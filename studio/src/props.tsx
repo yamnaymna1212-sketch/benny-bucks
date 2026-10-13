@@ -170,3 +170,67 @@ export const BarStack = ({segs, h = 520, w = 260}: {segs: [string, number, strin
       display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT, fontWeight: 800, fontSize: 34, color: col === C.gold ? C.ink : '#fff'}}>{full > 50 ? name : ''}</div>;
   })}</div>;
 };
+
+export const Burrito = ({w = 340}: {w?: number}) => (
+  <Svg w={w} h={w * 0.6} vb="0 0 250 150">
+    <path d="M20 95 Q15 40 80 30 L200 25 Q240 30 235 75 Q230 120 180 125 L60 130 Q22 128 20 95 Z" fill="#F1D9A6" />
+    <path d="M200 25 Q240 30 235 75 Q230 120 180 125 Q215 110 212 75 Q210 40 200 25 Z" fill="#7DBB4C" />
+    <path d="M70 40 Q90 80 70 120 M120 35 Q140 80 120 125 M165 30 Q185 80 165 124" fill="none" strokeWidth={3} />
+  </Svg>
+);
+
+export const Terminal = ({w = 260, screen = '', flash = 0}: {w?: number; screen?: string; flash?: number}) => (
+  <Svg w={w} h={w * 1.4} vb="0 0 180 252">
+    <rect x="15" y="10" width="150" height="232" rx="18" fill="#3B3B3B" />
+    <rect x="30" y="30" width="120" height="70" rx="6" fill={flash > 0 ? '#BDF5C8' : '#DDE7DD'} />
+    <T x={90} y={65} size={screen.length > 5 ? 20 : 30}>{screen}</T>
+    {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={38 + c * 38} y={120 + r * 36} width="28" height="24" rx="4" fill="#9a9a9a" strokeWidth={3} />))}
+  </Svg>
+);
+
+export const Receipt = ({w = 380, rows}: {w?: number; rows: [string, string, string?][]}) => (
+  <Svg w={w} h={w * 1.1} vb="0 0 300 330">
+    <path d="M20 10 L280 10 L280 300 L260 320 L240 300 L220 320 L200 300 L180 320 L160 300 L140 320 L120 300 L100 320 L80 300 L60 320 L40 300 L20 320 Z" fill="#fff" />
+    <T x={150} y={40} size={26}>RECEIPT</T>
+    {rows.map(([a, b, col], i) => <g key={i}><text x={35} y={95 + i * 52} fontFamily={FONT} fontWeight={700} fontSize={24} fill={col ?? C.ink} stroke="none">{a}</text>
+      <text x={265} y={95 + i * 52} fontFamily={FONT} fontWeight={800} fontSize={24} fill={col ?? C.ink} stroke="none" textAnchor="end">{b}</text></g>)}
+  </Svg>
+);
+
+export const Bank = ({w = 340}: {w?: number}) => (
+  <Svg w={w} h={w * 0.9} vb="0 0 300 270">
+    <path d="M20 90 L150 20 L280 90 Z" fill="#E6E6E6" /><rect x="30" y="90" width="240" height="20" fill="#E6E6E6" />
+    {[0, 1, 2, 3].map((i) => <rect key={i} x={50 + i * 58} y="115" width="28" height="110" fill="#fff" />)}
+    <rect x="20" y="225" width="260" height="30" fill="#E6E6E6" /><T x={150} y={70} size={30}>BANK</T>
+  </Svg>
+);
+
+export const BittenCoin = ({w = 220, bite = 1}: {w?: number; bite?: number}) => (
+  <Svg w={w} h={w} vb="0 0 100 100">
+    <mask id="bite"><rect width="100" height="100" fill="#fff" stroke="none" />{[0, 1, 2].map((i) => <circle key={i} cx={92 - (1 - bite) * 30} cy={30 + i * 14} r={bite * 10} fill="#000" stroke="none" />)}</mask>
+    <g mask="url(#bite)"><circle cx="50" cy="50" r="44" fill={C.gold} /><T x={50} y={52} size={34}>$</T></g>
+  </Svg>
+);
+
+export const Ticket = ({w = 380, label = 'CELTICS'}: {w?: number; label?: string}) => (
+  <Svg w={w} h={w * 0.5} vb="0 0 300 150">
+    <path d="M10 15 L290 15 L290 60 Q270 75 290 90 L290 135 L10 135 L10 90 Q30 75 10 60 Z" fill={C.green} />
+    <path d="M220 20 L220 130" strokeDasharray="8 8" strokeWidth={3} /><T x={115} y={77} size={36} fill="#fff">{label}</T><T x={255} y={77} size={22} fill="#fff">ADMIT</T>
+  </Svg>
+);
+
+export const Calendar = ({w = 300, month = 'JAN', label}: {w?: number; month?: string; label?: string}) => (
+  <Svg w={w} h={w} vb="0 0 200 200">
+    <rect x="15" y="25" width="170" height="160" rx="12" fill="#fff" /><rect x="15" y="25" width="170" height="45" rx="12" fill={C.red} />
+    <path d="M55 10 L55 40 M145 10 L145 40" strokeWidth={8} /><T x={100} y={48} size={30} fill="#fff">{month}</T>
+    {label && <T x={100} y={128} size={label.length > 4 ? 30 : 46}>{label}</T>}
+  </Svg>
+);
+
+export const Wallet = ({w = 300, label}: {w?: number; label?: string}) => (
+  <Svg w={w} h={w * 0.8} vb="0 0 250 200">
+    <rect x="40" y="20" width="150" height="70" rx="6" fill={C.bill} transform="rotate(-8 115 55)" />
+    <rect x="15" y="60" width="220" height="125" rx="16" fill="#8B5A2B" /><rect x="170" y="100" width="65" height="45" rx="8" fill="#A9743F" />
+    {label && <T x={110} y={130} size={30} fill="#fff">{label}</T>}
+  </Svg>
+);
