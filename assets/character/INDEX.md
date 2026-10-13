@@ -16,6 +16,10 @@ benny-angry.jpg | angry | front | canonical | clenched fists, gritted teeth
 benny-pointing.jpg | neutral/explaining | front | canonical (shorts lighter blue) | points right
 benny-thinking-03.jpg | thinking/doubtful | front | canonical (shorts lighter blue) | hand on chin, eyes up
 benny-sad-02.jpg | sad | 3/4 | canonical | looks into empty wallet
+benny-running-cash.jpg | panicked | 3/4, running | canonical | runs with big $ sack, speed lines
+benny-smug-cash-pile.jpg | smug/rich | front, lounging | canonical | lounging on a pile of cash
+benny-sleeping.jpg | asleep | top-down | canonical | in bed under blue blanket
+benny-police-car.jpg | worried | side, sitting | canonical | sitting in police car, officer standing
 benny-thinking.png | thinking | front | canonical | hand on chin, "no loan" icon beside him
 benny-thinking-02.png | thinking | front | canonical | holds red toolbox, wrench thought bubble
 benny-side.png | curious/worried | side | canonical | leaning, following oil footprints to a barrel
