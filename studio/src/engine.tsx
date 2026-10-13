@@ -203,10 +203,9 @@ export const AutoCaptions = ({lines, emphasis = {}, end}: {lines: {text: string;
   if (k < 0 || !line) return null;
   const g = groups[k];
   const text = g.words.map((x) => x.replace(/[.,!?:]+$/, '')).join(' ');
-  const p = pop(t, g.at, 12);
-  const size = Math.min(150, Math.floor(940 / (Math.max(4, text.length) * 0.72)));
-  return <div style={{position: 'absolute', left: 540, top: Z.wordY, transform: `translate(-50%,-50%) scale(${0.75 + 0.25 * p})`,
-    fontFamily: FONT, fontWeight: 900, fontSize: size, whiteSpace: 'nowrap', letterSpacing: -2, textTransform: 'uppercase', textShadow: '0 5px 0 rgba(255,255,255,0.9)'}}>
+  const size = Math.min(110, Math.floor(940 / (Math.max(6, text.length) * 0.7)));
+  return <div style={{position: 'absolute', left: 540, top: Z.wordY, transform: 'translate(-50%,-50%)',
+    fontFamily: FONT, fontWeight: 900, fontSize: size, whiteSpace: 'nowrap', letterSpacing: -1, textTransform: 'uppercase'}}>
     {g.words.map((x, j) => <span key={j} style={{color: emphasis[key(x)] ?? C.ink}}>{x.replace(/[.,!?:]+$/, '')}{j < g.words.length - 1 ? ' ' : ''}</span>)}
   </div>;
 };

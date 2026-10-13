@@ -29,6 +29,7 @@ Structure (adapt): Hook (0–3s) → Setup → Story/consequences → Twist/cont
 
 ## 5. Scene format
 - 1080×1920, 9:16, 30 fps. Safe zone: keep key text/faces out of top ~250px, bottom ~400px, right ~150px.
+- Captions: simple static 1–3 word groups in the middle band (no bounce/rotate), key words colored; never over Benny or the stage.
 - One focal point at a time; no clutter. On-screen text 1–5 words, bold, readable on a phone, synced to narration; key numbers big (count up/down).
 - Scene card:
 ```

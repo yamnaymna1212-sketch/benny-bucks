@@ -1,6 +1,6 @@
-# Why the rich get richer (inflation) — ~55s
+# Why the rich get richer (inflation) — ~60s
 English adaptation of the user's French script (same structure; "the panther" → Rich Benny; euros → dollars; "government prints" → "the Fed keeps creating", the accurate US actor).
-Voice: Kokoro `af_bella`, speed 1.22. Built with `tools/tts.py` from `lines.txt`. No music.
+Voice: Kokoro `af_bella`, speed 1.11 (paced to 60s). Built with `tools/tts.py` from `lines.txt`. No music.
 
 ## On-screen numbers
 | Claim | Basis |

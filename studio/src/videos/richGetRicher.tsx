@@ -5,8 +5,8 @@ import {Arrow, Balloon, Bank, Bill, Building, Calendar, FlipCard, FollowButton, 
 import {DrawArrow, DrawCircle} from '../draw';
 import lines from '../data/rich-get-richer.json';
 
-export const RICH_SECONDS = 55.2;
 const w = wordTimer(lines);
+export const RICH_SECONDS = Math.max(60, +(lines[lines.length - 1].end + 0.6).toFixed(2));
 const L = (n: number) => lines[n - 1];
 const Y = Z.topY;
 const Live = ({children}: {children: (t: number) => React.ReactNode}) => <>{children(useT())}</>;
@@ -32,7 +32,7 @@ export const RichGetRicher = () => (
         <At x={780} y={Y + 40} at={0.1}><Live>{(t) => <Stack w={380} n={ramp(t, w(1, 'rich'), L(1).end, 4, 16)} color={C.bill} />}</Live></At>
         <At x={780} y={Y - 210} at={w(1, 'richer')}><Arrow w={110} color={C.green} /></At>
         <DrawCircle x={780} y={Y + 40} rx={210} ry={200} at={w(1, 'richer')} color={C.green} />
-      </>, [[0, 1, 540, 960], [0.3, 1.1, 540, 900], [L(2).start, 1.13, 540, 890]])}
+      </>, [[0, 1, 540, 960], [0.3, 1.08, 540, 935], [L(2).start, 1.1, 540, 935]])}
 
       {/* 2 Normal guy saves in the bank */}
       {S(L(2).start, L(3).start, BLUE, <>
