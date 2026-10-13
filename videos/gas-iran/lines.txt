@@ -1,0 +1,21 @@
+am_michael|Why does Benny pay sixty-six dollars to fill his tank...|0.1
+am_michael|when in Iran, a full tank costs less than a pack of gum?|0.3
+am_puck|Okay. I'm going to Iran.|0.2
+am_michael|One last fill-up before the trip. Four forty-one a gallon.|0.1
+am_puck|Sixty-six bucks! For liquid dinosaurs!|0.25
+am_michael|Tehran. First gas station. Fifteen hundred tomans a liter.|0.1
+am_puck|Is that... a lot?|0.15
+am_michael|Less than three cents a gallon.|0.3
+am_puck|I've lost more than that in my couch!|0.2
+am_michael|Catch: that's for locals with a fuel card. First sixty liters a month.|0.1
+am_michael|After that? Up to ten thousand tomans.|0.1
+am_puck|Still pocket change!|0.25
+am_michael|So who's actually paying for this?|0.15
+am_michael|One: the government sells fuel below cost.|0.1
+am_michael|Two: the money. On the street, one dollar buys over two million rials.|0.2
+am_puck|So the gas is cheap... because the money is broken?|0.15
+am_michael|Pretty much. And America? Oil sells at world prices. Plus refining, trucks, and taxes.|0.15
+am_michael|Final twist: Benny's sixty-six bucks? Over a hundred and forty million rials.|0.2
+am_puck|I'm a millionaire!|0.2
+am_michael|In Tehran. In Texas, he's just a guy with an empty tank.|0.25
+am_michael|Expensive gas, or cheap gas with broken money? Which is worse? Comment below.|0

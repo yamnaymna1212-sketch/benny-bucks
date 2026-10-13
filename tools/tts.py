@@ -1,6 +1,6 @@
 """Kokoro TTS (free, Apache-2.0) -> tight voiceover with controlled pauses.
 Usage: /opt/tts/venv/bin/python tools/tts.py <lines.txt> <out_prefix> [voice] [speed]
-lines.txt: one line per clip, "text|pause_after_seconds".
+lines.txt: one line per clip, "text|pause_after_seconds" or "voice|text|pause" to override the voice.
 Writes <out_prefix>.wav, .mp3 (-14 LUFS) and .timings.json.
 """
 import json, subprocess, sys
@@ -22,10 +22,11 @@ k = Kokoro(MODEL, VOICES)
 parts, timings, t = [], [], 0.0
 for line in open(src):
     if not line.strip(): continue
-    text, pause = line.rstrip("\n").rsplit("|", 1)
-    a, sr = k.create(text, voice=voice, speed=speed, lang="en-us")
+    f = line.rstrip("\n").split("|")
+    v, text, pause = (f[0], f[1], f[2]) if len(f) == 3 else (voice, f[0], f[1])
+    a, sr = k.create(text, voice=v, speed=speed, lang="en-us")
     a = trim(a, sr)
-    timings.append({"text": text, "start": round(t, 2), "end": round(t + len(a) / sr, 2)})
+    timings.append({"voice": v, "text": text, "start": round(t, 2), "end": round(t + len(a) / sr, 2)})
     parts += [a, np.zeros(int(float(pause) * sr), dtype=a.dtype)]
     t += len(a) / sr + float(pause)
 sf.write(out + ".raw.wav", np.concatenate(parts), sr)
