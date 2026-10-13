@@ -46,7 +46,7 @@ export const At = ({x, y, children, ...m}: Timing & {x: number; y: number; child
 
 // Raster image; white background vanishes via multiply blending.
 export const Pic = ({src, w, x, y, ...m}: Timing & {src: string; w: number; x: number; y: number}) => (
-  <At x={x} y={y} {...m}><RImg src={staticFile(`gen/${src}.jpg`)} style={{width: w, display: 'block', mixBlendMode: 'multiply'}} /></At>
+  <At x={x} y={y} {...m}><RImg src={staticFile(`gen/${src}.png`)} style={{width: w, display: 'block'}} /></At>
 );
 
 export const Txt = ({children, size = 90, color = C.ink, weight = 800, x, y, ...m}: Timing & {children: React.ReactNode; size?: number; color?: string; weight?: number; x: number; y: number}) => (
@@ -84,6 +84,9 @@ export const RIG: Record<string, Rig> = {
   'benny-excited': {aspect: 1.79, top: 0.03},
   'benny-front': {aspect: 1.79, top: 0.03, eyes: [[0.44, 0.256, 0.05], [0.575, 0.256, 0.05]]},
   'benny-sad': {aspect: 1.79, top: 0.03, eyes: [[0.425, 0.256, 0.05], [0.575, 0.256, 0.05]]},
+  'benny-smug-cash-pile': {aspect: 1.79, top: 0.056, eyes: [[0.38, 0.223, 0.04], [0.50, 0.212, 0.04]]},
+  'benny-saving-cash': {aspect: 1.5, top: 0.075, eyes: [[0.405, 0.242, 0.04], [0.51, 0.242, 0.04]]},
+  'benny-running-cash': {aspect: 1.79, top: 0.195, eyes: [[0.695, 0.30, 0.03], [0.78, 0.296, 0.03]]},
 };
 export const Benny = ({poses, w = 760, x = 540}: {poses: [number, string | null][]; w?: number; x?: number}) => {
   const t = useT();
@@ -95,12 +98,13 @@ export const Benny = ({poses, w = 760, x = 540}: {poses: [number, string | null]
   const h = w * rig.aspect;
   const top = Z.bennyHeadY - rig.top * h;
   const p = pop(t, at, 10);
-  const s = 0.9 + 0.1 * p + Math.sin(t * 2.1) * 0.006;
+  const close = i % 3 === 1 ? 1.16 : 1;
+  const s = (0.9 + 0.1 * p) * close + Math.sin(t * 2.1) * 0.006;
   const tilt = Math.sin(t * 1.3 + i) * 1.6;
   const blink = ((t + i * 0.7) % 3.4) < 0.12;
-  return <div style={{position: 'absolute', left: x - w / 2, top, width: w, height: h, transformOrigin: '50% 30%',
+  return <div style={{position: 'absolute', left: x - w / 2, top, width: w, height: h, transformOrigin: `50% ${rig.top * 100}%`,
     transform: `translateY(${Math.sin(t * 3.2) * 5}px) scale(${s}) rotate(${tilt}deg)`}}>
-    <RImg src={staticFile(`gen/${name}.jpg`)} style={{width: w, display: 'block', mixBlendMode: 'multiply'}} />
+    <RImg src={staticFile(`gen/${name}.png`)} style={{width: w, display: 'block'}} />
     {blink && rig.eyes && <svg width={w} height={h} style={{position: 'absolute', left: 0, top: 0}}>
       {rig.eyes.map(([ex, ey, r], k) => <g key={k}>
         <ellipse cx={ex * w} cy={ey * h} rx={r * w * 1.15} ry={r * w * 1.05} fill="#F6F4EF" />
@@ -146,4 +150,63 @@ export const wordTimer = (lines: {text: string; start: number; end: number}[]) =
   const i = l.text.indexOf(word);
   if (i < 0) throw new Error(`"${word}" not in line ${line}`);
   return +(l.start + (l.end - l.start) * (i / l.text.length)).toFixed(2);
+};
+
+// Soft colored backdrop: color shifts by act; faint $ doodles add texture without clutter.
+export const Backdrop = ({keys}: {keys: [number, string][]}) => {
+  const t = useT();
+  let i = 0;
+  keys.forEach((k, j) => { if (t >= k[0]) i = j; });
+  const prev = keys[Math.max(0, i - 1)][1], cur = keys[i][1];
+  const mix = i === 0 ? 1 : Math.min(1, (t - keys[i][0]) / 0.35);
+  return <AbsoluteFill>
+    <AbsoluteFill style={{background: prev}} />
+    <AbsoluteFill style={{background: cur, opacity: mix}} />
+    <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%)'}} />
+    <svg width={1080} height={1920} style={{position: 'absolute', opacity: 0.07}}>
+      {Array.from({length: 40}, (_, k) => <text key={k} x={(k * 263) % 1080} y={((k * 397) % 1920) + Math.sin(t * 0.6 + k) * 8} fontFamily={FONT} fontWeight={900} fontSize={54} fill={C.ink}>$</text>)}
+    </svg>
+  </AbsoluteFill>;
+};
+
+// Rounded stage panel behind the top illustration band.
+export const Stage = ({color, from = 0}: {color: string; from?: number}) => {
+  const t = useT();
+  const p = pop(t, from, 14);
+  return <div style={{position: 'absolute', left: 60, top: 270, width: 960, height: 620, borderRadius: 48, background: color,
+    border: `6px solid ${C.ink}`, transform: `scale(${0.96 + 0.04 * p})`, boxShadow: '0 12px 0 rgba(0,0,0,0.12)'}} />;
+};
+
+// Synced captions in the middle band: short word groups (>= ~0.4s each); emphasis words get their own group and color.
+export const AutoCaptions = ({lines, emphasis = {}, end}: {lines: {text: string; start: number; end: number}[]; emphasis?: Record<string, string>; end: number}) => {
+  const t = useT();
+  if (t >= end) return null;
+  type G = {at: number; words: string[]};
+  const groups: G[] = [];
+  const key = (wd: string) => wd.replace(/[^A-Za-z0-9$%'-]/g, '').toLowerCase();
+  for (const l of lines) {
+    let idx = 0, cur: G | null = null;
+    const ws = l.text.split(' ');
+    ws.forEach((raw, j) => {
+      const i = l.text.indexOf(raw, idx); idx = i + raw.length;
+      const at = l.start + (l.end - l.start) * (i / l.text.length);
+      const emph = key(raw) in emphasis;
+      const nextAt = j + 1 < ws.length ? l.start + (l.end - l.start) * (l.text.indexOf(ws[j + 1], idx) / l.text.length) : l.end;
+      if (!cur || emph || (at - cur.at >= 0.4) || cur.words.some((x) => key(x) in emphasis) || cur.words.length >= 3) { cur = {at, words: []}; groups.push(cur); }
+      cur.words.push(raw);
+      if (/[.?!:]$/.test(raw) && nextAt - at > 0) cur = null;
+    });
+  }
+  let k = -1;
+  groups.forEach((g, j) => { if (t >= g.at) k = j; });
+  const line = lines.find((l) => t >= l.start - 0.05 && t <= l.end + 0.35);
+  if (k < 0 || !line) return null;
+  const g = groups[k];
+  const text = g.words.map((x) => x.replace(/[.,!?:]+$/, '')).join(' ');
+  const p = pop(t, g.at, 12);
+  const size = Math.min(150, Math.floor(940 / (Math.max(4, text.length) * 0.72)));
+  return <div style={{position: 'absolute', left: 540, top: Z.wordY, transform: `translate(-50%,-50%) scale(${0.75 + 0.25 * p})`,
+    fontFamily: FONT, fontWeight: 900, fontSize: size, whiteSpace: 'nowrap', letterSpacing: -2, textTransform: 'uppercase', textShadow: '0 5px 0 rgba(255,255,255,0.9)'}}>
+    {g.words.map((x, j) => <span key={j} style={{color: emphasis[key(x)] ?? C.ink}}>{x.replace(/[.,!?:]+$/, '')}{j < g.words.length - 1 ? ' ' : ''}</span>)}
+  </div>;
 };

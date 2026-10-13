@@ -1,0 +1,14 @@
+af_bella|Why do the poor keep getting poorer, while the rich just keep getting richer?|0.3
+af_bella|Look at a normal guy. Benny works hard, and he saves his money in a bank account.|0.15
+af_bella|But the Fed keeps creating billions of new dollars.|0.2
+af_bella|That creates inflation. Groceries cost more. Rent goes up. His saved cash loses value every single day.|0.25
+af_bella|But Rich Benny is smart. He knows saving cash is a trap.|0.2
+af_bella|So Rich Benny does the exact opposite. He walks into the bank and borrows a million dollars.|0.15
+af_bella|He uses that debt to buy a real asset: an apartment building.|0.2
+af_bella|Now watch what inflation does to Rich Benny.|0.2
+af_bella|As more money gets created, his building goes up in value. And he can raise the rent on his tenants.|0.25
+af_bella|But here's the secret. His million-dollar fixed-rate loan stays exactly the same.|0.25
+af_bella|Inflation makes normal Benny's savings worth less and less.|0.15
+af_bella|But it makes Rich Benny's debt cheaper, while his assets get more valuable.|0.3
+af_bella|The poor save paper money. The rich borrow paper money to buy the real world.|0.3
+af_bella|Want to be as smart as Rich Benny? Follow.|0

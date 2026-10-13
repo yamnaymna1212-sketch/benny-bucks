@@ -101,7 +101,7 @@ export const GasIran = () => (
 
       {/* 12 Who pays? card 1 → government below cost */}
       <Scene from={L(13).start} to={L(15).start}>
-        <At x={300} y={Y} at={L(13).start}><FlipCard w={360} h={460} at={w(14, 'government')}><Img src={staticFile('gen/government-office.jpg')} style={{width: 320, mixBlendMode: 'multiply'}} /></FlipCard></At>
+        <At x={300} y={Y} at={L(13).start}><FlipCard w={360} h={460} at={w(14, 'government')}><Img src={staticFile('gen/government-office.png')} style={{width: 320}} /></FlipCard></At>
         <At x={780} y={Y} at={L(13).start + 0.1}><FlipCard w={360} h={460} at={99}>?</FlipCard></At>
         <At x={300} y={Y + 260} enter="drop" at={w(14, 'below')}><Tag text="BELOW COST" color={C.red} w={300} /></At>
       </Scene>

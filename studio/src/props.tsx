@@ -234,3 +234,64 @@ export const Wallet = ({w = 300, label}: {w?: number; label?: string}) => (
     {label && <T x={110} y={130} size={30} fill="#fff">{label}</T>}
   </Svg>
 );
+
+export const Printer = ({w = 380, t = 0}: {w?: number; t?: number}) => (
+  <Svg w={w} h={w * 0.9} vb="0 0 300 270">
+    {[0, 1, 2].map((i) => { const p = ((t * 1.6 + i / 3) % 1); return <rect key={i} x={95 + Math.sin(i * 2 + t) * 10} y={150 + p * 110} width="110" height="50" rx="5" fill={C.bill} opacity={1 - p * 0.3} transform={`rotate(${(p - 0.5) * 30} 150 ${175 + p * 110})`} />; })}
+    <rect x="20" y="40" width="260" height="120" rx="16" fill="#5B6B7A" /><rect x="40" y="20" width="220" height="30" rx="8" fill="#8899A6" />
+    <rect x="80" y="135" width="140" height="18" rx="4" fill={C.ink} /><circle cx="245" cy="75" r="11" fill={C.red} /><circle cx="245" cy="108" r="11" fill={C.green} />
+    <T x={120} y={95} size={34} fill="#fff">FED</T>
+  </Svg>
+);
+
+export const GroceryBag = ({w = 260}: {w?: number}) => (
+  <Svg w={w} h={w * 1.1} vb="0 0 200 220">
+    <path d="M60 60 Q60 20 100 20 Q140 20 140 60" fill="none" />
+    <path d="M85 70 L70 15 L95 15 Z" fill={C.green} /><circle cx="120" cy="45" r="22" fill={C.red} /><rect x="125" y="20" width="22" height="55" rx="6" fill="#F2E3B3" />
+    <path d="M30 70 L170 70 L155 210 L45 210 Z" fill="#D9B98C" />
+  </Svg>
+);
+
+export const House = ({w = 300}: {w?: number}) => (
+  <Svg w={w} h={w} vb="0 0 200 200">
+    <path d="M20 95 L100 25 L180 95 Z" fill={C.red} /><rect x="40" y="95" width="120" height="95" fill="#F4E9D8" />
+    <rect x="85" y="130" width="32" height="60" fill="#8B5A2B" /><rect x="52" y="112" width="24" height="24" fill="#9CC9F0" /><rect x="125" y="112" width="24" height="24" fill="#9CC9F0" />
+  </Svg>
+);
+
+export const Building = ({w = 340}: {w?: number}) => (
+  <Svg w={w} h={w * 1.3} vb="0 0 200 260">
+    <rect x="30" y="30" width="140" height="220" fill="#E8D3B0" /><rect x="20" y="20" width="160" height="16" fill="#B5835A" />
+    {Array.from({length: 12}, (_, k) => <rect key={k} x={48 + (k % 3) * 40} y={50 + Math.floor(k / 3) * 42} width="24" height="26" fill="#9CC9F0" strokeWidth={4} />)}
+    <rect x="85" y="215" width="30" height="35" fill="#8B5A2B" strokeWidth={4} />
+  </Svg>
+);
+
+export const LoanDoc = ({w = 300, amount = '$1,000,000', fixed = false}: {w?: number; amount?: string; fixed?: boolean}) => (
+  <Svg w={w} h={w * 1.25} vb="0 0 200 250">
+    <path d="M20 10 L150 10 L180 40 L180 240 L20 240 Z" fill="#fff" /><path d="M150 10 L150 40 L180 40" fill="none" />
+    <T x={100} y={45} size={26}>LOAN</T><T x={100} y={100} size={amount.length > 8 ? 24 : 30} fill={C.green}>{amount}</T>
+    <path d="M45 140 L155 140 M45 165 L155 165 M45 190 L120 190" strokeWidth={4} />
+    {fixed && <g transform="translate(150 200)"><rect x="-22" y="-8" width="44" height="34" rx="6" fill={C.gold} /><path d="M-12 -8 Q-12 -32 0 -32 Q12 -32 12 -8" fill="none" /></g>}
+  </Svg>
+);
+
+export const MouseTrap = ({w = 360, snap = 0}: {w?: number; snap?: number}) => (
+  <Svg w={w} h={w * 0.6} vb="0 0 300 180">
+    <rect x="20" y="110" width="260" height="50" rx="8" fill="#D9A066" />
+    <rect x="150" y="80" width="90" height="34" rx="4" fill={C.bill} /><T x={195} y={97} size={18}>CASH</T>
+    <g transform={`rotate(${-150 + 150 * snap} 70 112)`}><path d="M70 112 L230 112" strokeWidth={9} /></g>
+    <circle cx="70" cy="112" r="10" fill="#9a9a9a" />
+  </Svg>
+);
+
+export const Balloon = ({w = 260, size = 1, label = 'INFLATION'}: {w?: number; size?: number; label?: string}) => (
+  <Svg w={w} h={w * 1.4} vb="0 0 200 280">
+    <g transform={`translate(100 110) scale(${size}) translate(-100 -110)`}><ellipse cx="100" cy="110" rx="80" ry="95" fill={C.red} /><T x={100} y={110} size={label.length > 6 ? 24 : 32} fill="#fff">{label}</T></g>
+    <path d={`M100 ${110 + 95 * size} Q90 240 105 275`} fill="none" strokeWidth={3} />
+  </Svg>
+);
+
+export const FollowButton = ({w = 420}: {w?: number}) => (
+  <Svg w={w} h={w * 0.32} vb="0 0 300 96"><rect x="5" y="5" width="290" height="86" rx="43" fill={C.red} /><T x={150} y={50} size={44} fill="#fff">FOLLOW</T></Svg>
+);
