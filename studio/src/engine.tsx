@@ -1,67 +1,129 @@
-// Reusable Benny Bucks building blocks. All times are in seconds, relative to the parent <Scene>.
-import React from 'react';
-import {AbsoluteFill, Audio, Img as RImg, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+// Reusable Benny Bucks building blocks. ALL times are absolute seconds on the video timeline.
+import React, {createContext, useContext} from 'react';
+import {AbsoluteFill, Audio, Img as RImg, Sequence, interpolate, spring, staticFile, useCurrentFrame} from 'remotion';
 
 export const FPS = 30;
 export const f = (s: number) => Math.round(s * FPS);
-export const C = {ink: '#1A1A1A', green: '#2E9E4F', red: '#D83A2E', yellow: '#F5C518', paper: '#FFFFFF'};
-const font = `@font-face{font-family:Marker;src:url(${staticFile('fonts/PermanentMarker.ttf')})}`;
-export const Fonts = () => <style>{font}</style>;
+export const C = {ink: '#1A1A1A', green: '#2E9E4F', red: '#D83A2E', gold: '#F2B705', yellow: '#F5C518', blue: '#2F5DA8', paper: '#FFFFFF', bill: '#8CC084', sand: '#E8C46A'};
+export const FONT = 'Montserrat';
+export const Fonts = () => <style>{`@font-face{font-family:${FONT};src:url(${staticFile('fonts/Montserrat.ttf')});font-weight:100 900}`}</style>;
 
-const useT = () => useCurrentFrame() / FPS;
-const pop = (t: number, at: number) => spring({frame: f(t - at), fps: FPS, config: {damping: 9, stiffness: 160}});
+// Layout zones (agentstick-style split screen)
+export const Z = {topY: 580, wordY: 990, bennyHeadY: 1110};
+
+const SceneStart = createContext(0);
+export const useT = () => useContext(SceneStart) + useCurrentFrame() / FPS;
+export const pop = (t: number, at: number, damping = 9) => spring({frame: f(t - at), fps: FPS, config: {damping, stiffness: 170}});
+export const ramp = (t: number, a: number, b: number, from = 0, to = 1) =>
+  interpolate(t, [a, b], [from, to], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (x) => 1 - Math.pow(1 - x, 3)});
 
 type Enter = 'pop' | 'slideL' | 'slideR' | 'drop' | 'fade' | 'none';
-type Common = {x: number; y: number; at?: number; until?: number; enter?: Enter; shakeAt?: number[]; bob?: boolean; rot?: number};
+export type Timing = {at?: number; until?: number; enter?: Enter; shakeAt?: number[]; bob?: boolean; rot?: number};
 
-function useMotion({at = 0, until, enter = 'pop', shakeAt = [], bob, rot = 0}: Common) {
+export function useMotion({at = -1e9, until, enter = 'pop', shakeAt = [], bob, rot = 0}: Timing) {
   const t = useT();
   if (t < at || (until !== undefined && t >= until)) return null;
-  const p = enter === 'none' ? 1 : pop(t, at);
+  const p = enter === 'none' || at < -1e8 ? 1 : pop(t, at);
   let dx = 0, dy = 0, s = 1, o = 1;
   if (enter === 'pop') s = p;
   if (enter === 'slideL') dx = (1 - p) * -900;
   if (enter === 'slideR') dx = (1 - p) * 900;
-  if (enter === 'drop') dy = (1 - p) * -700;
+  if (enter === 'drop') dy = (1 - p) * -600;
   if (enter === 'fade') o = Math.min(1, (t - at) / 0.25);
-  for (const k of shakeAt) { const d = t - k; if (d >= 0 && d < 0.35) dx += Math.sin(d * 90) * 18 * (1 - d / 0.35); }
+  for (const k of shakeAt) { const d = t - k; if (d >= 0 && d < 0.35) dx += Math.sin(d * 90) * 16 * (1 - d / 0.35); }
   if (bob) { dy += Math.sin(t * 3.2) * 6; s *= 1 + Math.sin(t * 2.1) * 0.008; }
-  return {transform: `translate(${dx}px,${dy}px) scale(${s}) rotate(${rot}deg)`, opacity: o};
+  return {transform: `translate(${dx}px,${dy}px) scale(${s}) rotate(${rot}deg)`, opacity: o, t};
 }
 
-// Image placed by its center; white backgrounds vanish via multiply blending.
-export const Pic = ({src, w, ...m}: Common & {src: string; w: number}) => {
+// Positioned layer: centers its children at (x,y) and applies the timing motion.
+export const At = ({x, y, children, ...m}: Timing & {x: number; y: number; children: React.ReactNode}) => {
   const st = useMotion(m);
   if (!st) return null;
-  return <RImg src={staticFile(`gen/${src}.jpg`)} style={{position: 'absolute', left: m.x - w / 2, top: m.y, width: w,
-    transform: `translateY(-50%) ${st.transform}`, opacity: st.opacity, mixBlendMode: 'multiply', transformOrigin: 'center'}} />;
+  return <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: st.transform, opacity: st.opacity}}>
+    <div style={{position: 'absolute', transform: 'translate(-50%,-50%)'}}>{children}</div>
+  </div>;
 };
 
-export const Txt = ({children, size = 110, color = C.ink, stroke = true, ...m}: Common & {children: React.ReactNode; size?: number; color?: string; stroke?: boolean}) => {
-  const st = useMotion(m);
-  if (!st) return null;
-  return <div style={{position: 'absolute', left: m.x, top: m.y, transform: `translate(-50%,-50%) ${st.transform}`, opacity: st.opacity,
-    fontFamily: 'Marker', fontSize: size, color, whiteSpace: 'pre', textAlign: 'center', lineHeight: 1.05,
-    WebkitTextStroke: stroke ? `${Math.max(3, size / 22)}px white` : undefined, paintOrder: 'stroke fill'}}>{children}</div>;
-};
+// Raster image; white background vanishes via multiply blending.
+export const Pic = ({src, w, x, y, ...m}: Timing & {src: string; w: number; x: number; y: number}) => (
+  <At x={x} y={y} {...m}><RImg src={staticFile(`gen/${src}.jpg`)} style={{width: w, display: 'block', mixBlendMode: 'multiply'}} /></At>
+);
 
-// Number that counts from `from` to `to` between `at` and `at+dur`.
-export const Counter = ({from, to, dur, fmt, ...rest}: Common & {from: number; to: number; dur: number; fmt: (n: number) => string; size?: number; color?: string}) => {
+export const Txt = ({children, size = 90, color = C.ink, weight = 800, x, y, ...m}: Timing & {children: React.ReactNode; size?: number; color?: string; weight?: number; x: number; y: number}) => (
+  <At x={x} y={y} {...m}><div style={{fontFamily: FONT, fontWeight: weight, fontSize: size, color, whiteSpace: 'pre', textAlign: 'center', lineHeight: 1.0, letterSpacing: -1}}>{children}</div></At>
+);
+
+export const Counter = ({from, to, at, dur, fmt, ...rest}: {from: number; to: number; at: number; dur: number; fmt: (n: number) => string; x: number; y: number; size?: number; color?: string; until?: number; enter?: Enter}) => {
   const t = useT();
-  const v = interpolate(t, [rest.at ?? 0, (rest.at ?? 0) + dur], [from, to], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (x) => 1 - Math.pow(1 - x, 3)});
-  return <Txt {...rest}>{fmt(v)}</Txt>;
+  return <Txt at={at} enter={rest.enter ?? 'none'} {...rest}>{fmt(ramp(t, at, at + dur, from, to))}</Txt>;
 };
 
-export const Box = ({w, h, bg, children, ...m}: Common & {w: number; h: number; bg: string; children?: React.ReactNode}) => {
-  const st = useMotion(m);
-  if (!st) return null;
-  return <div style={{position: 'absolute', left: m.x - w / 2, top: m.y - h / 2, width: w, height: h, background: bg, border: `6px solid ${C.ink}`,
-    borderRadius: 18, transform: st.transform, opacity: st.opacity, display: 'flex', alignItems: 'center', justifyContent: 'center', transformOrigin: 'center'}}><div style={{position: 'relative', width: 0, height: 0}}>{children}</div></div>;
+// One big word in the middle band, swapped on the voice. items: [time, text, color?]
+export const Words = ({items, end}: {items: [number, string, string?][]; end: number}) => {
+  const t = useT();
+  let i = -1;
+  items.forEach((it, k) => { if (t >= it[0]) i = k; });
+  if (i < 0 || t >= end) return null;
+  const [at, text, color] = items[i];
+  const p = pop(t, at, 11);
+  const size = Math.min(160, Math.floor(940 / (Math.max(3, text.length) * 0.74)));
+  return <div style={{position: 'absolute', left: 540, top: Z.wordY, transform: `translate(-50%,-50%) scale(${0.6 + 0.4 * p})`,
+    fontFamily: FONT, fontWeight: 900, fontSize: size, color: color ?? C.ink, whiteSpace: 'nowrap', letterSpacing: -2}}>{text}</div>;
 };
 
-// Camera: keyframes of [time, zoom, focusX, focusY]; focus point is kept centered.
-export const Scene = ({from, to, cam = [[0, 1, 540, 960]], overlay, children}: {from: number; to: number; cam?: [number, number, number, number][]; overlay?: boolean; children: React.ReactNode}) => (
-  <Sequence from={f(from)} durationInFrames={f(to) - f(from)}><Cam cam={cam} overlay={overlay}>{children}</Cam></Sequence>
+// Benny rig: pose swaps with zoom punch, idle tilt/bob, and blinking eyelids.
+type Rig = {aspect: number; top: number; eyes?: [number, number, number][]};
+export const RIG: Record<string, Rig> = {
+  'benny-shocked': {aspect: 1.79, top: 0.05, eyes: [[0.26, 0.316, 0.085], [0.475, 0.3, 0.085]]},
+  'benny-pointing': {aspect: 1.79, top: 0.085, eyes: [[0.40, 0.267, 0.05], [0.55, 0.26, 0.05]]},
+  'benny-sad-02': {aspect: 1.79, top: 0.085, eyes: [[0.59, 0.268, 0.04], [0.675, 0.27, 0.04]]},
+  'benny-angry': {aspect: 1.79, top: 0.07, eyes: [[0.575, 0.256, 0.04], [0.67, 0.256, 0.04]]},
+  'benny-thinking-03': {aspect: 1.79, top: 0.045, eyes: [[0.44, 0.275, 0.05], [0.59, 0.275, 0.055]]},
+  'benny-relaxed': {aspect: 1.79, top: 0.14, eyes: [[0.40, 0.31, 0.045], [0.54, 0.31, 0.045]]},
+  'benny-worried': {aspect: 1.5, top: 0.07, eyes: [[0.44, 0.285, 0.035], [0.54, 0.285, 0.035]]},
+  'benny-excited': {aspect: 1.79, top: 0.03},
+  'benny-front': {aspect: 1.79, top: 0.03, eyes: [[0.44, 0.256, 0.05], [0.575, 0.256, 0.05]]},
+  'benny-sad': {aspect: 1.79, top: 0.03, eyes: [[0.425, 0.256, 0.05], [0.575, 0.256, 0.05]]},
+};
+export const Benny = ({poses, w = 760, x = 540}: {poses: [number, string | null][]; w?: number; x?: number}) => {
+  const t = useT();
+  let i = -1;
+  poses.forEach((p, k) => { if (t >= p[0]) i = k; });
+  if (i < 0 || !poses[i][1]) return null;
+  const [at, name] = poses[i] as [number, string];
+  const rig = RIG[name] ?? {aspect: 1.79, top: 0.05};
+  const h = w * rig.aspect;
+  const top = Z.bennyHeadY - rig.top * h;
+  const p = pop(t, at, 10);
+  const s = 0.9 + 0.1 * p + Math.sin(t * 2.1) * 0.006;
+  const tilt = Math.sin(t * 1.3 + i) * 1.6;
+  const blink = ((t + i * 0.7) % 3.4) < 0.12;
+  return <div style={{position: 'absolute', left: x - w / 2, top, width: w, height: h, transformOrigin: '50% 30%',
+    transform: `translateY(${Math.sin(t * 3.2) * 5}px) scale(${s}) rotate(${tilt}deg)`}}>
+    <RImg src={staticFile(`gen/${name}.jpg`)} style={{width: w, display: 'block', mixBlendMode: 'multiply'}} />
+    {blink && rig.eyes && <svg width={w} height={h} style={{position: 'absolute', left: 0, top: 0}}>
+      {rig.eyes.map(([ex, ey, r], k) => <g key={k}>
+        <ellipse cx={ex * w} cy={ey * h} rx={r * w * 1.15} ry={r * w * 1.05} fill="#F6F4EF" />
+        <path d={`M${(ex - r) * w} ${ey * h} Q${ex * w} ${ey * h + r * w * 0.5} ${(ex + r) * w} ${ey * h}`} stroke={C.ink} strokeWidth={Math.max(3, w * 0.006)} fill="none" strokeLinecap="round" />
+      </g>)}
+    </svg>}
+  </div>;
+};
+
+// Whole-frame camera: zoom punches and shakes at given times.
+export const Camera = ({punch = [], shake = [], children}: {punch?: number[]; shake?: number[]; children: React.ReactNode}) => {
+  const t = useT();
+  let s = 1, dx = 0, dy = 0;
+  for (const k of punch) { const d = t - k; if (d >= 0 && d < 0.5) s += 0.07 * Math.exp(-d * 9) * Math.cos(d * 12); }
+  for (const k of shake) { const d = t - k; if (d >= 0 && d < 0.4) { dx += Math.sin(d * 95) * 14 * (1 - d / 0.4); dy += Math.cos(d * 80) * 8 * (1 - d / 0.4); } }
+  return <AbsoluteFill style={{transform: `translate(${dx}px,${dy}px) scale(${s})`, transformOrigin: '50% 45%'}}>{children}</AbsoluteFill>;
+};
+
+// Scene = a time window with its own white background and optional pan/zoom keyframes [time, zoom, focusX, focusY].
+export const Scene = ({from, to, cam, overlay, children}: {from: number; to: number; cam?: [number, number, number, number][]; overlay?: boolean; children: React.ReactNode}) => (
+  <Sequence from={f(from)} durationInFrames={f(to) - f(from)}>
+    <SceneStart.Provider value={from}><Cam cam={cam ?? [[from, 1, 540, 960]]} overlay={overlay}>{children}</Cam></SceneStart.Provider>
+  </Sequence>
 );
 const Cam = ({cam, overlay, children}: {cam: [number, number, number, number][]; overlay?: boolean; children: React.ReactNode}) => {
   const t = useT();
@@ -77,3 +139,11 @@ export const SFX_GAIN = 0.35;
 export const Sfx = ({at, name, vol = 0.5}: {at: number; name: string; vol?: number}) => (
   <Sequence from={f(at)} layout="none"><Audio src={staticFile(`sfx/${name}.wav`)} volume={vol * SFX_GAIN} /></Sequence>
 );
+
+// Estimated word time inside a voice line (proportional to character position).
+export const wordTimer = (lines: {text: string; start: number; end: number}[]) => (line: number, word: string) => {
+  const l = lines[line - 1];
+  const i = l.text.indexOf(word);
+  if (i < 0) throw new Error(`"${word}" not in line ${line}`);
+  return +(l.start + (l.end - l.start) * (i / l.text.length)).toFixed(2);
+};
