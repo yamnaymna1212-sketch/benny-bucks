@@ -1,6 +1,6 @@
 # Benny character references
 
-**Core references (open these first):** benny-front.jpg, benny-sad.jpg, benny-worried.png, benny-surprised.png, benny-thinking.png, benny-side.png, benny-relaxed.jpg, benny-saving-cash.png
+**Core references (open these first):** benny-front.jpg, benny-sad.jpg, benny-worried.png, benny-surprised.png, benny-thinking.png, benny-side.png, benny-relaxed.jpg, benny-excited.jpg, benny-angry.jpg
 
 Canonical look: spiky yellow crayon hair, pale skin, thick brows, droopy half-lidded eyes, gap teeth, skinny shirtless body with chest hair, blue crayon shorts, black flip-flops.
 
@@ -10,6 +10,12 @@ benny-front.jpg | confused/explaining | front | canonical | best full-body face 
 benny-sad.jpg | sad/disappointed | front | canonical | holds credit card, "$1,500 LIMIT" text
 benny-worried.png | worried/anxious | front | canonical | holds credit card, hand raised
 benny-surprised.png | surprised/shocked | 3/4 | canonical | with smiling oil-barrel character hugging cash
+benny-shocked.jpg | shocked | 3/4, waist-up | canonical | wide eyes, open mouth, hand to chest; legs cropped
+benny-excited.jpg | excited/celebrating | front | canonical | both fists up, big gap-tooth grin
+benny-angry.jpg | angry | front | canonical | clenched fists, gritted teeth
+benny-pointing.jpg | neutral/explaining | front | canonical (shorts lighter blue) | points right
+benny-thinking-03.jpg | thinking/doubtful | front | canonical (shorts lighter blue) | hand on chin, eyes up
+benny-sad-02.jpg | sad | 3/4 | canonical | looks into empty wallet
 benny-thinking.png | thinking | front | canonical | hand on chin, "no loan" icon beside him
 benny-thinking-02.png | thinking | front | canonical | holds red toolbox, wrench thought bubble
 benny-side.png | curious/worried | side | canonical | leaning, following oil footprints to a barrel
