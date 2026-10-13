@@ -11,6 +11,9 @@ TikTok factory for short English finance stories (US audience) starring **Benny*
 - Do not use paid tools/APIs or start production without the user's explicit approval.
 - The user is a beginner: explain steps simply.
 
+## Character reference
+مرجع شخصية Benny: assets/character/. اقرأ INDEX.md أولًا ولا تفتح الصور إلا عند الحاجة، وافتح فقط الصور المطلوبة للمشهد (مثلًا benny-sad عند مشهد حزين) مع المرجع الأساسي. لا تعدّل التصميم ولا تبتكر ملابس أو ملامح جديدة.
+
 ## Video work
 For scripts, storyboards, scene planning, animation, or rendering, load the skill
 `benny-bucks-video-style` (`.claude/skills/benny-bucks-video-style/SKILL.md`).
