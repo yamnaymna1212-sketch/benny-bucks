@@ -72,6 +72,8 @@ const Cam = ({cam, overlay, children}: {cam: [number, number, number, number][];
   </AbsoluteFill>;
 };
 
+// SFX always sit well under the narration (global gain ≈ -9 dB).
+export const SFX_GAIN = 0.35;
 export const Sfx = ({at, name, vol = 0.5}: {at: number; name: string; vol?: number}) => (
-  <Sequence from={f(at)} layout="none"><Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} /></Sequence>
+  <Sequence from={f(at)} layout="none"><Audio src={staticFile(`sfx/${name}.wav`)} volume={vol * SFX_GAIN} /></Sequence>
 );

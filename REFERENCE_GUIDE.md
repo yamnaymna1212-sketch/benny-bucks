@@ -49,7 +49,7 @@ Number check: source or calculation
 - If a tool can't do a move, use a clear alternative and say so; never claim it was done.
 
 ## 7. Sound
-- Clear, natural American English narration always on top; ~150–170 wpm; 0.2–0.4s beat after the hook and key numbers. Captions match the spoken words.
+- Narration always clearly louder than SFX (engine `SFX_GAIN`, SFX peaks ≈ 10 dB under voice); clear, natural American English; ~150–170 wpm; 0.2–0.4s beat after the hook and key numbers. Captions match the spoken words.
 - SFX first, chosen by event and emotion: money (coins, register, card tap/decline), comedic/meme-style, suspense, impacts, record scratch, reactions, UI/notifications, whooshes. Each sound serves the story; no filler or repetition.
 - Background music only when it genuinely improves a scene; low under narration.
 - Only legally usable audio; log in `assets/audio/sfx/LICENSES.md`.
