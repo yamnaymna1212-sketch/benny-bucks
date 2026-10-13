@@ -4,6 +4,7 @@ TikTok/Shorts factory for entertaining English finance stories (US, 18–30) sta
 
 ## Always
 - Before any video task (script, scenes, assets, animation, audio, render), read `REFERENCE_GUIDE.md` and only the relevant assets.
+- `REFERENCE_GUIDE.md` overrides the older `benny-bucks-video-style` skill wherever they conflict (e.g. music, textures, outfit).
 - No paid tools/APIs, deleting files, or major changes without the user's approval.
 - The user is a beginner: explain simply. Talk to the user in Arabic; code, filenames, and video content in English.
 
