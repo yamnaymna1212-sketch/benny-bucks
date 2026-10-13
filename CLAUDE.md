@@ -15,3 +15,10 @@ TikTok factory for short English finance stories (US audience) starring **Benny*
 For scripts, storyboards, scene planning, animation, or rendering, load the skill
 `benny-bucks-video-style` (`.claude/skills/benny-bucks-video-style/SKILL.md`).
 Do not copy its details into this file.
+
+## Working style (token efficiency)
+- Short, direct replies; no filler, no restating instructions, no long summaries.
+- Inspect and reuse existing files/assets/code; never duplicate rules across files.
+- Read only needed parts of files; for media, extract representative frames.
+- No regenerating assets, redundant tool calls, or unnecessary verification (but never skip verification that matters).
+- Ask only when info is missing or approval is required; brief plan before major changes.
