@@ -74,3 +74,9 @@ Number check: source or calculation
 - [ ] Facts and math verified
 - [ ] Export: 1080×1920, 30 fps, MP4 (H.264/AAC), intended duration
 - [ ] Report anything not verified
+
+## 11. Pipeline (tested on gas-iran)
+- Voice: `tools/tts.py` (Kokoro, free; models in /opt/tts — re-download from GitHub kokoro-onnx releases if missing).
+- SFX: `tools/sfx.py` synthesizes original sounds; external sounds must be logged in LICENSES.md.
+- Assets: `tools/prep_assets.sh` → `studio/public/gen` (whitened JPGs; white bg hidden with multiply blend).
+- Animation: Remotion in `studio/` (`engine.tsx` = reusable Pic/Txt/Counter/Box/Scene/Sfx; one file per video in `src/videos/`). Render: `cd studio && npx remotion render src/index.ts <id> out/<id>.mp4`, then ffmpeg loudnorm -14 LUFS into `videos/<slug>/`.

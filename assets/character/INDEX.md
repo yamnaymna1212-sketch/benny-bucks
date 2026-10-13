@@ -34,5 +34,5 @@ cast-banker.png | friendly | 3/4 | suit, "BANK" badge | clean style
 cast-advisor.png | cheerful | front | suit, red tie, "ADVISOR" book | clean style, bald with glasses
 cast-advisor-02.png | confident | front | suit, glasses, "ADVISOR" folder | clean style
 cast-fed-guy.png | smug | front | navy suit, purple tie | semi-realistic; satire character only, no real quotes
-prop-bank.jpg | — | front | — | bank building, 236px (low-res)
-prop-government-office.jpg | — | front | — | "GOVERNMENT OFFICE" building
+../props/bank.jpg | — | front | — | bank building, 236px (low-res)
+../props/government-office.jpg | — | front | — | "GOVERNMENT OFFICE" building

@@ -1,0 +1,5 @@
+node_modules/
+public/gen/
+public/sfx/
+public/*.mp3
+out/
