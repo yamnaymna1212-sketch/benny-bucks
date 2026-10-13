@@ -1,23 +1,14 @@
 # Benny Bucks
 
-TikTok factory for short English finance stories (US audience) starring **Benny**.
+TikTok/Shorts factory for entertaining English finance stories (US, 18–30) starring **Benny** (never a penguin).
 
-## Core rules (always)
-- Main character is **Benny**: young American cartoon guy, messy yellow hair, big eyes, simple face, casual clothes. **Never a penguin.**
-- Style: simple 2D hand-drawn cartoon, imperfect black outlines, flat colors, white background. No 3D, realism, or textures.
-- Benny looks identical in every scene (reuse approved assets; never redraw him freehand).
-- Every video: original script, original scene composition, accurate and sourced numbers.
-- Voiceover only, **no music**.
-- Do not use paid tools/APIs or start production without the user's explicit approval.
-- The user is a beginner: explain steps simply.
+## Always
+- Before any video task (script, scenes, assets, animation, audio, render), read `REFERENCE_GUIDE.md` and only the relevant assets.
+- No paid tools/APIs, deleting files, or major changes without the user's approval.
+- The user is a beginner: explain simply. Talk to the user in Arabic; code, filenames, and video content in English.
 
 ## Character reference
 مرجع شخصية Benny: assets/character/. اقرأ INDEX.md أولًا ولا تفتح الصور إلا عند الحاجة، وافتح فقط الصور المطلوبة للمشهد (مثلًا benny-sad عند مشهد حزين) مع المرجع الأساسي. لا تعدّل التصميم ولا تبتكر ملابس أو ملامح جديدة.
-
-## Video work
-For scripts, storyboards, scene planning, animation, or rendering, load the skill
-`benny-bucks-video-style` (`.claude/skills/benny-bucks-video-style/SKILL.md`).
-Do not copy its details into this file.
 
 ## Working style (token efficiency)
 - Short, direct replies; no filler, no restating instructions, no long summaries.
