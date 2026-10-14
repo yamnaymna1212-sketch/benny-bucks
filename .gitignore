@@ -2,3 +2,7 @@
 # large demo media from third-party skills (not needed to run them)
 .claude/skills/onetake/cases/**/*.mp4
 .claude/skills/onetake/assets/*.gif
+
+# secrets (never commit)
+.env
+.env.*
