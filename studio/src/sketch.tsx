@@ -104,6 +104,7 @@ export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84}: {lines: {t
   let idx = 0, cur = '';
   for (const raw of ws) {
     const i = line.text.indexOf(raw, idx); idx = i + raw.length;
+    if (!/[A-Za-z0-9$€]/.test(raw)) continue; // skip dashes/ellipses shown alone
     if (t >= line.start + (line.end - line.start) * (i / line.text.length)) cur = raw;
   }
   if (!cur) return null;
