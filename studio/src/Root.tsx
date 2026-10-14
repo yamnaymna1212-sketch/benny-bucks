@@ -1,4 +1,5 @@
 import {Composition} from 'remotion';
+import {AmbulanceVideo, AMBULANCE_SECONDS, AmbulanceSheet, AMBULANCE_SHEET_FRAMES} from './videos/ambulance';
 import {GasIran, GAS_IRAN_SECONDS} from './videos/gasIran';
 import {CashVsCard, CASH_CARD_SECONDS} from './videos/cashVsCard';
 import {RichGetRicher, RICH_SECONDS} from './videos/richGetRicher';
@@ -17,5 +18,7 @@ export const Root = () => (
     <Composition id="college-sheet" component={CollegeSheet} width={1080} height={1920} fps={30} durationInFrames={COLLEGE_SHEET_FRAMES} />
     <Composition id="college-assemble" component={CollegeAssemble} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(COLLEGE_ASSEMBLE_SECONDS * 30)} />
     <Composition id="college-germany" component={CollegeVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(COLLEGE_SECONDS * 30)} />
+    <Composition id="ambulance" component={AmbulanceVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(AMBULANCE_SECONDS * 30)} />
+    <Composition id="ambulance-sheet" component={AmbulanceSheet} width={1080} height={1920} fps={30} durationInFrames={AMBULANCE_SHEET_FRAMES} />
   </>
 );

@@ -1,0 +1,13 @@
+af_bella|Same ambulance. America: twelve seventy-seven. Japan: zero. Why?|0.25
+af_bella|Twelve seventy-seven is the average U.S. charge for an emergency ambulance ride. Before mileage.|0.2
+af_bella|And ground ambulances aren't covered by the No Surprises Act.|0.15
+af_bella|So if it's out of network, the bill can still surprise you.|0.2
+af_bella|In Japan, you call one-one-nine, and the ride is free. Local taxes pay for it.|0.2
+af_bella|So why is America so expensive?|0.25
+af_bella|Reason one: prices vary by state. California: fourteen sixty-one on average.|0.2
+af_bella|Reason two: insurers allow about seven fifty-eight. Out of network, you can be billed the rest.|0.2
+af_bella|Japan has a catch too. Some cities charge seventy-seven hundred yen, about fifty dollars, if you're not admitted.|0.2
+af_bella|Why? Too many calls for small stuff. In Matsusaka, calls dropped ten percent.|0.2
+af_bella|Back home, one study found ambulance use fell seven percent after Uber came to town.|0.2
+af_bella|Twelve seventy-seven versus zero. Or fifty bucks, worst case.|0.2
+af_bella|Would you call nine-one-one… or an Uber? Comment below.|0.1
