@@ -1,13 +1,16 @@
 // College USA $45,000 vs Germany $0 — free local collage (src/collage.tsx).
 // college-sheet: 1 frame per line (Gate 2 stills). college-assemble: each line assembles in 2.5s (Gate 3).
 import React from 'react';
-import {Scene, Fonts, C} from '../engine';
+import {Audio, staticFile} from 'remotion';
+import {Scene, Fonts, C, Sfx, wordTimer} from '../engine';
+import {OutlineCaptions} from '../sketch';
+import TIM from '../data/college-germany.json';
 import {Receipt, Calendar, House, GroceryBag, Ticket, Scale} from '../props';
 import {TornSplit, Field, Piece, Card, FlagUS, FlagDE} from '../collage';
 import {Ivy, PlainUni, Plate, Passport, Bus, QMark, Chalkboard, Book, Diploma, ExamPaper, Vault, Lock, EuroCoin, Mountain, GradCap, Chain, Road, Cross} from './collegeProps';
 
 const US = '#E4572E', DE = '#1F6B4A', CATCH = '#D9A21B', DEBT = '#B8322A', END = '#4B2E6B', CARD = '#FFF3D6';
-const Benny = ({pose, at, x = 540}: {pose: string; at: number; x?: number}) => <Piece x={x} y={1650} w={430} at={at} from="bottom" src={`benny-${pose}`} />;
+const Benny = ({pose, at, x = 540}: {pose: string; at: number; x?: number}) => <Piece x={x} y={1720} w={430} at={at} from="bottom" src={`benny-${pose}`} />;
 type L = (p: {at: number}) => JSX.Element;
 
 const lines: L[] = [
@@ -90,3 +93,45 @@ export const ASSEMBLE_LEN = 2.5;
 export const COLLEGE_ASSEMBLE_SECONDS = lines.length * ASSEMBLE_LEN;
 export const CollegeAssemble = () => <><Fonts />{lines.map((Line, k) =>
   <Scene key={k} from={k * ASSEMBLE_LEN} to={(k + 1) * ASSEMBLE_LEN}><Line at={k * ASSEMBLE_LEN} /></Scene>)}</>;
+
+// Full video: voice + per-line collage scenes + camera that follows the narration + SFX + captions.
+const W = wordTimer(TIM);
+const st = (k: number) => TIM[k - 1].start;
+export const COLLEGE_SECONDS = +(TIM[TIM.length - 1].end + 0.9).toFixed(2);
+type K = [number, number, number, number];
+// zoom toward (fx,fy) at t, hold, then return to the full frame at back
+const zt = (t: number, z: number, fx: number, fy: number, back?: number): K[] => [[t, 1, 540, 960], [t + 0.35, z, fx, fy], ...(back ? [[back, z, fx, fy], [back + 0.35, 1, 540, 960]] as K[] : [])];
+const push = (a: number, b: number, z: number, fx: number, fy: number): K[] => [[a, 1, 540, 960], [b, z, fx, fy]];
+const CAMS: K[][] = [
+  [[0, 1, 540, 960], ...zt(W(1, 'U.S.A.'), 1.45, 290, 700), [W(1, 'but') , 1.45, 290, 700], [W(1, 'Germany'), 1.45, 800, 700], [W(1, 'zero') + 0.3, 1.45, 800, 700], [W(1, 'zero') + 0.7, 1, 540, 960]],
+  push(st(2), TIM[1].end, 1.18, 420, 900),
+  [...zt(st(3) + 0.3, 1.3, 540, 380, W(3, 'Before rent')), [TIM[2].end, 1, 540, 960]],
+  push(st(4), W(4, 'Yes'), 1.2, 540, 600).concat([[W(4, 'Yes') + 0.4, 1, 540, 960]]),
+  [[st(5), 1.25, 360, 450], [W(5, 'bus'), 1.25, 360, 450], [W(5, 'bus') + 0.35, 1.25, 620, 800]],
+  [[st(6), 1.25, 540, 760], [TIM[5].end, 1, 540, 960]],
+  push(st(7) + 0.3, TIM[6].end, 1.22, 540, 560),
+  [...zt(st(8) + 0.3, 1.3, 340, 560, W(8, 'They')), [W(8, 'A.P.'), 1.3, 800, 660], [TIM[7].end, 1.3, 800, 660]],
+  push(st(9) + 0.3, W(9, 'blocked'), 1.3, 560, 680),
+  [[st(10), 1.2, 400, 420], [TIM[9].end, 1.2, 640, 560]],
+  [[st(11), 1, 540, 960], ...zt(W(11, 'One hundred'), 1.4, 290, 900), [W(11, 'versus'), 1.4, 290, 900], [W(11, 'zero'), 1.4, 800, 900], [TIM[10].end, 1.4, 800, 900]],
+  push(st(12), W(12, 'thirty-nine'), 1.25, 540, 760),
+  [[st(13), 1.25, 540, 640], [TIM[12].end, 1, 540, 960]],
+  push(st(14), TIM[13].end + 0.8, 1.15, 540, 1000),
+];
+const SFX: [number, string][] = [
+  [W(1, 'U.S.A.'), 'whoosh'], [W(1, 'forty-five'), 'cha-ching'], [W(1, 'Germany'), 'whoosh'], [W(1, 'zero'), 'impact'],
+  [W(2, 'Forty-five'), 'cha-ching'], [st(3) + 0.1, 'thud'], [W(3, 'One hundred'), 'ding'], [W(3, 'Before rent'), 'error'],
+  [st(4), 'whoosh'], [W(4, 'no tuition'), 'ding'], [W(4, 'Yes'), 'pop'], [W(5, 'semester fee'), 'cha-ching'], [W(5, 'bus'), 'whoosh'],
+  [st(6), 'whoosh'], [st(7), 'record-scratch'], [st(8), 'record-scratch'], [W(8, "isn't enough"), 'error'], [st(9), 'record-scratch'],
+  [W(9, 'twelve'), 'cha-ching'], [W(9, 'blocked'), 'thud'], [W(10, 'thousand'), 'coins'], [W(11, 'One hundred'), 'whoosh'],
+  [W(11, 'One hundred') + 0.15, 'cha-ching'], [W(11, 'zero'), 'whoosh'], [W(11, 'zero') + 0.1, 'impact'], [W(12, 'thirty-nine'), 'ding'],
+  [W(13, 'one-hundred'), 'ding'], [st(14), 'whoosh'], [W(14, 'Comment'), 'pop'],
+];
+const STARTS = [-0.5, ...TIM.slice(1).map((l) => l.start)];
+export const CollegeVideo = () => <>
+  <Fonts />
+  <Audio src={staticFile('voice-college.mp3')} />
+  {lines.map((Line, k) => <Scene key={k} from={Math.max(0, STARTS[k])} to={k < 13 ? TIM[k + 1].start : COLLEGE_SECONDS} cam={CAMS[k]}><Line at={STARTS[k]} /></Scene>)}
+  {SFX.map(([t, n], i) => <Sfx key={i} at={t} name={n} />)}
+  <Scene from={0} to={COLLEGE_SECONDS} overlay><OutlineCaptions lines={TIM} end={COLLEGE_SECONDS} y={1260} size={70} /></Scene>
+</>;
