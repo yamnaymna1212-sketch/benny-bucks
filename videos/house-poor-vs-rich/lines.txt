@@ -9,7 +9,7 @@ af_bella|Rick gets the same approval letter. But he buys a duplex. Two homes, on
 af_bella|He uses an FHA loan. Three and a half percent down, if he lives in one side.|0.1
 af_bella|On a three-hundred-thousand-dollar duplex, that's ten thousand five hundred, plus closing costs.|0.1
 af_bella|He rents the other side for fifteen hundred. His payment is about twenty-five hundred.|0.1
-af_bella|So Rick lives there for about a thousand a month. Less than a one-bedroom apartment.|0.1
+af_bella|So Rick lives there for about a thousand a month. Less than a one-bedroom apartment. That's called house hacking.|0.1
 af_bella|A year later, he moves out and rents both sides.|0.1
 af_bella|But if a renter leaves, or the roof leaks, Rick pays. Being a landlord is a real job.|0.1
-af_bella|Same bank. Opposite house. Which one would you buy?|0
+af_bella|Same bank. Opposite house. Which one would you buy? Follow for part two.|0

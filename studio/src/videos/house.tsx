@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile} from 'remotion';
 import {At, Benny, C, Camera, Counter, Fonts, Scene, Sfx, Txt, ramp, useT, wordTimer} from '../engine';
-import {Arrow, BarStack, BigHouse, Card, Coin, Duplex, Furnace, GroceryBag, Noodles, Tag} from '../props';
+import {Arrow, BarStack, BigHouse, Sparkles, Card, Coin, Duplex, Furnace, GroceryBag, Noodles, Tag} from '../props';
 import {DrawArrow, DrawCircle} from '../draw';
 import {FlipCal, GridPaper, HandFont, OutlineCaptions, SketchBox, Stamp, Write} from '../sketch';
 import lines from '../data/house.json';
@@ -124,6 +124,8 @@ export const House = () => (
           [L(10).start, 'rich-cash-fan'], [L(11).start, 'rich-pointing-chart'], [L(12).start, 'rich-thumbs-up'], [L(13).start, 'rich-airplane'], [L(14).start, 'rich-stressed-paperwork'],
           [L(15).start, 'rich-front']]} />
 
+        {/* premium glint on Rick at his key moments */}
+        {[w(1, 'rich'), L(8).start, w(12, 'thousand'), L(15).start].map((a, i) => <Live key={i}>{(t) => t >= a && t < a + 1.2 ? <At x={i === 0 ? 850 : 820} y={i === 0 ? 860 : 1200}><Sparkles w={300} at={a} /></At> : null}</Live>)}
         <Live>{(t) => <OutlineCaptions lines={lines} end={HOUSE_SECONDS} y={t < L(2).start ? 1150 : 955} size={t < L(2).start ? 52 : 66} />}</Live>
       </Scene>
     </Camera>

@@ -8,7 +8,12 @@ for f in assets/character/benny-*.* assets/character/cast-*.* assets/character/r
   n=$(basename "${f%.*}")
   [ -f "$out/$n.jpg" ] && [ "$out/$n.jpg" -nt "$f" ] && continue
   lvl="0%,93%"; [ "$n" = dino-skeleton ] && lvl="0%,80%"
-  convert "$f" -resize '1080x1920>' -level "$lvl" -quality 90 "$out/$n.jpg"
+  if [[ "$n" == rich-* ]] && [ "$(identify -format %w "$f")" -lt 600 ]; then
+    # low-res sliced poses: Lanczos 4x + close + unsharp → crisper line art
+    convert "$f" -background white -flatten -filter Lanczos -resize 400% -morphology Close Disk:1 -unsharp 0x2+1.5+0.02 -level 4%,96% -quality 92 "$out/$n.jpg"
+  else
+    convert "$f" -resize '1080x1920>' -level "$lvl" -quality 90 "$out/$n.jpg"
+  fi
 done
 mkdir -p studio/public/fonts
 [ -f studio/public/fonts/PermanentMarker.ttf ] || curl -sSLo studio/public/fonts/PermanentMarker.ttf https://raw.githubusercontent.com/google/fonts/main/apache/permanentmarker/PermanentMarker-Regular.ttf
