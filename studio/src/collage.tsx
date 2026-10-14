@@ -1,12 +1,14 @@
 // Free, local replacement for the Gemini collage stills + Omni "assemble" clips (no API key).
 // Paper-cutout look in pure CSS/SVG: flat color field + grain, torn split, halftone cut-outs, cream keylines,
-// soft paper shadows, and stop-motion (12 fps) slide-and-snap assembly. Times are absolute seconds.
+// soft paper shadows, and fast (~0.25s) slide-and-snap assembly. Times are absolute seconds.
 import React from 'react';
-import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {C, FPS, FONT, pop, useT} from './engine';
+import {AbsoluteFill, Img, spring, staticFile} from 'remotion';
+import {C, FPS, FONT, useT} from './engine';
 
 export const CREAM = '#F6EEDC';
-const STEP = 12; // stop-motion cadence
+// Fast snap-in (about 0.25s) used by every collage entrance.
+const snap = (t: number, at: number) => spring({frame: Math.round((t - at) * FPS), fps: FPS, config: {damping: 16, stiffness: 420, mass: 0.6}});
+const STEP = 30; // full frame rate: snappy, no stop-motion lag
 const stepT = (t: number) => Math.floor(t * STEP) / STEP;
 const keyline = (k: number) => [[k, 0], [-k, 0], [0, k], [0, -k], [k * 0.7, k * 0.7], [-k * 0.7, k * 0.7], [k * 0.7, -k * 0.7], [-k * 0.7, -k * 0.7]]
   .map(([x, y]) => `drop-shadow(${x}px ${y}px 0 ${CREAM})`).join(' ') + ' drop-shadow(10px 14px 8px rgba(40,25,10,0.35))';
@@ -24,7 +26,7 @@ export const Field = ({color}: {color: string}) => <AbsoluteFill style={{backgro
 // Two color halves meeting at a torn paper edge; each half slides in at `at`.
 export const TornSplit = ({left, right, at = 0, split = 540}: {left: string; right: string; at?: number; split?: number}) => {
   const t = stepT(useT());
-  const p = pop(t, at, 12);
+  const p = snap(t, at);
   const pts = Array.from({length: 41}, (_, i) => `${split + (i % 2 ? 16 : -12) + ((i * 37) % 11) - 5},${i * 48}`).join(' L ');
   return <AbsoluteFill>
     <AbsoluteFill style={{transform: `translateX(${(1 - p) * -1080}px)`}}>
@@ -45,11 +47,11 @@ export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halfto
 }) => {
   const t = stepT(useT());
   if (t < at || (until !== undefined && t >= until)) return null;
-  const p = pop(t, at, 11);
-  const d = (1 - p) * 1400;
+  const p = snap(t, at);
+  const d = (1 - p) * 600;
   const [dx, dy] = from === 'left' ? [-d, 0] : from === 'right' ? [d, 0] : from === 'top' ? [0, -d] : from === 'bottom' ? [0, d] : [0, 0];
   const s = from === 'pop' ? p : 1;
-  const wob = Math.sin((t - at) * 9) * 1.2 * Math.exp(-(t - at) * 3); // little settle wiggle
+  const wob = Math.sin((t - at) * 14) * Math.exp(-(t - at) * 8); // little settle wiggle
   const url = src ? staticFile(`gen/${src}.png`) : '';
   return <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: `translate(${dx}px,${dy}px) scale(${s}) rotate(${rot + wob}deg)`}}>
     <div style={{position: 'absolute', transform: 'translate(-50%,-50%)', filter: keyline(7)}}>
