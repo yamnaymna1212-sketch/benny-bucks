@@ -4,6 +4,7 @@ import {CashVsCard, CASH_CARD_SECONDS} from './videos/cashVsCard';
 import {RichGetRicher, RICH_SECONDS} from './videos/richGetRicher';
 import {StyleTest, STYLE_SECONDS} from './videos/styleTest';
 import {House, HOUSE_SECONDS} from './videos/house';
+import {Bonus, BONUS_SECONDS} from './videos/bonus';
 export const Root = () => (
   <>
     <Composition id="gas-iran" component={GasIran} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(GAS_IRAN_SECONDS * 30)} />
@@ -11,5 +12,6 @@ export const Root = () => (
     <Composition id="rich-get-richer" component={RichGetRicher} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(RICH_SECONDS * 30)} />
     <Composition id="style-test" component={StyleTest} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(STYLE_SECONDS * 30)} />
     <Composition id="house" component={House} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(HOUSE_SECONDS * 30)} />
+    <Composition id="bonus" component={Bonus} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(BONUS_SECONDS * 30)} />
   </>
 );
