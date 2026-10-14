@@ -16,3 +16,4 @@ mkdir -p studio/public/fonts
 [ -f studio/public/fonts/ArchitectsDaughter.ttf ] || curl -sSLo studio/public/fonts/ArchitectsDaughter.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/architectsdaughter/ArchitectsDaughter-Regular.ttf"
 echo done
 tools/cutout.sh
+python3 tools/rig_auto.py

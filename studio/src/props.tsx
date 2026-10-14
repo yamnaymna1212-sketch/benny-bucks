@@ -295,3 +295,44 @@ export const Balloon = ({w = 260, size = 1, label = 'INFLATION'}: {w?: number; s
 export const FollowButton = ({w = 420}: {w?: number}) => (
   <Svg w={w} h={w * 0.32} vb="0 0 300 96"><rect x="5" y="5" width="290" height="86" rx="43" fill={C.red} /><T x={150} y={50} size={44} fill="#fff">FOLLOW</T></Svg>
 );
+
+export const BigHouse = ({w = 520}: {w?: number}) => (
+  <Svg w={w} h={w * 0.72} vb="0 0 360 260">
+    <path d="M10 250 L350 250" /><path d="M0 252 Q180 236 360 252 L360 260 L0 260 Z" fill="#8FC66B" strokeWidth={3} />
+    <path d="M30 110 L140 30 L250 110 Z" fill="#B5583F" /><rect x="45" y="110" width="190" height="140" fill="#F4E9D8" />
+    {[[60, 130], [175, 130], [60, 190], [175, 190]].map(([x, y], i) => <rect key={i} x={x} y={y} width="40" height="36" fill="#9CC9F0" strokeWidth={4} />)}
+    <rect x="120" y="185" width="40" height="65" fill="#8B5A2B" strokeWidth={4} />
+    <path d="M235 140 L300 110 L345 140 Z" fill="#B5583F" /><rect x="240" y="140" width="100" height="110" fill="#E8DCC8" />
+    <path d="M255 170 L325 170 M255 190 L325 190 M255 210 L325 210 M255 230 L325 230" strokeWidth={3} />
+  </Svg>
+);
+
+// Duplex: left (green) and right (blue) homes; labels optional.
+export const Duplex = ({w = 520, left, right, leak = 0}: {w?: number; left?: string; right?: string; leak?: number}) => (
+  <Svg w={w} h={w * 0.8} vb="0 0 300 240">
+    <path d="M10 95 L150 20 L290 95 Z" fill="#A0705A" /><rect x="25" y="95" width="125" height="135" fill="#8FC67E" /><rect x="150" y="95" width="125" height="135" fill="#8BB0D9" />
+    <rect x="70" y="160" width="34" height="70" fill="#5E9C52" strokeWidth={4} /><rect x="196" y="160" width="34" height="70" fill="#5B82B5" strokeWidth={4} />
+    <rect x="38" y="112" width="28" height="28" fill="#DCEBFA" strokeWidth={4} /><rect x="112" y="112" width="28" height="28" fill="#DCEBFA" strokeWidth={4} />
+    <rect x="163" y="112" width="28" height="28" fill="#DCEBFA" strokeWidth={4} /><rect x="237" y="112" width="28" height="28" fill="#DCEBFA" strokeWidth={4} />
+    {left && <T x={87} y={147} size={left.length > 6 ? 15 : 19} fill={C.ink}>{left}</T>}
+    {right && <T x={213} y={147} size={right.length > 6 ? 15 : 19} fill={C.ink}>{right}</T>}
+    {leak > 0 && [0, 1, 2].map((i) => <path key={i} d={`M${200 + i * 18} ${70 + ((leak * 60 + i * 20) % 50)} q4 8 0 12 q-4 -4 0 -12 Z`} fill="#4A90D9" strokeWidth={2} />)}
+  </Svg>
+);
+
+export const Furnace = ({w = 260, broken = 0}: {w?: number; broken?: number}) => (
+  <Svg w={w} h={w * 1.3} vb="0 0 200 260">
+    <rect x="30" y="20" width="140" height="230" rx="8" fill="#B8C0C8" /><rect x="55" y="140" width="90" height="80" rx="6" fill="#3B3B3B" />
+    {broken < 1 ? <path d="M100 210 Q80 185 95 165 Q100 180 108 172 Q122 190 100 210 Z" fill="#F28C28" /> : <path d="M60 150 L140 210 M140 150 L60 210" stroke={C.red} strokeWidth={10} />}
+    {broken > 0 && [0, 1, 2].map((i) => <circle key={i} cx={80 + i * 22} cy={10 - broken * 30 - i * 8} r={12 + i * 3} fill="#9a9a9a" opacity={0.7} strokeWidth={2} />)}
+    <path d="M60 50 L140 50 M60 70 L140 70 M60 90 L140 90" strokeWidth={4} />
+  </Svg>
+);
+
+export const Noodles = ({w = 260}: {w?: number}) => (
+  <Svg w={w} h={w * 0.8} vb="0 0 200 160">
+    <path d="M60 10 L95 95 M85 5 L105 95" strokeWidth={5} />
+    <path d="M20 80 L180 80 Q170 150 100 150 Q30 150 20 80 Z" fill="#E8E3D6" />
+    <path d="M40 80 Q60 60 80 80 Q100 60 120 80 Q140 60 160 80" fill="none" stroke="#E8C46A" strokeWidth={7} />
+  </Svg>
+);

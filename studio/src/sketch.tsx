@@ -64,8 +64,9 @@ export const SketchBox = ({x, y, w, h, at, until, fill = '#FFFFFF', children, dr
 };
 
 // Calendar card whose page flips each time the value changes. items: [time, value]
-export const FlipCal = ({x, y, w = 360, label, items, color = C.red}: {x: number; y: number; w?: number; label: string; items: [number, string][]; color?: string}) => {
+export const FlipCal = ({x, y, w = 360, label, items, color = C.red, until}: {x: number; y: number; w?: number; label: string; items: [number, string][]; color?: string; until?: number}) => {
   const t = useT();
+  if (until !== undefined && t >= until) return null;
   let i = -1;
   items.forEach((it, k) => { if (t >= it[0]) i = k; });
   if (i < 0) return null;
@@ -85,9 +86,9 @@ export const FlipCal = ({x, y, w = 360, label, items, color = C.red}: {x: number
 };
 
 // Rubber stamp that slams down.
-export const Stamp = ({x, y, at, text = 'APPROVED', color = C.red, size = 80, rot = -12}: {x: number; y: number; at: number; text?: string; color?: string; size?: number; rot?: number}) => {
+export const Stamp = ({x, y, at, until, text = 'APPROVED', color = C.red, size = 80, rot = -12}: {x: number; y: number; at: number; until?: number; text?: string; color?: string; size?: number; rot?: number}) => {
   const t = useT();
-  if (t < at) return null;
+  if (t < at || (until !== undefined && t >= until)) return null;
   const p = ramp(t, at, at + 0.14);
   return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(${rot}deg) scale(${2.2 - 1.2 * p})`, opacity: p,
     border: `8px double ${color}`, padding: '4px 22px', fontFamily: HAND, fontSize: size, color, letterSpacing: 4}}>{text}</div>;
@@ -106,6 +107,7 @@ export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84}: {lines: {t
     if (t >= line.start + (line.end - line.start) * (i / line.text.length)) cur = raw;
   }
   if (!cur) return null;
-  return <div style={{position: 'absolute', left: 540, top: y, transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: size, color: '#fff',
-    WebkitTextStroke: `${size * 0.16}px ${C.ink}`, paintOrder: 'stroke fill', textTransform: 'uppercase', whiteSpace: 'nowrap'}}>{cur}</div>;
+  const fs = Math.min(size, Math.floor(900 / (cur.length * 0.66)));
+  return <div style={{position: 'absolute', left: 540, top: y, transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: fs, color: '#fff',
+    WebkitTextStroke: `${fs * 0.16}px ${C.ink}`, paintOrder: 'stroke fill', textTransform: 'uppercase', whiteSpace: 'nowrap'}}>{cur}</div>;
 };

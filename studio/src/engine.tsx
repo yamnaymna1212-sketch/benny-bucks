@@ -88,21 +88,27 @@ export const RIG: Record<string, Rig> = {
   'benny-saving-cash': {aspect: 1.5, top: 0.075, eyes: [[0.405, 0.242, 0.04], [0.51, 0.242, 0.04]]},
   'benny-running-cash': {aspect: 1.79, top: 0.195, eyes: [[0.695, 0.30, 0.03], [0.78, 0.296, 0.03]]},
 };
-export const Benny = ({poses, w = 760, x = 540}: {poses: [number, string | null][]; w?: number; x?: number}) => {
+import AUTO from './data/rig-auto.json';
+type Auto = {aspect: number; top: number; bottom: number; l: number; r: number};
+// cw = target width of the drawn character (content); when set, the image is scaled/centered from its measured bbox.
+export const Benny = ({poses, w: w0 = 760, x = 540, cw, headY = Z.bennyHeadY}: {poses: [number, string | null][]; w?: number; x?: number; cw?: number; headY?: number}) => {
   const t = useT();
   let i = -1;
   poses.forEach((p, k) => { if (t >= p[0]) i = k; });
   if (i < 0 || !poses[i][1]) return null;
   const [at, name] = poses[i] as [number, string];
-  const rig = RIG[name] ?? {aspect: 1.79, top: 0.05};
+  const auto = (AUTO as Record<string, Auto>)[name];
+  const rig = RIG[name] ?? {aspect: auto?.aspect ?? 1.79, top: auto?.top ?? 0.05};
+  const w = cw && auto ? cw / Math.max(0.2, auto.r - auto.l) : w0;
   const h = w * rig.aspect;
-  const top = Z.bennyHeadY - rig.top * h;
+  const top = headY - (auto && cw ? auto.top : rig.top) * h;
+  const left = cw && auto ? x - ((auto.l + auto.r) / 2) * w : x - w / 2;
   const p = pop(t, at, 10);
   const close = i % 3 === 1 ? 1.16 : 1;
   const s = (0.9 + 0.1 * p) * close + Math.sin(t * 2.1) * 0.006;
   const tilt = Math.sin(t * 1.3 + i) * 1.6;
   const blink = ((t + i * 0.7) % 3.4) < 0.12;
-  return <div style={{position: 'absolute', left: x - w / 2, top, width: w, height: h, transformOrigin: `50% ${rig.top * 100}%`,
+  return <div style={{position: 'absolute', left, top, width: w, height: h, transformOrigin: `50% ${rig.top * 100}%`,
     transform: `translateY(${Math.sin(t * 3.2) * 5}px) scale(${s}) rotate(${tilt}deg)`}}>
     <RImg src={staticFile(`gen/${name}.png`)} style={{width: w, display: 'block'}} />
     {blink && rig.eyes && <svg width={w} height={h} style={{position: 'absolute', left: 0, top: 0}}>
