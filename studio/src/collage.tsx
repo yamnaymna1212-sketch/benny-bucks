@@ -7,7 +7,7 @@ import {C, FPS, FONT, useT} from './engine';
 
 export const CREAM = '#F6EEDC';
 // Fast snap-in (about 0.25s) used by every collage entrance.
-const snap = (t: number, at: number) => spring({frame: Math.round((t - at) * FPS), fps: FPS, config: {damping: 16, stiffness: 420, mass: 0.6}});
+const snap = (t: number, at: number) => spring({frame: Math.round((t - at) * FPS), fps: FPS, config: {damping: 18, stiffness: 650, mass: 0.5}});
 const STEP = 30; // full frame rate: snappy, no stop-motion lag
 const stepT = (t: number) => Math.floor(t * STEP) / STEP;
 const keyline = (k: number) => [[k, 0], [-k, 0], [0, k], [0, -k]]

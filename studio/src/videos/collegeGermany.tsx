@@ -102,23 +102,24 @@ const st = (k: number) => TIM[k - 1].start;
 export const COLLEGE_SECONDS = +(TIM[TIM.length - 1].end + 0.9).toFixed(2);
 type K = [number, number, number, number];
 // zoom toward (fx,fy) at t, hold, then return to the full frame at back
-const zt = (t: number, z: number, fx: number, fy: number, back?: number): K[] => [[t, 1, 540, 960], [t + 0.35, z, fx, fy], ...(back ? [[back, z, fx, fy], [back + 0.35, 1, 540, 960]] as K[] : [])];
-const push = (a: number, b: number, z: number, fx: number, fy: number): K[] => [[a, 1, 540, 960], [b, z, fx, fy]];
+const zt = (t: number, z: number, fx: number, fy: number, back?: number): K[] => [[t, 1, 540, 960], [t + 0.2, z, fx, fy], ...(back ? [[back, z, fx, fy], [back + 0.2, 1, 540, 960]] as K[] : [])];
+// quick punch-in (0.25s) then hold; b is kept as the hold end
+const push = (a: number, b: number, z: number, fx: number, fy: number): K[] => [[a, 1, 540, 960], [a + 0.25, z, fx, fy], [Math.max(b, a + 0.3), z, fx, fy]];
 const CAMS: K[][] = [
-  [[0, 1, 540, 960], ...zt(W(1, 'U.S.A.'), 1.45, 290, 700), [W(1, 'but') , 1.45, 290, 700], [W(1, 'Germany'), 1.45, 800, 700], [W(1, 'zero') + 0.3, 1.45, 800, 700], [W(1, 'zero') + 0.7, 1, 540, 960]],
+  [[0, 1, 540, 960], ...zt(W(1, 'U.S.A.'), 1.45, 290, 700), [W(1, 'but') , 1.45, 290, 700], [W(1, 'Germany'), 1.45, 800, 700], [W(1, 'zero') + 0.3, 1.45, 800, 700], [W(1, 'zero') + 0.5, 1, 540, 960]],
   push(st(2), TIM[1].end, 1.18, 420, 900),
   [...zt(st(3) + 0.3, 1.3, 540, 380, W(3, 'Before rent')), [TIM[2].end, 1, 540, 960]],
-  push(st(4), W(4, 'Yes'), 1.2, 540, 600).concat([[W(4, 'Yes') + 0.4, 1, 540, 960]]),
-  [[st(5), 1.25, 360, 450], [W(5, 'bus'), 1.25, 360, 450], [W(5, 'bus') + 0.35, 1.25, 620, 800]],
-  [[st(6), 1.25, 540, 760], [TIM[5].end, 1, 540, 960]],
+  push(st(4), W(4, 'Yes'), 1.2, 540, 600).concat([[W(4, 'Yes') + 0.2, 1, 540, 960]]),
+  [[st(5), 1.25, 360, 450], [W(5, 'bus'), 1.25, 360, 450], [W(5, 'bus') + 0.2, 1.25, 620, 800]],
+  [[st(6), 1.25, 540, 760], [st(6) + 0.25, 1, 540, 960]],
   push(st(7) + 0.3, TIM[6].end, 1.22, 540, 560),
   [...zt(st(8) + 0.3, 1.3, 340, 560, W(8, 'They')), [W(8, 'A.P.'), 1.3, 800, 660], [TIM[7].end, 1.3, 800, 660]],
   push(st(9) + 0.3, W(9, 'blocked'), 1.3, 560, 680),
   [[st(10), 1.2, 400, 420], [TIM[9].end, 1.2, 640, 560]],
   [[st(11), 1, 540, 960], ...zt(W(11, 'One hundred'), 1.4, 290, 900), [W(11, 'versus'), 1.4, 290, 900], [W(11, 'zero'), 1.4, 800, 900], [TIM[10].end, 1.4, 800, 900]],
   push(st(12), W(12, 'thirty-nine'), 1.25, 540, 760),
-  [[st(13), 1.25, 540, 640], [TIM[12].end, 1, 540, 960]],
-  push(st(14), TIM[13].end + 0.8, 1.15, 540, 1000),
+  [[st(13), 1.25, 540, 640], [st(13) + 0.25, 1, 540, 960]],
+  push(st(14), TIM[13].end, 1.15, 540, 1000),
 ];
 const SFX: [number, string][] = [
   [W(1, 'U.S.A.'), 'whoosh'], [W(1, 'forty-five'), 'cha-ching'], [W(1, 'Germany'), 'whoosh'], [W(1, 'zero'), 'impact'],
