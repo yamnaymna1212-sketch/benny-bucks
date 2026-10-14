@@ -20,3 +20,10 @@ Avoid: real politicians' faces as-is (agentstick does this), long in-image text.
 - agentstick screenshots (4658–4662): see agentstick-notes.md.
 - Ideas worth adopting: torn-paper reveal transition, bar chart built from bills, loading-bar meme, character peeking in from frame edge, solid colored poster background for key reveals.
 - Style warning: 4701/4702/4704/4707/9127 are realistic/engraved, 4708/4709 flat vector, 4718 watercolor — mixing them with crayon Benny breaks consistency; redraw in crayon style or use as motion ideas only.
+
+## virtuosonetwork "Poor vs Rich" (5 screenshots, Oct 2026)
+- Look: cream graph-paper notebook background; watercolor/pencil characters; flat muted fills (red, green, blue, tan) with pencil hatching.
+- Motion vocabulary: handwritten text writes on with a pencil following the stroke; highlighter swipes behind key words (red POOR, green RICH); underline draw-on; "blueprint" sketch boxes whose construction lines overshoot corners, then the fill wipes in; calendar card that flips (SAVING 2023 → A YEAR LATER AUG); loan letter where the pencil writes the amount, then APPROVED stamp slams; numbered step headers (④ MOVE OUT...); stacked bar chart drawn and filled segment by segment; characters walk across frame.
+- Captions: one word, white with thick black outline, small, centered low-middle.
+- Structure: title card "How Poor vs Rich people buy a house" → split POOR | RICH → numbered steps → numbers on charts.
+- Take for Benny: write-on handwriting + pencil, highlighter, sketch boxes, calendar flip, stamp, bar fills, outlined word captions. Keep white background (only a faint grid), Benny + Rich Rick, our crayon style.
