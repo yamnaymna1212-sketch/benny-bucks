@@ -43,8 +43,11 @@ export const TornSplit = ({left, right, at = 0, split = 540}: {left: string; rig
 
 type From = 'left' | 'right' | 'top' | 'bottom' | 'pop';
 // One paper cut-out. `src` = studio/public/gen/<src>.png cutout (Benny stays in color); `halftone` turns it into B&W dots.
-export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halftone, children}: {
-  x: number; y: number; w: number; at: number; until?: number; from?: From; rot?: number; src?: string; halftone?: boolean; children?: React.ReactNode;
+// Every landed piece keeps a gentle idle float (never static), but only after HOOK_STILL so the hook's first second is frozen.
+export const HOOK_STILL = 1.2;
+// hits: times (s) when the piece punches (scale kick) — sync these to the spoken word it illustrates.
+export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halftone, hits = [], children}: {
+  x: number; y: number; w: number; at: number; until?: number; from?: From; rot?: number; src?: string; halftone?: boolean; hits?: number[]; children?: React.ReactNode;
 }) => {
   const t = stepT(useT());
   if (t < at || (until !== undefined && t >= until)) return null;
@@ -53,8 +56,12 @@ export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halfto
   const [dx, dy] = from === 'left' ? [-d, 0] : from === 'right' ? [d, 0] : from === 'top' ? [0, -d] : from === 'bottom' ? [0, d] : [0, 0];
   const s = from === 'pop' ? p : 1;
   const wob = Math.sin((t - at) * 14) * Math.exp(-(t - at) * 8); // little settle wiggle
+  const live = Math.min(1, Math.max(0, (t - HOOK_STILL) / 0.5), Math.max(0, (t - at - 0.3) / 0.5));
+  const fy = Math.sin(t * 2.3 + x * 0.013) * 5 * live, fr = Math.sin(t * 1.7 + y * 0.011) * 0.8 * live;
+  let k = 1;
+  for (const h of hits) { const d = t - h; if (d >= 0 && d < 0.5) k += 0.16 * Math.exp(-d * 10) * Math.cos(d * 14); }
   const url = src ? staticFile(`gen/${src}.png`) : '';
-  return <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: `translate(${dx}px,${dy}px) scale(${s}) rotate(${rot + wob}deg)`}}>
+  return <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: `translate(${dx}px,${dy + fy}px) scale(${s * k}) rotate(${rot + wob + fr}deg)`}}>
     <div style={{position: 'absolute', transform: 'translate(-50%,-50%)', filter: keyline(7)}}>
       {src ? <div style={{position: 'relative', width: w}}>
         <Img src={url} style={{width: w, display: 'block', filter: halftone ? 'grayscale(1) contrast(1.35)' : 'saturate(1.1)'}} />
@@ -66,11 +73,15 @@ export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halfto
   </div>;
 };
 
-// Colored cardstock label for prices/numbers (added at assembly, never baked into stills).
-export const Card = ({text, color = C.gold, ink = C.ink, size = 120, ...m}: {text: string; color?: string; ink?: string; size?: number; x: number; y: number; at: number; until?: number; from?: From; rot?: number}) => (
-  <Piece w={0} {...m}><div style={{display: 'inline-block', transform: 'translateX(-50%)', background: color, padding: '6px 34px', fontFamily: FONT, fontWeight: 900,
-    fontSize: size, color: ink, whiteSpace: 'nowrap', letterSpacing: -2, boxShadow: 'inset 0 0 0 4px rgba(0,0,0,0.08)'}}>{text}</div></Piece>
-);
+// Colored cardstock label for prices/numbers. count: the number rolls up from 0 when it lands (prices feel alive).
+const fmtLike = (src: string, v: number) => src.replace(/[\d,.]+/, Math.round(v).toLocaleString('en-US'));
+export const Card = ({text, color = C.gold, ink = C.ink, size = 120, count, ...m}: {text: string; color?: string; ink?: string; size?: number; count?: boolean; x: number; y: number; at: number; until?: number; from?: From; rot?: number; hits?: number[]}) => {
+  const t = useT();
+  const n = parseFloat((text.match(/[\d,.]+/)?.[0] ?? '').replace(/,/g, ''));
+  const shown = count && n > 0 ? fmtLike(text, n * Math.min(1, Math.max(0, (t - m.at) / 0.45))) : text;
+  return <Piece w={0} {...m}><div style={{display: 'inline-block', transform: 'translateX(-50%)', background: color, padding: '6px 34px', fontFamily: FONT, fontWeight: 900,
+    fontSize: size, color: ink, whiteSpace: 'nowrap', letterSpacing: -2, boxShadow: 'inset 0 0 0 4px rgba(0,0,0,0.08)', fontVariantNumeric: 'tabular-nums'}}>{shown}</div></Piece>;
+};
 
 // Simple cardstock flags.
 export const FlagUS = ({w = 220}: {w?: number}) => (
