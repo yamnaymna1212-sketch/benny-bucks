@@ -22,6 +22,7 @@ per-video props in `studio/src/videos/<slug>Props.tsx`. Reference build: `studio
 7. Landed pieces idle-float automatically (nothing is ever frozen after the hook).
 
 ## Sound (no music; voice louder than SFX)
+Automatic: every object entrance = soft paper "flip", every price Card = "pop" (Piece `sound` prop; Benny silent; nothing inside the still hook).
 cha-ching on prices · whoosh on every camera move · impact on the shock (auto camera shake) · ding on the key number · record-scratch on "catch/but" · pop on Benny reactions.
 
 ## Steps

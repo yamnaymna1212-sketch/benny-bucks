@@ -2,8 +2,8 @@
 // Paper-cutout look in pure CSS/SVG: flat color field + grain, torn split, halftone cut-outs, cream keylines,
 // soft paper shadows, and fast (~0.25s) slide-and-snap assembly. Times are absolute seconds.
 import React from 'react';
-import {AbsoluteFill, Img, spring, staticFile} from 'remotion';
-import {C, FPS, FONT, useT} from './engine';
+import {AbsoluteFill, Audio, Img, Sequence, spring, staticFile, useCurrentFrame} from 'remotion';
+import {C, FPS, FONT, SFX_GAIN, useT} from './engine';
 
 export const CREAM = '#F6EEDC';
 // Fast snap-in (about 0.25s) used by every collage entrance.
@@ -46,9 +46,12 @@ type From = 'left' | 'right' | 'top' | 'bottom' | 'pop';
 // Every landed piece keeps a gentle idle float (never static), but only after HOOK_STILL so the hook's first second is frozen.
 export const HOOK_STILL = 1.2;
 // hits: times (s) when the piece punches (scale kick) — sync these to the spoken word it illustrates.
-export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halftone, hits = [], children}: {
-  x: number; y: number; w: number; at: number; until?: number; from?: From; rot?: number; src?: string; halftone?: boolean; hits?: number[]; children?: React.ReactNode;
+// Every entrance makes a soft tactile sound (paper 'flip' for objects, 'pop' for price cards; Benny silent) so the edit feels alive.
+export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halftone, hits = [], sound, children}: {
+  x: number; y: number; w: number; at: number; until?: number; from?: From; rot?: number; src?: string; halftone?: boolean; hits?: number[]; sound?: string | false; children?: React.ReactNode;
 }) => {
+  const frame = useCurrentFrame();
+  const base = useT() - frame / FPS; // scene start (Sequences inside a Scene are relative to it)
   const t = stepT(useT());
   if (t < at || (until !== undefined && t >= until)) return null;
   const p = snap(t, at);
@@ -61,7 +64,9 @@ export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halfto
   let k = 1;
   for (const h of hits) { const d = t - h; if (d >= 0 && d < 0.5) k += 0.16 * Math.exp(-d * 10) * Math.cos(d * 14); }
   const url = src ? staticFile(`gen/${src}.png`) : '';
-  return <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: `translate(${dx}px,${dy + fy}px) scale(${s * k}) rotate(${rot + wob + fr}deg)`}}>
+  const snd = sound ?? (src?.startsWith('benny') ? false : 'flip');
+  const fx = snd && at > HOOK_STILL ? <Sequence from={Math.round((at - base) * FPS)} layout="none"><Audio src={staticFile(`sfx/${snd}.wav`)} volume={(snd === 'pop' ? 0.3 : 0.2) * SFX_GAIN} /></Sequence> : null;
+  return <>{fx}<div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, transform: `translate(${dx}px,${dy + fy}px) scale(${s * k}) rotate(${rot + wob + fr}deg)`}}>
     <div style={{position: 'absolute', transform: 'translate(-50%,-50%)', filter: keyline(7)}}>
       {src ? <div style={{position: 'relative', width: w}}>
         <Img src={url} style={{width: w, display: 'block', filter: halftone ? 'grayscale(1) contrast(1.35)' : 'saturate(1.1)'}} />
@@ -70,7 +75,7 @@ export const Piece = ({x, y, w, at, until, from = 'bottom', rot = 0, src, halfto
           WebkitMaskImage: `url(${url})`, WebkitMaskSize: '100% 100%', maskImage: `url(${url})`, maskSize: '100% 100%'}} />}
       </div> : <div style={{width: w}}>{children}</div>}
     </div>
-  </div>;
+  </div></>;
 };
 
 // Colored cardstock label for prices/numbers. count: the number rolls up from 0 when it lands (prices feel alive).
@@ -79,7 +84,7 @@ export const Card = ({text, color = C.gold, ink = C.ink, size = 120, count, ...m
   const t = useT();
   const n = parseFloat((text.match(/[\d,.]+/)?.[0] ?? '').replace(/,/g, ''));
   const shown = count && n > 0 ? fmtLike(text, n * Math.min(1, Math.max(0, (t - m.at) / 0.45))) : text;
-  return <Piece w={0} {...m}><div style={{display: 'inline-block', transform: 'translateX(-50%)', background: color, padding: '6px 34px', fontFamily: FONT, fontWeight: 900,
+  return <Piece w={0} sound="pop" {...m}><div style={{display: 'inline-block', transform: 'translateX(-50%)', background: color, padding: '6px 34px', fontFamily: FONT, fontWeight: 900,
     fontSize: size, color: ink, whiteSpace: 'nowrap', letterSpacing: -2, boxShadow: 'inset 0 0 0 4px rgba(0,0,0,0.08)', fontVariantNumeric: 'tabular-nums'}}>{shown}</div></Piece>;
 };
 
