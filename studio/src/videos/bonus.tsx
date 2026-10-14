@@ -23,7 +23,7 @@ export const Bonus = () => (
     <Fonts /><HandFont />
     <Audio src={staticFile('voice-bonus.mp3')} />
     <Scene from={0} to={BONUS_SECONDS} overlay>
-      <ShotCam whips={WHIPS} bg={<BgTimeline keys={[[0, 'caramel'], [S2, 'dark'], [S3, 'room'], [S3b, 'dark'], [S4, 'light'], [S5, 'dark'], [L(14).start, 'light'], [S6, 'street'], [S7, 'caramel']]} />} shots={[
+      <ShotCam whips={WHIPS} bg={<BgTimeline keys={[[0, 'caramel'], [S2, 'light'], [S3, 'room'], [S3b, 'caramel'], [S4, 'light'], [S5, 'caramel'], [L(14).start, 'light'], [S6, 'street'], [S7, 'caramel']]} />} shots={[
         [0, 1.35, 540, 700], [1.1, 1, 540, 960], [L(2).start, 1, 540, 960], [L(2).start + 0.5, 1.12, 360, 880], [L(3).start, 1.12, 360, 880], [L(3).start + 0.5, 1.12, 740, 880],
         [S2 - 0.01, 1.12, 740, 880], [S2, 1, 540, 960], [S3 - 0.01, 1.06, 540, 940], [S3, 1, 540, 960], [L(6).start, 1.0, 540, 960], [L(6).start + 0.3, 1.1, 600, 800],
         [S3b - 0.01, 1.1, 600, 800], [S3b, 1, 540, 960], [L(8).start, 1.0, 540, 960], [L(8).start + 0.4, 1.08, 560, 780], [S4 - 0.01, 1.08, 560, 780],
@@ -43,10 +43,10 @@ export const Bonus = () => (
           <At x={900} y={420} at={w(3, 'fund')} until={S2}><Arrow w={110} color={C.green} /></At>
         </>)}
 
-        {/* ── S2 dark: 30 years later ── */}
+        {/* ── S2 light: 30 years later ── */}
         {within(S2, S3, <>
           <BigNum x={540} y={560} at={S2 + 0.05} from={0} to={30} dur={0.5} fmt={(n) => `${Math.round(n)} YEARS`} size={140} color="#F2C14E" glow="#F2C14E" />
-          <Txt x={540} y={720} size={56} color="#F6E7CF" at={w(4, 'gap')}>THE GAP?</Txt>
+          <Txt x={540} y={720} size={56} color={C.ink} at={w(4, 'gap')}>THE GAP?</Txt>
         </>)}
 
         {/* ── S3 room: Benny's phone ── */}
@@ -56,13 +56,13 @@ export const Bonus = () => (
           <At x={720} y={640} at={w(6, 'bill')} enter="drop"><Receipt w={380} rows={[['New phone', '$1,000'], ['APR', '22%', C.red]]} /></At>
         </>)}
 
-        {/* ── S3b dark: 22% → $50/mo → 25 months → $1,260 ── */}
+        {/* ── S3b caramel: 22% → $50/mo → 25 months → $1,260 ── */}
         {within(S3b, S4, <>
           <BigNum x={540} y={420} at={w(7, 'Twenty-two')} from={0} to={22} dur={0.4} fmt={(n) => Math.round(n) + '%'} size={200} color={C.red} glow="#FF6B5B" until={L(8).start} />
           <At x={540} y={640} at={w(7, 'fifty')} enter="drop" until={L(8).start}><Tag text="$50 / MONTH" color={C.gold} w={340} /></At>
           <FlipCal x={300} y={560} w={260} label="MONTH" items={[[L(8).start, '1'], [L(8).start + 0.25, '6'], [L(8).start + 0.5, '12'], [L(8).start + 0.75, '18'], [L(8).start + 1.0, '25']]} />
           <BigNum x={720} y={520} at={w(8, 'twelve')} from={1000} to={1260} dur={0.8} fmt={usd} size={150} color={C.red} glow="#FF6B5B" />
-          <Txt x={720} y={650} size={40} color="#F6E7CF" at={w(8, 'one-thousand')}>for a $1,000 phone</Txt>
+          <Txt x={720} y={650} size={40} color={C.ink} at={w(8, 'one-thousand')}>for a $1,000 phone</Txt>
         </>)}
 
         {/* ── S4 light: Rick's boring index fund grows ── */}
@@ -78,11 +78,11 @@ export const Bonus = () => (
           <Txt x={540} y={850} size={30} at={w(11, 'thirty')} until={L(12).start}>historical average, not guaranteed</Txt>
         </>)}
 
-        {/* ── S5 dark: the catch, crash; then light: emergency fund ── */}
+        {/* ── S5 caramel: the catch, crash; then light: emergency fund ── */}
         {within(S5, L(14).start, <>
           <CrashLine x={540} y={560} at={S5 + 0.2} />
           <BigNum x={760} y={340} at={w(13, 'thirty')} from={0} to={-30} dur={0.5} fmt={(n) => Math.round(n) + '%'} size={130} color={C.red} glow="#FF6B5B" />
-          <Txt x={540} y={850} size={50} color="#F6E7CF" at={w(13, 'panic')}>DON'T PANIC</Txt>
+          <Txt x={540} y={850} size={50} color={C.ink} at={w(13, 'panic')}>DON'T PANIC</Txt>
         </>)}
         {within(L(14).start, S6, <>
           <SketchBox x={540} y={560} w={460} h={360} at={L(14).start + 0.1} fill="#FFF8E8"><Wallet w={260} label="SAFE" /></SketchBox>

@@ -64,18 +64,18 @@ export const ShotCam = ({shots, whips = [], bg, children}: {shots: [number, numb
   const f = blur > 0.5 ? `blur(${blur}px)` : undefined;
   // background: oversized parallax layer (moves ~30% of the camera) so camera moves never reveal edges
   const bz = 1.12 + (z - 1) * 0.3, bx = (540 - fx) * 0.3 + dx * 0.6, by = (960 - fy) * 0.3;
-  return <AbsoluteFill style={{overflow: 'hidden', background: '#1C1712'}}>
+  return <AbsoluteFill style={{overflow: 'hidden', background: '#E9CFA6'}}>
     {bg && <AbsoluteFill style={{transform: `translate(${bx}px,${by}px) scale(${bz})`, transformOrigin: '50% 50%', filter: f}}>{bg}</AbsoluteFill>}
     <AbsoluteFill style={{transform: `translate(${540 - fx * z + dx}px,${960 - fy * z}px) scale(${z})`, transformOrigin: '0 0', filter: f}}>{children}</AbsoluteFill>
   </AbsoluteFill>;
 };
 
 // ---------- Backgrounds ----------
-export type BgKind = 'caramel' | 'dark' | 'light' | 'room' | 'street';
+// No dark/black backgrounds (project rule).
+export type BgKind = 'caramel' | 'light' | 'room' | 'street';
 const Grain = ({o = 0.06}: {o?: number}) => <AbsoluteFill style={{opacity: o, backgroundImage: 'repeating-radial-gradient(circle at 30% 20%, #000 0 1px, transparent 1px 4px)'}} />;
 export const BgPreset = ({kind}: {kind: BgKind}) => {
   if (kind === 'caramel') return <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 35%, #F6E7CF 0%, #E9CFA6 60%, #D9B585 100%)'}}><Grain /></AbsoluteFill>;
-  if (kind === 'dark') return <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 42%, #3A3129 0%, #1C1712 55%, #0E0B08 100%)'}}><Grain o={0.08} /></AbsoluteFill>;
   if (kind === 'light') return <AbsoluteFill style={{background: '#FBF8F3', backgroundImage: 'linear-gradient(#EEE7DC 2px, transparent 2px), linear-gradient(90deg, #EEE7DC 2px, transparent 2px)', backgroundSize: '60px 60px'}} />;
   if (kind === 'room') return <AbsoluteFill>
     <AbsoluteFill style={{background: 'linear-gradient(#F1DEC0 0 70%, #C99B6B 70% 100%)'}} />
