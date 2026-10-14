@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# One-time per session: shared venv for the gbro-collage-broll skill (Gemini Omni). Free; needs network to PyPI.
+# Collage pipeline is now fully local and free (studio/src/collage.tsx + Remotion). No Gemini, no API key.
+# Checks the tools it needs and prepares cutouts once per session.
 set -e
-[ -x ~/hyperframes-projects/.omni-venv/bin/python ] || {
-  python3 -m venv ~/hyperframes-projects/.omni-venv
-  ~/hyperframes-projects/.omni-venv/bin/python -m pip install -q --upgrade "google-genai>=2.10.0" "httpx[socks]"
-}
-[ -n "$GEMINI_API_KEY" ] && echo "GEMINI_API_KEY: set" || echo "GEMINI_API_KEY: MISSING (add it in the environment settings, then start a new session)"
+for c in node ffmpeg convert; do command -v $c >/dev/null && echo "$c: ok" || echo "$c: MISSING"; done
+[ -f studio/public/gen/benny-front.png ] || bash tools/prep_assets.sh
+echo "collage: ready (render stills: cd studio && npx remotion still src/index.ts <comp> out.png --frame=N)"

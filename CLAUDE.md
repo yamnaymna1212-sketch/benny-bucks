@@ -6,7 +6,7 @@
 
 ## Workflow (always in this order)
 1. Script and hook: write 3 hook options, pick the strongest one and tell me honestly why, then write the rest of the script following the content rules below.
-2. Images: use the gbro-collage-broll skill to generate the visuals for each line in a paper-cutout collage style. Follow its three approval gates and don't spend tokens before I approve. Ask me for the Gemini API key and never write it into any file that could be pushed to GitHub.
+2. Images: use the gbro-collage-broll skill's paper-cutout collage style and its three approval gates for each line, and don't spend tokens before I approve. Build the stills and the assemble animation locally for free with `studio/src/collage.tsx` (Benny/Rick cutouts + SVG props, rendered by Remotion): no Gemini, no Grok, no API keys. Never write any key into a file that could be pushed to GitHub.
 3. Assembly and motion: use the hyperframes skill to assemble the clips into a 9:16 video: split screen, camera zoom synced to the narration, captions, voice, sound effects, then render.
 4. One Take: use the onetake skill only when I ask for a "one-take version". In that case, the camera travels from one side to the other without cuts instead of cutting between them.
 5. Before any final render: show me the hook (first 3 seconds) and get my approval.
