@@ -40,3 +40,14 @@ cast-advisor-02.png | confident | front | suit, glasses, "ADVISOR" folder | clea
 cast-fed-guy.png | smug | front | navy suit, purple tie | semi-realistic; satire character only, no real quotes
 ../props/bank.jpg | — | front | — | bank building, 236px (low-res)
 ../props/government-office.jpg | — | front | — | "GOVERNMENT OFFICE" building
+
+# Rich character ("Rich Rick" — name proposed, confirm with user)
+Canonical: blond spiky crayon hair, black sunglasses, gold tooth, black-and-gold tracksuit, gold $ chain, gold watch, black/white sneakers. Never change.
+**Core references (hi-res):** rich-front.jpg (thumbs-up), rich-dropping-cash.jpg, rich-airplane.jpg
+Pose library (sliced from references/rich-sheet-1/2.jpg; **low-res ~150–420px**, use small in the top stage, not as the big bottom narrator):
+- Happy/confident: thumbs-up, thumbs-up-02, arms-crossed, crown, waving, excited-wave, jump, jump-money-rain, money-rain, idea-finger, lightbulb
+- Money: cash-fan, cash-fan-02, counting-cash, sitting-cash-pile, money-bag, money-bag-hug, throwing-money, profit-paper
+- Investing/real estate: laptop, laptop-chart-dream, thinking-chart, pointing-chart, buy-sell, phone-app, phone-dollar, phone-house-up, holding-house, house
+- Problems: sad-loss, phone-loss, crying, sad-sitting, shocked, angry, confused, stressed-paperwork, tax-paper-worried, tax-stressed, night-laptop
+- Lifestyle: chair-relax, beach-dream, coffee, coffee-02, burger, dumbbells, headphones, sleeping, crouch, shrug, pointing, running-briefcase, checklist
+Note: art includes brand-like logos (LV, Nike, Apple); Starbucks-cup pose was excluded.

@@ -9,7 +9,7 @@ Entertaining American TikTok/Shorts stories (18–30, ~60s, length follows the s
 - **Benny** (never a penguin): canonical look per `assets/character/` core references (crayon-texture style of benny-front/sad/surprised). Never redesign, change outfit, or invent features. Do not use `benny-happy-offmodel`.
 - Benny must feel alive: expressions, head/body movement, gestures, reactions matched to events (losing money, bad news, opportunity, relief). Don't reuse the same expression/pose back-to-back without reason.
 - New poses/expressions: generate in the same style, white bg, full body, same scale; add to `INDEX.md`.
-- **Rich character** (name TBD; assets pending in `assets/character/rich-*`): Benny's wealthy counterpart — blond hair, black-and-gold tracksuit, sunglasses, gold dollar-sign chain; never change these. Represents power, privilege, assets, a different money playbook.
+- **Rich character** ("Rich Rick", proposed name; assets `assets/character/rich-*`, see INDEX.md): Benny's wealthy counterpart — blond hair, black-and-gold tracksuit, sunglasses, gold dollar-sign chain; never change these. Represents power, privilege, assets, a different money playbook.
 - Benny vs Rich: contrast decisions, reactions, lifestyles side by side (taxes, debt, real estate, investing, spending, opportunities). Neither is automatically right: show each one's advantages, mistakes, and consequences. Keep it to these two characters where possible; no clutter, short on-screen text.
 - Supporting cast (banker, advisors, Fed Guy, oil barrel, police) only when the story needs them; keep their own designs.
 - **Fed Guy**: satirical cartoon character only; never attribute real quotes or statements.

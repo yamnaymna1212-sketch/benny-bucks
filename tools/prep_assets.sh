@@ -3,7 +3,7 @@
 set -e
 cd "$(dirname "$0")/.."
 out=studio/public/gen; mkdir -p "$out"
-for f in assets/character/benny-*.* assets/character/cast-*.* assets/props/*.jpg assets/props/*.png; do
+for f in assets/character/benny-*.* assets/character/cast-*.* assets/character/rich-*.* assets/props/*.jpg assets/props/*.png; do
   [ -f "$f" ] || continue
   n=$(basename "${f%.*}")
   [ -f "$out/$n.jpg" ] && [ "$out/$n.jpg" -nt "$f" ] && continue
