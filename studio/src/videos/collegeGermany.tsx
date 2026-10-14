@@ -17,10 +17,11 @@ type L = (p: {at: number}) => JSX.Element;
 
 const lines: L[] = [
   ({at}) => <><TornSplit left={US} right={DE} at={at} />
-    <Piece x={270} y={250} w={190} at={at + 0.07} from="top" rot={-6}><FlagUS w={190} /></Piece><Piece x={810} y={250} w={190} at={at + 0.09} from="top" rot={5}><FlagDE w={190} /></Piece>
+    <Piece x={270} y={220} w={190} at={at + 0.07} from="top" rot={-6}><FlagUS w={190} /></Piece><Piece x={810} y={220} w={190} at={at + 0.09} from="top" rot={5}><FlagDE w={190} /></Piece>
+    <Card text="PRIVATE U.S. COLLEGE" x={270} y={330} at={at + 0.1} from="top" rot={-2} color={C.ink} ink={CARD} size={30} /><Card text="MOST GERMAN PUBLIC UNIS" x={800} y={330} at={at + 0.1} from="top" rot={2} color={C.ink} ink={CARD} size={26} />
     <Piece x={270} y={560} w={440} at={at + 0.12} from="left" rot={-2}><Ivy w={440} /></Piece><Piece x={810} y={580} w={380} at={at + 0.14} from="right" rot={2}><PlainUni w={380} /></Piece>
     <Piece x={250} y={880} w={330} at={at + 0.17} from="left" rot={-4}><Mountain w={330} /></Piece><Piece x={810} y={900} w={260} at={at + 0.19} from="right"><Plate w={260} /></Piece>
-    <Card text="$45,000" x={270} y={1110} at={at + 0.24} from="pop" rot={-4} color={CARD} ink={INK_US} size={92} /><Card text="$0" x={810} y={1110} at={at + 0.28} from="pop" rot={4} color={CARD} ink={INK_DE} size={140} />
+    <Card text="$45,000/yr" x={270} y={1110} at={at + 0.24} from="pop" rot={-4} color={CARD} ink={INK_US} size={76} /><Card text="$0 tuition" x={810} y={1110} at={at + 0.28} from="pop" rot={4} color={CARD} ink={INK_DE} size={76} />
     <Benny pose="shocked" at={at + 0.21} /></>,
   ({at}) => <><Field color="#F3E3D3" />
     <Piece x={540} y={450} w={560} at={at} from="top"><Ivy w={560} /></Piece>
@@ -106,7 +107,7 @@ const zt = (t: number, z: number, fx: number, fy: number, back?: number): K[] =>
 // quick punch-in (0.25s) then hold; b is kept as the hold end
 const push = (a: number, b: number, z: number, fx: number, fy: number): K[] => [[a, 1, 540, 960], [a + 0.25, z, fx, fy], [Math.max(b, a + 0.3), z, fx, fy]];
 const CAMS: K[][] = [
-  [[0, 1, 540, 960], ...zt(W(1, 'U.S.A.'), 1.45, 290, 700), [W(1, 'but') , 1.45, 290, 700], [W(1, 'Germany'), 1.45, 800, 700], [W(1, 'zero') + 0.3, 1.45, 800, 700], [W(1, 'zero') + 0.5, 1, 540, 960]],
+  [[0, 1, 540, 960], ...zt(Math.max(1.2, W(1, 'forty-five')), 1.45, 290, 700), [W(1, 'and'), 1.45, 290, 700], [W(1, 'zero'), 1.45, 800, 700], [W(1, 'schools') + 0.3, 1.45, 800, 700], [W(1, 'schools') + 0.5, 1, 540, 960]],
   push(st(2), TIM[1].end, 1.18, 420, 900),
   [...zt(st(3) + 0.3, 1.3, 540, 380, W(3, 'Before rent')), [TIM[2].end, 1, 540, 960]],
   push(st(4), W(4, 'Yes'), 1.2, 540, 600).concat([[W(4, 'Yes') + 0.2, 1, 540, 960]]),
@@ -122,7 +123,7 @@ const CAMS: K[][] = [
   push(st(14), TIM[13].end, 1.15, 540, 1000),
 ];
 const SFX: [number, string][] = [
-  [W(1, 'U.S.A.'), 'whoosh'], [W(1, 'forty-five'), 'cha-ching'], [W(1, 'Germany'), 'whoosh'], [W(1, 'zero'), 'impact'],
+  [W(1, 'forty-five'), 'whoosh'], [W(1, 'forty-five') + 0.1, 'cha-ching'], [W(1, 'zero'), 'whoosh'], [W(1, 'zero') + 0.1, 'impact'],
   [W(2, 'Forty-five'), 'cha-ching'], [st(3) + 0.1, 'thud'], [W(3, 'One hundred'), 'ding'], [W(3, 'Before rent'), 'error'],
   [st(4), 'whoosh'], [W(4, 'no tuition'), 'ding'], [W(4, 'Yes'), 'pop'], [W(5, 'semester fee'), 'cha-ching'], [W(5, 'bus'), 'whoosh'],
   [st(6), 'whoosh'], [st(7), 'record-scratch'], [st(8), 'record-scratch'], [W(8, "isn't enough"), 'error'], [st(9), 'record-scratch'],

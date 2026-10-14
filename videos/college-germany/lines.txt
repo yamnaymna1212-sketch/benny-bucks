@@ -1,4 +1,4 @@
-af_bella|Why does college in the U.S.A. cost forty-five thousand dollars… but in Germany, it costs zero?|0.25
+af_bella|Why is private college tuition forty-five K here… and zero at most German public schools?|0.25
 af_bella|That's the average private college in America. Forty-five thousand. Just tuition.|0.15
 af_bella|Four years? One hundred eighty thousand dollars. Before rent. Before food.|0.2
 af_bella|In Germany, public universities charge no tuition. Not for Germans. Not for Americans. Yes — you can go.|0.2

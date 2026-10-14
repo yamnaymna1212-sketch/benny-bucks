@@ -1,5 +1,5 @@
 # College: USA $45,000 vs Germany $0 — status
-- Hook (approved): "Why does college in the USA cost $45,000… but in Germany it costs $0?"
+- Hook (revised for accuracy): "Why is private college tuition $45K here… and $0 at most German public schools?" (on screen: PRIVATE U.S. COLLEGE $45,000/yr vs MOST GERMAN PUBLIC UNIS $0 tuition) ($45,000 = College Board 2025-26 avg private nonprofit tuition & fees; public in-state avg $11,950; Germany: no tuition at public universities except Baden-Württemberg €1,500/semester for non-EU; semester fees still apply)
 - Script: 14 lines approved (see chat table); line 4 adds "Yes — you can go."
 - Gate 1 (collage metaphors): APPROVED, all 14. Benny IS in the collage images: his real cutout from studio/public/gen/ (exact face/hair/outfit) is placed in every still; prices/numbers are added as animated text in hyperframes assembly (collage skill forbids text in images).
 - Gates 1–3 approved; hook approved. Final: college-germany.mp4 (62.2s, af_bella 1.15, light caramel collage, Remotion).
