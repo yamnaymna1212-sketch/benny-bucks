@@ -10,15 +10,12 @@ export const CREAM = '#F6EEDC';
 const snap = (t: number, at: number) => spring({frame: Math.round((t - at) * FPS), fps: FPS, config: {damping: 16, stiffness: 420, mass: 0.6}});
 const STEP = 30; // full frame rate: snappy, no stop-motion lag
 const stepT = (t: number) => Math.floor(t * STEP) / STEP;
-const keyline = (k: number) => [[k, 0], [-k, 0], [0, k], [0, -k], [k * 0.7, k * 0.7], [-k * 0.7, k * 0.7], [k * 0.7, -k * 0.7], [-k * 0.7, -k * 0.7]]
+const keyline = (k: number) => [[k, 0], [-k, 0], [0, k], [0, -k]]
   .map(([x, y]) => `drop-shadow(${x}px ${y}px 0 ${CREAM})`).join(' ') + ' drop-shadow(10px 14px 8px rgba(40,25,10,0.35))';
 
-// Grain overlay (uncoated paper).
+// Grain overlay (uncoated paper): pre-made tile, far cheaper to render than feTurbulence.
 const Grain = ({o = 0.22}: {o?: number}) => (
-  <svg width="100%" height="100%" style={{position: 'absolute', inset: 0, opacity: o, mixBlendMode: 'multiply'}}>
-    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" /><feColorMatrix type="saturate" values="0" /></filter>
-    <rect width="100%" height="100%" filter="url(#grain)" />
-  </svg>
+  <AbsoluteFill style={{opacity: o, mixBlendMode: 'multiply', backgroundImage: `url(${staticFile('grain.png')})`, backgroundSize: '512px 512px'}} />
 );
 
 export const Field = ({color}: {color: string}) => <AbsoluteFill style={{background: color}}><Grain /></AbsoluteFill>;
