@@ -127,11 +127,11 @@ const SFX: [number, string][] = [
   [W(11, 'One hundred') + 0.15, 'cha-ching'], [W(11, 'zero'), 'whoosh'], [W(11, 'zero') + 0.1, 'impact'], [W(12, 'thirty-nine'), 'ding'],
   [W(13, 'one-hundred'), 'ding'], [st(14), 'whoosh'], [W(14, 'Comment'), 'pop'],
 ];
-const STARTS = [-0.5, ...TIM.slice(1).map((l) => l.start)];
+const STARTS = [-1.6, ...TIM.slice(1).map((l) => l.start)];
 export const CollegeVideo = () => <>
   <Fonts />
   <Audio src={staticFile('voice-college.mp3')} />
-  {lines.map((Line, k) => <Scene key={k} from={Math.max(0, STARTS[k])} to={k < 13 ? TIM[k + 1].start : COLLEGE_SECONDS} cam={CAMS[k]}><Line at={STARTS[k]} /></Scene>)}
+  {lines.map((Line, k) => <Scene key={k} from={Math.max(0, STARTS[k])} to={k < 13 ? TIM[k + 1].start : COLLEGE_SECONDS} cam={CAMS[k].map(([t, z, fx, fy]) => [t, Math.min(z, 1.15), fx, 960 + (fy - 960) * 0.25] as K)}><Line at={STARTS[k]} /></Scene>)}
   {SFX.map(([t, n], i) => <Sfx key={i} at={t} name={n} />)}
   <Scene from={0} to={COLLEGE_SECONDS} overlay><OutlineCaptions lines={TIM} end={COLLEGE_SECONDS} y={1260} size={70} /></Scene>
 </>;
