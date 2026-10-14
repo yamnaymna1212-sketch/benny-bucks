@@ -14,26 +14,30 @@ const keyline = (k: number) => [[k, 0], [-k, 0], [0, k], [0, -k]]
   .map(([x, y]) => `drop-shadow(${x}px ${y}px 0 ${CREAM})`).join(' ') + ' drop-shadow(10px 14px 8px rgba(40,25,10,0.35))';
 
 // Grain overlay (uncoated paper): pre-made tile, far cheaper to render than feTurbulence.
-const Grain = ({o = 0.22}: {o?: number}) => (
+const Grain = ({o = 0.5}: {o?: number}) => (
   <AbsoluteFill style={{opacity: o, mixBlendMode: 'multiply', backgroundImage: `url(${staticFile('grain.png')})`, backgroundSize: '512px 512px'}} />
 );
 
-export const Field = ({color}: {color: string}) => <AbsoluteFill style={{background: color}}><Grain /></AbsoluteFill>;
+// Backgrounds bleed far past the frame so camera zooms/pans never reveal an empty edge.
+const B = 700;
+const bleed = {top: -B, left: -B, right: -B, bottom: -B, width: 'auto', height: 'auto'} as const;
+export const Field = ({color}: {color: string}) => <AbsoluteFill style={{...bleed, background: color}}><Grain /></AbsoluteFill>;
 
 // Two color halves meeting at a torn paper edge; each half slides in at `at`.
 export const TornSplit = ({left, right, at = 0, split = 540}: {left: string; right: string; at?: number; split?: number}) => {
   const t = stepT(useT());
   const p = snap(t, at);
-  const pts = Array.from({length: 41}, (_, i) => `${split + (i % 2 ? 16 : -12) + ((i * 37) % 11) - 5},${i * 48}`).join(' L ');
+  const H = 1920 + 2 * B;
+  const pts = Array.from({length: H / 48 + 1}, (_, i) => `${split + B + (i % 2 ? 16 : -12) + ((i * 37) % 11) - 5},${i * 48}`).join(' L ');
   return <AbsoluteFill>
+    <AbsoluteFill style={{transform: `translateX(${(1 - p) * 1080}px)`}}><Field color={right} /></AbsoluteFill>
     <AbsoluteFill style={{transform: `translateX(${(1 - p) * -1080}px)`}}>
-      <svg width={1080} height={1920} style={{position: 'absolute', filter: 'drop-shadow(6px 0 6px rgba(40,25,10,0.35))'}}>
-        <path d={`M0,0 L ${pts} L0,1920 Z`} fill={left} />
+      <svg width={1080 + 2 * B} height={H} style={{position: 'absolute', left: -B, top: -B, filter: 'drop-shadow(6px 0 6px rgba(40,25,10,0.25))'}}>
+        <path d={`M0,0 L ${pts} L0,${H} Z`} fill={left} />
         <path d={`M ${pts}`} fill="none" stroke={CREAM} strokeWidth={10} />
       </svg>
     </AbsoluteFill>
-    <AbsoluteFill style={{transform: `translateX(${(1 - p) * 1080}px)`, zIndex: -1}}><Field color={right} /></AbsoluteFill>
-    <AbsoluteFill style={{pointerEvents: 'none'}}><Grain o={0.18} /></AbsoluteFill>
+    <AbsoluteFill style={{...bleed, pointerEvents: 'none'}}><Grain o={0.3} /></AbsoluteFill>
   </AbsoluteFill>;
 };
 
