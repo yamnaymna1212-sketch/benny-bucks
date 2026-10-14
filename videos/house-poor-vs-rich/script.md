@@ -1,5 +1,5 @@
-# How Benny vs Rich Rick buy a house (~61s)
-Structure adapted from the user-supplied script (virtuosonetwork reference); Benny = ordinary buyer, Rich Rick = duplex/FHA strategy; added one balance line (landlord risk). Voice: Kokoro af_bella, speed 1.2. No music.
+# How Benny vs Rich Rick buy a house (~53s)
+Structure adapted from the user-supplied script (virtuosonetwork reference); Benny = ordinary buyer, Rich Rick = duplex/FHA strategy; added one balance line (landlord risk). Voice: Kokoro af_bella, speed 1.3, gaps ≤0.12s (benny-voice skill). No music.
 
 ## Fact check (assumptions stated)
 | Claim | Basis |

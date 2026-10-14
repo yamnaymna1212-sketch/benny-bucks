@@ -1,15 +1,15 @@
-af_bella|How Benny and Rich Rick buy a house.|0.3
-af_bella|Benny saves for years. The bank says: you're approved for four hundred thousand.|0.2
-af_bella|So he buys the biggest house that number gets him. Four bedrooms. Two-car garage.|0.2
-af_bella|But the bank looked at his pay before taxes. Not his grocery bill.|0.2
-af_bella|The payment is over three thousand a month. More than half his take-home pay.|0.2
-af_bella|Then the furnace dies. Six thousand dollars, on a credit card.|0.2
-af_bella|Now he eats noodles on the floor of a four-hundred-thousand-dollar house. That's house poor.|0.35
-af_bella|Rick gets the same approval letter. But he buys a duplex. Two homes, one building.|0.2
-af_bella|He uses an FHA loan. Three and a half percent down, if he lives in one side.|0.2
-af_bella|On a three-hundred-thousand-dollar duplex, that's ten thousand five hundred, plus closing costs.|0.2
-af_bella|He rents the other side for fifteen hundred. His payment is about twenty-five hundred.|0.2
-af_bella|So Rick lives there for about a thousand a month. Less than a one-bedroom apartment.|0.25
-af_bella|A year later, he moves out and rents both sides.|0.25
-af_bella|But if a renter leaves, or the roof leaks, Rick pays. Being a landlord is a real job.|0.3
+af_bella|How poor versus rich people buy a house.|0.15
+af_bella|Benny saves for years. The bank says: you're approved for four hundred thousand.|0.1
+af_bella|So he buys the biggest house that number gets him. Four bedrooms. Two-car garage.|0.1
+af_bella|But the bank looked at his pay before taxes. Not his grocery bill.|0.1
+af_bella|The payment is over three thousand a month. More than half his take-home pay.|0.1
+af_bella|Then the furnace dies. Six thousand dollars, on a credit card.|0.1
+af_bella|Now he eats noodles on the floor of a four-hundred-thousand-dollar house. That's house poor.|0.1
+af_bella|Rick gets the same approval letter. But he buys a duplex. Two homes, one building.|0.1
+af_bella|He uses an FHA loan. Three and a half percent down, if he lives in one side.|0.1
+af_bella|On a three-hundred-thousand-dollar duplex, that's ten thousand five hundred, plus closing costs.|0.1
+af_bella|He rents the other side for fifteen hundred. His payment is about twenty-five hundred.|0.1
+af_bella|So Rick lives there for about a thousand a month. Less than a one-bedroom apartment.|0.1
+af_bella|A year later, he moves out and rents both sides.|0.1
+af_bella|But if a renter leaves, or the roof leaks, Rick pays. Being a landlord is a real job.|0.1
 af_bella|Same bank. Opposite house. Which one would you buy?|0
