@@ -73,5 +73,7 @@ reference + analysis in `references/videos/style-ref-gas-iran-*`.
 
 ## Camera language (user rule: ZOOM ONLY)
 Beat moves cycle punch · deep push · hold · pull-out; line changes = zoom-through or zoom-settle (+ automatic soft whoosh).
-No camera shake, no dutch tilt, no lateral drift/whip. Hook pans must follow the side Benny points at (point-then-shocked points RIGHT).
+No camera shake, no dutch tilt, no lateral drift/whip.
+HOOK (user rule): strong zoom (1.3) starts at frame 0 on side A, swings to side B on the word that names it; Benny points at side A, then
+switches to the same clip with `flip` to point at side B (point-then-shocked points RIGHT unflipped). Hook cams are not capped; beats skip the hook.
 Icons: repeated concepts cycle variety pools (money: rial-stack → Cash → $100 bill → FinanceDollar → Saving → Wallet → Coin). Use `minSeconds={60}`.

@@ -23,9 +23,10 @@ const lines: LineFn[] = [
     <PriceTag price="$5,000" unit="ON TAX FORM" x={810} y={490} at={at} size={92} color={R} />
     <Pic src="rial-stack" x={270} y={790} w={400} at={at} />
     <Obj x={810} y={790} at={at}><IconArt id="doodle:FileForm" size={330} /></Obj>
-    <DrawArrow from={[70, 300]} to={[150, 420]} at={1.3} color={R} />
+    <DrawArrow from={[70, 300]} to={[150, 420]} at={W(1, 'Benny')} color={R} />
     <DrawArrow from={[1010, 300]} to={[930, 420]} at={0.3} color={R} />
-    <AnimBenny clip="point-then-shocked" x={540} y={1560} h={840} at={at} play={0} /></>,
+    <AnimBenny clip="point-then-shocked" x={540} y={1560} h={840} at={at} play={0} until={W(1, 'Benny')} />
+    <AnimBenny clip="point-then-shocked" x={540} y={1560} h={840} at={W(1, 'Benny')} flip /></>,
   ({at, w}) => <><GridField />
     <Word text="CASH ONLY" x={540} y={380} at={at} color={G} size={130} until={w('fifty')} />
     <Pic src="benny-tired-driving" at={at} w={620} y={1300} until={w('fifty')} />
@@ -112,11 +113,12 @@ const lines: LineFn[] = [
 
 const W = wordTimer(TIM);
 const cams: K[][] = [
-  [[0, 1, 540, 960], [0.35, 1.06, 640, 960], [W(1, 'find'), 1.06, 640, 960], [TIM[0].end, 1.0, 540, 960]],
+  // strong zoom from frame 0: RIGHT ($5,000 tax form, Benny points right) → on "Benny" swing LEFT ($50,000, Benny flipped points left)
+  [[0, 1, 540, 960], [0.3, 1.3, 700, 880], [W(1, 'Benny') - 0.05, 1.3, 700, 880], [W(1, 'Benny') + 0.25, 1.3, 380, 880], [TIM[0].end, 1.3, 380, 880]],
   ...TIM.slice(1).map((): K[] => []),
 ];
 const sfx: [number, string][] = [
-  [0.02, 'pop'], [0.3, 'spring'], [0.3, 'whoosh'], [0.6, 'cha-ching'], [1.3, 'spring'], [W(1, 'find'), 'impact'],
+  [0.02, 'pop'], [0.3, 'spring'], [0.0, 'whoosh'], [0.3, 'cha-ching'], [W(1, 'Benny') - 0.05, 'whoosh'], [W(1, 'Benny') + 0.2, 'cha-ching'], [W(1, 'find'), 'impact'],
   [W(2, 'fifty'), 'cha-ching'], [W(3, 'truck'), 'ding'], [TIM[3].start, 'record-scratch'], [W(5, 'form'), 'flip'], [W(6, 'take'), 'cha-ching'],
   [TIM[6].start, 'sad-horn'], [W(8, 'idea'), 'ding'], [W(9, 'five'), 'pop'], [W(10, 'keep'), 'coins'], [W(12, 'report'), 'boing'],
   [W(13, 'match'), 'error'], [W(14, 'already'), 'record-scratch'], [W(14, 'too'), 'record-scratch'], [W(15, 'seventy-five'), 'cha-ching'],
