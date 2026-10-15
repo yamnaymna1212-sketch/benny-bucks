@@ -1,4 +1,5 @@
 import {Composition} from 'remotion';
+import {IconGallery} from './videos/iconGallery';
 import {FoundationVideo, FOUNDATION_SECONDS, FoundationSheet, FOUNDATION_SHEET_FRAMES} from './videos/foundation';
 import {GridTest, GRID_TEST_SECONDS} from './videos/gridTest';
 import {AmbulanceVideo, AMBULANCE_SECONDS, AmbulanceSheet, AMBULANCE_SHEET_FRAMES} from './videos/ambulance';
@@ -25,5 +26,6 @@ export const Root = () => (
     <Composition id="grid-test" component={GridTest} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(GRID_TEST_SECONDS * 30)} />
     <Composition id="foundation" component={FoundationVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(FOUNDATION_SECONDS * 30)} />
     <Composition id="foundation-sheet" component={FoundationSheet} width={1080} height={1920} fps={30} durationInFrames={FOUNDATION_SHEET_FRAMES} />
+    <Composition id="icon-gallery" component={IconGallery} width={1080} height={1920} fps={30} durationInFrames={1} />
   </>
 );

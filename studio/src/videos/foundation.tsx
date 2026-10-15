@@ -44,11 +44,11 @@ const lines: LineFn[] = [
     <Word text="NO." x={540} y={420} at={w('Rick')} color={R} size={220} rot={-4} />
     <Rick pose="angry" at={w('Rick')} w={560} /></>,
   ({at, w}) => <><GridField />
-    <Word text="PRIVATE FOUNDATION" x={540} y={360} at={w('private')} color={C.ink} size={78} until={w('the Rich')} />
+    <Word text="PRIVATE FOUNDATION" x={540} y={360} at={w('private')} color={C.ink} size={64} until={w('the Rich')} />
     <Rick pose="checklist" at={at} w={560} until={w('the Rich')} />
     <Obj x={540} y={620} at={w('the Rich')}><Building w={340} /></Obj>
     <PriceTag price="RICH RICK FOUNDATION" x={540} y={360} at={w('the Rich')} size={56} color={G} />
-    <AnimBenny clip="point-then-shocked" x={300} y={1450} h={800} at={w('the Rich')} /></>,
+    <AnimBenny clip="point-then-shocked" x={540} y={1470} h={860} at={w('the Rich')} /></>,
   ({at, w}) => <><GridField />
     <Rick pose="money-bag-hug" x={300} y={760} w={420} at={at} until={w('charity')} />
     <Obj x={800} y={760} at={at} until={w('charity')}><Building w={320} /></Obj>
@@ -124,7 +124,7 @@ const sfx: [number, string][] = [
   [W(12, 'rest'), 'impact'], [W(13, 'decades'), 'ding'], [W(14, 'forty'), 'crack'], [W(15, 'salaries'), 'cha-ching'], [W(16, 'philanthropist'), 'sad-horn'], [W(17, 'Follow'), 'pop'],
 ];
 
-export const FOUNDATION_SECONDS = videoSeconds(TIM);
-export const FoundationVideo = () => <CollageVideo voice="voice-foundation.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} captionFill="#FFD43B" captionYs={[1090, ...TIM.slice(1).map(() => 870)]} />;
+export const FOUNDATION_SECONDS = Math.max(60, videoSeconds(TIM));
+export const FoundationVideo = () => <CollageVideo minSeconds={60} voice="voice-foundation.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[1090, ...TIM.slice(1).map(() => 870)]} />;
 export const FOUNDATION_SHEET_FRAMES = lines.length;
 export const FoundationSheet = () => <CollageSheet lines={lines} />;

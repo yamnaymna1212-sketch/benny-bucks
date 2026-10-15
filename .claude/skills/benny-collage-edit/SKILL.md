@@ -61,3 +61,16 @@ reference + analysis in `references/videos/style-ref-gas-iran-*`.
 - For any external/finished video: `auto-editor` (free, open source) cuts silences in picture + sound together:
   `/opt/autoed/bin/auto-editor in.mp4 --margin 0.04s --edit audio:threshold=4% -o out.mp4`
   (install per session: `python3 -m venv /opt/autoed && /opt/autoed/bin/pip install auto-editor`).
+
+## Icons on every spoken noun (user rule, all videos) — hand-drawn, NEVER 3D emoji
+- `<CollageVideo icons>` turns on AutoIcons (`studio/src/icons.tsx`): each mapped spoken word pops its icon on that exact word,
+  alternating left/right gutters (x 165 / 915, y 1180) beside the character; the hook line is skipped.
+- Sources, in priority: the user's own colored-pencil assets (`img:bank`, `img:rial-stack`, `img:government-office`…) → our hand-drawn props
+  (`prop:House`, `prop:Bill`, `prop:Receipt`, `prop:Plane`…) → Doodle Icons CC0 on a pastel sticker (`doodle:Crown`, `doodle:PiggyBank`…, 400+ names in
+  @doodle-icons/react) → real brand logos from simple-icons (`brand:siFacebook`, `brand:siUber`…).
+- For each new script add every concrete noun to `ICON_WORDS`; check them all with the `icon-gallery` composition.
+- Photo sites (Wikimedia, Unsplash, Pexels) are blocked here; new hand-drawn assets from the user go to `assets/props/` (+ prep_assets.sh).
+
+## Camera language (no repetitive zoom)
+Beat moves cycle punch · deep push · hold · drift · pull-out reveal · dutch tilt; line changes cycle whip-left · zoom-through · whip-right · slide-up
+(all automatic in CollageVideo). Use `minSeconds={60}` to land exactly on 60s.
