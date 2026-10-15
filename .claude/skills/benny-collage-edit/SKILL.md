@@ -49,3 +49,15 @@ reference + analysis in `references/videos/style-ref-gas-iran-*`.
 - Keywords: `<Word>` big colored text (red italic for bad, green for good), orange/red DrawArrow.
 - Captions: one yellow word with black outline next to Benny's head: `captionFill="#FFD43B" captionYs={[...per line]}`.
 - No real people's likeness (use cast-fed-guy etc.).
+
+## Speed: a visual change every 0.5–0.8s (automatic)
+- CollageVideo `beats` (on by default): on word starts ≥0.55s apart the framing jumps between two tight crops (1.0 ↔ 1.06, nudged L/R);
+  each new line enters with a 0.16s whip (slide + blur). Lives inside each Scene so bled backgrounds cover it (no edges). Hook still is skipped.
+- On top of that: 2–3 authored shots per line (Benny clip/keyword change on spoken words).
+
+## No dead air
+- Voice: per-line pause 0.05 in lines.txt and `tools/tts.py ... am_fenrir 1.25 0.08` (internal gaps > 0.08s are cut). Video timing comes from
+  the voice timings, so it stays in sync automatically.
+- For any external/finished video: `auto-editor` (free, open source) cuts silences in picture + sound together:
+  `/opt/autoed/bin/auto-editor in.mp4 --margin 0.04s --edit audio:threshold=4% -o out.mp4`
+  (install per session: `python3 -m venv /opt/autoed && /opt/autoed/bin/pip install auto-editor`).

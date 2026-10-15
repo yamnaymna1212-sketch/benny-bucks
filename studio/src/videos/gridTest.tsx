@@ -6,7 +6,7 @@ import {DrawArrow} from '../draw';
 import {CollageVideo, LineFn, K} from '../collageVideo';
 import {GridField, AnimBenny, Word, Banner, PriceTag, Obj} from '../grid';
 import {Ambulance} from './ambulanceProps';
-import ALL from '../data/ambulance-japan.json';
+import ALL from '../data/grid-test.json';
 
 const TIM = ALL.slice(0, 2);
 const W = wordTimer(TIM);
@@ -39,5 +39,5 @@ const cams: K[][] = [
 ];
 const sfx: [number, string][] = [[W(1, 'America'), 'whoosh'], [W(1, 'Japan'), 'whoosh'], [W(1, 'zero'), 'impact'], [W(2, 'average'), 'ding'], [W(2, 'emergency'), 'whoosh'], [W(2, 'mileage'), 'cha-ching']];
 
-export const GRID_TEST_SECONDS = +(TIM[1].end + 0.9).toFixed(2);
-export const GridTest = () => <CollageVideo voice="voice-ambulance.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} captionFill="#FFD43B" captionYs={[975, 790]} />;
+export const GRID_TEST_SECONDS = +(TIM[1].end + 0.9).toFixed(2); // = videoSeconds(TIM)
+export const GridTest = () => <CollageVideo voice="voice-gridtest.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} captionFill="#FFD43B" captionYs={[975, 790]} />;
