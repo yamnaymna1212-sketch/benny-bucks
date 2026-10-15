@@ -36,7 +36,7 @@ export const ICON_WORDS: Record<string, string> = {
   truck: 'doodle:Truck', cars: 'doodle:Car', roads: 'doodle:Navigation', schools: 'doodle:Bus', form: 'doodle:FileForm',
   ski: 'doodle:Ship', dealer: 'doodle:Shop', interest: 'doodle:TrendUp', jail: 'doodle:Lock', prison: 'doodle:Lock', penalty: 'doodle:Caution', felony: 'doodle:Caution',
   woods: 'doodle:Tree', forest: 'doodle:Tree', robbed: 'doodle:SadEmoji', sad: 'doodle:SadEmoji', happy: 'doodle:HappyEmoji',
-  son: 'doodle:UserMale', trust: 'doodle:Safe', trusts: 'doodle:Safe', shares: 'doodle:Analytics', company: 'doodle:Factory', mansion: 'prop:House',
+  son: 'doodle:UserMale', trust: 'doodle:FileContract', trusts: 'doodle:FileContract', shares: 'doodle:Analytics', company: 'doodle:Factory', mansion: 'prop:House',
   irrevocable: 'doodle:Lock', beneficiary: 'doodle:Gift', dime: 'doodle:Coin', sued: 'doodle:FileContract', creditors: 'doodle:Bill', divorce: 'doodle:Cross',
   generations: 'doodle:Tree', limit: 'doodle:Tick',
   facebook: 'brand:siFacebook', instagram: 'brand:siInstagram', tiktok: 'brand:siTiktok', youtube: 'brand:siYoutube', uber: 'brand:siUber',
