@@ -9,7 +9,7 @@ import {Building} from '../props';
 import TIM from '../data/foundation.json';
 
 const G = '#1E9E4A', R = '#D7261E', GOLD = '#D9A400';
-const Rick = ({pose, x = 540, y = 1330, w = 560, at, until}: {pose: string; x?: number; y?: number; w?: number; at: number; until?: number}) =>
+const Rick = ({pose, x = 540, y = 1440, w = 520, at, until}: {pose: string; x?: number; y?: number; w?: number; at: number; until?: number}) =>
   <Obj x={x} y={y} at={at} until={until}><Img src={staticFile(`gen/rich-${pose}.png`)} style={{width: w, display: 'block'}} /></Obj>;
 const Strike = ({x, y, w, at}: {x: number; y: number; w: number; at: number}) => {
   const t = useT(); if (t < at) return null;
@@ -34,19 +34,19 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <Word text="NOT JUST" x={540} y={380} at={at} color={R} size={150} rot={-3} />
     <Word text="helping others" x={540} y={540} at={w('helping')} color={C.ink} size={80} italic />
-    <AnimBenny clip="angry-point-crossarms" x={540} y={1380} h={1000} at={at} from={1.6} /></>,
+    <AnimBenny clip="angry-point-crossarms" x={540} y={1460} h={1000} at={at} from={1.6} /></>,
   ({at, w}) => <><GridField />
     <Word text="$10,000,000" x={540} y={380} at={w('ten')} color={G} size={140} />
-    <Rick pose="throwing-money" at={at} w={600} y={1250} /></>,
+    <Rick pose="throwing-money" at={at} w={600} y={1400} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="$3.7M" unit="THE IRS WANTS" x={540} y={400} at={at} color={R} size={130} until={w('Rick')} />
-    <AnimBenny clip="reads-bill-upset" x={540} y={1380} h={980} at={at} until={w('Rick')} />
+    <AnimBenny clip="reads-bill-upset" x={540} y={1460} h={980} at={at} until={w('Rick')} />
     <Word text="NO." x={540} y={420} at={w('Rick')} color={R} size={220} rot={-4} />
     <Rick pose="angry" at={w('Rick')} w={560} /></>,
   ({at, w}) => <><GridField />
     <Word text="PRIVATE FOUNDATION" x={540} y={360} at={w('private')} color={C.ink} size={78} until={w('the Rich')} />
     <Rick pose="checklist" at={at} w={560} until={w('the Rich')} />
-    <Obj x={540} y={800} at={w('the Rich')}><Building w={460} /></Obj>
+    <Obj x={540} y={620} at={w('the Rich')}><Building w={340} /></Obj>
     <PriceTag price="RICH RICK FOUNDATION" x={540} y={360} at={w('the Rich')} size={56} color={G} />
     <AnimBenny clip="point-then-shocked" x={300} y={1450} h={800} at={w('the Rich')} /></>,
   ({at, w}) => <><GridField />
@@ -55,16 +55,16 @@ const lines: LineFn[] = [
     <DrawArrow from={[470, 760]} to={[650, 760]} at={w('donates')} color={G} />
     <Word text="$10M" x={560} y={560} at={w('donates')} color={G} size={110} until={w('charity')} />
     <Word text="TAX-DEDUCTIBLE" x={540} y={420} at={w('charity')} color={G} size={100} rot={-3} />
-    <AnimBenny clip="money-rain" x={540} y={1360} h={980} at={w('charity')} /></>,
+    <AnimBenny clip="money-rain" x={540} y={1460} h={980} at={w('charity')} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="30%" unit="OF HIS INCOME / YEAR" x={540} y={420} at={w('Thirty')} color={G} size={160} until={w('rest')} />
     <Word text="+ next 5 years" x={540} y={420} at={w('rest')} color={C.ink} size={100} italic until={w('His tax')} />
     <PriceTag price="−$1.1M" unit="TAX BILL" x={540} y={420} at={w('His tax')} color={G} size={150} />
-    <AnimBenny clip="phone-shock-idea" x={540} y={1380} h={980} at={at} until={w('His tax')} />
-    <AnimBenny clip="wave-holds-dollar" x={540} y={1380} h={980} at={w('His tax')} from={2} /></>,
+    <AnimBenny clip="phone-shock-idea" x={540} y={1460} h={980} at={at} until={w('His tax')} />
+    <AnimBenny clip="wave-holds-dollar" x={540} y={1460} h={980} at={w('His tax')} from={2} /></>,
   ({at, w}) => <><GridField />
     <Word text="NOPE" x={540} y={400} at={at} color={R} size={180} until={w('named')} />
-    <AnimBenny clip="throws-paper-falls" x={540} y={1380} h={980} at={at} until={w('named')} />
+    <AnimBenny clip="throws-paper-falls" x={540} y={1460} h={980} at={at} until={w('named')} />
     <Word text="PRESIDENT" x={540} y={400} at={w('named')} color={GOLD} size={150} stroke />
     <Rick pose="crown" at={w('named')} w={560} /></>,
   ({at, w}) => <><GridField />
@@ -73,22 +73,22 @@ const lines: LineFn[] = [
     <Rick pose="counting-cash" at={at} w={560} /></>,
   ({at, w}) => <><GridField />
     <Word text="THE BOARD" x={540} y={330} at={at} color={C.ink} size={110} />
-    <Obj x={540} y={620} at={w('board')}><Table /></Obj>
-    <Word text="LEGAL ✓" x={540} y={880} at={w('Also')} color={G} size={110} rot={-3} />
+    <Obj x={540} y={560} at={w('board')}><Table /></Obj>
+    <Word text="LEGAL ✓" x={540} y={735} at={w('Also')} color={G} size={110} rot={-3} />
     <AnimBenny clip="point-then-shocked" x={540} y={1500} h={760} at={at} from={1.6} /></>,
   ({at, w}) => <><GridField />
     <Word text="PRIVATE JET?" x={540} y={360} at={at} color={C.ink} size={110} until={w('Vacations')} />
-    <Rick pose="airplane" at={at} w={600} y={1150} until={w('Vacations')} />
+    <Rick pose="airplane" at={at} w={600} y={1300} until={w('Vacations')} />
     <Word text="foundation trips only" x={540} y={520} at={w('Only')} color={G} size={76} italic until={w('Vacations')} />
-    <Rick pose="beach-dream" at={w('Vacations')} w={560} y={1150} />
-    <Word text="SELF-DEALING" x={540} y={420} at={w('self-dealing')} color={R} size={130} rot={-8} stroke /></>,
+    <Rick pose="beach-dream" at={w('Vacations')} w={560} y={1300} />
+    <Word text="SELF-DEALING" x={540} y={420} at={w('self-dealing')} color={R} size={108} rot={-8} stroke /></>,
   ({at, w}) => <><GridField />
     <Word text="5%" x={300} y={480} at={w('five')} color={G} size={150} />
     <Word text="give away" x={300} y={600} at={w('five')} color={C.ink} size={56} italic />
-    <Word text="95%" x={770} y={500} at={w('rest')} color={GOLD} size={230} stroke />
-    <Word text="stays with him" x={770} y={660} at={w('control')} color={C.ink} size={56} italic />
-    <Rick pose="sitting-cash-pile" at={w('rest')} w={520} y={1300} />
-    <AnimBenny clip="reads-bill-upset" x={540} y={1380} h={980} at={at} until={w('rest')} /></>,
+    <Word text="95%" x={740} y={500} at={w('rest')} color={GOLD} size={190} stroke />
+    <Word text="stays with him" x={740} y={660} at={w('control')} color={C.ink} size={56} italic />
+    <Rick pose="sitting-cash-pile" at={w('rest')} w={500} y={1440} />
+    <AnimBenny clip="reads-bill-upset" x={540} y={1460} h={980} at={at} until={w('rest')} /></>,
   ({at, w}) => <><GridField />
     <Word text="DECADES" x={540} y={400} at={w('decades')} color={G} size={150} />
     <DrawArrow from={[300, 700]} to={[800, 520]} at={w('growing')} color={G} />
@@ -104,11 +104,11 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <Word text="PHILANTHROPIST" x={540} y={380} at={w('philanthropist')} color={GOLD} size={110} stroke />
     <Rick pose="excited-wave" at={at} w={560} until={w('philanthropist')} />
-    <AnimBenny clip="long-receipt-facepalm" x={540} y={1380} h={980} at={w('philanthropist')} from={2} /></>,
+    <AnimBenny clip="long-receipt-facepalm" x={540} y={1460} h={980} at={w('philanthropist')} from={2} /></>,
   ({at, w}) => <><GridField />
     <Word text="FOLLOW" x={540} y={380} at={w('Follow')} color={R} size={170} />
     <Word text="for part 2" x={540} y={540} at={w('part')} color={C.ink} size={90} italic />
-    <AnimBenny clip="talking-thumbs-up" x={540} y={1380} h={1000} at={at} /></>,
+    <AnimBenny clip="talking-thumbs-up" x={540} y={1460} h={1000} at={at} /></>,
 ];
 
 const W = wordTimer(TIM);
@@ -125,6 +125,6 @@ const sfx: [number, string][] = [
 ];
 
 export const FOUNDATION_SECONDS = videoSeconds(TIM);
-export const FoundationVideo = () => <CollageVideo voice="voice-foundation.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} captionFill="#FFD43B" captionYs={[1090, ...TIM.slice(1).map(() => 900)]} />;
+export const FoundationVideo = () => <CollageVideo voice="voice-foundation.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} captionFill="#FFD43B" captionYs={[1090, ...TIM.slice(1).map(() => 870)]} />;
 export const FOUNDATION_SHEET_FRAMES = lines.length;
 export const FoundationSheet = () => <CollageSheet lines={lines} />;
