@@ -55,7 +55,7 @@ export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305, cap
     <Fonts />
     <Audio src={staticFile(voice)} />
     <Camera punch={cuts} shake={impacts}>
-      {lines.map((Line, k) => <Scene key={k} from={Math.max(0, starts[k])} to={k < lines.length - 1 ? tim[k + 1].start : end} cam={soften(cams[k] ?? [[0, 1, 540, 960]])}><Beat beats={bt} cuts={beats ? cuts : []}><Beat beats={bt} cuts={beats ? cuts : []}><Line at={starts[k]} w={k === 0 ? () => starts[0] : (word) => W(k + 1, word)} /></Beat></Beat></Scene>)}
+      {lines.map((Line, k) => <Scene key={k} from={Math.max(0, starts[k])} to={k < lines.length - 1 ? tim[k + 1].start : end} cam={soften(cams[k]?.length ? cams[k] : [[0, 1, 540, 960]])}><Beat beats={bt} cuts={beats ? cuts : []}><Beat beats={bt} cuts={beats ? cuts : []}><Line at={starts[k]} w={k === 0 ? () => starts[0] : (word) => W(k + 1, word)} /></Beat></Beat></Scene>)}
     </Camera>
     {sfx.map(([t, n], i) => <Sfx key={i} at={t} name={n} />)}
     <Scene from={0} to={end} overlay><OutlineCaptions lines={tim.map((l) => ({...l, text: l.text.replace(/-/g, ' ')}))} end={end} y={captionY} size={68} fill={captionFill} yOf={captionYs ? (i) => captionYs[i] ?? captionY : undefined} /></Scene>

@@ -126,6 +126,7 @@ export const Camera = ({punch = [], shake = [], children}: {punch?: number[]; sh
   let s = 1, dx = 0, dy = 0;
   for (const k of punch) { const d = t - k; if (d >= 0 && d < 0.5) s += 0.07 * Math.exp(-d * 9) * Math.cos(d * 12); }
   for (const k of shake) { const d = t - k; if (d >= 0 && d < 0.4) { dx += Math.sin(d * 95) * 14 * (1 - d / 0.4); dy += Math.cos(d * 80) * 8 * (1 - d / 0.4); } }
+  s *= 1 + (Math.abs(dx) + Math.abs(dy)) * 2.2 / 1080; // grow while shaking so no frame edge is ever revealed
   return <AbsoluteFill style={{transform: `translate(${dx}px,${dy}px) scale(${s})`, transformOrigin: '50% 45%'}}>{children}</AbsoluteFill>;
 };
 
