@@ -11,6 +11,13 @@ import * as DD from '@doodle-icons/react';
 import {C, FPS, SFX_GAIN, useT} from './engine';
 import {Stack, Bill, Receipt, House, Plane, Calendar, Coin, Wallet, Card} from './props';
 
+// Variety pools: a concept that is said many times cycles through different drawings (never the same money pile twice in a row).
+const POOLS: Record<string, string[]> = {
+  money: ['img:rial-stack', 'doodle:Cash', 'prop:Bill', 'doodle:FinanceDollar', 'doodle:Saving', 'prop:Wallet', 'doodle:Coin'],
+  tax: ['prop:Receipt', 'doodle:FileInvoice', 'doodle:Calculator', 'doodle:Bill'],
+  house: ['prop:House', 'doodle:Home'],
+  car: ['doodle:Car', 'doodle:Truck'],
+};
 export const ICON_WORDS: Record<string, string> = {
   money: 'img:rial-stack', million: 'img:rial-stack', millions: 'img:rial-stack', cash: 'img:rial-stack', billion: 'img:rial-stack', fortune: 'img:rial-stack',
   dollar: 'prop:Bill', dollars: 'prop:Bill', bucks: 'prop:Bill', salary: 'prop:Bill', salaries: 'prop:Bill', paycheck: 'prop:Bill',
@@ -61,13 +68,16 @@ type Tim = {text: string; start: number; end: number}[];
 export const iconEvents = (tim: Tim, skipLines: number[] = [0]) => {
   const ev: {t: number; until: number; id: string; slot: number}[] = [];
   let slot = 0, lastT = -9, lastId = '';
+  const used: Record<string, number> = {};
   tim.forEach((l, li) => {
     if (skipLines.includes(li)) return;
     let i = 0;
     for (const raw of l.text.split(' ')) {
       const at = l.text.indexOf(raw, i); i = at + raw.length;
       const key = raw.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+$/, '');
-      const id = ICON_WORDS[key] ?? ICON_WORDS[key.replace(/s$/, '')];
+      const raw0 = ICON_WORDS[key] ?? ICON_WORDS[key.replace(/s$/, '')];
+      const pool = raw0 ? POOLS[Object.keys(POOLS).find((k) => POOLS[k].includes(raw0)) ?? ''] : undefined;
+      const id = pool ? pool[(used[pool[0]] = (used[pool[0]] ?? -1) + 1) % pool.length] : raw0;
       if (!id || id === lastId) continue;
       if (!iconExists(id)) continue;
       const t = l.start + (l.end - l.start) * (at / l.text.length);
@@ -87,8 +97,7 @@ const One = ({t0, until, id, slot, size}: {t0: number; until: number; id: string
   const p = spring({frame: Math.round((t - t0) * FPS), fps: FPS, config: {damping: 13, stiffness: 420, mass: 0.6}});
   const out = Math.min(1, Math.max(0, (until - t) / 0.12));
   const [x, y] = SLOTS[slot];
-  const fl = Math.sin(t * 2.6 + slot) * 8;
-  return <div style={{position: 'absolute', left: x, top: y + fl, transform: `translate(-50%,-50%) scale(${p * out}) rotate(${(slot ? 8 : -8) * (1 - p) + (slot ? 4 : -4)}deg)`}}><IconArt id={id} size={size} /></div>;
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${p * out})`}}><IconArt id={id} size={size} /></div>;
 };
 export const AutoIcons = ({tim, skipLines, size = 210}: {tim: Tim; skipLines?: number[]; size?: number}) => {
   const ev = iconEvents(tim, skipLines);

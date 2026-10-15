@@ -71,6 +71,7 @@ reference + analysis in `references/videos/style-ref-gas-iran-*`.
 - For each new script add every concrete noun to `ICON_WORDS`; check them all with the `icon-gallery` composition.
 - Photo sites (Wikimedia, Unsplash, Pexels) are blocked here; new hand-drawn assets from the user go to `assets/props/` (+ prep_assets.sh).
 
-## Camera language (no repetitive zoom)
-Beat moves cycle punch · deep push · hold · drift · pull-out reveal · dutch tilt; line changes cycle whip-left · zoom-through · whip-right · slide-up
-(all automatic in CollageVideo). Use `minSeconds={60}` to land exactly on 60s.
+## Camera language (user rule: ZOOM ONLY)
+Beat moves cycle punch · deep push · hold · pull-out; line changes = zoom-through or zoom-settle (+ automatic soft whoosh).
+No camera shake, no dutch tilt, no lateral drift/whip. Hook pans must follow the side Benny points at (point-then-shocked points RIGHT).
+Icons: repeated concepts cycle variety pools (money: rial-stack → Cash → $100 bill → FinanceDollar → Saving → Wallet → Coin). Use `minSeconds={60}`.

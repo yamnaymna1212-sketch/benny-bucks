@@ -31,11 +31,11 @@ export const beatTimes = (tim: Tim, min = 0.6) => {
   return out;
 };
 // Camera language per beat (cycled so it never repeats the same move twice in a row):
-// punch = quick 0.08s cut-in · deep = slow push into the subject over the whole beat · drift = slow lateral glide
-// out = pull-back reveal · tilt = small dutch angle + push · hold = no move (breathing room).
-// Line changes cycle transitions: whip left · zoom-through · whip right · slide up (all ~0.18s with motion blur).
-const MOVES = ['punch', 'deep', 'hold', 'drift', 'out', 'tilt', 'punch', 'hold', 'deep', 'drift'] as const;
-const TRANS = ['whipL', 'zoom', 'whipR', 'up'] as const;
+// punch = quick 0.08s cut-in · deep = slow push into the subject over the whole beat
+// out = pull-back reveal · hold = no move (breathing room). Line changes: zoom-through or zoom-out settle.
+// User rule: ZOOM ONLY — no shake, no tilt, no lateral drift/whips. Variety comes from zoom type and depth.
+const MOVES = ['punch', 'deep', 'hold', 'out', 'punch', 'hold', 'deep', 'out'] as const;
+const TRANS = ['zoom', 'zoomOut'] as const;
 const ease = (x: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
 const Beat = ({beats, cuts, children}: {beats: number[]; cuts: number[]; children: React.ReactNode}) => {
   const t = useT();
@@ -48,13 +48,11 @@ const Beat = ({beats, cuts, children}: {beats: number[]; cuts: number[]; childre
     const mv = MOVES[n % MOVES.length];
     if (mv === 'punch') z = 1 + 0.08 * ease(d / 0.08);
     if (mv === 'deep') z = 1 + 0.14 * ease(d / len);
-    if (mv === 'drift') { z = 1.06; x = (n % 2 ? 1 : -1) * (-34 + 68 * (d / len)); }
     if (mv === 'out') z = 1.16 - 0.16 * ease(d / 0.35);
-    if (mv === 'tilt') { z = 1 + 0.07 * ease(d / 0.12); r = (n % 2 ? 1.6 : -1.6) * ease(d / 0.12); }
   }
   const ci = cuts.indexOf(lineStart), tr = TRANS[(ci < 0 ? 0 : ci) % TRANS.length], dd = t - lineStart;
   const wp = ci >= 0 && dd >= 0 && dd < 0.18 ? Math.pow(1 - dd / 0.18, 2) : 0;
-  if (wp > 0) { if (tr === 'whipL') x += 240 * wp; if (tr === 'whipR') x -= 240 * wp; if (tr === 'up') y += 300 * wp; if (tr === 'zoom') z *= 1 + 0.35 * wp; }
+  if (wp > 0) { if (tr === 'zoom') z *= 1 + 0.3 * wp; else z *= 1 + 0.12 * wp; }
   return <AbsoluteFill style={{transform: `translate(${x}px,${y}px) scale(${z}) rotate(${r}deg)`, transformOrigin: '50% 45%', filter: wp > 0.08 ? `blur(${9 * wp}px)` : undefined}}>{children}</AbsoluteFill>;
 };
 
@@ -67,14 +65,14 @@ export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305, cap
   const cuts = tim.slice(1).map((l) => l.start);
   const W = wordTimer(tim);
   const bt = beats ? beatTimes(tim) : []; // Beat sits inside each Scene so the bled background covers whips/zooms
-  const impacts = sfx.filter(([, n]) => n === 'impact').map(([t]) => t);
   return <>
     <Fonts />
     <Audio src={staticFile(voice)} />
-    <Camera punch={cuts} shake={impacts}>
+    <Camera punch={cuts}>
       {lines.map((Line, k) => <Scene key={k} from={Math.max(0, starts[k])} to={k < lines.length - 1 ? tim[k + 1].start : end} cam={soften(cams[k]?.length ? cams[k] : [[0, 1, 540, 960]])}><Beat beats={bt} cuts={beats ? cuts : []}><Beat beats={bt} cuts={beats ? cuts : []}><Line at={starts[k]} w={k === 0 ? () => starts[0] : (word) => W(k + 1, word)} /></Beat></Beat></Scene>)}
     </Camera>
     {sfx.map(([t, n], i) => <Sfx key={i} at={t} name={n} />)}
+    {cuts.map((c, i) => <Sfx key={`cut${i}`} at={Math.max(0, c - 0.05)} name="whoosh" vol={0.22} />)}
     {icons && <Scene from={0} to={end} overlay><AutoIcons tim={tim} /></Scene>}
     <Scene from={0} to={end} overlay><OutlineCaptions lines={tim.map((l) => ({...l, text: l.text.replace(/-/g, ' ')}))} end={end} y={captionY} size={68} fill={captionFill} yOf={captionYs ? (i) => captionYs[i] ?? captionY : undefined} /></Scene>
   </>;
