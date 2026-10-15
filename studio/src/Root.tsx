@@ -1,4 +1,5 @@
 import {Composition} from 'remotion';
+import {TaxEvasionVideo, TAX_EVASION_SECONDS, TaxEvasionSheet, TAX_EVASION_SHEET_FRAMES} from './videos/taxEvasion';
 import {IconGallery} from './videos/iconGallery';
 import {FoundationVideo, FOUNDATION_SECONDS, FoundationSheet, FOUNDATION_SHEET_FRAMES} from './videos/foundation';
 import {GridTest, GRID_TEST_SECONDS} from './videos/gridTest';
@@ -27,5 +28,7 @@ export const Root = () => (
     <Composition id="foundation" component={FoundationVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(FOUNDATION_SECONDS * 30)} />
     <Composition id="foundation-sheet" component={FoundationSheet} width={1080} height={1920} fps={30} durationInFrames={FOUNDATION_SHEET_FRAMES} />
     <Composition id="icon-gallery" component={IconGallery} width={1080} height={1920} fps={30} durationInFrames={1} />
+    <Composition id="tax-evasion" component={TaxEvasionVideo} width={1080} height={1920} fps={30} durationInFrames={TAX_EVASION_SECONDS * 30} />
+    <Composition id="tax-evasion-sheet" component={TaxEvasionSheet} width={1080} height={1920} fps={30} durationInFrames={TAX_EVASION_SHEET_FRAMES} />
   </>
 );

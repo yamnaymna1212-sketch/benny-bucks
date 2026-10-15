@@ -1,0 +1,17 @@
+am_fenrir|What is tax evasion? Benny about to find out.|0.1
+am_fenrir|Benny fix cars for cash. Whole year, fifty thousand dollars.|0.05
+am_fenrir|Benny happy. Finally buy new truck.|0.05
+am_fenrir|Not so fast.|0.05
+am_fenrir|Tax time. Government say: fill out this form.|0.05
+am_fenrir|You earn fifty thousand? Government take like ten thousand. For roads. For schools.|0.05
+am_fenrir|Benny sad. Feel like robbed.|0.05
+am_fenrir|Benny have idea. Cash leave no paper. Just lie on form.|0.05
+am_fenrir|Benny write: only five thousand.|0.05
+am_fenrir|Now tax only like seven hundred. Benny keep almost ten thousand extra.|0.05
+am_fenrir|Benny buy new truck. New house. New jet ski.|0.05
+am_fenrir|But truck dealer report big cash to IRS. Over ten thousand? IRS know.|0.05
+am_fenrir|IRS. Internal Revenue Service. They compare. Bank. Truck. House. It no match.|0.05
+am_fenrir|IRS agent come. Benny hide at home. Agent already there. Benny run to woods. Agent there too.|0.05
+am_fenrir|IRS catch Benny. Pay back the tax. Plus seventy-five percent fraud penalty. Plus interest.|0.05
+am_fenrir|And tax evasion is a felony. Up to five years in jail.|0.05
+am_fenrir|Two things certain in life: death and taxes. Next video: how rich people pay less, legally.|0.05
