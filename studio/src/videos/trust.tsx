@@ -6,6 +6,7 @@ import {DrawArrow} from '../draw';
 import {CollageVideo, CollageSheet, LineFn, K} from '../collageVideo';
 import {GridField, AnimBenny, Word, Banner, PriceTag, Obj} from '../grid';
 import {IconArt} from '../icons';
+import {BabyRick} from '../babyRick';
 import TIM from '../data/trust.json';
 
 const G = '#1E9E4A', R = '#D7261E', GOLD = '#D9A400';
@@ -27,7 +28,7 @@ const lines: LineFn[] = [
     <PriceTag price="−$394M" unit="ESTATE TAX" x={270} y={490} at={at} size={90} color={R} />
     <PriceTag price="$0" unit="TAX ON THE GROWTH" x={810} y={490} at={at} size={90} color={G} />
     <Rick pose="money-bag" x={270} y={830} w={290} at={at} />
-    <Ic id="doodle:Safe" x={810} y={810} size={280} at={at} />
+    <Obj x={810} y={820} at={at}><BabyRick w={240} /></Obj>
     <DrawArrow from={[70, 300]} to={[150, 420]} at={0.3} color={R} />
     <DrawArrow from={[1010, 300]} to={[930, 420]} at={W(1, 'directly')} color={R} />
     <AnimBenny clip="point-then-shocked" x={540} y={1560} h={840} at={at} play={0} flip until={W(1, 'directly')} />
@@ -35,6 +36,7 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <PriceTag price="$1,000,000,000" x={540} y={380} at={w('billion')} color={G} size={92} />
     <Word text="+ 1 SON" x={540} y={560} at={w('son')} color={C.ink} size={100} />
+    <Obj x={860} y={1160} at={w('son')}><BabyRick w={230} /></Obj>
     <Rick pose="front" at={at} w={720} y={1400} /></>,
   ({at, w}) => <><GridField />
     <Word text="IRS" x={540} y={330} at={w('IRS')} color={R} size={170} stroke />
@@ -51,7 +53,7 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <Word text="THEY DON'T OWN" x={540} y={330} at={w('own')} color={C.ink} size={96} />
     <Word text="THE TRUST DOES" x={540} y={470} at={w('trusts')} color={G} size={110} stroke />
-    <Ic id="doodle:Safe" y={800} size={360} at={w('trusts')} />
+    <Obj x={540} y={780} at={w('trusts')}><BabyRick w={260} /></Obj>
     <Rick pose="pointing" at={at} /></>,
   ({at, w}) => <><GridField />
     <Word text="YEARS EARLIER" x={540} y={330} at={at} color={GOLD} size={110} stroke />
@@ -75,7 +77,7 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <Word text="OWNS $0" x={540} y={360} at={w('dime')} color={R} size={140} until={w('beneficiary')} />
     <Word text="BENEFICIARY" x={540} y={400} at={w('beneficiary')} color={GOLD} size={130} stroke />
-    <B clip="point-then-shocked" at={at} from={2} /></>,
+    <Obj x={540} y={1360} at={at}><BabyRick w={380} /></Obj></>,
   ({at, w}) => <><GridField />
     <Word text="MANSION" x={540} y={300} at={w('mansion')} color={C.ink} size={100} />
     <Word text="CARS" x={540} y={420} at={w('cars')} color={C.ink} size={100} />
@@ -117,6 +119,6 @@ const sfx: [number, string][] = [
 ];
 
 export const TRUST_SECONDS = 60;
-export const TrustVideo = () => <CollageVideo minSeconds={60} voice="voice-trust.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[1090, ...TIM.slice(1).map(() => 870)]} />;
+export const TrustVideo = () => <CollageVideo minSeconds={60} voice="voice-trust.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[1125, ...TIM.slice(1).map(() => 870)]} />;
 export const TRUST_SHEET_FRAMES = lines.length;
 export const TrustSheet = () => <CollageSheet lines={lines} />;
