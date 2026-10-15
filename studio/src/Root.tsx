@@ -1,4 +1,5 @@
 import {Composition} from 'remotion';
+import {TrustVideo, TRUST_SECONDS, TrustSheet, TRUST_SHEET_FRAMES} from './videos/trust';
 import {TaxEvasionVideo, TAX_EVASION_SECONDS, TaxEvasionSheet, TAX_EVASION_SHEET_FRAMES} from './videos/taxEvasion';
 import {IconGallery} from './videos/iconGallery';
 import {FoundationVideo, FOUNDATION_SECONDS, FoundationSheet, FOUNDATION_SHEET_FRAMES} from './videos/foundation';
@@ -30,5 +31,7 @@ export const Root = () => (
     <Composition id="icon-gallery" component={IconGallery} width={1080} height={1920} fps={30} durationInFrames={1} />
     <Composition id="tax-evasion" component={TaxEvasionVideo} width={1080} height={1920} fps={30} durationInFrames={TAX_EVASION_SECONDS * 30} />
     <Composition id="tax-evasion-sheet" component={TaxEvasionSheet} width={1080} height={1920} fps={30} durationInFrames={TAX_EVASION_SHEET_FRAMES} />
+    <Composition id="trust" component={TrustVideo} width={1080} height={1920} fps={30} durationInFrames={TRUST_SECONDS * 30} />
+    <Composition id="trust-sheet" component={TrustSheet} width={1080} height={1920} fps={30} durationInFrames={TRUST_SHEET_FRAMES} />
   </>
 );
