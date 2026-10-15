@@ -52,7 +52,7 @@ export const Banner = ({text = 'WHY', x = 540, y = 150, at, until, size = 120}: 
       {[[30, 0.3, 0, 0.45], [20, 0.75, -10, 0.75], [30, 1.2, 0, 1.05]].map(([a, b, c, d], i) => <line key={i} x1={a} y1={size * b} x2={60 + c} y2={size * d} stroke={C.ink} strokeWidth={7} strokeLinecap="round" />)}
       {[[w + 100, 0.45, w + 130, 0.3], [w + 100, 0.75, w + 140, 0.75], [w + 100, 1.05, w + 130, 1.2]].map(([a, b, c, d], i) => <line key={`r${i}`} x1={a} y1={size * b} x2={c} y2={size * d} stroke={C.ink} strokeWidth={7} strokeLinecap="round" />)}
     </svg>
-    <div style={{position: 'relative', transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: size, color: C.ink, letterSpacing: 2, whiteSpace: 'nowrap'}}>{text}</div>
+    <div style={{position: 'absolute', left: 0, top: 0, transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: size, color: C.ink, letterSpacing: 2, whiteSpace: 'nowrap'}}>{text}</div>
   </div>;
 };
 

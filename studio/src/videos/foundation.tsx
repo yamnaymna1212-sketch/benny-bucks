@@ -22,14 +22,15 @@ const Table = () => <svg width={620} height={260} viewBox="0 0 620 260">
 </svg>;
 
 const lines: LineFn[] = [
-  ({at}) => <><GridField /><Banner at={at} y={160} />
-    <PriceTag price="BILLIONAIRE" x={260} y={370} at={at} size={56} color={G} />
-    <PriceTag price="CHARITY ♥" x={820} y={370} at={at} size={62} color={R} />
-    <Rick pose="sitting-cash-pile" x={260} y={720} w={500} at={at} />
-    <Obj x={820} y={720} at={at}><Building w={360} /></Obj>
-    <DrawArrow from={[470, 1050]} to={[300, 520]} at={1.25} color={R} />
-    <DrawArrow from={[610, 1050]} to={[780, 520]} at={2.2} color={R} />
-    <AnimBenny clip="phone-shock-idea" x={540} y={1430} h={900} at={at} play={1.2} /></>,
+  // Hook: big "WHY?" top-center (first thing the eye hits); tags clear of Rick; arrows only in empty corners; Benny reacts from 0s.
+  ({at}) => <><GridField /><Banner text="WHY?" at={at} y={250} size={150} />
+    <PriceTag price="BILLIONAIRE" x={270} y={480} at={at} size={54} color={G} />
+    <PriceTag price="CHARITY ♥" x={810} y={480} at={at} size={60} color={R} />
+    <Rick pose="sitting-cash-pile" x={270} y={760} w={370} at={at} />
+    <Obj x={810} y={760} at={at}><Building w={290} /></Obj>
+    <DrawArrow from={[70, 300]} to={[150, 420]} at={0.35} color={R} />
+    <DrawArrow from={[1010, 300]} to={[930, 420]} at={W(1, 'charitable')} color={R} />
+    <AnimBenny clip="phone-shock-idea" x={540} y={1560} h={840} at={at} play={0} /></>,
   ({at, w}) => <><GridField />
     <Word text="NOT JUST" x={540} y={380} at={at} color={R} size={150} rot={-3} />
     <Word text="helping others" x={540} y={540} at={w('helping')} color={C.ink} size={80} italic />
@@ -113,11 +114,11 @@ const lines: LineFn[] = [
 const W = wordTimer(TIM);
 const st = (k: number) => TIM[k - 1].start;
 const cams: K[][] = [
-  [[0, 1, 540, 960], [1.2, 1, 540, 960], [1.6, 1.12, 380, 900], [W(1, 'charitable'), 1.12, 420, 900], [W(1, 'foundations'), 1.12, 700, 900], [TIM[0].end, 1.12, 700, 900]],
+  [[0, 1, 540, 960], [1.2, 1, 540, 960], [1.5, 1.08, 400, 960], [W(1, 'charitable'), 1.08, 420, 960], [W(1, 'foundations'), 1.08, 680, 960], [TIM[0].end, 1.08, 680, 960]],
   ...TIM.slice(1).map((): K[] => []),
 ];
 const sfx: [number, string][] = [
-  [1.25, 'whoosh'], [W(1, 'foundations'), 'whoosh'], [W(1, 'foundations') + 0.2, 'impact'], [st(2), 'record-scratch'],
+  [0.02, 'pop'], [0.35, 'spring'], [W(1, 'billionaires'), 'cha-ching'], [1.2, 'whoosh'], [W(1, 'charitable'), 'ding'], [W(1, 'foundations'), 'whoosh'], [W(1, 'foundations') + 0.2, 'impact'], [st(2), 'record-scratch'],
   [W(3, 'ten'), 'cha-ching'], [W(4, 'three'), 'cha-ching'], [W(4, 'Rick'), 'error'], [W(5, 'Rich'), 'ding'], [W(6, 'donates'), 'coins'], [W(6, 'deductible'), 'ding'],
   [W(7, 'His tax'), 'cha-ching'], [W(8, 'named'), 'impact'], [W(9, 'salary'), 'cha-ching'], [W(10, 'legal'), 'ding'], [W(11, 'self-dealing'), 'error'],
   [W(12, 'rest'), 'impact'], [W(13, 'decades'), 'ding'], [W(14, 'forty'), 'crack'], [W(15, 'salaries'), 'cha-ching'], [W(16, 'philanthropist'), 'sad-horn'], [W(17, 'Follow'), 'pop'],
