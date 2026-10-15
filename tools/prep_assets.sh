@@ -21,4 +21,5 @@ mkdir -p studio/public/fonts
 [ -f studio/public/fonts/ArchitectsDaughter.ttf ] || curl -sSLo studio/public/fonts/ArchitectsDaughter.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/architectsdaughter/ArchitectsDaughter-Regular.ttf"
 echo done
 tools/cutout.sh
+mkdir -p studio/public/anim && cp -u assets/character/animated/alpha/*.webm studio/public/anim/
 python3 tools/rig_auto.py

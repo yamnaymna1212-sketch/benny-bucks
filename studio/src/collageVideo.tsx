@@ -19,7 +19,8 @@ const soften = (c: K[]) => c.map(([t, z, fx, fy]) => [t, Math.min(z, 1.15), fx, 
 
 export const videoSeconds = (tim: Tim) => +(tim[tim.length - 1].end + 0.9).toFixed(2);
 
-export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305}: {voice: string; tim: Tim; lines: LineFn[]; cams: K[][]; sfx: [number, string][]; captionY?: number}) => {
+// captionFill/captionYs: grid style = yellow word placed per line next to the subject.
+export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305, captionFill, captionYs}: {voice: string; tim: Tim; lines: LineFn[]; cams: K[][]; sfx: [number, string][]; captionY?: number; captionFill?: string; captionYs?: number[]}) => {
   const end = videoSeconds(tim);
   const starts = [-1.6, ...tim.slice(1).map((l) => l.start)]; // line 1 is fully assembled at 0s: the hook opens still
   const cuts = tim.slice(1).map((l) => l.start);
@@ -32,7 +33,7 @@ export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305}: {v
       {lines.map((Line, k) => <Scene key={k} from={Math.max(0, starts[k])} to={k < lines.length - 1 ? tim[k + 1].start : end} cam={soften(cams[k] ?? [[0, 1, 540, 960]])}><Line at={starts[k]} w={k === 0 ? () => starts[0] : (word) => W(k + 1, word)} /></Scene>)}
     </Camera>
     {sfx.map(([t, n], i) => <Sfx key={i} at={t} name={n} />)}
-    <Scene from={0} to={end} overlay><OutlineCaptions lines={tim.map((l) => ({...l, text: l.text.replace(/-/g, ' ')}))} end={end} y={captionY} size={68} /></Scene>
+    <Scene from={0} to={end} overlay><OutlineCaptions lines={tim.map((l) => ({...l, text: l.text.replace(/-/g, ' ')}))} end={end} y={captionY} size={68} fill={captionFill} yOf={captionYs ? (i) => captionYs[i] ?? captionY : undefined} /></Scene>
   </>;
 };
 

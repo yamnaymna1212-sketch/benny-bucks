@@ -1,4 +1,5 @@
 import {Composition} from 'remotion';
+import {GridTest, GRID_TEST_SECONDS} from './videos/gridTest';
 import {AmbulanceVideo, AMBULANCE_SECONDS, AmbulanceSheet, AMBULANCE_SHEET_FRAMES} from './videos/ambulance';
 import {GasIran, GAS_IRAN_SECONDS} from './videos/gasIran';
 import {CashVsCard, CASH_CARD_SECONDS} from './videos/cashVsCard';
@@ -20,5 +21,6 @@ export const Root = () => (
     <Composition id="college-germany" component={CollegeVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(COLLEGE_SECONDS * 30)} />
     <Composition id="ambulance" component={AmbulanceVideo} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(AMBULANCE_SECONDS * 30)} />
     <Composition id="ambulance-sheet" component={AmbulanceSheet} width={1080} height={1920} fps={30} durationInFrames={AMBULANCE_SHEET_FRAMES} />
+    <Composition id="grid-test" component={GridTest} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(GRID_TEST_SECONDS * 30)} />
   </>
 );

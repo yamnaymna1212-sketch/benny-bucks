@@ -95,11 +95,14 @@ export const Stamp = ({x, y, at, until, text = 'APPROVED', color = C.red, size =
 };
 
 // Word captions: white fill + thick black outline (TikTok style), static, low-middle.
-export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84}: {lines: {text: string; start: number; end: number}[]; y?: number; end: number; size?: number}) => {
+// fill: word color (white default; 'grid' style uses yellow). yOf(lineIndex) lets the word sit next to the subject of each line.
+export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84, fill = '#fff', yOf}: {lines: {text: string; start: number; end: number}[]; y?: number; end: number; size?: number; fill?: string; yOf?: (i: number) => number}) => {
   const t = useT();
   if (t >= end) return null;
-  const line = lines.find((l) => t >= l.start - 0.05 && t <= l.end + 0.3);
-  if (!line) return null;
+  const li = lines.findIndex((l) => t >= l.start - 0.05 && t <= l.end + 0.3);
+  if (li < 0) return null;
+  const line = lines[li];
+  const yy = yOf ? yOf(li) : y;
   const ws = line.text.split(' ');
   let idx = 0, cur = '';
   for (const raw of ws) {
@@ -109,6 +112,6 @@ export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84}: {lines: {t
   }
   if (!cur) return null;
   const fs = Math.min(size, Math.floor(900 / (cur.length * 0.66)));
-  return <div style={{position: 'absolute', left: 540, top: y, transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: fs, color: '#fff',
+  return <div style={{position: 'absolute', left: 540, top: yy, transform: 'translate(-50%,-50%)', fontFamily: FONT, fontWeight: 900, fontSize: fs, color: fill,
     WebkitTextStroke: `${fs * 0.16}px ${C.ink}`, paintOrder: 'stroke fill', textTransform: 'uppercase', whiteSpace: 'nowrap'}}>{cur}</div>;
 };

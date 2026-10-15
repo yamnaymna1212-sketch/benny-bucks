@@ -36,3 +36,16 @@ cha-ching on prices · whoosh on every camera move · impact on the shock (auto 
 - Frame 0 vs frame 29 identical except the caption (`compare -metric RMSE`).
 - No white edge at max zoom; caption never over a price or Benny; duration ≈ 60s (ffprobe).
 - Facts sourced in `videos/<slug>/script.md`.
+
+## Style B: "grid" (user's reference video — preferred for new videos)
+Files: `studio/src/grid.tsx` (GridField, AnimBenny, Word, Banner, PriceTag, Obj), example `studio/src/videos/gridTest.tsx`,
+reference + analysis in `references/videos/style-ref-gas-iran-*`.
+- White graph paper (GridField, bleeds for camera moves). Props get a thin black contour (Obj) — no keylines/shadows.
+- Benny MOVES: `<AnimBenny clip="long-receipt-facepalm" ...>` from `assets/character/animated` (index there). Transparent
+  WebMs come from `bash tools/cutout_clips.sh` (already in `assets/character/animated/alpha`, copied to `studio/public/anim` by prep_assets.sh).
+  In the hook use `play={1.2}` so Benny is frozen for the still first second.
+- 2–3 shots per line (≈ one new shot per second): switch Benny clip + keyword on spoken words with `at={w('word')} until={w('next')}`.
+- Hook: `<Banner text="WHY">` + flags + `<PriceTag>` per side + Benny in the middle + red `DrawArrow`s on each side's word; camera pans side to side with the words.
+- Keywords: `<Word>` big colored text (red italic for bad, green for good), orange/red DrawArrow.
+- Captions: one yellow word with black outline next to Benny's head: `captionFill="#FFD43B" captionYs={[...per line]}`.
+- No real people's likeness (use cast-fed-guy etc.).
