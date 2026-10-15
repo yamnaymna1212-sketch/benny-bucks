@@ -37,7 +37,7 @@ cha-ching on prices · whoosh on every camera move · impact on the shock (auto 
 - No white edge at max zoom; caption never over a price or Benny; duration ≈ 60s (ffprobe).
 - Facts sourced in `videos/<slug>/script.md`.
 
-## Style B: "grid" (user's reference video — preferred for new videos)
+## Style B: "grid" — THE SAVED DEFAULT FORMAT (user approved 2026-10-15; reference build: videos/foundation)
 Files: `studio/src/grid.tsx` (GridField, AnimBenny, Word, Banner, PriceTag, Obj), example `studio/src/videos/gridTest.tsx`,
 reference + analysis in `references/videos/style-ref-gas-iran-*`.
 - White graph paper (GridField, bleeds for camera moves). Props get a thin black contour (Obj) — no keylines/shadows.
