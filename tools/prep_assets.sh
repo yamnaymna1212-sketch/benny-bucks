@@ -23,3 +23,6 @@ echo done
 tools/cutout.sh
 mkdir -p studio/public/anim && cp -u assets/character/animated/alpha/*.webm studio/public/anim/
 python3 tools/rig_auto.py
+# user's modern house drawing: crop the house and remove the blue sky (not white, so cutout.sh can't do it)
+[ -f studio/public/gen/house-modern-cut.png ] || convert assets/props/house-modern.jpg -crop 960x720+0+400 +repage -alpha set -fuzz 14% -fill none \
+  -draw "color 2,2 floodfill" -draw "color 957,2 floodfill" -draw "color 480,2 floodfill" -channel A -morphology Erode Diamond:1 +channel studio/public/gen/house-modern-cut.png

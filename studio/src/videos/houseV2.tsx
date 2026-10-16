@@ -33,16 +33,13 @@ const lines: LineFn[] = [
     <Write text="People Buy" x={540} y={390} at={at} size={120} pencil={false} />
     <Write text="A House" x={540} y={520} at={at} size={120} pencil={false} />
     <Line x1={330} x2={750} y={590} color={C.ink} at={at} />
-    <Write text="POOR" x={250} y={680} at={at} size={100} pencil={false} color={R} />
-    <Line x1={120} x2={380} y={735} color={R} at={at} />
-    <Write text="RICH" x={830} y={680} at={at} size={100} pencil={false} color={G} />
-    <Line x1={700} x2={960} y={735} color={G} at={at} />
-    <AnimBenny clip="reads-bill-upset" x={250} y={1200} h={780} at={at} play={0} />
-    <Rick pose="front" x={830} y={1200} w={600} at={at} />
-    <Obj x={540} y={1440} at={at}><House w={220} /></Obj></>,
+    <AnimBenny clip="reads-bill-upset" x={220} y={1010} h={700} at={at} play={0} />
+    <Rick pose="front" x={860} y={1010} w={480} at={at} />
+    <Pic src="house-modern-cut" x={540} y={1610} w={560} at={at} /></>,
   ({at, w}) => <><GridField />
-    <PriceTag price="$430,000" unit="ZILLOW LISTING" x={540} y={400} at={w('four')} color={C.ink} size={130} />
-    <Obj x={540} y={700} at={w('Zillow')}><IconArt id="brand:siZillow" size={240} /></Obj>
+    <PriceTag price="$430,000" unit="ZILLOW LISTING" x={540} y={330} at={w('four')} color={C.ink} size={130} />
+    <Pic src="house-modern-cut" x={540} y={720} w={560} at={w('house')} />
+    <Obj x={890} y={520} at={w('Zillow')}><IconArt id="brand:siZillow" size={150} /></Obj>
     <B clip="phone-shock-idea" at={at} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="5% DOWN" x={540} y={330} at={w('five')} color={C.ink} size={110} />
@@ -120,7 +117,7 @@ const lines: LineFn[] = [
 
 const cams: K[][] = [
   // hook: zoom from frame 0 to POOR/Benny on "poor", swing to RICH/Rick on "rich", pull toward the house on "house"
-  [[0, 1, 540, 960], [0.25, 1.25, 300, 900], [W(1, 'rich') - 0.05, 1.25, 300, 900], [W(1, 'rich') + 0.2, 1.25, 780, 900], [W(1, 'house') - 0.05, 1.25, 780, 900], [W(1, 'house') + 0.2, 1.12, 540, 1050], [TIM[0].end, 1.12, 540, 1050]],
+  [[0, 1, 540, 960], [0.25, 1.25, 280, 820], [W(1, 'rich') - 0.05, 1.25, 280, 820], [W(1, 'rich') + 0.2, 1.25, 800, 820], [W(1, 'house') - 0.05, 1.25, 800, 820], [W(1, 'house') + 0.2, 1.15, 540, 1400], [TIM[0].end, 1.15, 540, 1400]],
   ...TIM.slice(1).map((): K[] => []),
 ];
 const sfx: [number, string][] = [
@@ -131,6 +128,6 @@ const sfx: [number, string][] = [
 ];
 
 export const HOUSE_V2_SECONDS = 60;
-export const HouseV2Video = () => <CollageVideo minSeconds={60} voice="voice-housev2.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[1740, ...TIM.slice(1).map(() => 870)]} />;
+export const HouseV2Video = () => <CollageVideo minSeconds={60} voice="voice-housev2.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[-1, 955, ...TIM.slice(2).map(() => 870)]} />;
 export const HOUSE_V2_SHEET_FRAMES = lines.length;
 export const HouseV2Sheet = () => <CollageSheet lines={lines} />;

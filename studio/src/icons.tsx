@@ -15,7 +15,7 @@ import {Stack, Bill, Receipt, House, Plane, Calendar, Coin, Wallet, Card} from '
 const POOLS: Record<string, string[]> = {
   money: ['img:rial-stack', 'doodle:Cash', 'prop:Bill', 'doodle:FinanceDollar', 'doodle:Saving', 'prop:Wallet', 'doodle:Coin'],
   tax: ['prop:Receipt', 'doodle:FileInvoice', 'doodle:Calculator', 'doodle:Bill'],
-  house: ['prop:House', 'doodle:Home'],
+  house: ['img:house-modern-cut', 'prop:House', 'doodle:Home'],
   car: ['doodle:Car', 'doodle:Truck'],
 };
 export const ICON_WORDS: Record<string, string> = {
@@ -23,7 +23,7 @@ export const ICON_WORDS: Record<string, string> = {
   dollar: 'prop:Bill', dollars: 'prop:Bill', bucks: 'prop:Bill', salary: 'prop:Bill', salaries: 'prop:Bill', paycheck: 'prop:Bill',
   bank: 'img:bank', banks: 'img:bank', irs: 'img:government-office', government: 'img:government-office',
   tax: 'prop:Receipt', taxes: 'prop:Receipt', bill: 'prop:Receipt', bills: 'prop:Receipt', fee: 'prop:Receipt', receipt: 'prop:Receipt',
-  house: 'prop:House', home: 'prop:House', estate: 'prop:House', rent: 'prop:House', jet: 'prop:Plane', plane: 'prop:Plane', flight: 'prop:Plane', trips: 'prop:Plane',
+  house: 'img:house-modern-cut', home: 'prop:House', estate: 'prop:House', rent: 'prop:House', jet: 'prop:Plane', plane: 'prop:Plane', flight: 'prop:Plane', trips: 'prop:Plane',
   year: 'prop:Calendar', years: 'prop:Calendar', month: 'prop:Calendar', coin: 'prop:Coin', wallet: 'prop:Wallet', card: 'prop:Card',
   billionaire: 'doodle:Diamond', billionaires: 'doodle:Diamond', rich: 'doodle:Diamond', charity: 'doodle:Heart', charitable: 'doodle:Heart',
   foundation: 'doodle:Bank', foundations: 'doodle:Bank', helping: 'doodle:Hand', others: 'doodle:User', board: 'doodle:User', family: 'doodle:User', kids: 'doodle:UserMale',

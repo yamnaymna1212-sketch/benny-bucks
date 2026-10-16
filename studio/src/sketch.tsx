@@ -103,6 +103,7 @@ export const OutlineCaptions = ({lines, y = Z.wordY, end, size = 84, fill = '#ff
   if (li < 0) return null;
   const line = lines[li];
   const yy = yOf ? yOf(li) : y;
+  if (yy < 0) return null; // a negative y hides the caption for that line (e.g. the hook title already shows the words)
   const ws = line.text.split(' ');
   let idx = 0, cur = '';
   for (const raw of ws) {
