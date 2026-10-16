@@ -39,4 +39,6 @@ x = t(1.1); save("sputter", lp(noise(1.1), 60) * (np.sin(2 * np.pi * 9 * x) > 0.
 save("sad-horn", mix((0, tone(392, 370, 0.4, 0.5, "sq")), (0.45, tone(370, 349, 0.4, 0.5, "sq")), (0.9, tone(349, 300, 0.9, 0.8, "sq"))))
 x = t(0.6); save("roar", lp(noise(0.6), 25) * (0.6 + 0.4 * np.sin(2 * np.pi * 28 * x)) * env(len(x), a=0.05, r=0.3))
 save("hum", lp(noise(1.0), 200) * 0.3 + tone(120, 120, 1.0, 5) * 0.3)
+save("splash", lp(noise(0.7), 4) * env(int(0.7 * SR), r=0.6) + 0.3 * lp(noise(0.7), 40) * env(int(0.7 * SR), r=0.3))
+save("blip", tone(880, 880, 0.08, 0.07))
 print(len(os.listdir(out)), "sfx")
