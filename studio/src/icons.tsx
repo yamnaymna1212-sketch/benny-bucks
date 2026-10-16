@@ -39,6 +39,8 @@ export const ICON_WORDS: Record<string, string> = {
   son: 'doodle:UserMale', trust: 'doodle:FileContract', trusts: 'doodle:FileContract', shares: 'doodle:Analytics', company: 'doodle:Factory', mansion: 'prop:House',
   irrevocable: 'doodle:Lock', beneficiary: 'doodle:Gift', dime: 'doodle:Coin', sued: 'doodle:FileContract', creditors: 'doodle:Bill', divorce: 'doodle:Cross',
   generations: 'doodle:Tree', limit: 'doodle:Tick',
+  zillow: 'brand:siZillow', insurance: 'doodle:Shield', roof: 'prop:House', fourplex: 'doodle:Warehouse', building: 'doodle:Warehouse',
+  tenants: 'doodle:User', mortgage: 'doodle:FileContract', profit: 'doodle:TrendUp', life: 'doodle:Heart',
   facebook: 'brand:siFacebook', instagram: 'brand:siInstagram', tiktok: 'brand:siTiktok', youtube: 'brand:siYoutube', uber: 'brand:siUber',
   apple: 'brand:siApple', iphone: 'brand:siApple', google: 'brand:siGoogle', tesla: 'brand:siTesla', netflix: 'brand:siNetflix', paypal: 'brand:siPaypal',
   visa: 'brand:siVisa', mastercard: 'brand:siMastercard', mcdonalds: 'brand:siMcdonalds', starbucks: 'brand:siStarbucks', nike: 'brand:siNike', walmart: 'brand:siWalmart',
