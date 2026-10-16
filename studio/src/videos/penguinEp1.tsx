@@ -9,7 +9,7 @@ import {HandFont} from '../sketch';
 import {Fish, INK, Line, Penguin, onTwos} from '../penguin/rig';
 import {Seagull, Walrus} from '../penguin/cast';
 import {BigWord, FishFlight, FishPile, IceBank, Igloo, Letter, Note, Paper, PriceTag, Stamp, Title} from '../penguin/world';
-import {Music, perform} from '../penguin/acting';
+import {perform} from '../penguin/acting';
 import TIM from '../data/penguin-rent.json';
 
 const T = (i: number) => TIM[i].start;
@@ -180,11 +180,8 @@ export const PenguinEp1 = () => {
       {set === 'ending' && <Ending t={t} />}
     </AbsoluteFill>
     {set === 'flow' && tc > T(8) + 0.9 && tc < T(9) && <Line t={t} text="thank you penguin." x={560} y={560} at={T(8) + 0.9} size={64} />}
-    {/* narrator + music bed (ducked under the voice) + a few key SFX */}
+    {/* narrator + a few key SFX (no music: user rule) */}
     <Audio src={staticFile('penguin-rent-voice.mp3')} />
-    <Music src="penguin-curious" from={0} until={T(20)} vol={0.2} />
-    <Music src="penguin-sad" from={T(20)} until={T(22)} vol={0.24} stops={[T(21) + 0.7]} />
-    <Music src="penguin-curious" from={T(22)} until={PENGUIN_EP1_SECONDS} startAt={20} vol={0.2} />
     <Sfx at={T(1)} name="cha-ching" vol={0.3} />
     <Sfx at={T(4) + 0.5} name="whoosh" vol={0.25} />
     <Sfx at={T(10) + 0.6} name="pop" vol={0.3} />

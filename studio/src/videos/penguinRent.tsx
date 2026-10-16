@@ -8,7 +8,7 @@ import {HandFont} from '../sketch';
 import {Fish, INK, Line, Penguin, onTwos} from '../penguin/rig';
 import {Seagull, Walrus} from '../penguin/cast';
 import {BigWord, FishPile, Igloo, IceCube, Mansion, PriceTag, SnowPile, SpeedLines, Thought, Title, Wallet, fishOf} from '../penguin/world';
-import {Music, perform} from '../penguin/acting';
+import {perform} from '../penguin/acting';
 
 export const PENGUIN_RENT_SECONDS = 20.5;
 const G = 1300;
@@ -114,10 +114,7 @@ export const PenguinRent = () => {
     </AbsoluteFill>
     <Wallet steps={[[2.7, RENT_FISH], [4.8, 0], [7.0, 1], [8.0, 0]]} />
     {shot.set === 'yard' && tc >= 5.6 && tc < 7.0 && <Line t={t} text="thanks, tenant." x={540} y={1730} at={5.8} size={92} />}
-    {/* music bed carries the video; SFX only on the key beats */}
-    <Music src="penguin-curious" from={0} until={9.0} vol={0.6} />
-    <Music src="penguin-sad" from={9.0} until={13.0} vol={0.62} />
-    <Music src="penguin-curious" from={13.0} until={PENGUIN_RENT_SECONDS} startAt={13} vol={0.6} stops={[17.5]} />
+    {/* no music (user rule); SFX only on the key beats */}
     <Sfx at={4.75} name="whoosh" vol={0.3} /><Sfx at={5.25} name="cha-ching" vol={0.3} />
     <Sfx at={8.0} name="pop" vol={0.35} />
     <Sfx at={16.0} name="pop" vol={0.35} />

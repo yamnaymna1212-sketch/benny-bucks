@@ -85,3 +85,67 @@ export const Seagull = ({x, y, h = 380, id = 'gull', flip, pose = {}}: {x: numbe
     </svg>
   </>;
 };
+
+// Puffin: the shop owner (snow cones, groceries). Small, stripy beak, apron. Faces left by default.
+export type PuffinPose = {mouth?: number; lids?: number; smirk?: boolean; flap?: number; look?: number};
+export const Puffin = ({x, y, h = 360, id = 'puffin', flip, pose = {}}: {x: number; y: number; h?: number; id?: string; flip?: boolean; pose?: PuffinPose}) => {
+  const t = useT2() + 3.1;
+  const {mouth = 0, lids = 0, smirk = false, flap = 0, look = -0.4} = pose;
+  const k = h / 400, w = 300 * k, br = 1 + 0.014 * Math.sin(t * 2.6), blink = (t % 3.9) < 0.12 ? 0.1 : 1;
+  return <>
+    <Shadow x={x} y={y} w={w * 0.7} />
+    <svg width={w} height={h} viewBox="0 0 300 400" style={{position: 'absolute', left: x - w / 2, top: y - h, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
+      <defs><Boil id={id} amount={1.8 / k} /></defs>
+      <g filter={`url(#${id})`} transform={`translate(150 392) scale(1 ${br}) translate(-150 -392)`}>
+        <path d="M110 384 L96 396 L132 396 Z M180 384 L166 396 L204 396 Z" fill="#F08A24" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M150 60 C 230 60, 256 170, 256 270 C 256 350, 220 388, 150 388 C 80 388, 44 350, 44 270 C 44 170, 70 60, 150 60 Z" fill="#1F1F1F" stroke={INK} strokeWidth={LW} />
+        <path d="M150 190 C 210 190, 224 260, 222 310 C 220 360, 190 380, 150 380 C 110 380, 80 360, 78 310 C 76 260, 90 190, 150 190 Z" fill="#FFF8EA" />
+        <path d="M84 300 L216 300 L210 372 Q150 392 90 372 Z" fill="#E9F4FB" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        <path d="M120 300 L120 270 M180 300 L180 270" stroke={INK} strokeWidth={3} />
+        <ellipse cx={150} cy={140} rx={78} ry={62} fill="#F3F3F0" stroke={INK} strokeWidth={LW - 1} />
+        <ellipse cx={122} cy={128} rx={14} ry={14 * blink} fill="#fff" stroke={INK} strokeWidth={LW - 1} /><circle cx={122 + look * 6} cy={130} r={5} fill={INK} />
+        <ellipse cx={178} cy={128} rx={14} ry={14 * blink} fill="#fff" stroke={INK} strokeWidth={LW - 1} /><circle cx={178 + look * 6} cy={130} r={5} fill={INK} />
+        {lids > 0 && <path d={`M106 ${114 + 28 * lids} L138 ${114 + 28 * lids} M162 ${114 + 28 * lids} L194 ${114 + 28 * lids}`} stroke={INK} strokeWidth={LW} strokeLinecap="round" />}
+        {smirk && <path d="M104 106 L136 112 M164 112 L196 104" stroke={INK} strokeWidth={LW} strokeLinecap="round" />}
+        {mouth > 0.03 && <path d={`M118 166 L182 166 L150 ${176 + mouth * 26} Z`} fill="#7A1F1F" />}
+        <path d="M112 150 Q150 136 188 150 L150 200 Z" fill="#E8543A" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M128 154 L150 186 L172 154" fill="none" stroke="#F2C230" strokeWidth={8} />
+        <path d="M118 151 Q150 140 182 151" fill="none" stroke="#4A6FA5" strokeWidth={6} />
+        <g transform={`rotate(${-flap} 60 230)`}><path d="M60 230 C 30 270, 26 320, 44 340 C 60 320, 72 280, 74 240 Z" fill="#1F1F1F" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /></g>
+        <g transform={`rotate(${flap} 240 230)`}><path d="M240 230 C 270 270, 274 320, 256 340 C 240 320, 228 280, 226 240 Z" fill="#1F1F1F" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /></g>
+      </g>
+    </svg>
+  </>;
+};
+
+// Big Seal: runs the Federal Fish Reserve (the money maker). Sits upright, suit + red tie + glasses.
+export type BigSealPose = {mouth?: number; lids?: number; flap?: number; look?: number; sweat?: boolean};
+export const BigSeal = ({x, y, h = 520, id = 'bigseal', flip, pose = {}}: {x: number; y: number; h?: number; id?: string; flip?: boolean; pose?: BigSealPose}) => {
+  const t = useT2() + 4.2;
+  const {mouth = 0, lids = 0.2, flap = 0, look = -0.3} = pose;
+  const k = h / 520, w = 400 * k, br = 1 + 0.012 * Math.sin(t * 2.1), blink = (t % 4.3) < 0.12 ? 0.1 : 1, wh = Math.sin(t * 6) * 2;
+  return <>
+    <Shadow x={x} y={y} w={w * 0.8} />
+    <svg width={w} height={h} viewBox="0 0 400 520" style={{position: 'absolute', left: x - w / 2, top: y - h, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
+      <defs><Boil id={id} amount={1.8 / k} /></defs>
+      <g filter={`url(#${id})`} transform={`translate(200 512) scale(1 ${br}) translate(-200 -512)`}>
+        <path d="M250 500 L330 470 C 344 466, 352 480, 340 490 L 300 512 Z" fill="#7C838A" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M120 170 C 80 260, 70 420, 100 500 L 300 512 C 320 420, 300 260, 260 170 Z" fill="#8E959C" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M120 230 C 96 300, 92 420, 110 500 L 290 508 C 304 420, 300 300, 276 230 L 200 300 Z" fill="#2B3440" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M160 236 L200 300 L240 236 Z" fill="#fff" stroke={INK} strokeWidth={LW - 1} />
+        <path d="M192 244 L208 244 L204 258 L214 330 L200 346 L186 330 L196 258 Z" fill="#D83A2E" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        <g transform={`rotate(${-flap} 120 280)`}><path d="M120 280 C 80 320, 60 380, 80 400 C 100 396, 130 340, 140 300 Z" fill="#2B3440" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /></g>
+        <path d="M110 120 C 100 50, 160 20, 210 30 C 270 42, 290 110, 270 170 C 250 220, 140 224, 116 180 C 110 162, 110 140, 110 120 Z" fill="#8E959C" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M130 170 C 160 200, 230 204, 262 172 C 240 214, 150 214, 130 170 Z" fill="#C3C8CD" />
+        <ellipse cx={162} cy={104} rx={9} ry={9 * blink} fill={INK} /><ellipse cx={226} cy={100} rx={9} ry={9 * blink} fill={INK} />
+        <circle cx={162 + look * 4} cy={104} r={24} fill="none" stroke={INK} strokeWidth={4} /><circle cx={226 + look * 4} cy={100} r={24} fill="none" stroke={INK} strokeWidth={4} />
+        <path d="M186 102 L202 100" stroke={INK} strokeWidth={4} />
+        {lids > 0 && <path d={`M146 ${92 + 20 * lids} L178 ${92 + 20 * lids} M210 ${88 + 20 * lids} L242 ${88 + 20 * lids}`} stroke={INK} strokeWidth={LW} strokeLinecap="round" />}
+        <ellipse cx={192} cy={136} rx={16} ry={11} fill={INK} />
+        <path d={`M172 ${156 + mouth * 4} Q192 ${162 + mouth * 20} 212 ${156 + mouth * 4}`} fill={mouth > 0.1 ? '#7A1F1F' : 'none'} stroke={INK} strokeWidth={LW} strokeLinecap="round" />
+        {[-1, 0, 1].map((i) => <path key={i} d={`M170 ${140 + i * 8} L130 ${136 + i * 14 + wh}`} stroke={INK} strokeWidth={2.5} strokeLinecap="round" />)}
+        {[-1, 0, 1].map((i) => <path key={`r${i}`} d={`M214 ${140 + i * 8} L254 ${136 + i * 14 - wh}`} stroke={INK} strokeWidth={2.5} strokeLinecap="round" />)}
+      </g>
+    </svg>
+  </>;
+};

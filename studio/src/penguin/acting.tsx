@@ -83,3 +83,28 @@ export const Music = ({src, from = 0, until, vol = 0.32, duck = [], stops = [], 
 export const useSeconds = () => useCurrentFrame() / FPS;
 export const lerpT = (t: number, a: number, b: number, from: number, to: number) => interpolate(t, [a, b], [from, to], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 export const Frag = React.Fragment;
+
+// ---------- Transitions between shots (variety without shake): ----------
+// 'cut' hard cut (default, like the reference) | 'swipe' slide + streak | 'zoom' punch through | 'iris' circle open | 'pop' scale settle.
+export type Fx = 'cut' | 'swipe' | 'swipeL' | 'zoom' | 'iris' | 'pop';
+export function cutFX(tc: number, cuts: {at: number; fx?: Fx}[]): React.CSSProperties {
+  const D = 0.16;
+  for (let i = 0; i < cuts.length; i++) {
+    const {at, fx = 'cut'} = cuts[i];
+    if (fx === 'cut') continue;
+    const into = (tc - at) / D, out = (at - tc) / D; // into: 0..1 after the cut, out: 0..1 before it
+    if (into >= 0 && into < 1) {
+      const p = 1 - Math.pow(1 - into, 3);
+      if (fx === 'swipe' || fx === 'swipeL') return {transform: `translateX(${(1 - p) * (fx === 'swipe' ? 1080 : -1080)}px)`, filter: `blur(${(1 - p) * 6}px)`};
+      if (fx === 'zoom') return {transform: `scale(${0.7 + 0.3 * p})`, transformOrigin: '540px 960px'};
+      if (fx === 'iris') return {clipPath: `circle(${p * 1150}px at 540px 900px)`};
+      if (fx === 'pop') return {transform: `scale(${1.12 - 0.12 * p})`, transformOrigin: '540px 960px'};
+    }
+    if (out > 0 && out < 1 && (fx === 'swipe' || fx === 'swipeL' || fx === 'zoom')) {
+      const p = 1 - out;
+      if (fx === 'zoom') return {transform: `scale(${1 + p * p * 1.6})`, transformOrigin: '540px 960px', filter: `blur(${p * 5}px)`};
+      return {transform: `translateX(${p * p * (fx === 'swipe' ? -1080 : 1080)}px)`, filter: `blur(${p * 6}px)`};
+    }
+  }
+  return {};
+}

@@ -5,7 +5,7 @@ import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {FPS} from '../engine';
 import {HAND} from '../sketch';
-import {Boil, FishShape, INK, back, useT2} from './rig';
+import {Boil, FishShape, INK, Penguin, back, useT2} from './rig';
 
 const LW = 4.5;
 const ICE = '#E4F4FC', ICE2 = '#BFE0F0', ICE3 = '#8FC3DC';
@@ -285,4 +285,109 @@ export const FishFlight = ({x1, y1, x2, y2, a, b, n = 6, w = 120, seed = 0, arc 
   const t = useT2(); if (t < a || t >= b) return null;
   const p = (t - a) / (b - a);
   return <FishPile x={x1 + (x2 - x1) * p} y={y1 + (y2 - y1) * p - Math.sin(p * Math.PI) * arc} n={n} w={w} seed={seed} />;
+};
+
+// The Federal Fish Reserve (the "Fed"): the only place that can make new fish.
+export const FishReserve = ({x, y, w = 700, id = 'fed'}: {x: number; y: number; w?: number; id?: string}) => {
+  const h = w * 0.9;
+  return <Svg x={x} y={y} w={w} h={h} vb="0 0 700 630" id={id}>
+    <path d="M230 120 Q350 10 470 120 Z" fill={ICE2} stroke={INK} strokeWidth={LW} />
+    <path d="M350 10 L350 -40" stroke={INK} strokeWidth={LW} /><path d="M350 -40 Q380 -30 410 -42 L410 -12 Q380 0 350 -10 Z" fill="#41A8EC" stroke={INK} strokeWidth={LW - 1} />
+    <path d="M30 200 L350 110 L670 200 Z" fill={ICE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <rect x={20} y={200} width={660} height={70} fill="#fff" stroke={INK} strokeWidth={LW} />
+    <text x={350} y={236} textAnchor="middle" dominantBaseline="middle" fontFamily={HAND} fontSize={44} fill={INK} fontWeight={700}>FEDERAL FISH RESERVE</text>
+    {[80, 200, 500, 620].map((cx) => <g key={cx}><rect x={cx - 28} y={270} width={56} height={280} fill={ICE} stroke={INK} strokeWidth={LW} /><path d={`M${cx - 10} 284 L${cx - 10} 536 M${cx + 10} 284 L${cx + 10} 536`} stroke={ICE3} strokeWidth={3} /></g>)}
+    <path d="M280 550 L280 380 Q350 330 420 380 L420 550 Z" fill="#2C4A5E" stroke={INK} strokeWidth={LW} />
+    <g transform="translate(350 455) scale(0.38)"><path d="M-128 -9 C -90 -49, 18 -55, 82 -9 C 86 -3, 86 5, 82 11 C 18 53, -90 49, -128 9 L -104 1 Z" fill="#E2B13C" stroke={INK} strokeWidth={10} /></g>
+    <rect x={10} y={550} width={680} height={34} fill={ICE2} stroke={INK} strokeWidth={LW} />
+    <rect x={0} y={584} width={700} height={40} fill={ICE} stroke={INK} strokeWidth={LW} />
+  </Svg>;
+};
+
+// Fish-making machine. `on` = running: shakes, puffs, and fish pop out of the chute.
+export const FishPrinter = ({x, y, w = 420, on = false, id = 'printer'}: {x: number; y: number; w?: number; on?: boolean; id?: string}) => {
+  const t = useT2(), sh = on ? Math.sin(t * 60) * 4 : 0;
+  return <div style={{position: 'absolute', left: 0, top: 0, transform: `translate(${sh}px, ${on ? Math.abs(Math.sin(t * 30)) * -4 : 0}px)`}}>
+    <Svg x={x} y={y} w={w} h={w * 1.05} vb="0 0 420 440" id={id}>
+      <rect x={30} y={60} width={300} height={360} rx={20} fill="#9FB8C6" stroke={INK} strokeWidth={LW} />
+      <rect x={60} y={90} width={240} height={90} rx={10} fill="#E4F4FC" stroke={INK} strokeWidth={LW} />
+      <text x={180} y={146} textAnchor="middle" fontFamily={HAND} fontSize={46} fill={INK} fontWeight={700}>FISH</text>
+      <circle cx={110} cy={240} r={26} fill={on ? '#2E9E4F' : '#B9CFDA'} stroke={INK} strokeWidth={LW} />
+      <circle cx={190} cy={240} r={26} fill={on ? '#D83A2E' : '#B9CFDA'} stroke={INK} strokeWidth={LW} />
+      <path d={`M300 230 L370 ${on ? 300 : 180}`} stroke={INK} strokeWidth={12} strokeLinecap="round" /><circle cx={370} cy={on ? 300 : 180} r={20} fill="#D83A2E" stroke={INK} strokeWidth={LW} />
+      <path d="M330 330 L410 360 L410 420 L330 400 Z" fill="#6F8A99" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <rect x={70} y={300} width={220} height={20} rx={6} fill="#6F8A99" />
+      {on && [0, 1, 2].map((i) => { const p = ((t * 1.5 + i / 3) % 1); return <circle key={i} cx={100 + i * 60} cy={50 - p * 60} r={20 + p * 20} fill="#E8EEF2" stroke={INK} strokeWidth={3} opacity={1 - p} />; })}
+    </Svg>
+  </div>;
+};
+
+// Snow cone: paper cone + coloured ice ball. size 1 = normal, 0.5 = shrinkflation.
+export const SnowCone = ({x, y, w = 120, size = 1, color = '#E8546A', id = 'cone'}: {x: number; y: number; w?: number; size?: number; color?: string; id?: string}) =>
+  <Svg x={x} y={y} w={w} h={w * 1.6} vb="0 0 120 192" id={id}>
+    <ellipse cx={60} cy={110 - 46 * size} rx={52 * size} ry={46 * size} fill={color} stroke={INK} strokeWidth={LW} />
+    <path d={`M${60 - 30 * size} ${100 - 60 * size} q 10 -8 20 0`} fill="none" stroke="#fff" strokeWidth={6} strokeLinecap="round" opacity={0.7} />
+    <path d="M14 104 L106 104 L60 188 Z" fill="#F7F1E3" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d="M30 120 L90 120 M40 140 L80 140" stroke="#D9CBB0" strokeWidth={4} />
+  </Svg>;
+
+// Snow cone shop stand with a flip-card price ("1 fish" -> "2 fish").
+export const ConeStand = ({x, y, w = 520, price, id = 'cstand', cones = 10}: {x: number; y: number; w?: number; price: string; id?: string; cones?: number}) => {
+  const h = w * 1.25;
+  return <>
+    <Svg x={x} y={y} w={w} h={h} vb="0 0 520 650" id={id}>
+      <rect x={30} y={170} width={16} height={480} fill="#9A6A35" stroke={INK} strokeWidth={LW} /><rect x={474} y={170} width={16} height={480} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
+      {Array.from({length: 6}, (_, i) => <path key={i} d={`M${10 + i * 84} 150 L${94 + i * 84} 150 L${94 + i * 84} 200 Q${52 + i * 84} 230 ${10 + i * 84} 200 Z`} fill={i % 2 ? '#fff' : '#E8546A'} stroke={INK} strokeWidth={LW - 1} />)}
+      <path d="M4 20 L516 14 L516 150 L4 154 Z" fill="#C8924E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <text x={260} y={92} textAnchor="middle" dominantBaseline="middle" fontFamily={HAND} fontSize={76} fill={INK} fontWeight={700}>SNOW CONES</text>
+      <path d="M0 440 L520 436 L520 470 L0 474 Z" fill="#B07A3E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <rect x={20} y={474} width={480} height={176} fill="#D9A866" stroke={INK} strokeWidth={LW} />
+    </Svg>
+    {Array.from({length: cones}, (_, i) => <SnowCone key={i} x={x - w * 0.38 + (i % 5) * w * 0.19} y={y - h * 0.3 + (i < 5 ? 0 : 0)} w={w * 0.12} color={['#E8546A', '#41A8EC', '#F2C230', '#2E9E4F', '#9B59B6'][i % 5]} id={`c${id}${i}`} />).filter((_, i) => i < Math.min(cones, 5))}
+    <PriceTag x={x + w * 0.34} y={y - h * 0.62} price={price} rot={8} size={0.7} color={INK} />
+  </>;
+};
+
+// A crowd of small penguins (varied builds) that can run as a stampede (dir +1 = to the right).
+export const Crowd = ({x, y, n = 7, h = 260, run = 0, dir = 1, seed = 0}: {x: number; y: number; n?: number; h?: number; run?: number; dir?: number; seed?: number}) => {
+  const t = useT2();
+  const builds = ['normal', 'fat', 'thin', 'baby', 'normal', 'fat', 'thin'] as const;
+  return <>{Array.from({length: n}, (_, i) => {
+    const px = x + (i - (n - 1) / 2) * h * 0.5 + ((i * 53) % 40) + run * dir, py = y + ((i * 37) % 3) * 16;
+    const b = builds[(i + seed) % builds.length];
+    return <PenguinMini key={i} x={px} y={py} h={b === 'baby' ? h * 0.7 : h} build={b} running={run > 0} dir={dir} t={t} i={i} />;
+  })}</>;
+};
+const PenguinMini = ({x, y, h, build, running, dir, t, i}: {x: number; y: number; h: number; build: 'normal' | 'fat' | 'thin' | 'baby'; running: boolean; dir: number; t: number; i: number}) =>
+  <Penguin id={`crowd${i}`} x={x} y={y} h={h} build={build} seed={i * 0.37} pose={running ? {side: true, turn: dir, walk: t * 3.2 + i * 0.3, run: true, brows: 'happy'} : {brows: i % 2 ? 'happy' : 'none', beak: i % 3 ? 'smile' : 'flat', look: [((i % 3) - 1) * 0.5, 0], flapL: 30 + (i % 2) * 40, flapR: 40}} shadow />;
+
+// Igloo interior: back wall arch + bed (fish hidden under it).
+export const Bedroom = ({x, y, w = 900, fish = 0, fishShrink = 1, id = 'bed'}: {x: number; y: number; w?: number; fish?: number; fishShrink?: number; id?: string}) => {
+  const t = useT2();
+  return <Svg x={x} y={y} w={w} h={w * 0.9} vb="0 0 900 810" id={id}>
+    <path d="M20 800 L20 380 Q450 -60 880 380 L880 800" fill="#EEF7FC" stroke={ICE3} strokeWidth={6} />
+    {[200, 330, 460, 590].map((yy) => <path key={yy} d={`M${40 + (600 - yy) * 0.1} ${yy} Q450 ${yy - 60} ${860 - (600 - yy) * 0.1} ${yy}`} fill="none" stroke={ICE2} strokeWidth={4} />)}
+    <rect x={240} y={560} width={460} height={110} rx={14} fill="#C8924E" stroke={INK} strokeWidth={LW} />
+    <path d="M240 560 Q470 500 700 560 L700 600 L240 600 Z" fill="#7FB3E0" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <ellipse cx={300} cy={548} rx={60} ry={28} fill="#fff" stroke={INK} strokeWidth={LW} />
+    <rect x={250} y={670} width={20} height={70} fill="#9A6A35" stroke={INK} strokeWidth={LW} /><rect x={670} y={670} width={20} height={70} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
+    {Array.from({length: fish}, (_, i) => <g key={i} transform={`translate(${330 + i * 70} ${715}) scale(${0.3 * fishShrink}) rotate(${(i % 2) * 8 - 4})`}><FishShape t={t + i} wag={0.3} /></g>)}
+  </Svg>;
+};
+
+// Penguin Town skyline: a row of igloos of different sizes (the "world" establishing shot).
+export const Town = ({y, id = 'town'}: {y: number; id?: string}) =>
+  <>{[[110, 230], [330, 300], [560, 250], [790, 320], [990, 220]].map(([x, w], i) => <Igloo key={i} x={x} y={y + (i % 2) * 20} w={w} id={`${id}${i}`} />)}</>;
+
+// Real-world stat card: drawn dollar bill(s) with years (sourced numbers only).
+export const StatCard = ({x, y, from, to, fromLabel, toLabel, at = -99, note}: {x: number; y: number; from: string; to: string; fromLabel: string; toLabel: string; at?: number; note?: string}) => {
+  const p = usePop(at); if (p <= 0) return null;
+  const bill = (txt: string, lbl: string, c: string) => <div style={{textAlign: 'center'}}>
+    <div style={{width: 360, height: 170, background: '#CFE8C8', border: `6px solid ${INK}`, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'inset 0 0 0 12px #B5D9AB'}}>
+      <span style={{fontFamily: HAND, fontSize: 100, fontWeight: 700, color: c}}>{txt}</span></div>
+    <div style={{fontFamily: HAND, fontSize: 56, marginTop: 10, color: INK}}>{lbl}</div></div>;
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${p})`, display: 'flex', alignItems: 'center', gap: 30}}>
+    {bill(from, fromLabel, INK)}<span style={{fontFamily: HAND, fontSize: 110, color: '#D83A2E'}}>→</span>{bill(to, toLabel, '#D83A2E')}
+    {note && <div style={{position: 'absolute', left: '50%', top: '108%', transform: 'translateX(-50%)', fontFamily: HAND, fontSize: 34, color: '#777', whiteSpace: 'nowrap'}}>{note}</div>}
+  </div>;
 };
