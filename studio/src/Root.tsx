@@ -1,5 +1,7 @@
 import {Composition} from 'remotion';
 import {PenguinTest, PENGUIN_TEST_SECONDS} from './videos/penguinTest';
+import {PenguinWorld} from './videos/penguinWorld';
+import {PenguinBank, PENGUIN_BANK_SECONDS} from './videos/penguinBank';
 import {HouseV2Video, HOUSE_V2_SECONDS, HouseV2Sheet, HOUSE_V2_SHEET_FRAMES} from './videos/houseV2';
 import {TrustVideo, TRUST_SECONDS, TrustSheet, TRUST_SHEET_FRAMES} from './videos/trust';
 import {TaxEvasionVideo, TAX_EVASION_SECONDS, TaxEvasionSheet, TAX_EVASION_SHEET_FRAMES} from './videos/taxEvasion';
@@ -16,6 +18,8 @@ import {Bonus, BONUS_SECONDS} from './videos/bonus';
 import {CollegeSheet, COLLEGE_SHEET_FRAMES, CollegeAssemble, COLLEGE_ASSEMBLE_SECONDS, CollegeVideo, COLLEGE_SECONDS} from './videos/collegeGermany';
 export const Root = () => (
   <>
+    <Composition id="penguin-bank" component={PenguinBank} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(PENGUIN_BANK_SECONDS * 30)} />
+    <Composition id="penguin-world" component={PenguinWorld} width={1080} height={1920} fps={30} durationInFrames={60} />
     <Composition id="penguin-test" component={PenguinTest} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(PENGUIN_TEST_SECONDS * 30)} />
     <Composition id="gas-iran" component={GasIran} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(GAS_IRAN_SECONDS * 30)} />
     <Composition id="cash-vs-card" component={CashVsCard} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(CASH_CARD_SECONDS * 30)} />

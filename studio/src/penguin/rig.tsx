@@ -19,6 +19,12 @@ export const Boil = ({id, amount = 1.8, freq = 0.03}: {id: string; amount?: numb
   </filter>;
 };
 
+// Characters animate "on twos" (12 poses/s) like hand-drawn animation; the camera still moves every frame.
+export const useT2 = () => Math.floor(useCurrentFrame() / 2) * 2 / FPS;
+export const onTwos = (frame: number) => Math.floor(frame / 2) * 2 / FPS;
+// Overshoot ease for flipper swings / pops (anticipation + settle).
+export const back = (p: number) => { const c = 1.9; const q = Math.max(0, Math.min(1, p)) - 1; return 1 + (c + 1) * q * q * q + c * q * q; };
+
 // Beak/mouth open amount while speaking (uneven syllables).
 export const talk = (t: number, ranges: [number, number][]) => {
   for (const [a, b] of ranges) if (t >= a && t <= b) return Math.min(1, Math.abs(Math.sin(t * 17)) * (0.55 + 0.45 * Math.sin(t * 5.3 + 1)));
@@ -47,7 +53,7 @@ export const FishShape = ({t, rotten = 0, wag = 1}: {t: number; rotten?: number;
 
 // Free-standing fish at (x,y), w px wide.
 export const Fish = ({x, y, w = 200, rot = 0, flip, rotten = 0, id, seed = 0, wag = 1}: {x: number; y: number; w?: number; rot?: number; flip?: boolean; rotten?: number; id: string; seed?: number; wag?: number}) => {
-  const t = useCurrentFrame() / FPS + seed, k = w / 300, bend = Math.sin(t * 6 + 1) * 2.5 * wag;
+  const t = useT2() + seed, k = w / 300, bend = Math.sin(t * 6 + 1) * 2.5 * wag;
   return <svg width={w} height={w * 0.5} viewBox="-150 -75 300 150" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.25, overflow: 'visible', transform: `rotate(${rot + bend}deg) scaleX(${flip ? -1 : 1})`}}>
     <defs><Boil id={id} amount={1.6 / k} /></defs>
     <g filter={`url(#${id})`}><FishShape t={t} rotten={rotten} wag={wag} /></g>
@@ -62,8 +68,9 @@ export type PenguinPose = {
 };
 
 // (x, y) = point between the feet; h = height px. turn: 0 = front, +1 = 3/4 facing right (-1 left).
-export const Penguin = ({x, y, h = 440, id = 'pg', seed = 0, pose = {}}: {x: number; y: number; h?: number; id?: string; seed?: number; pose?: PenguinPose}) => {
-  const t = useCurrentFrame() / FPS + seed;
+export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker';
+export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit = 'none'}: {x: number; y: number; h?: number; id?: string; seed?: number; pose?: PenguinPose; outfit?: Outfit}) => {
+  const t = useT2() + seed;
   const {mouth = 0, flapL = 6, flapR = 6, look = [0, 0], brows = 'none', turn = 0, eyeScale = 1, pupil = 1, walk = null, lean = 0, squash = 0, tremble = 0, holding} = pose;
   const k = h / 520, w = 400 * k;
   const breathe = 1 + 0.014 * Math.sin(t * 2.6);
@@ -104,9 +111,10 @@ export const Penguin = ({x, y, h = 440, id = 'pg', seed = 0, pose = {}}: {x: num
         <path d="M282 220 C 298 290, 296 380, 262 446 C 286 380, 290 300, 274 226 Z" fill="#E8E8E8" />
         <path d="M150 420 q 14 10 28 0 M206 434 q 14 10 28 0" fill="none" stroke="#BDBDBD" strokeWidth={4} strokeLinecap="round" />
       </g>
-      <g transform={`rotate(${Math.sin(t * 3.1) * 6 + rot * 1.5} ${200 + dx * 0.5} 44)`}>
+      {outfit === 'burglar' && <path d={`M${96 + dx} 150 Q200 136 ${304 + dx} 150 L${306 + dx} 226 Q200 212 ${94 + dx} 226 Z`} fill="#111" />}
+      {outfit !== 'rich' && outfit !== 'worker' && <g transform={`rotate(${Math.sin(t * 3.1) * 6 + rot * 1.5} ${200 + dx * 0.5} 44)`}>
         <path d={`M${196 + dx * 0.5} 44 C ${188 + dx * 0.5} 16, 172 6, 162 12 M${200 + dx * 0.5} 44 C ${200 + dx * 0.5} 12, 214 -2, 226 4 M${204 + dx * 0.5} 44 C ${218 + dx * 0.5} 24, 240 24, 246 34`} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" />
-      </g>
+      </g>}
       {eye(154 + dx, turn > 0.3)}{eye(246 + dx, turn < -0.3)}
       {brows !== 'none' && <g transform={`translate(${dx} 0)`}><path d={browPath[brows]} fill="none" stroke="#fff" strokeWidth={LW + 6} strokeLinecap="round" />
         <path d={browPath[brows]} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" /></g>}
@@ -115,15 +123,42 @@ export const Penguin = ({x, y, h = 440, id = 'pg', seed = 0, pose = {}}: {x: num
         <path d={`M156 ${250 + o * 26} Q200 ${262 + o * 38} 244 ${250 + o * 26} Q200 ${254 + o * 30} 156 ${250 + o * 26} Z`} fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
         <path d={`M${146 - Math.min(0, turn) * 30} 246 Q200 230 ${254 + Math.max(0, turn) * 30} 246 Q200 260 ${146 - Math.min(0, turn) * 30} 246 Z`} fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
       </g>
+      <OutfitLayer outfit={outfit} dx={dx} t={t} />
       {nearR && <g transform={`translate(${300 + turn * 20} 232)`}>{flipper(flapR, !!holding)}</g>}
       {nearL && <g transform={`translate(${100 + turn * 20} 232) scale(-1 1)`}>{flipper(flapL, !!holding)}</g>}
     </g>
   </svg>;
 };
 
+// Accessories that tell the viewer who a penguin is at a glance (like the reference's top hat / shirt+tie / mask).
+const OutfitLayer = ({outfit, dx, t}: {outfit: Outfit; dx: number; t: number}) => {
+  const hx = 200 + dx * 0.5, wob = Math.sin(t * 2.4) * 1.5;
+  if (outfit === 'rich') return <g>
+    <g transform={`rotate(${wob} ${hx} 60)`}>
+      <ellipse cx={hx} cy={62} rx={96} ry={16} fill="#111" stroke={INK} strokeWidth={LW} />
+      <path d={`M${hx - 62} 60 L${hx - 56} -66 Q${hx} -76 ${hx + 56} -66 L${hx + 62} 60 Z`} fill="#111" stroke={INK} strokeWidth={LW} />
+      <path d={`M${hx - 60} 30 L${hx + 60} 30 L${hx + 61} 50 L${hx - 61} 50 Z`} fill="#D83A2E" />
+    </g>
+    <circle cx={246 + dx} cy={190} r={44} fill="none" stroke="#E2B13C" strokeWidth={6} />
+    <path d={`M${288 + dx} 204 Q 310 280 ${290 + dx} 330`} fill="none" stroke="#E2B13C" strokeWidth={3} />
+    <path d={`M${200 + dx} 300 L${150 + dx} 276 L${150 + dx} 326 Z M${200 + dx} 300 L${250 + dx} 276 L${250 + dx} 326 Z`} fill="#D83A2E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <circle cx={200 + dx} cy={300} r={11} fill="#B42A20" stroke={INK} strokeWidth={LW} />
+  </g>;
+  if (outfit === 'banker') return <g>
+    <circle cx={154 + dx} cy={190} r={44} fill="none" stroke={INK} strokeWidth={5} /><circle cx={246 + dx} cy={190} r={44} fill="none" stroke={INK} strokeWidth={5} />
+    <path d={`M${198 + dx} 186 L${202 + dx} 186`} stroke={INK} strokeWidth={6} />
+    <path d={`M${186 + dx} 288 L${214 + dx} 288 L${208 + dx} 306 L${222 + dx} 396 L${200 + dx} 418 L${178 + dx} 396 L${192 + dx} 306 Z`} fill="#2F5DA8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+  </g>;
+  if (outfit === 'worker') return <g transform={`rotate(${wob} ${hx} 60)`}>
+    <path d={`M${hx - 100} 70 Q${hx} 40 ${hx + 100} 70 Q${hx + 70} -20 ${hx} -22 Q${hx - 70} -20 ${hx - 100} 70 Z`} fill="#F2C230" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d={`M${hx - 16} -20 L${hx - 10} 52 M${hx + 16} -20 L${hx + 10} 52`} stroke="#C9971A" strokeWidth={6} />
+  </g>;
+  return null;
+};
+
 // ---------- Seal landlord: side view facing left, two-tone grey, deadpan dot eyes, red tie ----------
 export const Seal = ({x, y, h = 330, id = 'seal', mouth = 0, flap = 0, smug = false}: {x: number; y: number; h?: number; id?: string; mouth?: number; flap?: number; smug?: boolean}) => {
-  const t = useCurrentFrame() / FPS + 1.7;
+  const t = useT2() + 1.7;
   const k = h / 360, w = 520 * k, br = 1 + 0.012 * Math.sin(t * 2.2);
   const blink = (t % 4.1) < 0.12 ? 0.1 : 1, hb = Math.sin(t * 1.6) * 3;
   const wh = Math.sin(t * 7) * 2;
@@ -155,10 +190,10 @@ export const Stand = ({x, y, label, id = 'stand', w = 420, h = 600, counter = 19
   <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{position: 'absolute', left: x - w / 2, top: y - h, overflow: 'visible'}}>
     <defs><Boil id={id} amount={1.8} /></defs>
     <g filter={`url(#${id})`}>
-      <rect x={18} y={170} width={14} height={h - 170} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
-      <rect x={w - 32} y={170} width={14} height={h - 170} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
-      <path d={`M4 8 L${w - 4} 4 L${w - 2} 176 L2 180 Z`} fill="#C8924E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
-      <text x={w / 2} y={128} textAnchor="middle" fontFamily="Architects Daughter" fontSize={118} fill={INK}>{label}</text>
+      <rect x={18} y={Math.min(170, w * 0.42)} width={14} height={h - Math.min(170, w * 0.42)} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
+      <rect x={w - 32} y={Math.min(170, w * 0.42)} width={14} height={h - Math.min(170, w * 0.42)} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
+      <path d={`M4 8 L${w - 4} 4 L${w - 2} 176 L2 180 Z`.replace(/176|180/g, (m) => m === "176" ? String(Math.min(176, w * 0.44)) : String(Math.min(180, w * 0.45)))} fill="#C8924E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <text x={w / 2} y={Math.min(92, w * 0.22)} textAnchor="middle" dominantBaseline="middle" fontFamily="Architects Daughter" fontSize={Math.min(w * 0.3, (w * 1.5) / Math.max(1, label.length))} fill={INK}>{label}</text>
       {children}
       <path d={`M0 ${h - counter} L${w} ${h - counter - 4} L${w} ${h - counter + 18} L0 ${h - counter + 22} Z`} fill="#B07A3E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
     </g>
