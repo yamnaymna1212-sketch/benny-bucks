@@ -14,6 +14,7 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 | Billionaire foundations | videos/foundation/foundation.mp4 | 60s, ends "Follow for part two" |
 | Tax evasion (Benny, cash worker) | videos/tax-evasion/tax-evasion.mp4 | 60s, ends "Next video: how rich people pay less, legally" |
 | Trusts / estate tax | videos/trust/trust.mp4 | 60s, Rick Jr. as the son |
+| Poor vs rich buy a house (v2) | videos/house-v2/house-v2.mp4 | 60s, reference-style hook, calmer pace, user house art |
 | Ambulance USA vs Japan | videos/ambulance-japan/ambulance.mp4 | old collage style |
 | College USA vs Germany | videos/college-germany/college-germany.mp4 | old collage style, accurate hook |
 | Older: gas-iran, cash-vs-card, rich-get-richer, house-poor-vs-rich, bonus-1000 | videos/* | pre-format |
