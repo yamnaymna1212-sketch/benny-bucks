@@ -172,3 +172,89 @@ export const FishPile = ({x, y, n, w = 150, rotten = 0, seed = 0}: {x: number; y
 };
 
 export const WORLD_FPS = FPS;
+
+// Tiny ice-cube apartment (the hero's rental), with a hand-written sign on the door.
+export const IceCube = ({x, y, w = 300, id = 'cube', sign}: {x: number; y: number; w?: number; id?: string; sign?: string}) =>
+  <Svg x={x} y={y} w={w} h={w} vb="0 0 300 300" id={id}>
+    <path d="M20 60 L230 40 L280 70 L280 296 L20 296 Z" fill={ICE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d="M20 60 L230 40 L280 70 L70 92 Z" fill="#fff" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d="M230 40 L230 270 M70 92 L70 296" stroke={ICE3} strokeWidth={4} />
+    <path d="M110 296 L110 200 Q150 176 190 200 L190 296 Z" fill="#2C4A5E" stroke={INK} strokeWidth={LW} />
+    <path d="M240 120 l 20 -6 M246 170 l 20 -6" stroke={ICE3} strokeWidth={4} strokeLinecap="round" />
+    {sign && <><rect x={96} y={120} width={108} height={46} fill="#fff" stroke={INK} strokeWidth={LW - 1} />
+      <text x={150} y={152} textAnchor="middle" fontFamily={HAND} fontSize={Math.min(30, 170 / sign.length)} fill="#D83A2E" fontWeight={700}>{sign}</text></>}
+  </Svg>;
+
+// Rich igloo mansion: three domes, gold trim, fish flag.
+export const Mansion = ({x, y, w = 760, id = 'mansion'}: {x: number; y: number; w?: number; id?: string}) => {
+  const t = useT2();
+  return <Svg x={x} y={y} w={w} h={w * 0.72} vb="0 0 760 548" id={id}>
+    <path d="M380 70 L380 0" stroke={INK} strokeWidth={LW} /><path d={`M380 4 Q420 ${14 + Math.sin(t * 6) * 6} 456 8 Q420 ${34 + Math.sin(t * 6) * 6} 380 34 Z`} fill="#41A8EC" stroke={INK} strokeWidth={LW - 1} />
+    <path d="M20 546 Q30 300 200 296 Q330 300 340 546 Z" fill={ICE} stroke={INK} strokeWidth={LW} />
+    <path d="M420 546 Q430 300 580 296 Q730 300 740 546 Z" fill={ICE} stroke={INK} strokeWidth={LW} />
+    <path d="M170 546 Q180 70 380 66 Q580 70 590 546 Z" fill="#F2FAFE" stroke={INK} strokeWidth={LW} />
+    {[180, 280, 380].map((yy) => <path key={yy} d={`M${190 + (yy - 120) * 0.05} ${yy} Q380 ${yy - 40} ${570 - (yy - 120) * 0.05} ${yy}`} fill="none" stroke={ICE3} strokeWidth={3.5} />)}
+    <path d="M190 470 Q380 440 570 470" fill="none" stroke="#E2B13C" strokeWidth={10} />
+    <path d="M320 546 L320 440 Q380 400 440 440 L440 546 Z" fill="#2C4A5E" stroke={INK} strokeWidth={LW} />
+    <circle cx={428} cy={496} r={7} fill="#E2B13C" />
+    {[[110, 430], [650, 430], [270, 250], [490, 250]].map(([a, b], i) => <rect key={i} x={a - 26} y={b - 22} width={52} height={44} rx={8} fill="#FFE9A8" stroke={INK} strokeWidth={LW - 1} />)}
+  </Svg>;
+};
+
+// Hand-drawn price tag on a string: big dollar price + fish conversion line.
+export const PriceTag = ({x, y, price, fish, at = -99, rot = -6, size = 1, color = '#D83A2E'}: {x: number; y: number; price: string; fish?: string; at?: number; rot?: number; size?: number; color?: string}) => {
+  const t = useT2(), p = usePop(at); if (p <= 0) return null;
+  const sw = Math.sin(t * 2.5) * 2;
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(${rot + sw}deg) scale(${p * size})`, transformOrigin: '50% 0%'}}>
+    <div style={{position: 'relative', background: '#FFF9EC', border: `5px solid ${INK}`, borderRadius: 18, padding: '10px 34px 12px 50px', textAlign: 'center', boxShadow: '4px 6px 0 rgba(0,0,0,0.10)'}}>
+      <div style={{position: 'absolute', left: 14, top: '50%', width: 18, height: 18, marginTop: -9, borderRadius: '50%', border: `4px solid ${INK}`, background: '#fff'}} />
+      <div style={{fontFamily: HAND, fontSize: 96, fontWeight: 700, color, lineHeight: 1}}>{price}</div>
+      {fish && <div style={{fontFamily: HAND, fontSize: 44, color: INK, lineHeight: 1.1}}>{fish}</div>}
+    </div>
+  </div>;
+};
+
+// Fish ATM: screen + slot that spits fish.
+export const FishATM = ({x, y, w = 300, id = 'atm', screen = 'FISH'}: {x: number; y: number; w?: number; id?: string; screen?: string}) =>
+  <Svg x={x} y={y} w={w} h={w * 1.5} vb="0 0 300 450" id={id}>
+    <rect x={20} y={20} width={260} height={428} rx={18} fill="#9FB8C6" stroke={INK} strokeWidth={LW} />
+    <rect x={50} y={60} width={200} height={120} rx={8} fill="#BFE7C9" stroke={INK} strokeWidth={LW} />
+    <text x={150} y={134} textAnchor="middle" fontFamily={HAND} fontSize={44} fill={INK}>{screen}</text>
+    {Array.from({length: 9}, (_, i) => <rect key={i} x={70 + (i % 3) * 56} y={210 + Math.floor(i / 3) * 44} width={44} height={32} rx={6} fill="#E4EEF3" stroke={INK} strokeWidth={3} />)}
+    <rect x={60} y={360} width={180} height={24} rx={6} fill="#2C4A5E" stroke={INK} strokeWidth={LW} />
+  </Svg>;
+
+// Motion streaks behind a running character (dir = +1 running right).
+export const SpeedLines = ({x, y, dir = 1, h = 300}: {x: number; y: number; dir?: number; h?: number}) => {
+  const t = useT2();
+  return <svg width={400} height={h} style={{position: 'absolute', left: dir > 0 ? x - 400 : x, top: y - h, overflow: 'visible'}}>
+    {[0.2, 0.4, 0.6, 0.8].map((k, i) => { const len = 120 + ((t * 9 + i) % 1) * 140, yy = h * k, x0 = dir > 0 ? 400 - 30 : 30;
+      return <path key={i} d={`M${x0} ${yy} L${x0 - dir * len} ${yy}`} stroke={INK} strokeWidth={5} strokeLinecap="round" opacity={0.7} />; })}
+  </svg>;
+};
+
+// Big hand-lettered key word / number (readable on a phone): pops, slight wobble.
+export const BigWord = ({text, x, y, at, until, size = 150, color = INK, rot = -3}: {text: string; x: number; y: number; at: number; until?: number; size?: number; color?: string; rot?: number}) => {
+  const t = useT2(), p = usePop(at); if (p <= 0 || (until !== undefined && t >= until)) return null;
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(${rot + Math.sin(t * 3) * 1}deg) scale(${p})`, fontFamily: HAND, fontSize: size, fontWeight: 700,
+    color, whiteSpace: 'nowrap', lineHeight: 1, WebkitTextStroke: `${size * 0.035}px #fff`, paintOrder: 'stroke fill', textShadow: '0 0 1px #fff'}}>{text}</div>;
+};
+
+// Fish wallet: only shows when the count changes (then fades after `hold` s). steps = [time, count][] sorted.
+export const Wallet = ({steps, hold = 2.4}: {steps: [number, number][]; hold?: number}) => {
+  const t = useT2();
+  const cur = [...steps].reverse().find(([a]) => t >= a);
+  if (!cur) return null;
+  const since = t - cur[0];
+  if (since > hold) return null;
+  const n = cur[1], o = Math.min(1, since / 0.12, (hold - since) / 0.3), kick = 1 + 0.25 * Math.exp(-since * 9);
+  return <div style={{position: 'absolute', left: 46, top: 250, opacity: o, transform: `scale(${kick})`, transformOrigin: 'left center', display: 'flex', alignItems: 'center', gap: 12,
+    background: '#fff', border: `5px solid ${INK}`, borderRadius: 26, padding: '8px 30px 8px 10px', boxShadow: '4px 6px 0 rgba(0,0,0,0.10)'}}>
+    <svg width={140} height={74} viewBox="-150 -75 300 150"><FishShape t={t} rotten={0} /></svg>
+    <div style={{fontFamily: HAND, fontSize: 92, color: n === 0 ? '#D83A2E' : INK, lineHeight: 1, fontWeight: 700}}>× {n}</div>
+  </div>;
+};
+
+// Exchange rate used across the whole series so prices never contradict: 1 fish = $10.
+export const FISH_USD = 10;
+export const fishOf = (usd: number) => Math.round(usd / FISH_USD);
