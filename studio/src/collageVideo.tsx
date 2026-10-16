@@ -59,12 +59,12 @@ const Beat = ({beats, cuts, children}: {beats: number[]; cuts: number[]; childre
 export const videoSeconds = (tim: Tim) => +(tim[tim.length - 1].end + 0.9).toFixed(2);
 
 // captionFill/captionYs: grid style = yellow word placed per line next to the subject.
-export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305, captionFill, captionYs, beats = true, icons = false, minSeconds = 0}: {voice: string; tim: Tim; lines: LineFn[]; cams: K[][]; sfx: [number, string][]; captionY?: number; captionFill?: string; captionYs?: number[]; beats?: boolean; icons?: boolean; minSeconds?: number}) => {
+export const CollageVideo = ({voice, tim, lines, cams, sfx, captionY = 1305, captionFill, captionYs, beats = true, icons = false, minSeconds = 0, beatEvery = 0.6}: {voice: string; tim: Tim; lines: LineFn[]; cams: K[][]; sfx: [number, string][]; captionY?: number; captionFill?: string; captionYs?: number[]; beats?: boolean; icons?: boolean; minSeconds?: number; beatEvery?: number}) => {
   const end = Math.max(minSeconds, videoSeconds(tim));
   const starts = [-1.6, ...tim.slice(1).map((l) => l.start)]; // line 1 is fully assembled at 0s: the hook opens still
   const cuts = tim.slice(1).map((l) => l.start);
   const W = wordTimer(tim);
-  const bt = beats ? beatTimes(tim) : []; // Beat sits inside each Scene so the bled background covers whips/zooms
+  const bt = beats ? beatTimes(tim, beatEvery) : []; // Beat sits inside each Scene so the bled background covers whips/zooms
   return <>
     <Fonts />
     <Audio src={staticFile(voice)} />

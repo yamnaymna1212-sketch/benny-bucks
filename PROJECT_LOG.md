@@ -23,6 +23,7 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 - No real people / copyrighted characters (no Fed-chair likeness, no Scrooge McDuck, no Stewie). No Gemini/paid APIs. No dark/black backgrounds.
 - Pasted scripts from other creators = structure only; reword to avoid duplicate content.
 - Show stills sheet + hook preview, then render on "go".
+- House v2 (2026-10-16): user asked for a CLEAR, calmer pace — voice speed 1.0 and `beatEvery={1.6}`; ask before reusing the very fast pace.
 
 ## Known gaps
 - Rick has no animated clips (stills only). IRS agent = cast-advisor (book says "ADVISOR"). Doodle emoji faces are weak.

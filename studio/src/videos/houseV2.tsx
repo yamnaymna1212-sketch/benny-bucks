@@ -33,13 +33,13 @@ const lines: LineFn[] = [
     <Write text="People Buy" x={540} y={390} at={at} size={120} pencil={false} />
     <Write text="A House" x={540} y={520} at={at} size={120} pencil={false} />
     <Line x1={330} x2={750} y={590} color={C.ink} at={at} />
-    <Write text="POOR" x={200} y={680} at={at} size={96} pencil={false} color={R} />
-    <Line x1={80} x2={320} y={732} color={R} at={at} />
-    <Write text="RICH" x={880} y={680} at={at} size={96} pencil={false} color={G} />
-    <Line x1={760} x2={1000} y={732} color={G} at={at} />
-    <AnimBenny clip="reads-bill-upset" x={190} y={1130} h={700} at={at} play={0} />
-    <Rick pose="front" x={885} y={1120} w={520} at={at} />
-    <Pic src="house-modern-cut" x={540} y={1310} w={330} at={at} /></>,
+    <Write text="POOR" x={200} y={1090} at={at} size={96} pencil={false} color={R} />
+    <Line x1={80} x2={320} y={1142} color={R} at={at} />
+    <Write text="RICH" x={880} y={1090} at={at} size={96} pencil={false} color={G} />
+    <Line x1={760} x2={1000} y={1142} color={G} at={at} />
+    <AnimBenny clip="reads-bill-upset" x={200} y={1520} h={700} at={at} play={0} />
+    <Rick pose="front" x={880} y={1510} w={500} at={at} />
+    <Pic src="house-modern-cut" x={540} y={830} w={460} at={at} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="$430,000" unit="ZILLOW LISTING" x={540} y={330} at={w('four')} color={C.ink} size={130} />
     <Pic src="house-modern-cut" x={540} y={720} w={560} at={w('house')} />
@@ -47,21 +47,21 @@ const lines: LineFn[] = [
     <B clip="phone-shock-idea" at={at} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="5% DOWN" x={540} y={330} at={w('five')} color={C.ink} size={110} />
-    <Word text="$21,500" x={540} y={520} at={w('Twenty-one')} color={R} size={150} stroke />
-    <Word text="everything he saved" x={540} y={680} at={w('Everything')} color={C.ink} size={70} italic />
-    <B clip="throws-paper-falls" at={w('Everything')} />
-    <Ic id="doodle:PiggyBank" x={540} y={1300} size={260} at={at} until={w('Everything')} /></>,
+    <Word text="$21,500" x={540} y={520} at={w('twenty-one')} color={R} size={150} stroke />
+    <Word text="all his savings" x={540} y={680} at={w('savings')} color={C.ink} size={70} italic />
+    <B clip="throws-paper-falls" at={w('savings')} />
+    <Ic id="doodle:PiggyBank" x={540} y={1300} size={260} at={at} until={w('savings')} /></>,
   ({at, w}) => <><GridField />
     <Pic src="bank" y={620} w={460} at={at} />
     <Word text="30 YEARS · 7%" x={540} y={330} at={w('Thirty')} color={R} size={110} stroke />
     <B clip="reads-bill-upset" at={at} x={540} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="$2,700" unit="EVERY MONTH" x={540} y={400} at={w('twenty-seven')} color={R} size={170} />
-    <Word text="+ taxes + insurance" x={540} y={620} at={w('Before')} color={C.ink} size={74} italic />
+    <Word text="+ taxes + insurance" x={540} y={620} at={w('month')} color={C.ink} size={74} italic />
     <B clip="long-receipt-facepalm" at={at} /></>,
   ({at, w}) => <><GridField />
     <Word text="$978,000" x={540} y={330} at={w('million')} color={R} size={170} stroke />
-    <Word text="for a $430,000 house" x={540} y={520} at={w('For')} color={C.ink} size={80} italic />
+    <Word text="for a $430,000 house" x={540} y={520} at={w('pays')} color={C.ink} size={80} italic />
     <B clip="point-then-shocked" at={at} from={2} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="$570,000" unit="JUST INTEREST" x={540} y={400} at={w('interest')} color={R} size={150} />
@@ -77,7 +77,7 @@ const lines: LineFn[] = [
   ({at, w}) => <><GridField />
     <Word text="SAME $21K" x={540} y={300} at={w('Same')} color={C.ink} size={110} />
     <Obj x={540} y={640} at={w('fourplex')}><Building w={360} /></Obj>
-    <PriceTag price="4 HOMES" unit="ONE BUILDING" x={540} y={950} at={w('Four')} color={G} size={100} />
+    <PriceTag price="4 HOMES" unit="ONE BUILDING" x={540} y={950} at={w('four homes')} color={G} size={100} />
     <Rick pose="pointing" x={800} y={1450} w={420} at={at} /></>,
   ({at, w}) => <><GridField />
     <PriceTag price="FHA LOAN" unit="3.5% DOWN" x={540} y={380} at={w('FHA')} color={G} size={130} />
@@ -90,7 +90,7 @@ const lines: LineFn[] = [
     <Rick pose="thumbs-up" x={830} y={1450} w={400} at={at} /></>,
   ({at, w}) => <><GridField />
     <Word text="$1,550 × 3" x={540} y={330} at={w('fifteen')} color={G} size={140} stroke />
-    <PriceTag price="$4,650" unit="EVERY MONTH" x={540} y={560} at={w('forty-six')} color={G} size={140} />
+    <PriceTag price="$4,650" unit="EVERY MONTH" x={540} y={560} at={w('covers')} color={G} size={140} />
     <Word text="= his whole mortgage" x={540} y={760} at={w('whole')} color={C.ink} size={74} italic />
     <Rick pose="counting-cash" at={at} /></>,
   ({at, w}) => <><GridField />
@@ -121,17 +121,17 @@ const lines: LineFn[] = [
 
 const cams: K[][] = [
   // hook: zoom from frame 0 to POOR/Benny on "poor", swing to RICH/Rick on "rich", pull toward the house on "house"
-  [[0, 1, 540, 960], [0.25, 1.25, 260, 900], [W(1, 'rich') - 0.05, 1.25, 260, 900], [W(1, 'rich') + 0.2, 1.25, 820, 900], [W(1, 'house') - 0.05, 1.25, 820, 900], [W(1, 'house') + 0.2, 1.3, 540, 1200], [TIM[0].end, 1.3, 540, 1200]],
+  [[0, 1, 540, 960], [0.3, 1.18, 280, 1350], [W(1, 'rich') - 0.05, 1.18, 280, 1350], [W(1, 'rich') + 0.3, 1.18, 800, 1350], [W(1, 'house') - 0.05, 1.18, 800, 1350], [W(1, 'house') + 0.3, 1.2, 540, 830], [TIM[0].end, 1.2, 540, 830]],
   ...TIM.slice(1).map((): K[] => []),
 ];
 const sfx: [number, string][] = [
   [0.0, 'whoosh'], [W(1, 'poor'), 'error'], [W(1, 'rich') - 0.05, 'whoosh'], [W(1, 'rich'), 'cha-ching'], [W(1, 'house'), 'impact'],
-  [W(2, 'four'), 'cha-ching'], [W(3, 'Twenty-one'), 'coins'], [W(4, 'Seven'), 'thud'], [W(5, 'twenty-seven'), 'cha-ching'], [W(6, 'million'), 'impact'],
+  [W(2, 'four'), 'cha-ching'], [W(3, 'twenty-one'), 'coins'], [W(4, 'Seven'), 'thud'], [W(5, 'twenty-seven'), 'cha-ching'], [W(6, 'million'), 'impact'],
   [W(7, 'interest'), 'error'], [W(8, 'house poor'), 'sad-horn'], [W(9, 'fourplex'), 'ding'], [W(10, 'FHA'), 'pop'], [W(11, 'rents'), 'ding'],
-  [W(12, 'forty-six'), 'cash-rain'], [W(13, 'free'), 'ding'], [W(14, 'Rick owns'), 'cha-ching'], [W(15, 'worked for him'), 'impact'], [W(17, 'Comment'), 'pop'],
+  [W(12, 'covers'), 'cash-rain'], [W(13, 'free'), 'ding'], [W(14, 'Rick owns'), 'cha-ching'], [W(15, 'worked for him'), 'impact'], [W(17, 'Comment'), 'pop'],
 ];
 
 export const HOUSE_V2_SECONDS = 60;
-export const HouseV2Video = () => <CollageVideo minSeconds={60} voice="voice-housev2.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[-1, 955, ...TIM.slice(2).map(() => 870)]} />;
+export const HouseV2Video = () => <CollageVideo minSeconds={60} beatEvery={1.6} voice="voice-housev2.mp3" tim={TIM} lines={lines} cams={cams} sfx={sfx} icons captionFill="#FFD43B" captionYs={[-1, 955, ...TIM.slice(2).map(() => 870)]} />;
 export const HOUSE_V2_SHEET_FRAMES = lines.length;
 export const HouseV2Sheet = () => <CollageSheet lines={lines} />;
