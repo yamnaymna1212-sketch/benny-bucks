@@ -1,6 +1,7 @@
 import {Composition} from 'remotion';
 import {PenguinTest, PENGUIN_TEST_SECONDS} from './videos/penguinTest';
 import {PenguinWorld} from './videos/penguinWorld';
+import {DougRent, DOUG_RENT_SECONDS} from './videos/dougRent';
 import {PenguinHook} from './videos/penguinHook';
 import {PenguinCast2} from './videos/penguinCast2';
 import {PenguinEp1, PENGUIN_EP1_SECONDS} from './videos/penguinEp1';
@@ -27,6 +28,7 @@ export const Root = () => (
     <Composition id="penguin-ep1" component={PenguinEp1} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(PENGUIN_EP1_SECONDS * 30)} />
     <Composition id="penguin-cast2" component={PenguinCast2} width={1080} height={1920} fps={30} durationInFrames={60} />
     <Composition id="penguin-hook" component={PenguinHook} width={1080} height={1920} fps={30} durationInFrames={30} />
+    <Composition id="doug-rent" component={DougRent} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_RENT_SECONDS * 30)} />
     <Composition id="penguin-world" component={PenguinWorld} width={1080} height={1920} fps={30} durationInFrames={60} />
     <Composition id="penguin-test" component={PenguinTest} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(PENGUIN_TEST_SECONDS * 30)} />
     <Composition id="gas-iran" component={GasIran} width={1080} height={1920} fps={30} durationInFrames={Math.ceil(GAS_IRAN_SECONDS * 30)} />

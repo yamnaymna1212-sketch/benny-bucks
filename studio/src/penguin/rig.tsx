@@ -94,7 +94,7 @@ export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit =
   const B = BUILD[build];
   const k = h / 520, w = 400 * k;
   const breathe = 1 + 0.014 * Math.sin(t * 2.6);
-  const blink = (t % 3.3) < 0.12 && eyeScale <= 1 && lids < 0.8 ? 0.08 : 1;
+  const blink = ((t + 1.1) % 3.3) < 0.12 && eyeScale <= 1 && lids < 0.8 ? 0.08 : 1; // never blinks on frame 0
   let rot = lean + (run ? (turn < 0 ? -12 : 12) : 0), bob = 0, liftL = 0, liftR = 0, stride = 0;
   if (walk !== null) { const s = Math.sin(walk * Math.PI * 2); rot += s * (side ? 3 : 6); bob = -Math.abs(s) * (run ? 26 : 14); liftL = Math.max(0, s) * 16; liftR = Math.max(0, -s) * 16; stride = s; }
   const tr = tremble ? Math.sin(t * 70) * 3 * tremble : 0;

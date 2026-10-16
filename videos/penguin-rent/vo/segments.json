@@ -1,0 +1,275 @@
+[
+ {
+  "a": 0.0,
+  "b": 1.26497,
+  "line": 0,
+  "text": "If Doug pay rent,",
+  "gap_after": 0.08
+ },
+ {
+  "a": 1.57172,
+  "b": 2.71649,
+  "line": 0,
+  "text": "Doug own nothing.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 3.23152,
+  "b": 4.42986,
+  "line": 0,
+  "text": "If Larry get rent,",
+  "gap_after": 0.08
+ },
+ {
+  "a": 4.69585,
+  "b": 5.93304,
+  "line": 0,
+  "text": "Larry own igloo.",
+  "gap_after": 0.18
+ },
+ {
+  "a": 6.48844,
+  "b": 7.54029,
+  "line": 1,
+  "text": "This is Doug.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 7.94317,
+  "b": 9.23152,
+  "line": 1,
+  "text": "Doug need igloo.",
+  "gap_after": 0.16
+ },
+ {
+  "a": 9.66596,
+  "b": 11.8497,
+  "line": 2,
+  "text": "Igloo cost thirty thousand fish.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 12.2571,
+  "b": 13.6163,
+  "line": 2,
+  "text": "Doug have twelve fish.",
+  "gap_after": 0.2
+ },
+ {
+  "a": 14.0416,
+  "b": 16.4451,
+  "line": 3,
+  "text": "Larry also no have thirty thousand fish.",
+  "gap_after": 0.2
+ },
+ {
+  "a": 16.8621,
+  "b": 18.1909,
+  "line": 4,
+  "text": "But Larry go to bank.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 18.5501,
+  "b": 19.9981,
+  "line": 4,
+  "text": "Bank give Larry fish.",
+  "gap_after": 0.2
+ },
+ {
+  "a": 20.3812,
+  "b": 21.5758,
+  "line": 5,
+  "text": "Larry buy igloo.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 21.9834,
+  "b": 23.4081,
+  "line": 5,
+  "text": "Now Larry owe bank.",
+  "gap_after": 0.1
+ },
+ {
+  "a": 23.7079,
+  "b": 25.2502,
+  "line": 5,
+  "text": "One hundred fifty fish.",
+  "gap_after": 0.08
+ },
+ {
+  "a": 25.5844,
+  "b": 26.352,
+  "line": 5,
+  "text": "Every month.",
+  "gap_after": 0.2
+ },
+ {
+  "a": 26.7958,
+  "b": 27.8697,
+  "line": 6,
+  "text": "Larry no want pay.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 28.3102,
+  "b": 29.5259,
+  "line": 6,
+  "text": "Larry find Doug.",
+  "gap_after": 0.25
+ },
+ {
+  "a": 30.2194,
+  "b": 30.9192,
+  "line": 7,
+  "text": "Nice igloo.",
+  "gap_after": 0.1
+ },
+ {
+  "a": 31.3073,
+  "b": 32.4235,
+  "line": 7,
+  "text": "180 fish.",
+  "gap_after": 0.22
+ },
+ {
+  "a": 32.9767,
+  "b": 34.835,
+  "line": 8,
+  "text": "Doug pay Larry 180.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 35.2615,
+  "b": 37.163,
+  "line": 8,
+  "text": "Larry pay bank 150.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 37.5459,
+  "b": 38.7365,
+  "line": 8,
+  "text": "Larry keep 30.",
+  "gap_after": 0.3
+ },
+ {
+  "a": 39.2177,
+  "b": 39.5549,
+  "line": 9,
+  "text": "Doug.",
+  "gap_after": 0.75
+ },
+ {
+  "a": 39.9446,
+  "b": 41.0437,
+  "line": 10,
+  "text": "Doug pay rent.",
+  "gap_after": 0.1
+ },
+ {
+  "a": 41.3856,
+  "b": 42.5307,
+  "line": 10,
+  "text": "Larry pay mortgage.",
+  "gap_after": 0.1
+ },
+ {
+  "a": 42.8022,
+  "b": 43.603,
+  "line": 10,
+  "text": "Same igloo.",
+  "gap_after": 0.2
+ },
+ {
+  "a": 43.8631,
+  "b": 45.653,
+  "line": 11,
+  "text": "But only one name on igloo.",
+  "gap_after": 0.25
+ },
+ {
+  "a": 46.2409,
+  "b": 51.3914,
+  "line": 12,
+  "text": "In real life, half of American renters spend over thirty percent of their paycheck on rent.",
+  "gap_after": 0.3
+ },
+ {
+  "a": 51.8968,
+  "b": 53.109,
+  "line": 13,
+  "text": "Thirty years later.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 53.5459,
+  "b": 54.36,
+  "line": 13,
+  "text": "Bank happy.",
+  "gap_after": 0.1
+ },
+ {
+  "a": 54.7206,
+  "b": 55.9676,
+  "line": 13,
+  "text": "Larry own igloo.",
+  "gap_after": 0.25
+ },
+ {
+  "a": 56.3461,
+  "b": 57.1565,
+  "line": 14,
+  "text": "Doug own...",
+  "gap_after": 0.4
+ },
+ {
+  "a": 57.5492,
+  "b": 58.2378,
+  "line": 14,
+  "text": "one fish.",
+  "gap_after": 0.3
+ },
+ {
+  "a": 58.7818,
+  "b": 59.1805,
+  "line": 15,
+  "text": "Doug.",
+  "gap_after": 0.75
+ },
+ {
+  "a": 59.6257,
+  "b": 61.1211,
+  "line": 16,
+  "text": "Larry buy second igloo.",
+  "gap_after": 0.12
+ },
+ {
+  "a": 61.4653,
+  "b": 62.7766,
+  "line": 16,
+  "text": "Larry find new Doug.",
+  "gap_after": 0.3
+ },
+ {
+  "a": 63.2499,
+  "b": 64.2715,
+  "line": 17,
+  "text": "Rent or buy?",
+  "gap_after": 0.12
+ },
+ {
+  "a": 64.6772,
+  "b": 65.3005,
+  "line": 17,
+  "text": "What would you do?",
+  "gap_after": 0.1
+ },
+ {
+  "a": 65.6975,
+  "b": 66.8702,
+  "line": 17,
+  "text": "Tell Doug in the comments.",
+  "gap_after": 0.0
+ }
+]
