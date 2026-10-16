@@ -22,3 +22,11 @@
 - Narrator never says "basically", "in other words", "economists". Show, then name.
 - Every 3–5 s: a new place, framing or transition. Every ~15 s: a gag.
 - Ending must make sense from the story (no random disaster).
+
+## Narration voice = caveman English (from the reference script, user-provided)
+- Drop articles and helper verbs: "Fish rare. Fish valuable." "Price go up." "Doug is penguin."
+- Repeat the key noun instead of pronouns (fish, fish, fish) — the repetition IS the teaching.
+- Teach with "If ..., ... . Because ..." chains, then say the concept name alone as its own line.
+- Several mini-lessons per video (2–3), each = If-chain -> name -> "Doug." gag.
+- Fake-happy ending: "Doug eat snow cone. Life is good." then the twist "Life is not good."
+- Keep the terms economically correct (the reference swaps cost-push / supply-shock).
