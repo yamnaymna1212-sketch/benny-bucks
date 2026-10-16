@@ -18,7 +18,7 @@
 
 ## Sentence rules
 - Present tense. Subject + verb + object. Max ~12 words. Words a 7-year-old knows.
-- Max 2 numbers per episode (+ the real-life one). Never explain twice.
+- Only small numbers a child can count (1, 2, 5, 10, 100) + ONE real-life number. Never explain the same thing twice.
 - Narrator never says "basically", "in other words", "economists". Show, then name.
 - Every 3–5 s: a new place, framing or transition. Every ~15 s: a gag.
 - Ending must make sense from the story (no random disaster).
