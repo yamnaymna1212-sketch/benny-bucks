@@ -125,11 +125,11 @@ export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit =
   if (side) {
     // True profile, facing right (mirrored for left). One eye, pointed beak, one flipper, feet step forward/back.
     return wrap(<g transform={dir < 0 ? 'translate(400 0) scale(-1 1)' : ''}>
-      <path transform={`translate(${-stride * 30} ${500 - liftL})`} d="M-10 6 L10 -10 L40 -8 L62 6 L40 2 L22 9 Z" fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
-      <path transform={`translate(${stride * 30} ${500 - liftR})`} d="M-10 6 L10 -10 L40 -8 L62 6 L40 2 L22 9 Z" fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <path transform={`translate(${170 - stride * 30} ${500 - liftL})`} d="M-10 6 L10 -10 L40 -8 L62 6 L40 2 L22 9 Z" fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <path transform={`translate(${170 + stride * 30} ${500 - liftR})`} d="M-10 6 L10 -10 L40 -8 L62 6 L40 2 L22 9 Z" fill={ORANGE} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
       <g transform={`translate(200 0) scale(${B.bx} 1) translate(-200 0)`}>
         <path d="M210 40 C 290 44, 318 160, 320 300 C 322 420, 290 494, 196 494 C 110 494, 84 420, 86 300 C 88 170, 130 38, 210 40 Z" fill={BODY} stroke={INK} strokeWidth={LW} />
-        <path d="M244 92 C 296 130, 306 220, 304 310 C 302 410, 268 468, 214 470 C 262 420, 270 330, 266 250 C 262 170, 240 120, 214 96 Z" fill={BELLY} stroke={INK} strokeWidth={LW - 1} />
+        <path d="M232 90 C 296 128, 312 220, 310 310 C 306 410, 272 470, 210 472 C 192 420, 186 330, 192 250 C 198 170, 212 120, 232 90 Z" fill={BELLY} stroke={INK} strokeWidth={LW - 1} />
         <path d="M110 170 C 96 250, 96 340, 112 430 C 104 340, 108 250, 124 176 Z" fill={SHADE} />
       </g>
       {outfit !== 'rich' && outfit !== 'worker' && <path d={`M214 44 C 206 16, 190 6, 180 12 M220 44 C 222 12, 238 0, 250 6`} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" transform={`rotate(${Math.sin(t * 3.1) * 6} 216 44)`} />}
