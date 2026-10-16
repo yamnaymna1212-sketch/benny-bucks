@@ -391,3 +391,14 @@ export const StatCard = ({x, y, from, to, fromLabel, toLabel, at = -99, note}: {
     {note && <div style={{position: 'absolute', left: '50%', top: '108%', transform: 'translateX(-50%)', fontFamily: HAND, fontSize: 34, color: '#777', whiteSpace: 'nowrap'}}>{note}</div>}
   </div>;
 };
+
+// Series hook title (top of the first frame): icy-blue fill, navy outline, soft drop — our answer to the reference's
+// yellow title. Pops in at `at`, then gently bobs. Two lines max.
+export const HookTitle = ({lines, x = 540, y = 520, at = 0, size = 92}: {lines: string[]; x?: number; y?: number; at?: number; size?: number}) => {
+  const t = useT2(); if (t < at) return null;
+  const p = back(Math.min(1, (t - at) / 0.3));
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${p}) translateY(${Math.sin(t * 2.2) * 4}px)`, textAlign: 'center'}}>
+    {lines.map((l, i) => <div key={i} style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, lineHeight: 1.12, letterSpacing: -1, whiteSpace: 'nowrap',
+      color: '#5EC4FA', WebkitTextStroke: `${size * 0.075}px #123B6B`, paintOrder: 'stroke fill', textShadow: `0 ${size * 0.06}px 0 #0B2A4D`}}>{l}</div>)}
+  </div>;
+};

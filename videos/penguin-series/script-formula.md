@@ -30,3 +30,8 @@
 - Several mini-lessons per video (2–3), each = If-chain -> name -> "Doug." gag.
 - Fake-happy ending: "Doug eat snow cone. Life is good." then the twist "Life is not good."
 - Keep the terms economically correct (the reference swaps cost-push / supply-shock).
+
+## Hook template (user rule, 2026-10-16)
+- On-screen: blue title `<Topic> Explained by Doug` (HookTitle: #5EC4FA fill, #123B6B outline), Doug left vs other side right.
+- Spoken: starts with "If Doug ..." — two short parallel If-sentences with a contrast: "If Doug pay rent, Doug own nothing. If Larry get rent, Larry own igloo."
+- Description in caveman voice: "Doug understand now 🐧 #topic". TikTok auto-captions ON.
