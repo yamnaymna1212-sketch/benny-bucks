@@ -258,3 +258,31 @@ export const Wallet = ({steps, hold = 2.4}: {steps: [number, number][]; hold?: n
 // Exchange rate used across the whole series so prices never contradict: 1 fish = $10.
 export const FISH_USD = 10;
 export const fishOf = (usd: number) => Math.round(usd / FISH_USD);
+
+// A sheet of paper (paycheck, bill, lease) with a hand-written header and amount.
+export const Paper = ({x, y, w = 260, title, amount, at = -99, rot = -5, id = 'paper'}: {x: number; y: number; w?: number; title: string; amount?: string; at?: number; rot?: number; id?: string}) => {
+  const p = usePop(at); if (p <= 0) return null;
+  return <div style={{position: 'absolute', left: 0, top: 0, transform: `scale(${p}) rotate(${rot}deg)`, transformOrigin: `${x}px ${y}px`}}>
+    <Svg x={x} y={y} w={w} h={w * 1.25} vb="0 0 260 325" id={id} anchor="center">
+      <path d="M12 8 L248 4 L252 318 L8 322 Z" fill="#FFFDF5" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <text x={130} y={64} textAnchor="middle" fontFamily={HAND} fontSize={Math.min(44, 380 / title.length)} fill={INK} fontWeight={700}>{title}</text>
+      {[110, 140, 170].map((yy) => <path key={yy} d={`M36 ${yy} L224 ${yy}`} stroke="#C9CED4" strokeWidth={5} strokeLinecap="round" />)}
+      {amount && <text x={130} y={262} textAnchor="middle" fontFamily={HAND} fontSize={Math.min(70, 520 / amount.length)} fill="#2E9E4F" fontWeight={700}>{amount}</text>}
+    </Svg>
+  </div>;
+};
+
+// Rubber-stamp mark that slams in (e.g. "PAID OFF").
+export const Stamp = ({text, x, y, at, color = '#2E9E4F', size = 110, rot = -12}: {text: string; x: number; y: number; at: number; color?: string; size?: number; rot?: number}) => {
+  const t = useT2(); if (t < at) return null;
+  const d = t - at, s = d < 0.12 ? 2.2 - 1.2 * (d / 0.12) : 1;
+  return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(${rot}deg) scale(${s})`, border: `10px solid ${color}`, borderRadius: 18, padding: '4px 30px',
+    fontFamily: HAND, fontWeight: 700, fontSize: size, color, letterSpacing: 6, whiteSpace: 'nowrap', background: 'rgba(255,255,255,0.75)'}}>{text}</div>;
+};
+
+// A pile of fish flying along an arc from (x1,y1) to (x2,y2) between times a and b.
+export const FishFlight = ({x1, y1, x2, y2, a, b, n = 6, w = 120, seed = 0, arc = 380}: {x1: number; y1: number; x2: number; y2: number; a: number; b: number; n?: number; w?: number; seed?: number; arc?: number}) => {
+  const t = useT2(); if (t < a || t >= b) return null;
+  const p = (t - a) / (b - a);
+  return <FishPile x={x1 + (x2 - x1) * p} y={y1 + (y2 - y1) * p - Math.sin(p * Math.PI) * arc} n={n} w={w} seed={seed} />;
+};

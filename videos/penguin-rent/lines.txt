@@ -1,0 +1,24 @@
+This penguin pays one hundred eighty fish a month for this igloo.|0.5
+And this walrus collects it.|0.7
+But here's the thing.|0.4
+The walrus never paid for the igloo.|0.5
+He borrowed the fish from the bank.|0.5
+Now he owes the bank one hundred fifty fish every month.|0.6
+So he finds a penguin.|0.4
+And rents him the igloo for one hundred eighty.|0.6
+Every month, the penguin pays the walrus.|0.4
+The walrus pays the bank.|0.4
+The seagull takes his tax.|0.4
+And the walrus keeps the rest.|0.7
+Next year, the walrus raises the rent to two hundred.|0.4
+The penguin's paycheck? Still the same.|0.7
+This is called rent.|0.9
+Thirty years later, the igloo is paid off.|0.6
+Who paid for it?|0.4
+The penguin.|0.6
+Who owns it?|0.4
+The walrus.|0.7
+And the penguin owns...|0.5
+one fish.|0.8
+And the walrus? He just bought another igloo.|0.7
+So should the penguin keep renting, or buy his own igloo? Tell me in the comments.|0.6
