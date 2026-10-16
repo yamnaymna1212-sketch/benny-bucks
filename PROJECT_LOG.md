@@ -29,3 +29,9 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 ## Known gaps
 - Rick has no animated clips (stills only). IRS agent = cast-advisor (book says "ADVISOR"). Doodle emoji faces are weak.
 - Photo sites (Wikimedia/Unsplash/Pexels) blocked; GitHub raw + npm reachable.
+
+## NEW DIRECTION (2026-10-16): Penguin series (planning, nothing built yet)
+- Refs analyzed: Monkey Economics + Primate Economics (YouTube Shorts, 1M–15M views): crude hand-drawn, white bg, 1 idea/shot, cut every ~3s, no captions, deadpan narrator, recurring shocked-face gag, disaster ending. Lesson: our 0.6s hyper-edit is too dense.
+- User choices: format = penguin lives an American life (story, not lecture); voice = deadpan sarcastic narrator; hero = broke, dumb optimist; signatures = wealth meter + fixed shock close-up.
+- Currency = fish (user art: blue fish). Penguin style ref = user image (hand-drawn, big stunned eyes) — design OUR OWN penguin, no knife (copyright/violence).
+- Monetize: Creator Rewards needs >60s → target 61–65s (CLAUDE.md still says 60s; change only with approval). Voice: ElevenLabs planned (needs paid plan + ELEVENLABS_API_KEY env secret, never in chat).
