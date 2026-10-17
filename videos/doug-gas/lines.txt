@@ -1,6 +1,6 @@
-If Doug live in Texas, gas cost four dollars.|0.05
-If Doug live in California, gas cost six dollars.|0.05
-Same gas.|0.1
+Why Doug pay four dollars for gas in Texas...|0.05
+but six dollars in California?|0.05
+Same gas. Same Doug.|0.1
 This is Doug. Doug drive snowmobile to work.|0.05
 Snowmobile drink gas. Every day.|0.05
 Doug fill up. Fifteen gallons. Doug watch numbers go up, up, up.|0.05

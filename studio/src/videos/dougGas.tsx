@@ -50,12 +50,11 @@ const Hook = ({t}: {t: number}) => {
   const lookR = t >= P(1);
   return <>
     <HookTitle lines={['Gas Explained', 'by Doug']} at={-1} y={360} />
-    <div style={{position: 'absolute', left: 0, right: 0, top: 1300, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 58, color: INK}}>same gallon. same gas.</div>
     <GasSign x={210} y={1180} state="TEXAS" price="$3.82" t={t} />
     <GasSign x={870} y={1180} state="CALIFORNIA" price="$6.23" t={t} glow={lookR} />
     <Pump x={680} y={G} t={t} run={t > P(1)} dollars={lookR ? 93 : 57} />
     <Penguin id="doug" x={450} y={G} h={430} pose={{turn: lookR ? 0.6 : -0.6, look: [lookR ? 0.8 : -0.8, -0.3], brows: lookR ? 'shock' : 'worried', eyeScale: lookR ? 1.2 : 1, pupil: lookR ? 0.5 : 1, sweat: true, flapL: lookR ? 90 : 10, flapR: lookR ? 90 : 10}} />
-    <Stamp text="SAME GAS" x={540} y={760} at={P(2)} color="#D83A2E" size={96} />
+    <Stamp text="SAME GAS" x={540} y={1360} at={P(2)} color="#D83A2E" size={96} />
   </>;
 };
 

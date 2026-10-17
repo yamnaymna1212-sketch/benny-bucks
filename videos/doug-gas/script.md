@@ -4,7 +4,7 @@ On-screen title: **Gas Explained / by Doug** (blue). HOOK frame: split — left 
 
 | # | Spoken line | Shot | SFX |
 |---|---|---|---|
-| 1 | If Doug live in Texas, gas cost four dollars. If Doug live in California, gas cost six dollars. Same gas. | split price signs, Doug looks left/right; "SAME GAS" stamp | ting (0 s), boom on "six" |
+| 1 | Why Doug pay four dollars for gas in Texas... but six dollars in California? Same gas. Same Doug. | split price signs, Doug looks left/right; "SAME GAS" stamp | ting (0 s), boom on "six" |
 | 2 | This is Doug. Doug drive snowmobile to work. | Doug on snowmobile, speed lines | penguin-squawk, whoosh |
 | 3 | Snowmobile drink gas. Every day. | pump counter spinning, "every day" calendar flips | money, timer |
 | 4 | Gas come from oil. Oil come from ground. | oil gushes from the ice | boom |
