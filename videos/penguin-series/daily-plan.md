@@ -1,6 +1,7 @@
 # Daily Doug plan (user, 2026-10-17)
-- 2 NEW episodes per day for 1 month (user choice; warned about Claude usage limits + YouTube inauthentic-content risk).
-- Post times (Tunisia, UTC+1): 00:00 and 02:00 (= 7 pm / 9 pm New York, EDT; after Nov 2 US time change = 6 pm / 8 pm).
+- UPDATED: 1 NEW episode per day (~61 s) for 1 month (was 2/day; changed for cost).
+- Post time (Tunisia, UTC+1): 00:00 (= 7 pm New York EDT; 6 pm after the Nov 2 US time change).
+- Budget: ElevenLabs Starter (30k chars) -> keep each script <= 950 characters. Metricool free ~50 posts/month -> 2 platforms x 30 = 60 is over; YouTube first, TikTok too only if the plan allows.
 - Platforms via Metricool (brand blogId 7420762): TikTok + YouTube Shorts (+ Instagram/Facebook Reels if connected). AI-content label ON, YouTube madeForKids=false.
 - NO VPN / location tricks (refused; TikTok ToS).
 - Flow per episode: topic + real numbers -> script -> ElevenLabs voice (tools/elevenlabs_tts.py) -> hook preview -> user "go" -> full build/render -> upload to PUBLIC repo doug-videos (finished mp4 only) -> user "go" -> Metricool schedule.
