@@ -49,3 +49,4 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 - Topic backlog: tipping, credit score, buy-now-pay-later, investing (5 fish -> compound), groceries/shrinkflation, inflation (fish machine, Big Seal) — avoid bank/inflation-first (Monkey Economics' biggest topics).
 - Workflow is documented in .claude/skills/doug-episode/SKILL.md; CLAUDE.md now starts with an ACTIVE CHANNEL note.
 - EP3 idea (2026-10-17): 'Tipping Explained by Doug' script draft -> videos/doug-tipping/script.md ($2.13 tipped wage since 1991 + tipflation, Pew 72%). Waiting for user's VO.
+- 2026-10-17: ElevenLabs TTS tool tools/elevenlabs_tts.py (official REST API, key from gitignored .env, default voice 'A Top Narrator'). Untested live: api.elevenlabs.io blocked by this env's network policy.
