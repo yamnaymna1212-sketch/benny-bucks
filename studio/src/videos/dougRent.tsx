@@ -207,6 +207,12 @@ const SHOTS: Shot[] = [
   {at: P(36), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 
+// Deep zooms: [phrase, focusX, focusY, scale] — dive onto the face / object the narrator names.
+const DEEP: [number, number, number, number][] = [
+  [7, 560, 1150, 1.6], [13, 720, 1050, 1.5], [16, 880, 1060, 1.9],
+  [21, 560, 900, 1.6], [26, 540, 1150, 1.5], [30, 560, 1050, 1.5], [32, 760, 1150, 1.8], [35, 830, 1050, 1.7], [37, 540, 1000, 1.4],
+];
+
 // Camera = slow push only; in the hook it pushes toward the side being named (Doug left, then Larry right).
 const camFor = (tc: number, sh: Shot) => {
   if (sh.at === 0) {
@@ -221,8 +227,12 @@ export const DougRent = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   const {s: s0, fx, fy} = camFor(tc, sh);
-  const s = s0 * beat(tc, PH); // punch on every phrase: faster rhythm
-  const cam = `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`;
+  // deep zoom on chosen phrases: the camera dives onto the subject being named, then the next phrase releases it
+  const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15);
+  const dp = dz ? ease(r(tc, P(dz[0]), P(dz[0]) + 0.22)) : 0;
+  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, PH);
+  const fxx = dz ? fx + (dz[1] - fx) * dp : fx, fyy = dz ? fy + (dz[2] - fy) * dp : fy;
+  const cam = `translate(${540 - fxx * s}px, ${960 - fyy * s}px) scale(${s})`;
   const fxStyle = cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})));
   return <AbsoluteFill style={{background: '#FFFFFF', overflow: 'hidden'}}>
     <Fonts /><HandFont />

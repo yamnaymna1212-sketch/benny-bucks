@@ -37,6 +37,7 @@
 - Description in caveman voice: "Doug understand now 🐧 #topic". TikTok auto-captions ON.
 
 ## Edit rules v2 (user, 2026-10-17)
-- Captions ON (penguin/edit.tsx `Captions`): <=3 words, uppercase Montserrat 900, white + navy outline, colour keywords (red money-pain, green own/gain, blue cast), pop + tilt, y=1530.
+- Captions ON: hand-written (Architects Daughter), small (~66px), ONE ink colour, lowercase, slight tilt, y=1530. No multi-colour, no fat font (user).
 - Faster rhythm: camera punch on every phrase (`beat`), cut swoosh on every shot change, pop-high on every big word.
 - SFX: animal voices (tools/sfx_animals.py: penguin-squawk/honk, walrus-grunt/laugh, gull-caw/mine, splat, swoosh-fast, pop-high) + the user's own money/transition/meme sounds when provided.
+- Deep zooms: 6–10 per episode, camera dives (x1.5–1.9) onto the face/object named in that phrase, released on the next phrase. Not in the first 3 s.

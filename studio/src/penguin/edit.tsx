@@ -6,6 +6,7 @@ import {FPS, SFX_GAIN} from '../engine';
 export type Phrase = {start: number; end: number; text: string; line?: number};
 
 // Words that get a colour (numbers / money / the cast) so the eye catches the point instantly.
+// (colour helpers kept for BigWord use)
 const RED = /^(0|nothing|broke|owe|owes|rent|180|150|200|30%|debt|tax)$/i, GREEN = /^(own|igloo|rich|30|\+30|bank|mortgage)$/i, BLUE = /^(doug|larry|fish)$/i;
 const colour = (w: string) => { const k = w.replace(/[^\w%+]/g, ''); return RED.test(k) ? '#FF5A4E' : GREEN.test(k) ? '#3DDC84' : BLUE.test(k) ? '#5EC4FA' : '#FFFFFF'; };
 
@@ -24,16 +25,16 @@ export function chunks(phrases: Phrase[]) {
   return out;
 }
 
-// Chunky white caption with navy outline, coloured keywords, pop + tiny tilt per chunk (hand-made feel).
-export const Captions = ({t, phrases, y = 1530, size: maxSize = 84}: {t: number; phrases: Phrase[]; y?: number; size?: number}) => {
+// Hand-written caption: one ink colour, small, slightly crooked, like a note scribbled under the drawing.
+export const Captions = ({t, phrases, y = 1530, size: maxSize = 66}: {t: number; phrases: Phrase[]; y?: number; size?: number}) => {
   const cs = chunks(phrases);
   const i = cs.findIndex((c, k) => t >= c.start && t < (cs[k + 1]?.start ?? c.end + 0.3));
   if (i < 0) return null;
-  const c = cs[i], size = Math.min(maxSize, 1500 / Math.max(8, c.words.join(' ').length)), d = t - c.start, s = d < 0.08 ? 1.18 - 0.18 * (d / 0.08) : 1, rot = ((i * 37) % 7) - 3;
-  return <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', transform: `scale(${s}) rotate(${rot * 0.6}deg)`}}>
-    <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, lineHeight: 1.05, textAlign: 'center', maxWidth: 940, textTransform: 'uppercase', letterSpacing: 1}}>
-      {c.words.map((w, k) => <span key={k} style={{color: colour(w), WebkitTextStroke: `${size * 0.16}px #123B6B`, paintOrder: 'stroke fill', textShadow: `0 ${size * 0.07}px 0 #0B2A4D`, marginRight: '0.28em'}}>{w}</span>)}
-    </div>
+  const c = cs[i], size = Math.min(maxSize, 1300 / Math.max(8, c.words.join(' ').length)), d = t - c.start;
+  const s = d < 0.08 ? 1.08 - 0.08 * (d / 0.08) : 1, rot = ((i * 37) % 7) - 3;
+  return <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', transform: `scale(${s}) rotate(${rot * 0.5}deg)`}}>
+    <div style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.1, textAlign: 'center', maxWidth: 900, color: '#1A1A1A',
+      background: 'rgba(255,255,255,0.85)', padding: '2px 18px', borderRadius: 10}}>{c.words.join(' ').toLowerCase()}</div>
   </div>;
 };
 
