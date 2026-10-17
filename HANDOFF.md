@@ -17,7 +17,7 @@ Talk to the user in Arabic. Video text/voice in English.
 ## 3. Where things are
 - Cast/world code: studio/src/penguin/{rig,cast,world,acting,edit}.tsx (Doug, Larry walrus, Big Seal, Puffin, Tax Gull, seal; captions/beat/SFX in edit.tsx).
 - EP1 (published): studio/src/videos/dougRent.tsx -> videos/doug-rent/.
-- EP2 Gas (IN PROGRESS): studio/src/videos/dougGas.tsx — only the HOOK is built (approved). Script: videos/doug-gas/script.md.
+- EP2 Gas: DONE (videos/doug-gas/doug-gas.mp4). Next episode: pick a topic with the user.
   User VO (ElevenLabs) tightened + sped x1.2 to 61.5 s: videos/doug-gas/vo/voice.mp3; speech segments (start/end in the final file,
   52 segments, seg 36 = "Doug.") in videos/doug-gas/vo/voice.segments.json. NEXT: map segments -> script lines (by order/length,
   like EP1), save as studio/src/data/doug-gas.json, build all shots after the hook, render, compress (<30 MB).

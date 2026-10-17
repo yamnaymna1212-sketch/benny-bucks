@@ -44,3 +44,4 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 - SFX (2026-10-17): user's 4 mp3 packs (origin/main uploads) split into 64 clips studio/public/sfx/user/u01..u64.wav (gitignored; u63 = 'Fahh' long, u64 = 'Fahhh'). Numbered preview: videos/sfx/soundboard-numbered.mp3 — waiting for the user's labels (money / whoosh / meme).
 - User SFX labelled (2026-10-17): see tools/sfx_user_map.json; ting at 0 s of every hook.
 - 2026-10-17: EP2 gas VO from user (83.9s) tightened + atempo 1.2 -> 61.5s (videos/doug-gas/vo). HANDOFF.md written for a new session.
+- EP2 'Gas Explained by Doug' DONE (2026-10-17): videos/doug-gas/doug-gas.mp4; segments->lines map in studio/src/data/doug-gas.json.
