@@ -4,7 +4,7 @@ Read this first, then PROJECT_LOG.md (decisions) and videos/penguin-series/scrip
 Talk to the user in Arabic. Video text/voice in English.
 
 ## 1. Get the project
-- Repo: github.com/yamnaymna1212-sketch/benny-bucks — branch `claude/benny-tiktok-factory-design-lex9ua` (all work is here).
+- Repo: github.com/yamnaymna1212-sketch/benny-bucks — branch `claude/benny-tiktok-factory-design-lex9ua` (also merged into `main`).
 - `cd studio && npm install`
 
 ## 2. Rebuild the git-ignored assets (needed to render)

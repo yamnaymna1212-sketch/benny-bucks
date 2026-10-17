@@ -4,7 +4,7 @@
 // breathing, blinking, wagging. Times are absolute seconds.
 import React from 'react';
 import {interpolateColors, useCurrentFrame} from 'remotion';
-import {FPS} from '../engine';
+import {FPS} from '../base';
 
 export const INK = '#161616';
 export const ORANGE = '#F08A24';

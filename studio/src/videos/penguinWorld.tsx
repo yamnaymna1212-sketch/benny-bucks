@@ -1,7 +1,7 @@
 // Penguin world reference sheet: cast (builds, outfits, side view, expressions), other species, set pieces, story devices.
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {HandFont} from '../sketch';
+import {HandFont} from '../base';
 import {Penguin} from '../penguin/rig';
 import {Seagull, Walrus} from '../penguin/cast';
 import {FishATM, FishPile, IceBank, IceCube, Igloo, Letter, Mansion, PriceTag, Thought, Title, Vault} from '../penguin/world';

@@ -1,8 +1,7 @@
 // EP2 "Gas Explained by Doug" — hook first (approval), full episode after. Line timings: studio/src/data/doug-gas.json.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
-import {FPS, Fonts} from '../engine';
-import {HandFont} from '../sketch';
+import {FPS, Fonts, HandFont} from '../base';
 import {Fish, INK, Penguin, onTwos} from '../penguin/rig';
 import {Seagull, Walrus} from '../penguin/cast';
 import {BigWord, FishPile, HookTitle, Stamp} from '../penguin/world';

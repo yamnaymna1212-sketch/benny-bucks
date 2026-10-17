@@ -1,7 +1,7 @@
 // Editing layer for the Doug series: readable "primitive" captions + beat punches + SFX helpers.
 import React from 'react';
 import {Audio, Sequence, staticFile} from 'remotion';
-import {FPS, SFX_GAIN} from '../engine';
+import {FPS, SFX_GAIN} from '../base';
 
 export type Phrase = {start: number; end: number; text: string; line?: number};
 

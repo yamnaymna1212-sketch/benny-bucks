@@ -2,7 +2,7 @@
 // Keeps episodes fast to build and every character consistent. Times are absolute seconds.
 import React from 'react';
 import {Audio, Sequence, interpolate, staticFile, useCurrentFrame} from 'remotion';
-import {FPS} from '../engine';
+import {FPS} from '../base';
 import {PenguinPose, back, talk} from './rig';
 
 export type Act =

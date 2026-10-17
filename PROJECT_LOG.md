@@ -1,37 +1,15 @@
-# Benny Bucks — project log (read this first in a new session instead of re-exploring)
-Last update: 2026-10-16. Branch: `claude/benny-tiktok-factory-design-lex9ua`. Rules: CLAUDE.md. Edit system: `.claude/skills/benny-collage-edit/SKILL.md`.
-
-## Saved format (default for every video)
-Grid paper · moving Benny clips (`assets/character/animated/alpha/*.webm` → `studio/public/anim`) · Rich Rick stills (`studio/public/gen/rich-*.png`)
-· original kid "Rick Jr." (`studio/src/babyRick.tsx`) · hand-drawn icons on spoken nouns (`studio/src/icons.tsx`, never 3D, never the safe icon)
-· yellow mid captions · ZOOM-ONLY camera; hook = strong zoom from frame 0 swinging side→side with the words, Benny points at each side (flip clip)
-· Fenrir voice (`tools/tts.py ... am_fenrir <speed> 0.08`, pauses 0.05) · exactly 60s (`minSeconds={60}`) · compress crf 22 under 30 MB.
-Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp; reference builds: `trust.tsx`, `taxEvasion.tsx`, `foundation.tsx`.
-
-## Finished videos (all on the branch, raw link = github.com/yamnaymna1212-sketch/benny-bucks/raw/claude/benny-tiktok-factory-design-lex9ua/<path>)
-| video | path | notes |
-|---|---|---|
-| Billionaire foundations | videos/foundation/foundation.mp4 | 60s, ends "Follow for part two" |
-| Tax evasion (Benny, cash worker) | videos/tax-evasion/tax-evasion.mp4 | 60s, ends "Next video: how rich people pay less, legally" |
-| Trusts / estate tax | videos/trust/trust.mp4 | 60s, Rick Jr. as the son |
-| Poor vs rich buy a house (v2) | videos/house-v2/house-v2.mp4 | 60s, reference-style hook, calmer pace, user house art |
-| Ambulance USA vs Japan | videos/ambulance-japan/ambulance.mp4 | old collage style |
-| College USA vs Germany | videos/college-germany/college-germany.mp4 | old collage style, accurate hook |
-| Older: gas-iran, cash-vs-card, rich-get-richer, house-poor-vs-rich, bonus-1000 | videos/* | pre-format |
+# Doug the Penguin — project log (read only the last 20 lines in a new session)
+Rules: CLAUDE.md. Episode workflow: `.claude/skills/doug-episode/SKILL.md`. Series rules: videos/penguin-series/script-formula.md.
+2026-10-17: all old "Benny Bucks" material (code, assets, videos, skills) was deleted at the user's request; it stays in git history only.
 
 ## User preferences learned (don't re-ask)
 - Arabic chat, English video text. Blunt criticism. Facts verified + sourced; fix misleading claims in pasted scripts (keep hook/structure).
-- No real people / copyrighted characters (no Fed-chair likeness, no Scrooge McDuck, no Stewie). No Gemini/paid APIs. No dark/black backgrounds.
+- No real people / copyrighted characters. No Gemini/paid APIs. No dark/black backgrounds.
 - Pasted scripts from other creators = structure only; reword to avoid duplicate content.
-- Show stills sheet + hook preview, then render on "go".
-- House v2 (2026-10-16): user asked for a CLEAR, calmer pace — voice speed 1.0 and `beatEvery={1.6}`; ask before reusing the very fast pace.
-
-## Known gaps
-- Rick has no animated clips (stills only). IRS agent = cast-advisor (book says "ADVISOR"). Doodle emoji faces are weak.
 - Photo sites (Wikimedia/Unsplash/Pexels) blocked; GitHub raw + npm reachable.
 
-## NEW DIRECTION (2026-10-16): Penguin series (planning, nothing built yet)
-- Refs analyzed: Monkey Economics + Primate Economics (YouTube Shorts, 1M–15M views): crude hand-drawn, white bg, 1 idea/shot, cut every ~3s, no captions, deadpan narrator, recurring shocked-face gag, disaster ending. Lesson: our 0.6s hyper-edit is too dense.
+## Penguin series history
+- Refs analyzed: Monkey Economics + Primate Economics (YouTube Shorts, 1M–15M views): crude hand-drawn, white bg, 1 idea/shot, cut every ~3s, no captions, deadpan narrator, recurring shocked-face gag, disaster ending. Lesson: the old Benny 0.6s hyper-edit is too dense.
 - User choices: format = penguin lives an American life (story, not lecture); voice = deadpan sarcastic narrator; hero = broke, dumb optimist; signatures = wealth meter + fixed shock close-up.
 - Currency = fish (user art: blue fish). Penguin style ref = user image (hand-drawn, big stunned eyes) — design OUR OWN penguin, no knife (copyright/violence).
 - Monetize: Creator Rewards needs >60s → target 61–65s (CLAUDE.md still says 60s; change only with approval). Voice: ElevenLabs planned (needs paid plan + ELEVENLABS_API_KEY env secret, never in chat).

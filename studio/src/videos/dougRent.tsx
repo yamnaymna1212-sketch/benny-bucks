@@ -3,8 +3,7 @@
 // Phrase timings: studio/src/data/doug-rent.json (P(i) = start of phrase i, E(i) = end).
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
-import {FPS, Fonts, SFX_GAIN} from '../engine';
-import {HandFont} from '../sketch';
+import {FPS, Fonts, HandFont, SFX_GAIN} from '../base';
 import {Fish, INK, Line, Penguin, onTwos, talk} from '../penguin/rig';
 import {Walrus} from '../penguin/cast';
 import {BigWord, FishFlight, FishPile, HookTitle, IceBank, Igloo, Note, Paper, PriceTag, Sign, SnowPile, Stamp, Thought} from '../penguin/world';

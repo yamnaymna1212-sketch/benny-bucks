@@ -3,8 +3,7 @@
 // thought cloud, A/B letters, red "+ interest" notes, sparkle concept titles, fire for disaster endings.
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
-import {FPS} from '../engine';
-import {HAND} from '../sketch';
+import {FPS, HAND} from '../base';
 import {Boil, FishShape, INK, Penguin, back, useT2} from './rig';
 
 const LW = 4.5;

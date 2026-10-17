@@ -1,6 +1,6 @@
 ---
 name: doug-episode
-description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — script, voice tightening, hook preview, full Remotion build, SFX, captions, render. Use for any new Doug video, topic ideas, scripts, or edits. Overrides the old Benny Bucks rules.
+description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — script, voice tightening, hook preview, full Remotion build, SFX, captions, render. Use for any new Doug video, topic ideas, scripts, or edits.
 ---
 # Doug episode workflow (proven on EP1 Rent, EP2 Gas)
 

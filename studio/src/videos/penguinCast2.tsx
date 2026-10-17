@@ -1,7 +1,7 @@
 // Named cast + sets for the inflation episode (still sheet for approval; no video before the user's voiceover).
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {HandFont} from '../sketch';
+import {HandFont} from '../base';
 import {Penguin} from '../penguin/rig';
 import {BigSeal, Puffin, Seagull, Walrus} from '../penguin/cast';
 import {Bedroom, ConeStand, Crowd, FishPrinter, FishReserve, Letter, SnowCone, StatCard, Title, Town} from '../penguin/world';
