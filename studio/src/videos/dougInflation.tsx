@@ -4,7 +4,7 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts} from '../engine';
 import {HandFont} from '../sketch';
 import {INK, Penguin, onTwos} from '../penguin/rig';
-import {BigWord, HookTitle, Stamp} from '../penguin/world';
+import {BigWord, HookTitle} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import TIM from '../data/doug-inflation.json';
@@ -51,36 +51,39 @@ const Price = ({text, x, y, at: a, color, t}: {text: string; x: number; y: numbe
   return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(-4deg) scale(${s})`, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 140, color,
     WebkitTextStroke: '8px #fff', paintOrder: 'stroke fill', filter: `drop-shadow(0 6px 0 ${INK})`}}>{text}</div>;
 };
-// receipt that keeps printing down the right edge
-const Receipt = ({t, a}: {t: number; a: number}) => {
-  if (t < a) return null;
-  const h = 1350 * ease((t - a) / 1.3);
-  return <div style={{position: 'absolute', left: 960, top: 840, width: 120, height: h, background: '#fff', border: `5px solid ${INK}`, borderTop: 'none', overflow: 'hidden'}}>
-    {Array.from({length: 26}, (_, i) => <div key={i} style={{margin: '18px 14px 0', height: 6, width: 40 + ((i * 37) % 50), background: '#B9B9B9'}} />)}
-  </div>;
+// big centre words; the caption hides for exactly these windows (one text on screen at a time)
+const BIGS: {text: string; at: number; until: number; color?: string; size: number}[] = [
+  {text: 'did nothing', at: P(7) + 0.2, until: P(8), size: 80},
+  {text: 'poorer.', at: P(8) + 0.1, until: E(8) + 0.8, color: RED, size: 110},
+];
+// "same eggs / milk / bread": the object itself pops in big, one at a time, synced to the word
+const SAMES: [number, (p: {x: number; y: number}) => JSX.Element][] = [[4, Eggs], [5, Milk], [6, Bread]];
+const SameObject = ({tc}: {tc: number}) => {
+  const k = SAMES.findIndex(([i], n) => tc >= P(i) && tc < (n < 2 ? P(SAMES[n + 1][0]) : P(7)));
+  if (k < 0) return null;
+  const [i, Obj] = SAMES[k], d = tc - P(i), s = d < 0.1 ? 0.3 + 4.7 * (d / 0.1) : d < 0.18 ? 5 - 0.6 * ((d - 0.1) / 0.08) : 4.4;
+  return <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+    <g transform={`translate(540 980) scale(${s}) rotate(${Math.sin(tc * 6) * 3})`}><Obj x={0} y={0} /></g>
+  </svg>;
 };
 
 const Hook = ({t}: {t: number}) => {
   const right = t >= P(2), done = t >= P(7), poor = t >= P(8);
   return <>
-    <div style={{position: 'absolute', left: 0, top: 0, width: 540, height: 1920, background: '#EAF7EC'}} />
-    <div style={{position: 'absolute', left: 540, top: 0, width: 540, height: 1920, background: '#FCEAE8'}} />
-    <div style={{position: 'absolute', left: 535, top: 600, width: 10, height: 1320, background: INK}} />
+    {/* oversized so no white edge shows at any zoom/pan */}
+    <div style={{position: 'absolute', left: -2000, top: -2000, width: 2540, height: 6000, background: '#EAF7EC'}} />
+    <div style={{position: 'absolute', left: 540, top: -2000, width: 2540, height: 6000, background: '#FCEAE8'}} />
+    <div style={{position: 'absolute', left: 535, top: 600, width: 10, height: 3000, background: INK}} />
     <HookTitle lines={['Inflation Explained', 'by Doug']} at={-1} y={300} />
     <div style={{position: 'absolute', left: 270, top: 560, transform: 'translate(-50%,-50%)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: INK}}>2020</div>
     <div style={{position: 'absolute', left: 810, top: 560, transform: 'translate(-50%,-50%)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: INK}}>TODAY</div>
     <Cart x={270} y={G} /><Cart x={810} y={G} />
     <Price text="$100" x={270} y={740} at={P(1) + 0.55} color={GREEN} t={t} />
     <Price text="$120+" x={810} y={740} at={P(3) + 0.35} color={RED} t={t} />
-    <Receipt t={t} a={P(3) + 0.35} />
-    {t < P(7) && <><Stamp text="SAME" x={at(810, 'eggs')[0]} y={at(810, 'eggs')[1] - 20} at={P(4) + 0.1} color={RED} size={60} />
-    <Stamp text="SAME" x={at(810, 'milk')[0]} y={at(810, 'milk')[1] - 20} at={P(5) + 0.1} color={RED} size={60} />
-    <Stamp text="SAME" x={at(810, 'bread')[0]} y={at(810, 'bread')[1] - 20} at={P(6) + 0.1} color={RED} size={60} /></>}
     <Penguin id="doug" x={540} y={G + 190} h={poor ? 420 : 360} pose={done
       ? {brows: poor ? 'shock' : 'worried', eyeScale: poor ? 1.35 : 1, pupil: poor ? 0.4 : 1, tremble: poor ? 1 : 0, tears: poor, flapL: poor ? 20 : 95, flapR: poor ? 20 : 95, beak: 'frown', look: [0, 0.2]}
       : {turn: right ? 0.6 : -0.6, look: [right ? 0.8 : -0.8, -0.4], brows: right ? 'shock' : 'worried', eyeScale: right ? 1.2 : 1, pupil: right ? 0.5 : 1, sweat: right}} />
-    <BigWord text="did nothing" x={540} y={960} at={P(7) + 0.2} until={P(8)} size={80} />
-    <BigWord text="poorer." x={540} y={960} at={P(8) + 0.1} color={RED} size={110} />
+    {BIGS.map((b) => <BigWord key={b.text} text={b.text} x={540} y={960} at={b.at} until={b.until} color={b.color} size={b.size} />)}
   </>;
 };
 
@@ -89,9 +92,9 @@ type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
 ];
-// deep zooms [segment, focusX, focusY, scale]: same eggs / milk / bread, then Doug's face
+// deep zooms [segment, focusX, focusY, scale]: Doug's face
 const DEEP: [number, number, number, number][] = [
-  [4, ...at(810, 'eggs'), 1.9], [5, ...at(810, 'milk'), 1.9], [6, ...at(810, 'bread'), 1.9], [8, 540, G - 120, 1.8],
+  [8, 540, G - 120, 1.8],
 ];
 
 export const DougInflation = () => {
@@ -110,7 +113,8 @@ export const DougInflation = () => {
     <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
       <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
     </AbsoluteFill>
-    <Captions t={tc} phrases={TIM} />
+    {sh.at === 0 && <SameObject tc={tc} />}
+    {!BIGS.some((b) => tc >= b.at && tc < b.until) && <Captions t={tc} phrases={TIM} />}
     <Audio src={staticFile('doug-inflation-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.1} name="user-whoosh" vol={0.25} />
@@ -118,7 +122,7 @@ export const DougInflation = () => {
     <Sfx at={P(2)} name="user-whoosh" vol={0.3} />
     <Sfx at={P(3) + 0.35} name="user-boom" vol={0.5} />
     <Sfx at={P(3) + 0.4} name="user-cash-register" vol={0.3} />
-    {[4, 5, 6].map((i) => <Sfx key={i} at={P(i) + 0.1} name="user-slap" vol={0.35} />)}
+    {SAMES.map(([i]) => <Sfx key={i} at={P(i)} name="user-pop" vol={0.45} />)}
     <Sfx at={P(7)} name="user-wrong" vol={0.35} />
     <Sfx at={P(8)} name="user-fahh" vol={0.5} />
   </AbsoluteFill>;

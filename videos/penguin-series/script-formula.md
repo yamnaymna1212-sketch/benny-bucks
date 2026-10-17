@@ -45,3 +45,9 @@
   ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
   wrong / aww / shock / fahh / fahh-long = bad news & the "Doug." gag; boom = big reveal; slap = hits; wow / yeah = good news;
   notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
+
+## Edit rules v3 (user, 2026-10-17, EP3)
+- Hook only = split screen (two coloured halves + blue title). Background layers oversized so no white edge at any zoom/pan; no decorative strips at the frame edge.
+- After the hook: back to the normal Doug ice world (white bg, one idea per shot) like doug-gas / doug-rent.
+- "Same X / Same Y" lists: the object itself pops in big, one per word, synced, with user-pop. No stacked stamps.
+- Caption hides exactly while a big centre word (BigWord) is on screen; one text on screen at a time, no repeats.
