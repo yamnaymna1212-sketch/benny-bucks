@@ -4,6 +4,17 @@ Those Doug rules OVERRIDE the Benny rules below (grid paper, am_fenrir, exactly 
 Doug: 61–65 s, user's ElevenLabs voice, no music, hand-written captions, user SFX library, hook preview before full render.
 The Benny rules below are kept only for the old Benny videos.
 
+# TOKEN GUARD (user rule, always on)
+Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
+- Full video render / re-render (any render > 5 s) -> offer ONE still or the 5-s hook preview instead; never re-render a finished episode unless asked.
+- Many small fix requests in a row -> ask the user to batch all fixes into one message, then render once.
+- Long session (context > ~50% or several episodes in one chat) -> tell them to start a new session (one episode = one session; first message: "Use the doug-episode skill ...").
+- General chat / strategy questions inside the build session -> suggest asking in a normal claude.ai chat or using Sonnet.
+- Vague requests ("fix it", "analyse everything", "review the whole project") -> ask one short clarifying question instead of reading many files.
+- Big style changes mid-series -> warn that tools must be rebuilt; confirm first.
+- Many screenshots/images -> ask for one clear image or a text description.
+Cheap habits to recommend: scripts/ideas on Sonnet, build on Opus; read only the last 20 lines of PROJECT_LOG.md; named files (ep3-voice.mp3, money.mp3).
+
 # Permanent rules for every video (TikTok, American audience)
 
 ## Language
