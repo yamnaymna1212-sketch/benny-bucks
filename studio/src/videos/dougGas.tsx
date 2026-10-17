@@ -23,8 +23,9 @@ export const GasSign = ({x, y, state, price, at = -1, t, glow}: {x: number; y: n
       <rect x={155} y={300} width={30} height={220} fill="#8A9399" stroke={INK} strokeWidth={5} />
       <rect x={10} y={10} width={320} height={300} rx={18} fill="#F7F3E8" stroke={INK} strokeWidth={6} />
       <rect x={10} y={10} width={320} height={70} rx={18} fill="#2F5DA8" stroke={INK} strokeWidth={6} />
-      <text x={170} y={58} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={40} fill="#fff">{state}</text>
-      <text x={170} y={120} textAnchor="middle" fontFamily="Architects Daughter" fontSize={34} fill={INK} fontWeight={700}>REGULAR</text>
+      <text x={170} y={58} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={state.length > 8 ? 30 : 40} fill="#fff">{state}</text>
+      <g transform="translate(18 -54)"><rect width={70} height={44} fill="#fff" stroke={INK} strokeWidth={3} />{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 6.3} width={70} height={3.2} fill="#B22234" />)}<rect width={30} height={24} fill="#3C3B6E" /><line x1={0} y1={0} x2={0} y2={-30} stroke={INK} strokeWidth={4} /></g>
+      <text x={170} y={120} textAnchor="middle" fontFamily="Architects Daughter" fontSize={32} fill={INK} fontWeight={700}>1 GALLON</text>
       <rect x={30} y={140} width={280} height={150} rx={10} fill="#1B1B1B" stroke={INK} strokeWidth={5} />
       <text x={150} y={242} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={76} fill="#FF3B2F" opacity={flick} style={{letterSpacing: 2}}>{price}</text>
       <text x={286} y={196} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={34} fill="#FF3B2F" opacity={flick}>9</text>
@@ -49,8 +50,9 @@ const Hook = ({t}: {t: number}) => {
   const lookR = t >= P(1);
   return <>
     <HookTitle lines={['Gas Explained', 'by Doug']} at={-1} y={360} />
+    <div style={{position: 'absolute', left: 0, right: 0, top: 1300, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 58, color: INK}}>same gallon. same gas.</div>
     <GasSign x={210} y={1180} state="TEXAS" price="$3.82" t={t} />
-    <GasSign x={870} y={1180} state="CALIF." price="$6.23" t={t} glow={lookR} />
+    <GasSign x={870} y={1180} state="CALIFORNIA" price="$6.23" t={t} glow={lookR} />
     <Pump x={680} y={G} t={t} run={t > P(1)} dollars={lookR ? 93 : 57} />
     <Penguin id="doug" x={450} y={G} h={430} pose={{turn: lookR ? 0.6 : -0.6, look: [lookR ? 0.8 : -0.8, -0.3], brows: lookR ? 'shock' : 'worried', eyeScale: lookR ? 1.2 : 1, pupil: lookR ? 0.5 : 1, sweat: true, flapL: lookR ? 90 : 10, flapR: lookR ? 90 : 10}} />
     <Stamp text="SAME GAS" x={540} y={760} at={P(2)} color="#D83A2E" size={96} />
