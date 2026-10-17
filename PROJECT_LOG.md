@@ -50,3 +50,4 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 - Workflow is documented in .claude/skills/doug-episode/SKILL.md; CLAUDE.md now starts with an ACTIVE CHANNEL note.
 - EP3 idea (2026-10-17): 'Tipping Explained by Doug' script draft -> videos/doug-tipping/script.md ($2.13 tipped wage since 1991 + tipflation, Pew 72%). Waiting for user's VO.
 - 2026-10-17: ElevenLabs TTS tool tools/elevenlabs_tts.py (official REST API, key from gitignored .env, default voice 'A Top Narrator'). Untested live: api.elevenlabs.io blocked by this env's network policy.
+- EP3 inflation (2026-10-17): user VO 65.1s -> 60.8s (pauses cut, hook segs 0-8 atempo 1.2); videos/doug-inflation/vo; hook preview videos/doug-inflation/doug-inflation-hook.mp4 (comp doug-inflation, hook only). Waiting for hook approval; segs 9-38 not mapped to text yet.
