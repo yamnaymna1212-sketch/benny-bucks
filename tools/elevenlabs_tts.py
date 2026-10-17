@@ -26,18 +26,21 @@ def load_env(path=ROOT / ".env"):
         os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 def api_key():
-    key = os.environ.get("ELEVENLABS_API_KEY", "").strip()
-    if not key: sys.exit("ELEVENLABS_API_KEY missing: add it to .env (see .env.example) or the environment.")
-    return key
+    # Empty key is fine in a cloud session with an ElevenLabs network secret: the proxy adds xi-api-key itself.
+    return os.environ.get("ELEVENLABS_API_KEY", "").strip()
+
+def auth(key):
+    return {"xi-api-key": key} if key else {}
 
 def fail(r):
     # Show the API's error message only; never the request headers (they hold the key).
     try: msg = r.json().get("detail", r.text)
     except ValueError: msg = r.text
-    sys.exit(f"ElevenLabs error {r.status_code}: {str(msg)[:300]}")
+    hint = " (no key: add ELEVENLABS_API_KEY to .env, or an api.elevenlabs.io network secret with header xi-api-key)" if r.status_code == 401 else ""
+    sys.exit(f"ElevenLabs error {r.status_code}: {str(msg)[:300]}{hint}")
 
 def voices(key):
-    r = requests.get(f"{API}/voices", headers={"xi-api-key": key}, timeout=30)
+    r = requests.get(f"{API}/voices", headers=auth(key), timeout=30)
     if not r.ok: fail(r)
     return r.json()["voices"]
 
@@ -77,12 +80,12 @@ def main():
     model = a.model or os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
     voice_id = a.voice_id or os.environ.get("ELEVENLABS_VOICE_ID")
     if a.dry_run:
-        print(f"key loaded ({len(key)} chars, hidden) | voice: {voice_id or a.voice} | model: {model} "
+        print(f"key: {'from .env/env (' + str(len(key)) + ' chars, hidden)' if key else 'none (network secret expected)'} | voice: {voice_id or a.voice} | model: {model} "
               f"| {len(text.split())} words, {len(text)} chars -> {a.out}")
         return
     voice_id = voice_id or find_voice(key, a.voice)
     r = requests.post(f"{API}/text-to-speech/{voice_id}", params={"output_format": a.format},
-                      headers={"xi-api-key": key, "Accept": "audio/mpeg"},
+                      headers={**auth(key), "Accept": "audio/mpeg"},
                       json={"text": text, "model_id": model}, timeout=300)
     if not r.ok: fail(r)
     out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
