@@ -1,0 +1,10 @@
+# Daily Doug plan (user, 2026-10-17)
+- UPDATED: 1 NEW episode per day (~61 s) for 1 month (was 2/day; changed for cost).
+- Post time (Tunisia, UTC+1): 00:00 (= 7 pm New York EDT; 6 pm after the Nov 2 US time change).
+- Budget: ElevenLabs Starter (30k chars) -> keep each script <= 950 characters. Metricool free ~50 posts/month -> 2 platforms x 30 = 60 is over; YouTube first, TikTok too only if the plan allows.
+- Platforms via Metricool (brand blogId 7420762): TikTok + YouTube Shorts (+ Instagram/Facebook Reels if connected). AI-content label ON, YouTube madeForKids=false.
+- NO VPN / location tricks (refused; TikTok ToS).
+- Flow per episode: topic + real numbers -> script -> ElevenLabs voice (tools/elevenlabs_tts.py) -> hook preview -> user "go" -> full build/render -> upload to PUBLIC repo doug-videos (finished mp4 only) -> user "go" -> Metricool schedule.
+- Blocked until the user: (1) connects TikTok + YouTube in Metricool, (2) adds api.elevenlabs.io + ELEVENLABS_API_KEY to the environment, (3) says "موافق" to the public repo doug-videos.
+- Then: new session -> verify all three -> create the daily scheduled task (fresh session per run).
+- STATUS 2026-10-17: (1) Metricool: TikTok "doug_bucks" connected to brand 7420762 (YouTube later). (2) ElevenLabs still blocked (proxy 403, no key). (3) User said "موافق" to public repo doug-videos; creating it from the session failed (GitHub 403, the app can't create repos) -> user creates it on github.com, then add_repo.
