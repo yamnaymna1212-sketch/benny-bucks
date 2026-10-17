@@ -41,3 +41,7 @@
 - Faster rhythm: camera punch on every phrase (`beat`), cut swoosh on every shot change, pop-high on every big word.
 - SFX: animal voices (tools/sfx_animals.py: penguin-squawk/honk, walrus-grunt/laugh, gull-caw/mine, splat, swoosh-fast, pop-high) + the user's own money/transition/meme sounds when provided.
 - Deep zooms: 6–10 per episode, camera dives (x1.5–1.9) onto the face/object named in that phrase, released on the next phrase. Not in the first 3 s.
+- User SFX (labels from the user, tools/sfx_user_map.json -> studio/public/sfx/user-<name>.wav):
+  ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
+  wrong / aww / shock / fahh / fahh-long = bad news & the "Doug." gag; boom = big reveal; slap = hits; wow / yeah = good news;
+  notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
