@@ -3,8 +3,9 @@ import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts} from '../engine';
 import {HandFont} from '../sketch';
-import {INK, Penguin, onTwos} from '../penguin/rig';
-import {BigWord, HookTitle} from '../penguin/world';
+import {Fish, INK, Penguin, onTwos} from '../penguin/rig';
+import {BigSeal, Puffin, Walrus} from '../penguin/cast';
+import {BigWord, ConeStand, Crowd, FishFlight, FishPile, FishPrinter, FishReserve, HookTitle, IceCube, PriceTag, SnowCone, StatCard, Title} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import TIM from '../data/doug-inflation.json';
@@ -52,10 +53,17 @@ const Price = ({text, x, y, at: a, color, t}: {text: string; x: number; y: numbe
     WebkitTextStroke: '8px #fff', paintOrder: 'stroke fill', filter: `drop-shadow(0 6px 0 ${INK})`}}>{text}</div>;
 };
 // big centre words; the caption hides for exactly these windows (one text on screen at a time)
-const BIGS: {text: string; at: number; until: number; color?: string; size: number}[] = [
+type Big = {text: string; at: number; until: number; x?: number; y?: number; color?: string; size: number};
+const BIGS: Big[] = [
   {text: 'did nothing', at: P(7) + 0.2, until: P(8), size: 80},
-  {text: 'poorer.', at: P(8) + 0.1, until: E(8) + 0.8, color: RED, size: 110},
+  {text: 'poorer.', at: P(9), until: P(10), color: RED, size: 110},
+  {text: 'BRRRR', at: P(15), until: P(16), y: 560, size: 150},
+  {text: '+50%', at: P(24) + 0.3, until: P(25), x: 580, y: 760, color: RED, size: 140},
+  {text: '+5%', at: P(30), until: P(31), y: 620, color: GREEN, size: 170},
+  {text: '+10%', at: P(33) + 0.2, until: P(34), y: 620, color: RED, size: 170},
 ];
+// other full-screen text (title card, stat card) also mutes the caption
+const QUIET: [number, number][] = [[P(21), P(22)], [P(28) + 0.2, P(29)]];
 // "same eggs / milk / bread": the object itself pops in big, one at a time, synced to the word
 const SAMES: [number, (p: {x: number; y: number}) => JSX.Element][] = [[4, Eggs], [5, Milk], [6, Bread]];
 const SameObject = ({tc}: {tc: number}) => {
@@ -83,18 +91,132 @@ const Hook = ({t}: {t: number}) => {
     <Penguin id="doug" x={540} y={G + 190} h={poor ? 420 : 360} pose={done
       ? {brows: poor ? 'shock' : 'worried', eyeScale: poor ? 1.35 : 1, pupil: poor ? 0.4 : 1, tremble: poor ? 1 : 0, tears: poor, flapL: poor ? 20 : 95, flapR: poor ? 20 : 95, beak: 'frown', look: [0, 0.2]}
       : {turn: right ? 0.6 : -0.6, look: [right ? 0.8 : -0.8, -0.4], brows: right ? 'shock' : 'worried', eyeScale: right ? 1.2 : 1, pupil: right ? 0.5 : 1, sweat: right}} />
-    {BIGS.map((b) => <BigWord key={b.text} text={b.text} x={540} y={960} at={b.at} until={b.until} color={b.color} size={b.size} />)}
   </>;
 };
 
+// ---------- Doug ice world (after the hook) ----------
+const Ice = () => <>
+  <div style={{position: 'absolute', left: -2000, top: -2000, width: 5080, height: 6000, background: '#fff'}} />
+  <div style={{position: 'absolute', left: -2000, top: G - 10, width: 5080, height: 3000, background: '#E4F4FC', borderTop: `6px solid ${INK}`}} />
+</>;
+const Snowfall = ({t}: {t: number}) => <>{Array.from({length: 18}, (_, i) => { const sp = 50 + (i * 37) % 60, x = (i * 173) % 1080, y = ((i * 311) % 2000 + t * sp) % 2000 - 60;
+  return <div key={i} style={{position: 'absolute', left: x, top: y, width: 10, height: 10, borderRadius: '50%', background: '#D6E8F3'}} />; })}</>;
+const Heart = ({x, y, t}: {x: number; y: number; t: number}) => <div style={{position: 'absolute', left: x - 40, top: y - 40 - (t * 40) % 40, fontSize: 80, color: '#E8546A', fontFamily: 'Montserrat', fontWeight: 900}}>♥</div>;
+
+const Intro = ({t}: {t: number}) => <>
+  <Snowfall t={t} />
+  <Penguin id="doug" x={420} y={G} h={520} pose={t < P(11) ? {flapR: 60, beak: 'smile', brows: 'happy'} : {beak: 'smile', brows: 'happy', lids: 0.3, look: [0.7, -0.3], blush: 1}} />
+  {t >= P(11) && <><SnowCone x={790} y={G - 40} w={190} /><Heart x={590} y={G - 560} t={t} /></>}
+  <PriceTag x={790} y={G - 420} price="1 fish" at={P(12)} color={GREEN} />
+</>;
+
+const Reserve = ({t}: {t: number}) => {
+  const on = t >= P(14);
+  return <>
+    <FishReserve x={300} y={G} w={520} />
+    <BigSeal x={300} y={G + 40} h={360} pose={{mouth: t < E(13) ? 0.5 : 0, flap: on ? 1 : 0}} />
+    <FishPrinter x={790} y={G} w={380} on={on} />
+    <FishFlight x1={790} y1={G - 300} x2={540} y2={G - 900} a={P(14) + 0.3} b={P(16) + 1} n={9} w={120} />
+  </>;
+};
+
+const Everyone = ({t}: {t: number}) => <>
+  <Crowd x={300} y={G} n={5} h={250} run={t < P(17) ? 1 : 0} />
+  {[150, 300, 450].map((x, i) => <FishPile key={i} x={x} y={G + 70} n={4} w={90} seed={i} />)}
+  {t >= P(17) && <>
+    <ConeStand x={810} y={G} w={420} price="1 fish" cones={10} />
+    <Puffin x={810} y={G - 230} h={170} pose={{smirk: true}} />
+    <BigWord text="same 10" x={810} y={G - 760} at={P(17) + 0.5} size={90} />
+  </>}
+</>;
+
+const Equation = ({t}: {t: number}) => <>
+  <FishPile x={260} y={G} n={14} w={120} />
+  <BigWord text="more fish" x={260} y={G - 520} at={P(18)} size={80} color={GREEN} />
+  {t >= P(19) && <><SnowCone x={800} y={G - 20} w={180} /><BigWord text="same cone" x={800} y={G - 520} at={P(19)} size={80} /></>}
+  {t >= P(20) && <PriceTag x={800} y={G - 760} price={t < P(20) + 0.5 ? '1 fish' : '2 fish'} at={P(20)} color={RED} />}
+</>;
+
+const Name = () => <Title lines={['INFLATION']} y={760} size={140} />;
+const Stare = ({side}: {side?: boolean}) => <Penguin id="doug" x={540} y={G + 300} h={950} pose={{lids: 0.35, look: side ? [0.6, 0] : [0, 0], turn: side ? 0.4 : 0}} />;
+
+const IceDeal = ({t}: {t: number}) => <>
+  <Walrus x={330} y={G} h={430} flip pose={{mouth: t < E(23) ? 0.4 : 0, laugh: t >= P(24) ? 1 : 0}} />
+  <IceCube x={590} y={G} w={260} sign={t >= P(24) ? '2 fish' : '1 fish'} />
+  <Puffin x={840} y={G} h={300} pose={{look: -0.6}} />
+</>;
+
+const PuffinPays = ({t}: {t: number}) => <>
+  <Walrus x={220} y={G} h={360} flip pose={{laugh: 1}} />
+  <FishFlight x1={560} y1={G - 250} x2={260} y2={G - 300} a={P(25)} b={P(26)} n={6} w={100} />
+  <ConeStand x={720} y={G} w={440} price={t >= P(27) ? '3 fish' : '2 fish'} cones={10} />
+  <Puffin x={720} y={G - 240} h={180} pose={{smirk: t >= P(26), mouth: t >= P(26) && t < E(26) ? 0.5 : 0}} />
+  {t >= P(27) && <PriceTag x={720} y={G - 900} price="3 fish" at={P(27)} color={RED} size={1.3} />}
+</>;
+
+const RealLife = () => <>
+  <BigWord text="real life" x={540} y={460} at={P(28)} until={P(28) + 0.2} size={110} />
+  <div style={{position: 'absolute', left: 0, top: 0, width: 1080, height: 1920, transform: 'scale(1.15)', transformOrigin: '540px 900px'}}>
+    <StatCard x={540} y={900} from="$100" to="$123" fromLabel="2020" toLabel="2025" at={P(28) + 0.2} note="US CPI (BLS)" />
+  </div>
+</>;
+
+const Raise = ({t}: {t: number}) => {
+  const rich = t >= P(31);
+  return <>
+    <Walrus x={280} y={G} h={400} flip hat pose={{mouth: t < E(29) ? 0.4 : 0}} />
+    {t >= P(29) + 0.6 && <Fish x={lerp(380, 650, ease((t - P(29) - 0.6) / 0.5))} y={G - 300} w={120} id="raise" />}
+    <Penguin id="doug" x={760} y={G} h={460} pose={rich ? {beak: 'smile', brows: 'happy', flapL: 130, flapR: 130, hop: Math.abs(Math.sin(t * 8))} : {look: [-0.6, 0]}} />
+    {rich && <FishPile x={760} y={G + 80} n={6} w={90} />}
+  </>;
+};
+const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
+
+const GoBuy = ({t}: {t: number}) => <>
+  <Penguin id="doug" x={lerp(180, 520, ease((t - P(32)) / 1))} y={G} h={380} pose={{side: true, turn: 1, run: true, beak: 'smile'}} />
+  <ConeStand x={840} y={G} w={380} price="3 fish" cones={10} />
+</>;
+
+const Poorer = ({t}: {t: number}) => {
+  const cry = t >= P(35);
+  return <>
+    <div style={{position: 'absolute', left: 230, top: G - 120, width: 160, height: 120, background: GREEN, border: `6px solid ${INK}`}} />
+    <div style={{position: 'absolute', left: 230, top: G - 150, width: 160, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 40, transform: 'translateY(-100%)'}}>PAY +5%</div>
+    <div style={{position: 'absolute', left: 690, top: G - lerp(120, 240, ease((t - P(33)) / 0.4)), width: 160, height: lerp(120, 240, ease((t - P(33)) / 0.4)), background: RED, border: `6px solid ${INK}`}} />
+    <div style={{position: 'absolute', left: 690, top: G - 270, width: 160, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 40, transform: 'translateY(-100%)'}}>PRICE +10%</div>
+    <Penguin id="doug" x={540} y={G + 80} h={cry ? 440 : 380} pose={cry ? {brows: 'worried', beak: 'frown', tears: true, look: [0, 0.3]} : {look: [0.6, -0.3], brows: 'worried'}} />
+    {cry && <SnowCone x={650} y={G + 20} w={60} size={0.5} id="tiny" />}
+  </>;
+};
+
+const Cta = ({t}: {t: number}) => <>
+  <ConeStand x={820} y={G} w={340} price="4 fish" cones={6} />
+  <Penguin id="doug" x={420} y={G + 120} h={600} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0.3, 0.6]}} />
+</>;
+
 // ---------- shots ----------
-type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
+type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx; ice?: boolean};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
+  {at: P(10), set: (t) => <Intro t={t} />, fx_: 'swipe', ice: true},
+  {at: P(13), set: (t) => <Reserve t={t} />, fx_: 'zoom', ice: true},
+  {at: P(16), set: (t) => <Everyone t={t} />, fx_: 'pop', ice: true},
+  {at: P(18), set: (t) => <Equation t={t} />, fx_: 'iris', ice: true},
+  {at: P(21), set: () => <Name />, fx_: 'pop'},
+  {at: P(22), set: () => <Stare />, fx_: 'zoom'},
+  {at: P(23), set: (t) => <IceDeal t={t} />, fx_: 'swipe', ice: true},
+  {at: P(25), set: (t) => <PuffinPays t={t} />, fx_: 'swipeL', ice: true},
+  {at: P(28), set: () => <RealLife />, fx_: 'iris'},
+  {at: P(29), set: (t) => <Raise t={t} />, fx_: 'swipe', ice: true},
+  {at: P(32), set: (t) => <GoBuy t={t} />, fx_: 'swipeL', ice: true},
+  {at: P(33), set: (t) => <Poorer t={t} />, fx_: 'pop', ice: true},
+  {at: P(36), set: () => <Stare side />, fx_: 'zoom'},
+  {at: P(37), set: (t) => <Cta t={t} />, fx_: 'pop', ice: true},
 ];
-// deep zooms [segment, focusX, focusY, scale]: Doug's face
+// deep zooms [segment, focusX, focusY, scale]
 const DEEP: [number, number, number, number][] = [
-  [8, 540, G - 120, 1.8],
+  [8, 540, G - 120, 1.8], [9, 540, G - 120, 1.8], [12, 790, G - 300, 1.6], [14, 790, G - 220, 1.5], [17, 810, G - 300, 1.5], [20, 800, G - 500, 1.6],
+  [24, 560, G - 120, 1.7], [27, 720, G - 600, 1.5], [31, 760, G - 250, 1.5], [35, 540, G - 220, 1.7],
 ];
 
 export const DougInflation = () => {
@@ -108,14 +230,20 @@ export const DougInflation = () => {
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.1), dp = dz ? ease((tc - P(dz[0])) / 0.18) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
   if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
+  const quiet = BIGS.some((b) => tc >= b.at && tc < b.until) || QUIET.some(([a, b]) => tc >= a && tc < b);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
-      <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
+      <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>
+        {sh.ice && <Ice />}
+        {sh.set(t)}
+        {BIGS.map((b) => <BigWord key={b.text} text={b.text} x={b.x ?? 540} y={b.y ?? 960} at={b.at} until={b.until} color={b.color} size={b.size} />)}
+      </AbsoluteFill>
     </AbsoluteFill>
     {sh.at === 0 && <SameObject tc={tc} />}
-    {!BIGS.some((b) => tc >= b.at && tc < b.until) && <Captions t={tc} phrases={TIM} />}
+    {!quiet && <Captions t={tc} phrases={TIM} />}
     <Audio src={staticFile('doug-inflation-voice.mp3')} />
+    {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.1} name="user-whoosh" vol={0.25} />
     <Sfx at={P(1) + 0.55} name="user-cash-register" vol={0.4} />
@@ -124,6 +252,30 @@ export const DougInflation = () => {
     <Sfx at={P(3) + 0.4} name="user-cash-register" vol={0.3} />
     {SAMES.map(([i]) => <Sfx key={i} at={P(i)} name="user-pop" vol={0.45} />)}
     <Sfx at={P(7)} name="user-wrong" vol={0.35} />
-    <Sfx at={P(8)} name="user-fahh" vol={0.5} />
+    <Sfx at={P(9)} name="user-fahh" vol={0.5} />
+    <Sfx at={P(10)} name="penguin-squawk" vol={0.35} />
+    <Sfx at={P(12)} name="user-money" vol={0.35} />
+    <Sfx at={P(13)} name="user-boom" vol={0.4} />
+    <Sfx at={P(15)} name="user-horn" vol={0.3} />
+    <Sfx at={P(16)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(17) + 0.5} name="user-pop" vol={0.35} />
+    <Sfx at={P(20)} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(20) + 0.5} name="user-wrong" vol={0.35} />
+    <Sfx at={P(21)} name="user-pop" vol={0.4} />
+    <Sfx at={P(22)} name="user-shock" vol={0.35} />
+    <Sfx at={P(23)} name="walrus-grunt" vol={0.4} />
+    <Sfx at={P(24) + 0.3} name="user-slap" vol={0.4} />
+    <Sfx at={P(24) + 0.4} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(25)} name="user-money-transfer" vol={0.35} />
+    <Sfx at={P(27)} name="user-cash-register" vol={0.4} />
+    <Sfx at={P(28)} name="user-ting" vol={0.4} />
+    <Sfx at={P(28) + 0.3} name="user-timer" vol={0.3} />
+    <Sfx at={P(29) + 0.6} name="user-money" vol={0.35} />
+    <Sfx at={P(30)} name="user-wow" vol={0.35} />
+    <Sfx at={P(31)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(33) + 0.2} name="user-fahh" vol={0.45} />
+    <Sfx at={P(35)} name="user-aww" vol={0.4} />
+    <Sfx at={P(36)} name="user-wrong" vol={0.4} />
+    <Sfx at={P(37)} name="user-pop" vol={0.35} />
   </AbsoluteFill>;
 };
