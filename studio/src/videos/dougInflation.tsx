@@ -57,6 +57,10 @@ type Big = {text: string; at: number; until: number; x?: number; y?: number; col
 const BIGS: Big[] = [
   {text: 'did nothing', at: P(7) + 0.2, until: P(8), size: 80},
   {text: 'poorer.', at: P(9), until: P(10), color: RED, size: 110},
+  {text: 'same 10', at: P(17) + 0.5, until: P(18), x: 810, y: G - 760, size: 90},
+  {text: 'more fish', at: P(18), until: P(19), x: 260, y: G - 520, color: GREEN, size: 80},
+  {text: 'same cone', at: P(19), until: P(20), x: 800, y: G - 520, size: 80},
+  {text: 'real life', at: P(28), until: P(28) + 0.2, y: 460, size: 110},
   {text: 'BRRRR', at: P(15), until: P(16), y: 560, size: 150},
   {text: '+50%', at: P(24) + 0.3, until: P(25), x: 580, y: 760, color: RED, size: 140},
   {text: '+5%', at: P(30), until: P(31), y: 620, color: GREEN, size: 170},
@@ -126,19 +130,17 @@ const Everyone = ({t}: {t: number}) => <>
   {t >= P(17) && <>
     <ConeStand x={810} y={G} w={420} price="1 fish" cones={10} />
     <Puffin x={810} y={G - 230} h={170} pose={{smirk: true}} />
-    <BigWord text="same 10" x={810} y={G - 760} at={P(17) + 0.5} size={90} />
   </>}
 </>;
 
 const Equation = ({t}: {t: number}) => <>
   <FishPile x={260} y={G} n={14} w={120} />
-  <BigWord text="more fish" x={260} y={G - 520} at={P(18)} size={80} color={GREEN} />
-  {t >= P(19) && <><SnowCone x={800} y={G - 20} w={180} /><BigWord text="same cone" x={800} y={G - 520} at={P(19)} size={80} /></>}
+  {t >= P(19) && <><SnowCone x={800} y={G - 20} w={180} /></>}
   {t >= P(20) && <PriceTag x={800} y={G - 760} price={t < P(20) + 0.5 ? '1 fish' : '2 fish'} at={P(20)} color={RED} />}
 </>;
 
 const Name = () => <Title lines={['INFLATION']} y={760} size={140} />;
-const Stare = ({side}: {side?: boolean}) => <Penguin id="doug" x={540} y={G + 300} h={950} pose={{lids: 0.35, look: side ? [0.6, 0] : [0, 0], turn: side ? 0.4 : 0}} />;
+const Stare = ({side}: {side?: boolean}) => <Penguin id="doug" x={540} y={1450} h={820} pose={{lids: 0.35, look: side ? [0.6, 0] : [0, 0], turn: side ? 0.4 : 0}} />;
 
 const IceDeal = ({t}: {t: number}) => <>
   <Walrus x={330} y={G} h={430} flip pose={{mouth: t < E(23) ? 0.4 : 0, laugh: t >= P(24) ? 1 : 0}} />
@@ -155,7 +157,6 @@ const PuffinPays = ({t}: {t: number}) => <>
 </>;
 
 const RealLife = () => <>
-  <BigWord text="real life" x={540} y={460} at={P(28)} until={P(28) + 0.2} size={110} />
   <div style={{position: 'absolute', left: 0, top: 0, width: 1080, height: 1920, transform: 'scale(1.15)', transformOrigin: '540px 900px'}}>
     <StatCard x={540} y={900} from="$100" to="$123" fromLabel="2020" toLabel="2025" at={P(28) + 0.2} note="US CPI (BLS)" />
   </div>
@@ -215,7 +216,7 @@ const SHOTS: Shot[] = [
 ];
 // deep zooms [segment, focusX, focusY, scale]
 const DEEP: [number, number, number, number][] = [
-  [8, 540, G - 120, 1.8], [9, 540, G - 120, 1.8], [12, 790, G - 300, 1.6], [14, 790, G - 220, 1.5], [17, 810, G - 300, 1.5], [20, 800, G - 500, 1.6],
+  [8, 540, G - 120, 1.8], [9, 540, G - 120, 1.8], [12, 790, G - 300, 1.6], [14, 790, G - 220, 1.5], [20, 800, G - 500, 1.6],
   [24, 560, G - 120, 1.7], [27, 720, G - 600, 1.5], [31, 760, G - 250, 1.5], [35, 540, G - 220, 1.7],
 ];
 
