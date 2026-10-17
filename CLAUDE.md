@@ -1,3 +1,9 @@
+# ACTIVE CHANNEL = "Doug the Penguin" (since 2026-10-16)
+For any new video use the `doug-episode` skill + HANDOFF.md + PROJECT_LOG.md + videos/penguin-series/script-formula.md.
+Those Doug rules OVERRIDE the Benny rules below (grid paper, am_fenrir, exactly 60 s, yellow captions, Rich Rick, zoom-only).
+Doug: 61–65 s, user's ElevenLabs voice, no music, hand-written captions, user SFX library, hook preview before full render.
+The Benny rules below are kept only for the old Benny videos.
+
 # Permanent rules for every video (TikTok, American audience)
 
 ## Language

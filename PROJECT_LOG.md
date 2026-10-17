@@ -45,3 +45,6 @@ Build: `studio/src/videos/<name>.tsx` with `CollageVideo` + `<name>-sheet` comp;
 - User SFX labelled (2026-10-17): see tools/sfx_user_map.json; ting at 0 s of every hook.
 - 2026-10-17: EP2 gas VO from user (83.9s) tightened + atempo 1.2 -> 61.5s (videos/doug-gas/vo). HANDOFF.md written for a new session.
 - EP2 'Gas Explained by Doug' DONE (2026-10-17): videos/doug-gas/doug-gas.mp4; segments->lines map in studio/src/data/doug-gas.json.
+- TikTok descriptions: keyword question + 5 specific hashtags, e.g. EP1 "Rent vs. Buy a House | Doug Explains 🐧 Would you keep renting or buy? 👇 #rentvsbuy #renting #landlord #personalfinance #moneytok"; EP2 "Why is gas $6 in California but $3.82 in Texas? ⛽🐧 ... #gasprices #california #texas #personalfinance #moneytok". Turn on AI-generated content label (ElevenLabs voice). Pin "Team X or team Y?" comment.
+- Topic backlog: tipping, credit score, buy-now-pay-later, investing (5 fish -> compound), groceries/shrinkflation, inflation (fish machine, Big Seal) — avoid bank/inflation-first (Monkey Economics' biggest topics).
+- Workflow is documented in .claude/skills/doug-episode/SKILL.md; CLAUDE.md now starts with an ACTIVE CHANNEL note.
