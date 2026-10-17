@@ -9,6 +9,7 @@ import {Fish, INK, Line, Penguin, onTwos, talk} from '../penguin/rig';
 import {Walrus} from '../penguin/cast';
 import {BigWord, FishFlight, FishPile, HookTitle, IceBank, Igloo, Note, Paper, PriceTag, Sign, SnowPile, Stamp, Thought} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
+import {Captions, beat} from '../penguin/edit';
 import PH from '../data/doug-rent.json';
 
 const P = (i: number) => PH[i].start, E = (i: number) => PH[i].end;
@@ -93,8 +94,8 @@ const Owe = ({t}: {t: number}) => <>
   <Stamp text="SOLD" x={360} y={900} at={P(11) + 0.3} color={GREEN} size={90} />
   <IceBank x={930} y={720} w={230} id="bankO" />
   <Note text="owes the bank" x={560} y={560} toX={850} toY={640} at={P(12) + 0.2} size={58} />
-  <BigWord text="150 fish" x={720} y={1420} at={P(13)} color={RED} size={130} />
-  <BigWord text="every month" x={720} y={1560} at={P(14)} color={INK} size={80} />
+  <BigWord text="150 fish" x={720} y={1000} at={P(13)} color={RED} size={120} />
+  <BigWord text="every month" x={720} y={1110} at={P(14)} color={INK} size={70} />
 </>;
 
 const FindDoug = ({t}: {t: number}) => {
@@ -137,7 +138,7 @@ const SameIgloo = ({t}: {t: number}) => <>
   <Walrus x={930} y={G + 40} h={330} pose={{lids: 0.5, look: -0.6}} />
   <BigWord text="RENT" x={300} y={760} at={P(23)} color={RED} size={110} rot={-6} />
   <BigWord text="MORTGAGE" x={780} y={760} at={P(24)} color="#2F5DA8" size={90} rot={5} />
-  <BigWord text="same igloo" x={540} y={1420} at={P(25)} size={100} />
+  <BigWord text="same igloo" x={540} y={560} at={P(25)} size={100} />
   {t >= P(26) && <Sign x={540} y={G - 40} text="LARRY" w={260} id="larrySign" />}
 </>;
 
@@ -146,8 +147,8 @@ const Stat = ({t}: {t: number}) => <>
   <Penguin id="r2" x={780} y={G} h={460} build="thin" pose={{sweat: true, brows: 'worried', flapL: 60, turn: -0.4}} seed={0.7} />
   <Paper x={440} y={840} w={230} title="PAYCHECK" amount="30%+" at={P(27) + 1.2} rot={-8} id="pc1" />
   <BigWord text="1 in 2 US renters" x={540} y={460} at={P(27) + 0.3} size={86} />
-  <BigWord text="30%+ → rent" x={540} y={1430} at={P(27) + 2.2} color={RED} size={110} />
-  <div style={{position: 'absolute', left: 0, right: 0, top: 1560, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 34, color: '#888'}}>Harvard JCHS, 2024</div>
+  <BigWord text="30%+ → rent" x={540} y={600} at={P(27) + 2.6} color={RED} size={110} />
+  <div style={{position: 'absolute', left: 0, right: 0, top: 1330, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 34, color: '#888'}}>Harvard JCHS, 2024</div>
 </>;
 
 const ThirtyYears = ({t}: {t: number}) => <>
@@ -181,7 +182,7 @@ const NewDoug = ({t}: {t: number}) => {
 const Cta = ({t}: {t: number}) => <>
   <BigWord text="RENT or BUY?" x={540} y={520} at={P(36)} size={130} />
   <Penguin id="doug" x={540} y={G + 120} h={640} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0.3, 0.6]}} />
-  <BigWord text="↓ comments ↓" x={540} y={1560} at={P(38)} color={RED} size={90} />
+  
 </>;
 
 // ---------- shot list ----------
@@ -219,7 +220,8 @@ const camFor = (tc: number, sh: Shot) => {
 export const DougRent = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
-  const {s, fx, fy} = camFor(tc, sh);
+  const {s: s0, fx, fy} = camFor(tc, sh);
+  const s = s0 * beat(tc, PH); // punch on every phrase: faster rhythm
   const cam = `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`;
   const fxStyle = cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})));
   return <AbsoluteFill style={{background: '#FFFFFF', overflow: 'hidden'}}>
@@ -227,7 +229,22 @@ export const DougRent = () => {
     <AbsoluteFill style={fxStyle}>
       <AbsoluteFill style={{transform: cam, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
     </AbsoluteFill>
+    <Captions t={tc} phrases={PH} />
     <Audio src={staticFile('doug-rent-voice.mp3')} />
+    {/* rhythm SFX: a fast swoosh on every cut, a pop on every big word, animal voices on the characters */}
+    {SHOTS.slice(1).map((x, i) => <Sfx key={`sw${i}`} at={x.at - 0.05} name="swoosh-fast" vol={0.18} />)}
+    <Sfx at={P(3) + 0.25} name="walrus-laugh" vol={0.4} />
+    <Sfx at={P(4)} name="penguin-squawk" vol={0.35} />
+    <Sfx at={P(7) + 0.4} name="penguin-honk" vol={0.3} />
+    <Sfx at={P(8) + 0.9} name="walrus-grunt" vol={0.4} />
+    <Sfx at={P(10) + 0.8} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(15) + 0.3} name="walrus-grunt" vol={0.35} />
+    <Sfx at={P(16) + 0.3} name="penguin-squawk" vol={0.3} />
+    <Sfx at={P(21) + 0.3} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(29)} name="penguin-honk" vol={0.3} />
+    <Sfx at={P(32) + 0.1} name="splat" vol={0.35} />
+    <Sfx at={P(35) + 0.2} name="penguin-squawk" vol={0.3} />
+    {[P(1) + 0.3, P(6) + 0.2, P(13), P(18), P(23), P(24), P(28), P(36)].map((a, i) => <Sfx key={`pp${i}`} at={a} name="pop-high" vol={0.25} />)}
     <Sfx at={P(0) + 0.3} name="cha-ching" vol={0.25} />
     <Sfx at={P(7) + 0.4} name="pop" />
     <Sfx at={P(10) + 0.3} name="whoosh" vol={0.25} />

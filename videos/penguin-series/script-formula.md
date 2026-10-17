@@ -35,3 +35,8 @@
 - On-screen: blue title `<Topic> Explained by Doug` (HookTitle: #5EC4FA fill, #123B6B outline), Doug left vs other side right.
 - Spoken: starts with "If Doug ..." — two short parallel If-sentences with a contrast: "If Doug pay rent, Doug own nothing. If Larry get rent, Larry own igloo."
 - Description in caveman voice: "Doug understand now 🐧 #topic". TikTok auto-captions ON.
+
+## Edit rules v2 (user, 2026-10-17)
+- Captions ON (penguin/edit.tsx `Captions`): <=3 words, uppercase Montserrat 900, white + navy outline, colour keywords (red money-pain, green own/gain, blue cast), pop + tilt, y=1530.
+- Faster rhythm: camera punch on every phrase (`beat`), cut swoosh on every shot change, pop-high on every big word.
+- SFX: animal voices (tools/sfx_animals.py: penguin-squawk/honk, walrus-grunt/laugh, gull-caw/mine, splat, swoosh-fast, pop-high) + the user's own money/transition/meme sounds when provided.
