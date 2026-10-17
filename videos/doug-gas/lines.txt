@@ -1,0 +1,23 @@
+If Doug live in Texas, gas cost four dollars.|0.05
+If Doug live in California, gas cost six dollars.|0.05
+Same gas.|0.1
+This is Doug. Doug drive snowmobile to work.|0.05
+Snowmobile drink gas. Every day.|0.05
+Doug fill up. Fifteen gallons. Doug watch numbers go up, up, up.|0.05
+Gas come from oil. Oil come from ground.|0.05
+Larry own refinery.|0.05
+Larry turn oil into gas.|0.05
+In Texas, many refineries. Lots of gas. Gas cheap.|0.05
+In California, few refineries. Some close. Gas rare. Gas expensive.|0.05
+And no pipe bring gas from Texas. California is alone.|0.05
+Then Tax Gull come.|0.05
+Texas gull take twenty cents. California gull take sixty cents. Every gallon.|0.05
+And California want special summer gas. Special gas cost more to make. Only few refineries can make it.|0.08
+Doug.|0.45
+In real life, California gas is six twenty-three. Texas is three eighty-two.|0.05
+Doug drive twelve thousand miles a year. In California, Doug pay over one thousand dollars more. Same snowmobile.|0.05
+That is a lot of fish.|0.05
+Doug move to Texas. Doug happy. Life is good.|0.05
+Then Doug see Texas summer.|0.1
+Doug is penguin.|0.2
+Would you move for cheaper gas? Tell Doug in the comments.|0.1
