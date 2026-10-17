@@ -10,7 +10,7 @@ Talk to the user in Arabic. Video text/voice in English.
 ## 2. Rebuild the git-ignored assets (needed to render)
 - Fonts are tracked (studio/public/fonts).
 - SFX: `pip install numpy soundfile && python3 tools/sfx.py && python3 tools/sfx_animals.py`
-  then `git fetch origin main && python3 tools/import_user_sfx.py` (user's labelled sounds -> studio/public/sfx/user-*.wav).
+  then `python3 tools/import_user_sfx.py` (user's labelled sounds -> studio/public/sfx/user-*.wav).
 - Voices: `cp videos/doug-rent/../penguin-rent/vo/voice.mp3 studio/public/doug-rent-voice.mp3` and
   `cp videos/doug-gas/vo/voice.mp3 studio/public/doug-gas-voice.mp3`.
 
