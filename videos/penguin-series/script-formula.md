@@ -51,3 +51,20 @@
 - After the hook: back to the normal Doug ice world (white bg, one idea per shot) like doug-gas / doug-rent.
 - "Same X / Same Y" lists: the object itself pops in big, one per word, synced, with user-pop. No stacked stamps.
 - Caption hides exactly while a big centre word (BigWord) is on screen; one text on screen at a time, no repeats.
+
+## Edit rules v4 = MASTER STYLE (user, 2026-10-18, EP4 gas USA vs Iran — use on EVERY video)
+Reference episode: studio/src/videos/dougGasIran.tsx + videos/doug-gas-iran/doug-gas-iran.mp4.
+- HOOK = WhyHook (studio/src/penguin/whyHook.tsx), PURE WHITE background, everything on screen at frame 0.
+  Doug ACTS the hook (pass dougPose/mark): looks at side A while it is said (camera pushes to A) -> snaps his head to side B with the
+  camera on "but in ..." -> SHOCK on B's number (eyes big, mouth open, flippers out, small hop, tremble, sweat, "?" marks turn to red "!").
+  SFX: ting 0 s, whoosh to A, cash-register on A's price, swoosh-fast to B, boom + penguin-squawk on B's number. Captions y=1640 in the hook.
+- VOICE PACE: cut EVERY pause to ~0.08 s; only 0.3 s after the hook question and 0.4 s after each "Doug." gag. NEVER stretch pauses to
+  reach 61 s. If the tight VO is short, write extra content lines (a second mini-lesson), get approval, generate ONLY those lines, splice them in.
+- STORY ORDER: hook -> open loop ("Doug smell a trick.") -> side A (Doug pays, counter, fish fly) -> travel -> side B (cheap, Doug happy)
+  -> why B (concept name card + "Doug.") -> why A ("everybody takes a cut": Larry / truck / Tax Gull, each "cut!") -> the trick reveal
+  (dark spotlight + red "the trick") -> real consequence numbers -> Doug looks left/right -> back home -> "Doug is confused penguin" + ?
+  -> CTA choice cards (A vs B) + comment question.
+- RHYTHM: a new shot every ~2.5 s (20–25 shots in 61 s), cutFX on every cut, whoosh on every cut, beat() punch per phrase.
+- DEEP ZOOMS only on a face/object that stays in frame; never zoom where it cuts a BigWord, price tag or stamp. Big words never overlap tags
+  (put them above the headers). Always check a contact sheet of every shot before sending; fix empty shots (props must be on screen at once).
+- Length 61–62 s, render, compress crf 22 slow (<15 MB), commit + push, send.

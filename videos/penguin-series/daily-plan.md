@@ -16,3 +16,4 @@
 - AUTONOMY (user, 2026-10-18, permanent): daily episodes are built AND published with NO approval steps (user asleep). Claude self-checks hook + final mp4; Metricool autoPublish=true, isAigc=false (user removed the AI label after being told the risk). Overrides the earlier "go" steps and the phone-publish rule.
 - CORRECTION (user, 2026-10-18): the AUTONOMY line above is wrong. Rule = EVERYTHING needs the user's approval (topic/script, hook preview, full render) EXCEPT publishing: once the video is approved, schedule it in Metricool without asking, autoPublish=true, isAigc=false.
 - HOOK RULE (user, 2026-10-18, permanent): every episode opens with the WhyHook template (studio/src/penguin/whyHook.tsx; ref still videos/penguin-series/why-hook-v1.png). No "Explained by Doug" title.
+- MASTER EDIT STYLE (user, 2026-10-18): every episode follows 'Edit rules v4' (script-formula.md) and copies studio/src/videos/dougGasIran.tsx.
