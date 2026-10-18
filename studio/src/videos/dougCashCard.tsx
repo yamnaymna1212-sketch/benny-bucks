@@ -288,7 +288,7 @@ const Stare = ({marks}: {marks?: boolean}) => <>
 const Billions = ({t}: {t: number}) => { const n = 2 + Math.floor(10 * ease((t - P(34) - 1.2) / 1.8));
   return <>
     <NameTag x={540} y={360} text="USA" color={BLUE} />
-    <div style={{position: 'absolute', left: 540, top: 560, transform: 'translate(-50%,-50%) rotate(-3deg)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, color: RED, whiteSpace: 'nowrap',
+    <div style={{position: 'absolute', left: 540, top: 560, transform: 'translate(-50%,-50%) rotate(-3deg)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 100, color: RED, whiteSpace: 'nowrap',
       opacity: t >= P(34) + 1.2 ? 1 : 0}}>$198 BILLION</div>
     <div style={{position: 'absolute', left: 540, top: 690, transform: 'translate(-50%,-50%)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 60, color: INK, whiteSpace: 'nowrap',
       opacity: t >= P(34) + 1.2 ? 1 : 0}}>in swipe fees</div>
