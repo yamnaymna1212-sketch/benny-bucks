@@ -81,7 +81,7 @@ const Smell = ({t}: {t: number}) => <>
   <Stamp text="SAME GAS" x={540} y={520} at={P(3)} color={INK} size={100} />
 </>;
 
-const Ride = ({t}: {t: number}) => { const x = lerp(-200, 560, ease((t - P(5)) / 1.2));
+const Ride = ({t}: {t: number}) => { const x = lerp(200, 560, ease((t - P(5)) / 0.6));
   return <>
     <Snowfall t={t} />
     {[0, 1, 2, 3].map((i) => <div key={i} style={{position: 'absolute', left: ((i * 300 - t * 900) % 1400 + 1400) % 1400 - 200, top: G + 20 + i * 14, width: 160, height: 6, background: '#D6E8F3', borderRadius: 3}} />)}
@@ -216,7 +216,7 @@ const SHOTS: Shot[] = [
 ];
 // deep zooms [phrase, focusX, focusY, scale]
 const DEEP: [number, number, number, number][] = [
-  [8, 720, G - 220, 1.6], [11, 330, G - 260, 1.6], [16, 720, 600, 1.4], [21, 760, G - 300, 1.5], [26, 810, 900, 1.4], [29, 300, G - 120, 1.5], [34, 760, G - 250, 1.5], [37, 330, G - 260, 1.6],
+  [8, 560, G - 320, 1.35], [11, 330, G - 260, 1.6], [16, 720, 600, 1.4], [29, 540, G - 300, 1.3], [34, 760, G - 250, 1.5], [37, 330, G - 260, 1.6],
 ];
 // big centre words; the caption hides while they (and full-screen text) are on screen
 const BIGS: {text: string; at: number; until: number; x?: number; y?: number; color?: string; size: number}[] = [
