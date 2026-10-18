@@ -1,5 +1,5 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
-For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
+For any new video type `/doug-episode` (manual-only skill) + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
 Doug rules: 61–65 s, the user's ElevenLabs voice, NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 HOOK = main template `WhyHook` (studio/src/penguin/whyHook.tsx): big "WHY" + two flag/price/object sides + plain confused Doug in the middle; never an "Explained by Doug" title.
 MASTER EDIT STYLE (every video) = 'Edit rules v4' in videos/penguin-series/script-formula.md, template studio/src/videos/dougGasIran.tsx: white hook, Doug acts the hook (looks A -> snaps to B -> shock), no pauses (0.08 s), new shot every ~2.5 s.
@@ -11,7 +11,7 @@ Posting times (best 3 per day, US): videos/penguin-series/posting-times.md — 1
 Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
 - Full video render / re-render (any render > 5 s) -> offer ONE still or the 5-s hook preview instead; never re-render a finished episode unless asked.
 - Many small fix requests in a row -> ask the user to batch all fixes into one message, then render once.
-- Long session (context > ~50% or several episodes in one chat) -> tell them to start a new session (one episode = one session; first message: "Use the doug-episode skill ...").
+- Long session (context > ~50% or several episodes in one chat) -> tell them to start a new session (one episode = one session; first message: "/doug-episode ...").
 - General chat / strategy questions inside the build session -> suggest asking in a normal claude.ai chat or using Sonnet.
 - Vague requests ("fix it", "analyse everything", "review the whole project") -> ask one short clarifying question instead of reading many files.
 - Big style changes mid-series -> warn that tools must be rebuilt; confirm first.
