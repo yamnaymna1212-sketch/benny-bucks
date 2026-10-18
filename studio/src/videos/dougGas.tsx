@@ -71,7 +71,7 @@ export const OilGush = ({x, y, t, at}: {x: number; y: number; t: number; at: num
     <ellipse cx={200} cy={598} rx={150 * p} ry={22} fill="#1B1B1B" />
   </svg>;
 };
-const Refinery = ({x, y, w = 460, t, label, closed, id}: {x: number; y: number; w?: number; t: number; label?: string; closed?: boolean; id: string}) =>
+export const Refinery = ({x, y, w = 460, t, label, closed, id}: {x: number; y: number; w?: number; t: number; label?: string; closed?: boolean; id: string}) =>
   <svg width={w} height={w * 0.9} viewBox="0 0 460 414" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.9, overflow: 'visible'}} key={id}>
     {!closed && [0, 1, 2].map((i) => { const ph = (t * 0.8 + i / 3) % 1; return <circle key={i} cx={95 + ph * 30} cy={70 - ph * 90} r={20 + ph * 26} fill="#D6D6D6" stroke={INK} strokeWidth={3} opacity={1 - ph} />; })}
     <rect x={80} y={70} width={34} height={240} fill="#B9C0C3" stroke={INK} strokeWidth={5} />

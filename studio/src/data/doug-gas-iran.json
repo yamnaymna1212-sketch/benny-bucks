@@ -1,6 +1,6 @@
 [
  {
-  "line": 1,
+  "line": 0,
   "text": "Why full tank cost sixty-six dollars in USA...",
   "start": 0.04,
   "end": 2.45
@@ -8,247 +8,349 @@
  {
   "line": 1,
   "text": "but in Iran,",
-  "start": 2.99,
-  "end": 3.63
+  "start": 2.6,
+  "end": 3.24
  },
  {
-  "line": 1,
+  "line": 2,
   "text": "forty-five cents?",
-  "start": 3.95,
-  "end": 4.79
+  "start": 3.39,
+  "end": 4.23
  },
  {
-  "line": 2,
+  "line": 3,
   "text": "Same gas.",
-  "start": 5.61,
-  "end": 6.19
+  "start": 4.6,
+  "end": 5.19
  },
  {
-  "line": 2,
+  "line": 4,
   "text": "Doug smell a trick.",
-  "start": 6.73,
-  "end": 7.53
- },
- {
-  "line": 3,
-  "text": "This is Doug.",
-  "start": 8.25,
-  "end": 8.91
- },
- {
-  "line": 3,
-  "text": "Doug drive snowmobile.",
-  "start": 9.45,
-  "end": 10.51
- },
- {
-  "line": 4,
-  "text": "In America,",
-  "start": 11.05,
-  "end": 11.48
- },
- {
-  "line": 4,
-  "text": "Doug pay almost seven fish.",
-  "start": 11.8,
-  "end": 13.15
+  "start": 5.34,
+  "end": 6.13
  },
  {
   "line": 5,
-  "text": "So Doug fly to Iran.",
-  "start": 13.69,
-  "end": 14.84
+  "text": "This is Doug.",
+  "start": 6.28,
+  "end": 6.95
  },
  {
   "line": 6,
-  "text": "In Iran, Doug pay forty-five cents.",
-  "start": 15.38,
-  "end": 17.2
- },
- {
-  "line": 6,
-  "text": "Doug rich!",
-  "start": 17.74,
-  "end": 18.27
+  "text": "Doug drive snowmobile.",
+  "start": 7.1,
+  "end": 8.16
  },
  {
   "line": 7,
-  "text": "How?",
-  "start": 18.94,
-  "end": 19.16
- },
- {
-  "line": 7,
-  "text": "Iran sit on oil.",
-  "start": 19.53,
-  "end": 20.33
- },
- {
-  "line": 7,
-  "text": "Lots of oil.",
-  "start": 20.86,
-  "end": 21.45
+  "text": "In America,",
+  "start": 8.31,
+  "end": 8.74
  },
  {
   "line": 8,
-  "text": "And government pay part of the gas.",
-  "start": 21.98,
-  "end": 23.36
- },
- {
-  "line": 8,
-  "text": "Gas cheap on purpose.",
-  "start": 23.89,
-  "end": 25.01
+  "text": "Doug pay almost seven fish.",
+  "start": 8.89,
+  "end": 10.25
  },
  {
   "line": 9,
-  "text": "This is called subsidy.",
-  "start": 25.54,
-  "end": 26.35
+  "text": "So Doug fly to Iran.",
+  "start": 10.4,
+  "end": 11.55
  },
  {
   "line": 10,
-  "text": "Doug.",
-  "start": 27.07,
-  "end": 27.28
+  "text": "In Iran, Doug pay forty-five cents.",
+  "start": 11.7,
+  "end": 13.52
  },
  {
   "line": 11,
-  "text": "But here is the trick.",
-  "start": 28.35,
-  "end": 29.07
+  "text": "Doug rich!",
+  "start": 13.67,
+  "end": 14.21
  },
  {
   "line": 12,
-  "text": "Iran money is broken.",
-  "start": 29.99,
-  "end": 31.19
+  "text": "How?",
+  "start": 14.36,
+  "end": 14.58
  },
  {
   "line": 13,
-  "text": "One dollar buy almost two million rials.",
-  "start": 31.76,
-  "end": 33.74
+  "text": "Iran sit on oil.",
+  "start": 14.73,
+  "end": 15.53
  },
  {
   "line": 14,
-  "text": "Cheap gas.",
-  "start": 34.27,
-  "end": 34.83
- },
- {
-  "line": 14,
-  "text": "Expensive everything else.",
-  "start": 35.37,
-  "end": 36.33
+  "text": "Lots of oil.",
+  "start": 15.68,
+  "end": 16.26
  },
  {
   "line": 15,
-  "text": "Bread go up.",
-  "start": 36.87,
-  "end": 37.31
- },
- {
-  "line": 15,
-  "text": "Rent go up.",
-  "start": 37.85,
-  "end": 38.27
- },
- {
-  "line": 15,
-  "text": "Prices up almost seventy percent this year.",
-  "start": 38.8,
-  "end": 40.4
+  "text": "And government pay part of the gas.",
+  "start": 16.41,
+  "end": 17.78
  },
  {
   "line": 16,
-  "text": "And cheap gas?",
-  "start": 41.12,
-  "end": 41.71
- },
- {
-  "line": 16,
-  "text": "Only sixty liters a month.",
-  "start": 42.24,
-  "end": 43.4
- },
- {
-  "line": 16,
-  "text": "After that, price double.",
-  "start": 43.94,
-  "end": 44.79
+  "text": "Gas cheap on purpose.",
+  "start": 17.93,
+  "end": 19.05
  },
  {
   "line": 17,
-  "text": "Doug look at gas.",
-  "start": 45.46,
-  "end": 46.3
- },
- {
-  "line": 17,
-  "text": "Gas cheap.",
-  "start": 46.83,
-  "end": 47.28
- },
- {
-  "line": 17,
-  "text": "Doug look at bread.",
-  "start": 47.82,
-  "end": 48.61
- },
- {
-  "line": 17,
-  "text": "Bread",
-  "start": 49.15,
-  "end": 49.4
- },
- {
-  "line": 17,
-  "text": "not cheap.",
-  "start": 49.65,
-  "end": 49.98
+  "text": "This is called subsidy.",
+  "start": 19.2,
+  "end": 20.0
  },
  {
   "line": 18,
-  "text": "Doug fly home.",
-  "start": 50.7,
-  "end": 51.28
- },
- {
-  "line": 18,
-  "text": "Pay four forty.",
-  "start": 51.82,
-  "end": 52.53
- },
- {
-  "line": 18,
-  "text": "Doug happy.",
-  "start": 53.06,
-  "end": 53.61
+  "text": "Doug.",
+  "start": 20.27,
+  "end": 20.48
  },
  {
   "line": 19,
+  "text": "And America?",
+  "start": 20.95,
+  "end": 21.47
+ },
+ {
+  "line": 20,
+  "text": "America no subsidy.",
+  "start": 21.62,
+  "end": 22.44
+ },
+ {
+  "line": 21,
+  "text": "America pay world price for oil.",
+  "start": 22.59,
+  "end": 23.92
+ },
+ {
+  "line": 22,
+  "text": "Then Larry turn oil into gas.",
+  "start": 24.07,
+  "end": 25.6
+ },
+ {
+  "line": 23,
+  "text": "Larry take a cut.",
+  "start": 25.75,
+  "end": 26.39
+ },
+ {
+  "line": 24,
+  "text": "Truck drive gas to station.",
+  "start": 26.54,
+  "end": 27.85
+ },
+ {
+  "line": 25,
+  "text": "Truck take a cut.",
+  "start": 28.0,
+  "end": 28.6
+ },
+ {
+  "line": 26,
+  "text": "Then Tax Gull come.",
+  "start": 28.75,
+  "end": 29.64
+ },
+ {
+  "line": 27,
+  "text": "Fifty cents every gallon.",
+  "start": 29.79,
+  "end": 30.73
+ },
+ {
+  "line": 28,
+  "text": "Everybody take a cut.",
+  "start": 30.88,
+  "end": 31.7
+ },
+ {
+  "line": 29,
+  "text": "Doug pay all the cuts.",
+  "start": 31.85,
+  "end": 32.91
+ },
+ {
+  "line": 30,
+  "text": "Larry happy.",
+  "start": 33.06,
+  "end": 33.53
+ },
+ {
+  "line": 31,
+  "text": "Truck happy.",
+  "start": 33.68,
+  "end": 34.0
+ },
+ {
+  "line": 32,
+  "text": "Gull happy.",
+  "start": 34.15,
+  "end": 34.48
+ },
+ {
+  "line": 33,
+  "text": "Doug not happy.",
+  "start": 34.63,
+  "end": 35.08
+ },
+ {
+  "line": 34,
+  "text": "That is why full tank cost sixty-six dollars.",
+  "start": 35.35,
+  "end": 37.17
+ },
+ {
+  "line": 35,
+  "text": "Doug.",
+  "start": 37.32,
+  "end": 37.49
+ },
+ {
+  "line": 36,
+  "text": "But here is the trick.",
+  "start": 37.96,
+  "end": 38.67
+ },
+ {
+  "line": 37,
+  "text": "Iran money is broken.",
+  "start": 38.82,
+  "end": 40.02
+ },
+ {
+  "line": 38,
+  "text": "One dollar buy almost two million rials.",
+  "start": 40.17,
+  "end": 42.16
+ },
+ {
+  "line": 39,
+  "text": "Cheap gas.",
+  "start": 42.31,
+  "end": 42.86
+ },
+ {
+  "line": 40,
+  "text": "Expensive everything else.",
+  "start": 43.01,
+  "end": 43.98
+ },
+ {
+  "line": 41,
+  "text": "Bread go up.",
+  "start": 44.13,
+  "end": 44.57
+ },
+ {
+  "line": 42,
+  "text": "Rent go up.",
+  "start": 44.72,
+  "end": 45.14
+ },
+ {
+  "line": 43,
+  "text": "Prices up almost seventy percent this year.",
+  "start": 45.29,
+  "end": 46.89
+ },
+ {
+  "line": 44,
+  "text": "And cheap gas?",
+  "start": 47.04,
+  "end": 47.62
+ },
+ {
+  "line": 45,
+  "text": "Only sixty liters a month.",
+  "start": 47.77,
+  "end": 48.94
+ },
+ {
+  "line": 46,
+  "text": "After that, price double.",
+  "start": 49.09,
+  "end": 49.94
+ },
+ {
+  "line": 47,
+  "text": "Doug look at gas.",
+  "start": 50.09,
+  "end": 50.92
+ },
+ {
+  "line": 48,
+  "text": "Gas cheap.",
+  "start": 51.07,
+  "end": 51.52
+ },
+ {
+  "line": 49,
+  "text": "Doug look at bread.",
+  "start": 51.67,
+  "end": 52.46
+ },
+ {
+  "line": 50,
+  "text": "Bread",
+  "start": 52.61,
+  "end": 52.86
+ },
+ {
+  "line": 51,
+  "text": "not cheap.",
+  "start": 53.01,
+  "end": 53.35
+ },
+ {
+  "line": 52,
+  "text": "Doug fly home.",
+  "start": 53.5,
+  "end": 54.08
+ },
+ {
+  "line": 53,
+  "text": "Pay four forty.",
+  "start": 54.23,
+  "end": 54.94
+ },
+ {
+  "line": 54,
+  "text": "Doug happy.",
+  "start": 55.09,
+  "end": 55.64
+ },
+ {
+  "line": 55,
   "text": "Doug is confused penguin.",
-  "start": 54.28,
-  "end": 55.43
+  "start": 55.79,
+  "end": 56.94
  },
  {
-  "line": 20,
+  "line": 56,
   "text": "Cheap gas with broken money,",
-  "start": 56.45,
-  "end": 57.66
+  "start": 57.21,
+  "end": 58.41
  },
  {
-  "line": 20,
+  "line": 57,
   "text": "or expensive gas with strong money?",
-  "start": 58.19,
-  "end": 60.01
+  "start": 58.56,
+  "end": 60.38
  },
  {
-  "line": 20,
+  "line": 58,
   "text": "Tell Doug in the comments.",
-  "start": 60.55,
-  "end": 61.53
+  "start": 60.53,
+  "end": 61.52
  }
 ]

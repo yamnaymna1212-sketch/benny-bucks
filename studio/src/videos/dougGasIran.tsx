@@ -8,7 +8,8 @@ import {INK, Penguin, PenguinPose, onTwos} from '../penguin/rig';
 import {BigWord, FishFlight, FishPile, Igloo, PriceTag, Stamp, Title} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
-import {Barrel, MoneyBag, OilGush, Pump, Snowfall, Snowmobile} from './dougGas';
+import {Barrel, MoneyBag, OilGush, Pump, Refinery, Snowfall, Snowmobile} from './dougGas';
+import {Seagull, Walrus} from '../penguin/cast';
 import TIM from '../data/doug-gas-iran.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
@@ -140,12 +141,12 @@ const Trick = ({t}: {t: number}) => <>
   <Penguin id="doug" x={540} y={1400} h={620} pose={{look: [Math.sin(t * 3) * 0.8, 0], brows: 'worried', sweat: true}} />
 </>;
 
-const Broken = ({t}: {t: number}) => { const n = 2 + 13 * ease((t - P(21)) / 1.6);
+const Broken = ({t}: {t: number}) => { const n = 2 + 13 * ease((t - P(38)) / 1.6);
   return <>
     <Bill x={270} y={G - 520} w={300} />
     <div style={{position: 'absolute', left: 270, top: G - 470, transform: 'translateX(-50%)', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 52, color: INK}}>=</div>
     <Rials x={760} y={G} n={n} />
-    {t >= P(20) && <Stamp text="BROKEN" x={760} y={G - 260} at={P(20)} color={RED} size={110} />}
+    {t >= P(37) && <Stamp text="BROKEN" x={760} y={G - 260} at={P(37)} color={RED} size={110} />}
     <Penguin id="doug" x={270} y={G + 40} h={360} pose={{turn: 0.5, look: [0.8, -0.6], brows: 'shock', eyeScale: 1.2}} />
   </>; };
 
@@ -154,42 +155,99 @@ const Everything = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: 540, top: 360, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 70, color: RED}}>EVERYTHING</div>
   <div style={{position: 'absolute', left: 535, top: 330, width: 10, height: 1000, background: INK}} />
   <Pump x={270} y={G} t={t} run={false} dollars={0.45} />
-  {t >= P(23) && t < P(24) && <PriceTag x={810} y={780} price="$$$" at={P(23)} />}
-  {t >= P(24) && <><Bread x={810} y={G - lerp(0, 220, ease((t - P(24)) / 0.5))} s={1.1} /><PriceTag x={700} y={600} price="↑" fish="bread" at={P(24)} size={0.8} /></>}
-  {t >= P(25) && <><Igloo x={900} y={G} w={260} /><PriceTag x={930} y={600} price="↑" fish="rent" at={P(25)} size={0.8} /></>}
+  {t >= P(40) && t < P(41) && <PriceTag x={810} y={780} price="$$$" at={P(40)} />}
+  {t >= P(41) && <><Bread x={810} y={G - lerp(0, 220, ease((t - P(41)) / 0.5))} s={1.1} /><PriceTag x={700} y={600} price="↑" fish="bread" at={P(41)} size={0.8} /></>}
+  {t >= P(42) && <><Igloo x={900} y={G} w={260} /><PriceTag x={930} y={600} price="↑" fish="rent" at={P(42)} size={0.8} /></>}
 </>;
 
-const Quota = ({t}: {t: number}) => { const fill = cl((t - P(28)) / 1.0);
+const Quota = ({t}: {t: number}) => { const fill = cl((t - P(45)) / 1.0);
   return <>
     <FuelCard x={300} y={G - 420} />
     <JerryCan x={780} y={G} fill={fill} />
-    {t >= P(28) && <BigWord text="60 L / month" x={780} y={G - 420} at={P(28) + 0.3} size={80} />}
-    {t >= P(29) && <PriceTag x={300} y={G - 120} price="x2" fish="after 60 L" at={P(29) + 0.3} />}
+    {t >= P(45) && <BigWord text="60 L / month" x={780} y={G - 420} at={P(45) + 0.3} size={80} />}
+    {t >= P(46) && <PriceTag x={300} y={G - 120} price="x2" fish="after 60 L" at={P(46) + 0.3} />}
   </>; };
 
-const LookLook = ({t}: {t: number}) => { const right = t >= P(32), sad = t >= P(34);
+const LookLook = ({t}: {t: number}) => { const right = t >= P(49), sad = t >= P(51);
   return <>
     <Pump x={200} y={G} t={t} run={false} dollars={0.45} />
     <Bread x={880} y={G} s={1.1} />
-    <PriceTag x={880} y={760} price="$$$" at={P(33)} />
-    {t >= P(31) && <PriceTag x={200} y={760} price="cheap" at={P(31)} color={GREEN} size={0.8} />}
+    <PriceTag x={880} y={760} price="$$$" at={P(50)} />
+    {t >= P(48) && <PriceTag x={200} y={760} price="cheap" at={P(48)} color={GREEN} size={0.8} />}
     <Penguin id="doug" x={540} y={G + 60} h={520} pose={{turn: right ? 0.6 : -0.6, look: [right ? 0.8 : -0.8, -0.1], brows: sad ? 'worried' : 'happy', beak: sad ? 'frown' : 'smile', tears: sad}} />
   </>; };
 
-const Home = ({t}: {t: number}) => { const happy = t >= P(37);
+const Home = ({t}: {t: number}) => { const happy = t >= P(54);
   return <>
     <FlagTag x={540} y={420} text="USA" color="#2F5DA8" />
     <Pump x={720} y={G + 40} t={t} run={false} dollars={4.4} />
-    <PriceTag x={760} y={640} price="$4.40" fish="per gallon" at={P(36)} />
+    <PriceTag x={760} y={640} price="$4.40" fish="per gallon" at={P(53)} />
     <Penguin id="doug" x={330} y={G + 40} h={460} pose={happy ? {beak: 'smile', brows: 'happy', lids: 0.25, blush: 1} : {turn: 0.5, look: [0.8, -0.2]}} />
   </>; };
 
 const Choice = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: 60, top: 420, width: 440, padding: 24, border: `7px solid ${INK}`, borderRadius: 26, background: '#EAF7EC', textAlign: 'center',
     fontFamily: 'Montserrat', fontWeight: 900, fontSize: 52, lineHeight: 1.15}}>CHEAP GAS<br /><span style={{color: RED}}>BROKEN MONEY</span></div>
-  {t >= P(40) && <div style={{position: 'absolute', left: 580, top: 420, width: 440, padding: 24, border: `7px solid ${INK}`, borderRadius: 26, background: '#FCEAE8', textAlign: 'center',
+  {t >= P(57) && <div style={{position: 'absolute', left: 580, top: 420, width: 440, padding: 24, border: `7px solid ${INK}`, borderRadius: 26, background: '#FCEAE8', textAlign: 'center',
     fontFamily: 'Montserrat', fontWeight: 900, fontSize: 52, lineHeight: 1.15}}>EXPENSIVE GAS<br /><span style={{color: GREEN}}>STRONG MONEY</span></div>}
   <Penguin id="doug" x={540} y={G + 140} h={560} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0.2, 0.6], brows: 'happy'}} />
+</>;
+
+
+// ---------- America side: everybody takes a cut ----------
+const Truck = ({x, y, w = 520}: {x: number; y: number; w?: number}) =>
+  <svg width={w} height={w * 0.5} viewBox="0 0 520 260" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.5, overflow: 'visible'}}>
+    <rect x={20} y={70} width={330} height={130} rx={60} fill="#DDE6EC" stroke={INK} strokeWidth={7} />
+    <text x={185} y={150} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={44} fill={RED}>GAS</text>
+    <path d="M360 200 L360 90 L440 90 L500 150 L500 200 Z" fill={RED} stroke={INK} strokeWidth={7} strokeLinejoin="round" />
+    <path d="M380 105 L435 105 L475 150 L380 150 Z" fill="#BFE0F0" stroke={INK} strokeWidth={5} />
+    {[90, 270, 430].map((cx) => <circle key={cx} cx={cx} cy={212} r={34} fill="#2B2B2B" stroke={INK} strokeWidth={6} />)}
+  </svg>;
+const Cut = ({x, y, at, t}: {x: number; y: number; at: number; t: number}) => t < at ? null : <BigWord text="cut!" x={x} y={y} at={at} size={90} color={RED} />;
+
+const NoSubsidy = ({t}: {t: number}) => <>
+  <FlagTag x={540} y={420} text="USA" color="#2F5DA8" />
+  {[0, 1, 2].map((i) => <Barrel key={i} x={700 + i * 100} y={G + 40} />)}
+  <Stamp text="NO SUBSIDY" x={540} y={700} at={P(20)} color={RED} size={90} />
+  {t >= P(21) && <PriceTag x={800} y={980} price="world price" at={P(21)} size={0.7} />}
+  <Penguin id="doug" x={300} y={G + 40} h={420} pose={{turn: 0.4, look: [0.6, -0.4], brows: 'worried'}} />
+</>;
+const LarryCut = ({t}: {t: number}) => <>
+  <Refinery x={680} y={G} w={520} t={t} label="LARRY OIL" id="ref" />
+  <Walrus x={260} y={G + 40} h={420} flip pose={{laugh: t >= P(23) ? 1 : 0, mouth: t < P(23) ? 0.3 : 0}} />
+  <FishFlight x1={900} y1={G - 900} x2={300} y2={G - 380} a={P(23)} b={E(23) + 0.3} n={3} w={100} />
+  <Cut x={300} y={560} at={P(23) + 0.2} t={t} />
+</>;
+const TruckCut = ({t}: {t: number}) => <>
+  <Truck x={lerp(-300, 560, ease((t - P(24)) / 0.7))} y={G + 30} />
+  <FishFlight x1={200} y1={G - 900} x2={560} y2={G - 300} a={P(25)} b={E(25) + 0.3} n={3} w={100} />
+  <Cut x={560} y={560} at={P(25) + 0.2} t={t} />
+</>;
+const GullCut = ({t}: {t: number}) => <>
+  <Pump x={720} y={G + 40} t={t} run={false} dollars={66.15} />
+  <Seagull x={lerp(1200, 380, ease((t - P(26)) / 0.6))} y={G + 40} h={360} pose={{fly: t < P(26) + 0.6, mouth: t >= P(27) ? 0.4 : 0, holding: t >= P(27)}} />
+  <PriceTag x={760} y={640} price="50¢" fish="every gallon" at={P(27)} />
+</>;
+const AllCuts = ({t}: {t: number}) => <>
+  <Walrus x={170} y={G + 40} h={300} flip pose={{laugh: 1}} />
+  <Truck x={540} y={G + 30} w={330} />
+  <Seagull x={900} y={G + 40} h={280} pose={{mouth: 0.3}} />
+  <FishFlight x1={540} y1={G - 900} x2={170} y2={G - 300} a={P(28)} b={P(28) + 0.7} n={3} w={90} />
+  <FishFlight x1={540} y1={G - 900} x2={540} y2={G - 250} a={P(28) + 0.2} b={P(28) + 0.9} n={3} w={90} seed={2} />
+  <FishFlight x1={540} y1={G - 900} x2={900} y2={G - 300} a={P(28) + 0.4} b={P(28) + 1.1} n={3} w={90} seed={4} />
+  {t >= P(29) && <Penguin id="doug" x={540} y={G + 300} h={360} pose={{brows: 'worried', beak: 'frown', look: [0, -0.6], sweat: true}} />}
+</>;
+const Happy = ({t}: {t: number}) => { const sad = t >= P(33);
+  return <>
+    <Walrus x={170} y={G} h={300} flip pose={{laugh: t >= P(30) ? 1 : 0}} />
+    {t >= P(31) && <Truck x={430} y={G} w={300} />}
+    {t >= P(32) && <Seagull x={680} y={G} h={260} pose={{mouth: 0.3}} />}
+    <Penguin id="doug" x={920} y={G + 20} h={sad ? 420 : 340} pose={sad ? {brows: 'worried', beak: 'frown', tears: true, look: [-0.5, 0.2]} : {look: [-0.8, 0]}} />
+  </>; };
+const WhySixtySix = ({t}: {t: number}) => <>
+  <Pump x={720} y={G + 40} t={t} run={false} dollars={66.15} />
+  <PriceTag x={760} y={640} price="$66" fish="full tank" at={P(34)} size={1.2} />
+  <Penguin id="doug" x={330} y={G + 40} h={430} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'shock', eyeScale: 1.2}} />
 </>;
 
 // ---------- shots ----------
@@ -205,27 +263,35 @@ const SHOTS: Shot[] = [
   {at: P(15), set: (t) => <GovPays t={t} />, fx_: 'swipe', ice: true},
   {at: P(17), set: () => <Name />, fx_: 'pop'},
   {at: P(18), set: () => <Stare />, fx_: 'zoom'},
-  {at: P(19), set: (t) => <Trick t={t} />, fx_: 'iris'},
-  {at: P(20), set: (t) => <Broken t={t} />, fx_: 'pop', ice: true},
-  {at: P(22), set: (t) => <Everything t={t} />, fx_: 'swipe', ice: true},
-  {at: P(27), set: (t) => <Quota t={t} />, fx_: 'swipeL', ice: true},
-  {at: P(30), set: (t) => <LookLook t={t} />, fx_: 'pop', ice: true},
-  {at: P(35), set: (t) => <Home t={t} />, fx_: 'swipe', ice: true},
-  {at: P(38), set: () => <Stare marks />, fx_: 'zoom'},
-  {at: P(39), set: (t) => <Choice t={t} />, fx_: 'pop', ice: true},
+  {at: P(19), set: (t) => <NoSubsidy t={t} />, fx_: 'swipe', ice: true},
+  {at: P(22), set: (t) => <LarryCut t={t} />, fx_: 'pop', ice: true},
+  {at: P(24), set: (t) => <TruckCut t={t} />, fx_: 'swipeL', ice: true},
+  {at: P(26), set: (t) => <GullCut t={t} />, fx_: 'swipe', ice: true},
+  {at: P(28), set: (t) => <AllCuts t={t} />, fx_: 'zoom', ice: true},
+  {at: P(30), set: (t) => <Happy t={t} />, fx_: 'pop', ice: true},
+  {at: P(34), set: (t) => <WhySixtySix t={t} />, fx_: 'swipeL', ice: true},
+  {at: P(35), set: () => <Stare />, fx_: 'zoom'},
+  {at: P(36), set: (t) => <Trick t={t} />, fx_: 'iris'},
+  {at: P(37), set: (t) => <Broken t={t} />, fx_: 'pop', ice: true},
+  {at: P(39), set: (t) => <Everything t={t} />, fx_: 'swipe', ice: true},
+  {at: P(44), set: (t) => <Quota t={t} />, fx_: 'swipeL', ice: true},
+  {at: P(47), set: (t) => <LookLook t={t} />, fx_: 'pop', ice: true},
+  {at: P(52), set: (t) => <Home t={t} />, fx_: 'swipe', ice: true},
+  {at: P(55), set: () => <Stare marks />, fx_: 'zoom'},
+  {at: P(56), set: (t) => <Choice t={t} />, fx_: 'pop', ice: true},
 ];
 // deep zooms [phrase, focusX, focusY, scale]
 const DEEP: [number, number, number, number][] = [
-  [8, 560, G - 320, 1.35], [11, 330, G - 260, 1.6], [16, 720, 600, 1.4], [29, 540, G - 300, 1.3], [34, 760, G - 250, 1.5], [37, 330, G - 260, 1.6],
+  [8, 560, G - 320, 1.35], [11, 330, G - 260, 1.6], [23, 300, G - 300, 1.5], [33, 760, G - 260, 1.5], [46, 540, G - 300, 1.3], [51, 760, G - 250, 1.5], [54, 330, G - 260, 1.6],
 ];
 // big centre words; the caption hides while they (and full-screen text) are on screen
 const BIGS: {text: string; at: number; until: number; x?: number; y?: number; color?: string; size: number}[] = [
   {text: 'how?', at: P(12), until: P(13), y: 640, size: 200},
-  {text: 'the trick', at: P(19) + 0.2, until: P(20), y: 560, color: RED, size: 140},
-  {text: '1 dollar = 2,000,000 rials', at: P(21) + 0.3, until: P(22), y: 420, size: 66},
-  {text: 'prices +70%', at: P(26), until: P(27), y: 250, color: RED, size: 120},
+  {text: 'the trick', at: P(36) + 0.2, until: P(37), y: 560, color: RED, size: 140},
+  {text: '1 dollar = 2,000,000 rials', at: P(38) + 0.3, until: P(39), y: 420, size: 66},
+  {text: 'prices +70%', at: P(43), until: P(44), y: 250, color: RED, size: 120},
 ];
-const QUIET: [number, number][] = [[P(17), P(18)], [P(39), P(41)]];
+const QUIET: [number, number][] = [[P(17), P(18)], [P(56), P(58)]];
 
 export const DougGasIran = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
@@ -268,20 +334,34 @@ export const DougGasIran = () => {
     <Sfx at={P(15) + 0.3} name="user-money-transfer" vol={0.3} />
     <Sfx at={P(17)} name="user-pop" vol={0.4} />
     <Sfx at={P(18)} name="user-fahh" vol={0.45} />
-    <Sfx at={P(19)} name="user-boom" vol={0.45} />
-    <Sfx at={P(20)} name="user-slap" vol={0.45} />
-    <Sfx at={P(21) + 0.3} name="user-shock" vol={0.35} />
-    <Sfx at={P(24)} name="user-wrong" vol={0.35} />
-    <Sfx at={P(25)} name="user-wrong" vol={0.35} />
-    <Sfx at={P(26)} name="user-boom" vol={0.4} />
-    <Sfx at={P(28)} name="user-timer" vol={0.3} />
-    <Sfx at={P(29) + 0.3} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(31)} name="user-yeah" vol={0.3} />
-    <Sfx at={P(34)} name="user-aww" vol={0.4} />
-    <Sfx at={P(36)} name="user-money" vol={0.3} />
-    <Sfx at={P(37)} name="user-yeah" vol={0.35} />
-    <Sfx at={P(38)} name="user-shock" vol={0.35} />
-    <Sfx at={P(39)} name="user-pop" vol={0.35} />
-    <Sfx at={P(40)} name="user-pop" vol={0.35} />
+    <Sfx at={P(19)} name="user-whoosh" vol={0.3} />
+    <Sfx at={P(20)} name="user-slap" vol={0.4} />
+    <Sfx at={P(21)} name="user-money" vol={0.3} />
+    <Sfx at={P(22)} name="walrus-laugh" vol={0.4} />
+    <Sfx at={P(23) + 0.2} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(25) + 0.2} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(26)} name="gull-caw" vol={0.4} />
+    <Sfx at={P(27)} name="gull-mine" vol={0.35} />
+    <Sfx at={P(28)} name="user-money-transfer" vol={0.3} />
+    <Sfx at={P(30)} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(32)} name="gull-caw" vol={0.3} />
+    <Sfx at={P(33)} name="user-aww" vol={0.4} />
+    <Sfx at={P(34)} name="user-ting" vol={0.35} />
+    <Sfx at={P(35)} name="user-fahh-long" vol={0.4} />
+    <Sfx at={P(36)} name="user-boom" vol={0.45} />
+    <Sfx at={P(37)} name="user-slap" vol={0.45} />
+    <Sfx at={P(38) + 0.3} name="user-shock" vol={0.35} />
+    <Sfx at={P(41)} name="user-wrong" vol={0.35} />
+    <Sfx at={P(42)} name="user-wrong" vol={0.35} />
+    <Sfx at={P(43)} name="user-boom" vol={0.4} />
+    <Sfx at={P(45)} name="user-timer" vol={0.3} />
+    <Sfx at={P(46) + 0.3} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(48)} name="user-yeah" vol={0.3} />
+    <Sfx at={P(51)} name="user-aww" vol={0.4} />
+    <Sfx at={P(53)} name="user-money" vol={0.3} />
+    <Sfx at={P(54)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(55)} name="user-shock" vol={0.35} />
+    <Sfx at={P(56)} name="user-pop" vol={0.35} />
+    <Sfx at={P(57)} name="user-pop" vol={0.35} />
   </AbsoluteFill>;
 };
