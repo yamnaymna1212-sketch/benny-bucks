@@ -20,23 +20,54 @@ const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 const SHOCK = P(1) + 0.75; // the word "card?"
 
 // ---------- money props ----------
-const CashIcon = ({w = 250}: {w?: number}) =>
-  <div style={{width: w, height: w * 0.45, background: '#CFE8C8', border: `6px solid ${INK}`, borderRadius: 12, boxShadow: 'inset 0 0 0 10px #B5D9AB',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: w * 0.26, color: INK, transform: 'rotate(-6deg)'}}>$10</div>;
+// "ten" of every spoken "ten dollars" (tightened VO times) -> the $10 bill pops on that word
+const TEN = [1.38, 2.67, 4.27, 10.09, 13.82, 17.23, 19.16, 32.54, 34.58];
+const tenPop = (tc: number) => { const d = TEN.map((a) => tc - a).find((x) => x >= 0 && x < 0.4); return d === undefined ? 1 : 1 + 0.2 * Math.sin((d / 0.4) * Math.PI); };
+// A real-looking US $10 note (drawn, not a photo): cream-green paper, guilloche border, "10" corners, portrait oval, seals, TEN DOLLARS.
+const RealTen = ({w = 300}: {w?: number}) =>
+  <svg width={w} height={w * 0.425} viewBox="0 0 470 200" style={{display: 'block', overflow: 'visible'}}>
+    <rect x={3} y={3} width={464} height={194} rx={8} fill="#E7E9D6" stroke={INK} strokeWidth={6} />
+    <rect x={14} y={14} width={442} height={172} rx={4} fill="none" stroke="#5E7F5A" strokeWidth={5} />
+    <rect x={22} y={22} width={426} height={156} rx={3} fill="none" stroke="#9DB28F" strokeWidth={2} strokeDasharray="4 3" />
+    <path d="M300 60 Q340 40 380 70 Q420 100 440 80" fill="none" stroke="#E6B07A" strokeWidth={10} opacity={0.6} />
+    <text x={235} y={46} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={17} fill="#2E3B2C" textLength={270} lengthAdjust="spacingAndGlyphs">THE UNITED STATES OF AMERICA</text>
+    <ellipse cx={235} cy={108} rx={52} ry={58} fill="#D7DEC4" stroke="#3F5A3C" strokeWidth={4} />
+    <path d="M205 160 Q205 128 235 124 Q265 128 265 160 Z" fill="#4A5E47" />
+    <circle cx={235} cy={100} r={22} fill="#C9D3B5" stroke="#3F5A3C" strokeWidth={3} />
+    <path d="M213 94 Q216 72 238 74 Q258 76 258 96 Q250 84 236 84 Q222 86 213 94 Z" fill="#4A5E47" />
+    <circle cx={120} cy={108} r={26} fill="none" stroke="#2E3B2C" strokeWidth={3} /><text x={120} y={117} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={26} fill="#2E3B2C">L</text>
+    <circle cx={350} cy={118} r={24} fill="#C9DCC2" stroke="#3E7A4C" strokeWidth={4} /><path d="M338 118 L362 118 M350 106 L350 130" stroke="#3E7A4C" strokeWidth={3} />
+    <text x={40} y={64} fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
+    <text x={430} y={64} textAnchor="end" fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
+    <text x={40} y={176} fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
+    <text x={436} y={182} textAnchor="end" fontFamily="Georgia, serif" fontWeight={900} fontSize={62} fill="#C9702E" stroke={INK} strokeWidth={1.5}>10</text>
+    <text x={235} y={186} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={20} fill="#2E3B2C" textLength={150} lengthAdjust="spacingAndGlyphs">TEN DOLLARS</text>
+  </svg>;
+const CashIcon = ({w = 250, t = -1}: {w?: number; t?: number}) => <div style={{transform: `rotate(-6deg) scale(${t < 0 ? 1 : tenPop(t)})`}}><RealTen w={w} /></div>;
 const CardIcon = ({w = 250}: {w?: number}) =>
   <div style={{width: w, height: w * 0.62, background: BLUE, border: `6px solid ${INK}`, borderRadius: 18, position: 'relative', transform: 'rotate(6deg)'}}>
     <div style={{position: 'absolute', left: 24, top: 34, width: 52, height: 40, background: '#F5C518', border: `4px solid ${INK}`, borderRadius: 8}} />
     <div style={{position: 'absolute', left: 24, bottom: 22, right: 24, height: 12, background: 'rgba(255,255,255,0.7)', borderRadius: 6}} />
   </div>;
-const Bill = ({x, y, w = 300, text = '$10', rot = -4, s = 1, color = INK}: {x: number; y: number; w?: number; text?: string; rot?: number; s?: number; color?: string}) =>
-  <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.225, width: w, height: w * 0.45, background: '#CFE8C8', border: `6px solid ${INK}`, borderRadius: 12,
-    boxShadow: 'inset 0 0 0 10px #B5D9AB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: w * 0.27, color,
-    transform: `rotate(${rot}deg) scale(${s})`}}>{text}</div>;
+// hook right side: the card, and the same real $10 slides out from behind it on "ten dollars with card"
+const CardSide = ({t = -1}: {t?: number}) => { const p = t < 0 ? 0 : ease((t - TEN[1]) / 0.25);
+  return <div style={{position: 'relative', width: 250, height: 155}}>
+    {p > 0 && <div style={{position: 'absolute', left: -60 * p, top: -30 * p, transform: `rotate(-10deg) scale(${tenPop(t)})`, opacity: p}}><RealTen w={220} /></div>}
+    <div style={{position: 'absolute', left: 0, top: 0}}><CardIcon /></div>
+  </div>; };
+// the bill on stage: always the real $10 note; another value (shrunk by fees) gets a red sticker on it. Pops on every spoken "ten dollars".
+const Bill = ({x, y, w = 300, text = '$10', rot = -4, s = 1}: {x: number; y: number; w?: number; text?: string; rot?: number; s?: number; color?: string}) => {
+  const k = tenPop(useCurrentFrame() / FPS);
+  return <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.2125, width: w, transform: `rotate(${rot}deg) scale(${s * k})`}}>
+    <RealTen w={w} />
+    {text !== '$10' && <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%) rotate(-6deg)', background: RED, color: '#fff', border: `5px solid ${INK}`, borderRadius: 14,
+      padding: '2px 18px', fontFamily: 'Montserrat', fontWeight: 900, fontSize: w * 0.2, whiteSpace: 'nowrap'}}>{text}</div>}
+  </div>; };
 const Card = ({x, y, w = 260, rot = 8}: {x: number; y: number; w?: number; rot?: number}) =>
   <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.31, transform: `rotate(${rot - 6}deg)`}}><CardIcon w={w} /></div>;
 // a bill flying on an arc between two points during [a, b]; parked at the end afterwards
 const BillFly = ({t, x1, y1, x2, y2, a, b, w = 220, text = '$10', arc = 260}: {t: number; x1: number; y1: number; x2: number; y2: number; a: number; b: number; w?: number; text?: string; arc?: number}) => {
-  if (t < a) return null; const p = ease((t - a) / (b - a));
+  const p = ease((t - a) / (b - a)); // held at the start point until it flies
   return <Bill x={lerp(x1, x2, p)} y={lerp(y1, y2, p) - Math.sin(p * Math.PI) * arc} w={w} text={text} rot={-4 + 10 * Math.sin(p * 6)} />;
 };
 const Coin = ({x, y, text, w = 150}: {x: number; y: number; text: string; w?: number}) =>
@@ -91,8 +122,8 @@ const hookDoug = (t: number): {pose: PenguinPose; mark: string} => {
 };
 const HookSet = ({t = -1}: {t?: number}) => { const d = t < 0 ? undefined : hookDoug(t);
   return <WhyHook dougPose={d?.pose} mark={d?.mark}
-    left={{label: 'CASH', price: '$10', unit: 'STAYS $10', obj: <CashIcon />, color: GREEN}}
-    right={{label: 'CARD', price: '$10', unit: 'BECOMES $6.20', obj: <CardIcon />, color: RED}} />; };
+    left={{label: 'CASH', price: '$10', unit: 'STAYS $10', obj: <CashIcon t={t} />, color: GREEN}}
+    right={{label: 'CARD', price: '$10', unit: 'BECOMES $6.20', obj: <CardSide t={t} />, color: RED}} />; };
 export const DougCashCardHook = () => <HookSet />;
 const hookCam = (t: number) => {
   const toL = ease((t - 0.6) / 0.9) * (1 - ease((t - P(1)) / 0.35));
@@ -129,9 +160,9 @@ const Cut = ({t}: {t: number}) => <>
 </>;
 
 const PayCash = ({t}: {t: number}) => <>
-  <Penguin id="doug" x={290} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', brows: 'happy', flapR: t < P(7) + 0.6 ? 70 : 20}} />
+  <Penguin id="doug" x={290} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', brows: 'happy', flapR: t < TEN[3] + 0.4 ? 70 : 20}} />
   <Puffin x={800} y={G + 40} h={430} pose={{look: -0.5, mouth: t >= P(8) ? 0.3 : 0}} />
-  {t < P(7) + 0.2 ? <Bill x={400} y={G - 330} w={240} /> : <BillFly t={t} x1={400} y1={G - 330} x2={760} y2={G - 470} a={P(7) + 0.2} b={P(7) + 0.9} w={240} />}
+  <BillFly t={t} x1={480} y1={G - 130} x2={760} y2={G - 470} a={TEN[3]} b={TEN[3] + 0.6} w={240} />
   <Stamp text="CASH" x={540} y={560} at={P(8)} color={GREEN} size={120} />
 </>;
 
@@ -139,19 +170,19 @@ const SealShop = ({t}: {t: number}) => <>
   <NameTag x={540} y={400} text="SEAL FISH SHOP" color={BLUE} />
   <div style={{position: 'absolute', left: 560, top: G - 230, width: 440, height: 240, background: '#E9D2A8', border: `7px solid ${INK}`, borderRadius: 14}} />
   <FishPile x={780} y={G - 230} n={6} w={120} />
-  <BigSeal x={800} y={G - 220} h={420} pose={{look: -0.5, mouth: t >= P(10) + 0.8 ? 0.3 : 0}} />
+  <BigSeal x={800} y={G - 220} h={420} pose={{look: -0.5, mouth: t >= TEN[4] + 0.6 ? 0.3 : 0}} />
   <Puffin x={260} y={G + 40} h={400} flip pose={{look: 0.5}} />
-  <BillFly t={t} x1={300} y1={G - 380} x2={700} y2={G - 560} a={P(10)} b={P(10) + 0.7} w={220} />
-  {t >= P(10) + 0.7 && <PriceTag x={330} y={560} price="$10" fish="same bill" at={P(10) + 0.7} color={GREEN} />}
+  <BillFly t={t} x1={410} y1={G - 120} x2={700} y2={G - 560} a={TEN[4]} b={TEN[4] + 0.6} w={220} />
+  {t >= TEN[4] + 0.6 && <PriceTag x={330} y={560} price="$10" fish="same bill" at={TEN[4] + 0.6} color={GREEN} />}
 </>;
 
 const CarWash = ({t}: {t: number}) => <>
   <NameTag x={540} y={400} text="LARRY CAR WASH" color={RED} />
   <Sled x={560} y={G + 20} t={t} />
-  <Walrus x={880} y={G + 40} h={400} pose={{look: -0.6, laugh: t >= P(12) + 0.7 ? 1 : 0}} />
+  <Walrus x={880} y={G + 40} h={400} pose={{look: -0.6, laugh: t >= TEN[5] + 0.6 ? 1 : 0}} />
   <BigSeal x={190} y={G + 40} h={400} flip pose={{look: 0.4}} />
-  <BillFly t={t} x1={230} y1={G - 420} x2={860} y2={G - 470} a={P(12)} b={P(12) + 0.7} w={220} arc={320} />
-  {t >= P(12) + 0.7 && <PriceTag x={330} y={700} price="$10" fish="same bill" at={P(12) + 0.7} color={GREEN} />}
+  <BillFly t={t} x1={350} y1={G - 130} x2={860} y2={G - 470} a={TEN[5]} b={TEN[5] + 0.6} w={220} arc={320} />
+  {t >= TEN[5] + 0.6 && <PriceTag x={330} y={700} price="$10" fish="same bill" at={TEN[5] + 0.6} color={GREEN} />}
 </>;
 
 const Chain = ({t}: {t: number}) => { const xs = [120, 330, 540, 750, 960], hop = cl((t - P(13)) / 0.85) * 4, i0 = Math.floor(hop), f = hop - i0;
@@ -386,7 +417,8 @@ export const DougCashCard = () => {
     {/* hook */}
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.75} name="user-whoosh" vol={0.25} />
-    <Sfx at={2.0} name="user-cash-register" vol={0.4} />
+    <Sfx at={TEN[0]} name="user-cash-register" vol={0.4} />
+    <Sfx at={TEN[1]} name="user-money" vol={0.3} />
     <Sfx at={P(1) + 0.1} name="swoosh-fast" vol={0.3} />
     <Sfx at={SHOCK - 0.08} name="card-beep" vol={0.3} />
     <Sfx at={SHOCK} name="user-boom" vol={0.5} />
@@ -396,13 +428,13 @@ export const DougCashCard = () => {
     <Sfx at={P(4) + 0.1} name="user-ting" vol={0.4} />
     <Sfx at={P(5) + 0.3} name="user-aww" vol={0.3} />
     {[0, 0.25, 0.5].map((d) => <Sfx key={d} at={P(6) + 0.2 + d} name="pop-high" vol={0.3} />)}
-    <Sfx at={P(7) + 0.3} name="user-money" vol={0.35} />
+    <Sfx at={TEN[3]} name="user-money" vol={0.35} />
     <Sfx at={P(8)} name="user-cash-register" vol={0.4} />
-    <Sfx at={P(10)} name="user-money" vol={0.35} />
-    <Sfx at={P(10) + 0.7} name="user-cash-register" vol={0.35} />
+    <Sfx at={TEN[4]} name="user-money" vol={0.35} />
+    <Sfx at={TEN[4] + 0.6} name="user-cash-register" vol={0.35} />
     <Sfx at={P(11) + 0.2} name="splat" vol={0.25} />
-    <Sfx at={P(12) + 0.7} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(12) + 0.75} name="walrus-laugh" vol={0.35} />
+    <Sfx at={TEN[5] + 0.6} name="user-cash-register" vol={0.35} />
+    <Sfx at={TEN[5] + 0.65} name="walrus-laugh" vol={0.35} />
     <Sfx at={P(13)} name="user-money-transfer" vol={0.3} />
     <Sfx at={P(14) + 0.1} name="user-ting" vol={0.4} />
     <Sfx at={P(15)} name="swoosh-fast" vol={0.3} />
