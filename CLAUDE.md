@@ -5,6 +5,7 @@ HOOK = main template `WhyHook` (studio/src/penguin/whyHook.tsx): big "WHY" + two
 MASTER EDIT STYLE (every video) = 'Edit rules v4' in videos/penguin-series/script-formula.md, template studio/src/videos/dougGasIran.tsx: white hook, Doug acts the hook (looks A -> snaps to B -> shock), no pauses (0.08 s), new shot every ~2.5 s.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
+Posting times (best 3 per day, US): videos/penguin-series/posting-times.md — 10:00 / 12:00 / 18:00 ET.
 
 # TOKEN GUARD (user rule, always on)
 Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
