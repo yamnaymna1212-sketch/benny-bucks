@@ -37,7 +37,7 @@ export const GasSign = ({x, y, state, price, at = -1, t, glow}: {x: number; y: n
 };
 
 // Gas pump with a counter that spins while `run`.
-const Pump = ({x, y, t, run, dollars}: {x: number; y: number; t: number; run: boolean; dollars: number}) =>
+export const Pump = ({x, y, t, run, dollars}: {x: number; y: number; t: number; run: boolean; dollars: number}) =>
   <svg width={200} height={330} viewBox="0 0 200 330" style={{position: 'absolute', left: x - 100, top: y - 330, overflow: 'visible'}}>
     <rect x={20} y={20} width={140} height={300} rx={14} fill="#D83A2E" stroke={INK} strokeWidth={6} />
     <rect x={38} y={44} width={104} height={70} rx={6} fill="#E8F7E4" stroke={INK} strokeWidth={4} />
@@ -52,7 +52,7 @@ const r = (t: number, a: number, b: number) => cl((t - a) / (b - a));
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
 // ---------- small props drawn in the series style ----------
-const Snowmobile = ({x, y, w = 420, t, moving}: {x: number; y: number; w?: number; t: number; moving?: boolean}) => {
+export const Snowmobile = ({x, y, w = 420, t, moving}: {x: number; y: number; w?: number; t: number; moving?: boolean}) => {
   const b = moving ? Math.sin(t * 30) * 4 : 0;
   return <svg width={w} height={w * 0.55} viewBox="0 0 420 230" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.55 + b, overflow: 'visible'}}>
     <path d="M20 210 L400 210 Q415 210 410 196" fill="none" stroke={INK} strokeWidth={10} strokeLinecap="round" />
@@ -62,7 +62,7 @@ const Snowmobile = ({x, y, w = 420, t, moving}: {x: number; y: number; w?: numbe
     <path d="M90 190 L90 210 M330 190 L330 210" stroke={INK} strokeWidth={8} />
   </svg>;
 };
-const OilGush = ({x, y, t, at}: {x: number; y: number; t: number; at: number}) => {
+export const OilGush = ({x, y, t, at}: {x: number; y: number; t: number; at: number}) => {
   if (t < at) return null;
   const p = Math.min(1, (t - at) / 0.4), h = 420 * p, wob = Math.sin(t * 14) * 10;
   return <svg width={400} height={600} viewBox="0 0 400 600" style={{position: 'absolute', left: x - 200, top: y - 600, overflow: 'visible'}}>
@@ -82,14 +82,14 @@ const Refinery = ({x, y, w = 460, t, label, closed, id}: {x: number; y: number; 
     {label && <text x={230} y={366} textAnchor="middle" fontFamily="Architects Daughter" fontWeight={700} fontSize={40} fill={INK}>{label}</text>}
     {closed && <g transform="rotate(-10 230 230)"><rect x={110} y={200} width={240} height={70} fill="#fff" stroke={RED} strokeWidth={8} /><text x={230} y={250} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={44} fill={RED}>CLOSED</text></g>}
   </svg>;
-const Barrel = ({x, y}: {x: number; y: number}) => <svg width={90} height={120} viewBox="0 0 90 120" style={{position: 'absolute', left: x - 45, top: y - 120}}>
+export const Barrel = ({x, y}: {x: number; y: number}) => <svg width={90} height={120} viewBox="0 0 90 120" style={{position: 'absolute', left: x - 45, top: y - 120}}>
   <rect x={5} y={5} width={80} height={110} rx={12} fill="#2B2B2B" stroke={INK} strokeWidth={4} /><path d="M5 40 L85 40 M5 80 L85 80" stroke="#666" strokeWidth={5} /></svg>;
 const GasCan = ({x, y, w = 110, special}: {x: number; y: number; w?: number; special?: boolean}) => <svg width={w} height={w * 1.2} viewBox="0 0 110 132" style={{position: 'absolute', left: x - w / 2, top: y - w * 1.2, overflow: 'visible'}}>
   <path d="M10 30 L70 30 L100 60 L100 125 L10 125 Z" fill={special ? '#F2C230' : RED} stroke={INK} strokeWidth={5} strokeLinejoin="round" />
   <path d="M70 30 L90 8 L104 18 L84 40" fill="none" stroke={INK} strokeWidth={6} />
   {special && [0, 1, 2].map((i) => <path key={i} d={`M${20 + i * 34} ${-10 - (i % 2) * 14} l6 14 l14 6 l-14 6 l-6 14 l-6 -14 l-14 -6 l14 -6 Z`} fill="#F5C518" stroke={INK} strokeWidth={2} />)}
 </svg>;
-const MoneyBag = ({x, y, w, label}: {x: number; y: number; w: number; label: string}) => <svg width={w} height={w * 1.1} viewBox="0 0 100 110" style={{position: 'absolute', left: x - w / 2, top: y - w * 1.1, overflow: 'visible'}}>
+export const MoneyBag = ({x, y, w, label}: {x: number; y: number; w: number; label: string}) => <svg width={w} height={w * 1.1} viewBox="0 0 100 110" style={{position: 'absolute', left: x - w / 2, top: y - w * 1.1, overflow: 'visible'}}>
   <path d="M30 20 L70 20 L60 34 C 95 50, 100 105, 50 106 C 0 105, 5 50, 40 34 Z" fill="#D9B77A" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
   <text x={50} y={80} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={26} fill={INK}>{label}</text></svg>;
 const Sun = ({x, y, t, size = 220}: {x: number; y: number; t: number; size?: number}) => <svg width={size * 2} height={size * 2} viewBox="-100 -100 200 200" style={{position: 'absolute', left: x - size, top: y - size, overflow: 'visible'}}>
@@ -115,7 +115,7 @@ const Hook = ({t}: {t: number}) => {
     {t >= P(4) && <BigWord text="same Doug." x={540} y={1480} at={P(4)} size={70} />}
   </>;
 };
-const Snowfall = ({t}: {t: number}) => <>{Array.from({length: 18}, (_, i) => { const sp = 50 + (i * 37) % 60, x = (i * 173) % 1080, y = ((i * 311) % 2000 + t * sp) % 2000 - 60;
+export const Snowfall = ({t}: {t: number}) => <>{Array.from({length: 18}, (_, i) => { const sp = 50 + (i * 37) % 60, x = (i * 173) % 1080, y = ((i * 311) % 2000 + t * sp) % 2000 - 60;
   return <div key={i} style={{position: 'absolute', left: x, top: y, width: 10, height: 10, borderRadius: '50%', background: '#D6E8F3'}} />; })}</>;
 
 const Ride = ({t}: {t: number}) => {
