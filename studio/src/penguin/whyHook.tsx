@@ -68,7 +68,7 @@ const Side = ({side, x, y, t, phase}: {side: HookSide; x: number; y: number; t: 
 export const WhyHook = ({left, right, word = 'WHY', dougPose, mark = '?'}: {left: HookSide; right: HookSide; word?: string; dougPose?: PenguinPose; mark?: string}) => {
   const t = useT2();
   const pulse = 1 + 0.025 * Math.sin(t * 5);
-  return <AbsoluteFill style={{background: '#FBFBF8'}}>
+  return <AbsoluteFill style={{background: '#FFFFFF'}}>
     <Fonts /><HandFont />
     {/* WHY on a yellow brush stroke with burst lines */}
     <div style={{position: 'absolute', left: 540 - 380, top: 250 - 150, width: 760, height: 300, transform: `rotate(-2deg) scale(${pulse})`,
