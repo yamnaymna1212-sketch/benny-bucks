@@ -6,4 +6,5 @@
 # secrets (never commit)
 .env
 .env.*
+!.env.example
 studio/public/music/*.wav
