@@ -1,4 +1,4 @@
-// EP5 "What is the difference between paying $10 with cash and $10 with card?" — WhyHook main template (Edit rules v4).
+// EP5 "Cash vs card: the same $10 passed 20 times" (swipe-fee chain) — WhyHook main template (Edit rules v4).
 import React from 'react';
 import {WhyHook} from '../penguin/whyHook';
 import {INK} from '../penguin/rig';
@@ -13,5 +13,5 @@ const Card = ({w = 250}: {w?: number}) =>
   </div>;
 
 export const DougCashCardHook = () => <WhyHook
-  left={{label: 'CASH', price: '$10', unit: 'YOU FEEL IT', obj: <Cash />}}
-  right={{label: 'CARD', price: '$10', unit: "YOU DON'T", obj: <Card />}} />;
+  left={{label: 'CASH', price: '$10', unit: 'STAYS $10', obj: <Cash />}}
+  right={{label: 'CARD', price: '$10', unit: 'BECOMES $6.20', obj: <Card />}} />;
