@@ -4,7 +4,7 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {Fonts, HandFont, HAND} from '../base';
-import {INK, Penguin, useT2} from './rig';
+import {INK, Penguin, PenguinPose, useT2} from './rig';
 
 export type FlagKind = 'usa' | 'iran' | 'japan' | 'germany' | 'canada' | 'mexico' | 'uk' | 'none';
 export type HookSide = {flag?: FlagKind; label?: string; price: string; unit?: string; obj?: 'pump' | React.ReactNode; color?: string};
@@ -64,7 +64,8 @@ const Side = ({side, x, y, t, phase}: {side: HookSide; x: number; y: number; t: 
   </div>;
 };
 
-export const WhyHook = ({left, right, word = 'WHY'}: {left: HookSide; right: HookSide; word?: string}) => {
+// dougPose / mark let an episode animate Doug (look at a side, react); defaults = the confused cover pose.
+export const WhyHook = ({left, right, word = 'WHY', dougPose, mark = '?'}: {left: HookSide; right: HookSide; word?: string; dougPose?: PenguinPose; mark?: string}) => {
   const t = useT2();
   const pulse = 1 + 0.025 * Math.sin(t * 5);
   return <AbsoluteFill style={{background: '#FBFBF8'}}>
@@ -84,10 +85,10 @@ export const WhyHook = ({left, right, word = 'WHY'}: {left: HookSide; right: Hoo
     <Side side={right} x={855} y={440} t={t} phase={1.7} />
     {/* confused Doug in the middle: casual clothes, flipper up, eyes rolled up, ? marks */}
     <Penguin x={540} y={1500} h={560} id="hookDoug"
-      pose={{brows: 'worried', look: [0.5, -0.7], flapR: 22, flapL: 14, beak: 'frown', turn: 0.15}} />
+      pose={dougPose ?? {brows: 'worried', look: [0.5, -0.7], flapR: 22, flapL: 14, beak: 'frown', turn: 0.15}} />
     {[{x: 400, y: 1000, r: -14, s: 0.85}, {x: 690, y: 975, r: 12, s: 1}].map((q, i) =>
       <div key={i} style={{position: 'absolute', left: q.x, top: q.y + Math.sin(t * 3 + i * 2) * 10, transform: `translate(-50%,-50%) rotate(${q.r}deg) scale(${q.s})`,
-        fontFamily: HAND, fontWeight: 900, fontSize: 130, color: INK}}>?</div>)}
+        fontFamily: HAND, fontWeight: 900, fontSize: 130, color: mark === '!' ? '#D83A2E' : INK}}>{mark}</div>)}
   </AbsoluteFill>;
 };
 
