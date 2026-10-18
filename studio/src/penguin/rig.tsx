@@ -69,7 +69,7 @@ export type PenguinPose = {
   eyeScale?: number; pupil?: number; walk?: number | null; lean?: number; squash?: number; tremble?: number; holding?: boolean;
   side?: boolean; beak?: Beak; lids?: number; tears?: boolean; sweat?: boolean; angry?: number; blush?: number; hop?: number; lie?: number; sit?: number; run?: boolean;
 };
-export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker';
+export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker' | 'casual';
 const BELLY = '#FFF8EA', BODY = '#1F1F1F', SHADE = '#3A3A3A', CREAM_SHADE = '#EDE3CF';
 const BUILD: Record<Build, {bx: number; eye: number}> = {normal: {bx: 1, eye: 1}, fat: {bx: 1.3, eye: 0.9}, thin: {bx: 0.8, eye: 1}, baby: {bx: 1.05, eye: 1.3}};
 
@@ -222,6 +222,16 @@ const OutfitLayer = ({outfit, dx, t, sideView}: {outfit: Outfit; dx: number; t: 
     {eyes.map((e) => <circle key={e} cx={e} cy={ey} r={44} fill="none" stroke={INK} strokeWidth={5} />)}
     {!sideView && <path d={`M${198 + dx} 186 L${202 + dx} 186`} stroke={INK} strokeWidth={6} />}
     <path d={`M${186 + tieDx} 288 L${214 + tieDx} 288 L${208 + tieDx} 306 L${222 + tieDx} 396 L${200 + tieDx} 418 L${178 + tieDx} 396 L${192 + tieDx} 306 Z`} fill="#2F5DA8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+  </g>;
+  if (outfit === 'casual' && !sideView) return <g transform={`translate(${dx * 0.6} 0)`}>
+    {/* white tee with a green $ print, blue shorts, flip-flop straps (the "normal guy" look of the hit hooks) */}
+    <path d="M206 452 L338 446 L326 372 L74 372 L62 446 L194 452 L200 424 Z" fill="#3D6FB8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d="M200 424 L200 384" stroke={INK} strokeWidth={3} />
+    <path d="M92 292 C 126 278, 166 276, 200 284 C 234 276, 274 278, 308 292 L336 318 L318 352 L310 344 L314 388 Q200 402 86 388 L90 344 L82 352 L64 318 Z" fill="#FFFFFF" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d="M170 282 Q200 304 230 282" fill="none" stroke={INK} strokeWidth={LW} strokeLinecap="round" />
+    <text x={200} y={376} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={80} fill="#2E9E4F" stroke={INK} strokeWidth={3}>$</text>
+    {[152, 248].map((fx) => <path key={fx} d={`M${fx - 24} 500 L${fx} 486 L${fx + 24} 500`} fill="none" stroke="#E8546A" strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" />)}
+    {[152, 248].map((fx) => <rect key={`s${fx}`} x={fx - 42} y={505} width={84} height={9} rx={4} fill="#E8546A" stroke={INK} strokeWidth={3} />)}
   </g>;
   if (outfit === 'worker') return <g transform={`rotate(${wob} ${hx} 60)`}>
     <path d={`M${hx - 100} 70 Q${hx} 40 ${hx + 100} 70 Q${hx + 70} -20 ${hx} -22 Q${hx - 70} -20 ${hx - 100} 70 Z`} fill="#F2C230" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
