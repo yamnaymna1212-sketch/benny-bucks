@@ -223,7 +223,7 @@ const BIGS: {text: string; at: number; until: number; x?: number; y?: number; co
   {text: 'how?', at: P(12), until: P(13), y: 640, size: 200},
   {text: 'the trick', at: P(19) + 0.2, until: P(20), y: 560, color: RED, size: 140},
   {text: '1 dollar = 2,000,000 rials', at: P(21) + 0.3, until: P(22), y: 420, size: 66},
-  {text: 'prices +70%', at: P(26), until: P(27), y: 700, color: RED, size: 120},
+  {text: 'prices +70%', at: P(26), until: P(27), y: 250, color: RED, size: 120},
 ];
 const QUIET: [number, number][] = [[P(17), P(18)], [P(39), P(41)]];
 
