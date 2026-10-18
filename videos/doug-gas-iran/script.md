@@ -5,7 +5,7 @@ Open loop: "Doug smell a trick." (asked at 4 s) -> answered at "But here is the 
 
 | # | Spoken (voice.txt) | Shot | SFX |
 |---|---|---|---|
-| 1 | Why Doug pay four dollars forty ... but in Iran, three cents? | WhyHook | ting, boom |
+| 1 | Why gas price four dollars... but in Iran, three cents? | WhyHook | ting, boom |
 | 2 | Same gas. Doug smell a trick. | Doug sniffs, squints at the $0.03 sign | sniff/pop |
 | 3 | This is Doug. Doug drive snowmobile. | snowmobile, speed lines | whoosh, squawk |
 | 4 | In America, Doug fill tank. Sixty-six dollars. Almost seven fish. | pump counter to $66, 7 fish fly out of wallet | cash-register |
