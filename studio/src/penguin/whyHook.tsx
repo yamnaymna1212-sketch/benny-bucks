@@ -83,7 +83,7 @@ export const WhyHook = ({left, right, word = 'WHY'}: {left: HookSide; right: Hoo
     <Side side={left} x={225} y={440} t={t} phase={0} />
     <Side side={right} x={855} y={440} t={t} phase={1.7} />
     {/* confused Doug in the middle: casual clothes, flipper up, eyes rolled up, ? marks */}
-    <Penguin x={540} y={1500} h={560} id="hookDoug" outfit="casual"
+    <Penguin x={540} y={1500} h={560} id="hookDoug"
       pose={{brows: 'worried', look: [0.5, -0.7], flapR: 22, flapL: 14, beak: 'frown', turn: 0.15}} />
     {[{x: 400, y: 1000, r: -14, s: 0.85}, {x: 690, y: 975, r: 12, s: 1}].map((q, i) =>
       <div key={i} style={{position: 'absolute', left: q.x, top: q.y + Math.sin(t * 3 + i * 2) * 10, transform: `translate(-50%,-50%) rotate(${q.r}deg) scale(${q.s})`,
