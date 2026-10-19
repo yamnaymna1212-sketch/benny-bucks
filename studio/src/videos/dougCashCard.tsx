@@ -17,11 +17,11 @@ const G = 1250, RED = '#D83A2E', GREEN = '#2E9E4F', BLUE = '#2F5DA8';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => { const q = cl(p); return q * q * (3 - 2 * q); };
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const SHOCK = P(1) + 0.75; // the word "card?"
+const SHOCK = 3.31; // the word "card?"
 
 // ---------- money props ----------
 // "ten" of every spoken "ten dollars" (tightened VO times) -> the $10 bill pops on that word
-const TEN = [1.38, 2.67, 4.27, 10.09, 13.82, 17.23, 19.16, 32.54, 34.58];
+const TEN = [1.4, 2.7, 4.33, 10.23, 14.03, 17.49, 19.44];
 const tenPop = (tc: number) => { const d = TEN.map((a) => tc - a).find((x) => x >= 0 && x < 0.4); return d === undefined ? 1 : 1 + 0.2 * Math.sin((d / 0.4) * Math.PI); };
 // A real-looking US $10 note (drawn, not a photo): cream-green paper, guilloche border, "10" corners, portrait oval, seals, TEN DOLLARS.
 const RealTen = ({w = 300}: {w?: number}) =>
@@ -133,15 +133,15 @@ const Counter = ({x, w}: {x: number; w: number}) => <>
     backgroundImage: `repeating-linear-gradient(90deg, transparent 0 52px, rgba(0,0,0,0.18) 52px 56px)`}} />
   <div style={{position: 'absolute', left: x - 14, top: 1082, width: w + 28, height: 34, background: '#E0A96D', border: `7px solid ${INK}`, borderRadius: 8}} />
 </>;
-const DiffSide = ({side}: {side: 'cash' | 'card'}) => { const o = side === 'cash' ? 0 : 540;
+const DiffSide = ({side, t = -1}: {side: 'cash' | 'card'; t?: number}) => { const o = side === 'cash' ? 0 : 540;
   return <>
     <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={{look: -0.6, mouth: 0.15}} />
     <Counter x={o + 270} w={260} />
-    {side === 'card' && <Reader x={o + 330} y={1086} w={96} t={-1} amount="$10" />}
+    {side === 'card' && <Reader x={o + 330} y={1086} w={96} t={t} beeps={[SHOCK]} amount="$10" />}
     <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={{turn: 0.55, look: [0.8, -0.1], flapR: 62, beak: 'flat', lids: 0.25}} />
-    {side === 'cash' ? <Bill x={o + 300} y={1040} w={180} rot={-8} /> : <Card x={o + 255} y={1020} w={130} rot={-14} />}
+    {side === 'cash' ? <Bill x={o + 300} y={1040} w={180} rot={-8} /> : <div style={{position: 'absolute', left: 0, top: 0, transform: `scale(${t < 0 ? 1 : tenPop(t - (SHOCK - TEN[1])) })`, transformOrigin: `${o + 255}px 1020px`}}><Card x={o + 255} y={1020} w={130} rot={-14} /></div>}
   </>; };
-export const DougCashCardHookV2 = () => <AbsoluteFill style={{background: '#fff'}}>
+const HookV2 = ({t = -1}: {t?: number}) => <AbsoluteFill style={{background: '#fff'}}>
   <Fonts /><HandFont />
   <div style={{position: 'absolute', left: 0, top: 120, width: 1080, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontStyle: 'italic', fontSize: 96, whiteSpace: 'nowrap',
     color: INK, letterSpacing: -3, textShadow: '5px 6px 0 rgba(0,0,0,0.18)'}}>What the difference</div>
@@ -152,8 +152,9 @@ export const DougCashCardHookV2 = () => <AbsoluteFill style={{background: '#fff'
   <div style={{position: 'absolute', left: 536, top: 700, width: 0, height: 760, borderLeft: `8px dashed ${INK}`}} />
   <div style={{position: 'absolute', left: 540 - 62, top: 560, width: 124, height: 124, borderRadius: '50%', background: '#F7CF3B', border: `7px solid ${INK}`,
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 54, color: INK}}>VS</div>
-  <DiffSide side="cash" /><DiffSide side="card" />
+  <DiffSide side="cash" t={t} /><DiffSide side="card" t={t} />
 </AbsoluteFill>;
+export const DougCashCardHookV2 = () => <HookV2 />;
 const hookCam = (t: number) => {
   const toL = ease((t - 0.6) / 0.9) * (1 - ease((t - P(1)) / 0.35));
   const toR = ease((t - P(1)) / 0.35) * (1 - ease((t - SHOCK - 0.15) / 0.3));
@@ -272,10 +273,16 @@ const CardPay = ({t, i0, from, to}: {t: number; i0: number; from: 'puffin' | 'se
     {t >= P(i0 + 2) && <PriceTag x={300} y={560} price={amount} at={P(i0 + 2) + 0.15} size={0.8} />}
   </>; };
 
-const Shrink = ({t}: {t: number}) => { const k = Math.min(5, Math.floor(cl((t - P(27)) / 1.3) * 6)), val = 10 * Math.pow(1 - 0.0236, k * 2);
+// fees pile up in Fox's corner with every beep (the money moves to Fox, nobody's bill shrinks)
+const feeAfter = (k: number) => 10 - 10 * Math.pow(1 - 0.0236, k);
+const CoinPile = ({x, y, n}: {x: number; y: number; n: number}) => <>{Array.from({length: n}, (_, i) =>
+  <Coin key={i} x={x + ((i * 47) % 120) - 60} y={y - Math.floor(i / 3) * 46 - (i % 3) * 8} text="¢" w={90} />)}</>;
+const Shrink = ({t}: {t: number}) => { const k = Math.min(5, Math.floor(cl((t - P(27)) / 1.3) * 6));
   return <>
-    <Bill x={540} y={800} w={560} s={val / 10} text={`$${val.toFixed(2)}`} color={k ? RED : INK} rot={0} />
-    <Reader x={540} y={G + 20} w={150} t={t} beeps={[0, 1, 2, 3, 4].map((i) => P(27) + 0.26 * (i + 1))} amount="" />
+    <Reader x={300} y={G + 20} w={170} t={t} beeps={[0, 1, 2, 3, 4].map((i) => P(27) + 0.26 * (i + 1))} amount="$10" />
+    <Fox x={790} y={G + 40} h={430} pose={{laugh: k > 0 ? 1 : 0, pocket: k / 5}} />
+    <CoinPile x={600} y={G - 20} n={k * 2} />
+    {k > 0 && <PriceTag x={700} y={520} price={`+$${feeAfter(k * 2).toFixed(2)}`} fish="to Fox" />}
   </>; };
 
 const TwentyBeeps = ({t}: {t: number}) => { const n = Math.min(20, 1 + Math.floor(cl((t - P(28)) / 0.8) * 19));
@@ -285,14 +292,12 @@ const TwentyBeeps = ({t}: {t: number}) => { const n = Math.min(20, 1 + Math.floo
     <Reader x={540} y={1340} w={260} t={t} beeps={Array.from({length: 6}, (_, i) => P(28) + i * 0.14)} amount="" />
   </>; };
 
-const Compare = ({t}: {t: number}) => { const six = P(29) + 0.98;
+const Collect = ({t}: {t: number}) => { const hit = P(29) + 0.6, p = ease((t - P(29)) / 0.6);
   return <>
-    <div style={{position: 'absolute', left: 0, top: 330, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: GREEN}}>CASH</div>
-    <div style={{position: 'absolute', left: 540, top: 330, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: RED}}>CARD</div>
-    <div style={{position: 'absolute', left: 535, top: 320, width: 10, height: 1000, background: INK}} />
-    <Bill x={270} y={760} w={440} rot={-4} />
-    <Bill x={810} y={760} w={440} rot={4} s={t >= six ? 0.62 : 1 - 0.38 * ease((t - P(29)) / 0.95)} text={t >= six ? '$6.20' : '$10'} color={t >= six ? RED : INK} />
-    <Penguin id="doug" x={540} y={G + 160} h={420} pose={t >= six ? {brows: 'shock', eyeScale: 1.35, pupil: 0.6, mouth: 0.6, flapL: 80, flapR: 80, sweat: true} : {look: [0.7, -0.6], brows: 'worried'}} />
+    <Fox x={760} y={G + 40} h={520} pose={{laugh: t >= hit ? 1 : 0, pocket: 1, lids: 0.5}} />
+    <CoinPile x={430} y={G - 10} n={Math.round(4 + 14 * p)} />
+    {t >= hit && <PriceTag x={540} y={470} price="$3.80" fish="in fees, to Fox" at={hit} size={1.3} />}
+    <Penguin id="doug" x={160} y={G + 60} h={360} pose={t >= hit ? {brows: 'shock', eyeScale: 1.3, pupil: 0.6, mouth: 0.5, sweat: true, turn: 0.5} : {turn: 0.5, look: [0.8, -0.3], brows: 'worried'}} />
   </>; };
 
 const WhereIs = ({t}: {t: number}) => <>
@@ -379,7 +384,7 @@ const Choice = ({t}: {t: number}) => <>
 // ---------- shots ----------
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx; ice?: boolean};
 const SHOTS: Shot[] = [
-  {at: 0, set: (t) => <HookSet t={t} />},
+  {at: 0, set: (t) => <HookV2 t={t} />},
   {at: P(3), set: (t) => <Intro t={t} />, fx_: 'zoom', ice: true},
   {at: P(5), set: (t) => <NeedCut t={t} />, fx_: 'swipe', ice: true},
   {at: P(6), set: (t) => <Cut t={t} />, fx_: 'pop', ice: true},
@@ -395,7 +400,7 @@ const SHOTS: Shot[] = [
   {at: P(24), set: (t) => <CardPay t={t} i0={24} from="seal" to="larry" />, fx_: 'swipeL', ice: true},
   {at: P(27), set: (t) => <Shrink t={t} />, fx_: 'pop', ice: true},
   {at: P(28), set: (t) => <TwentyBeeps t={t} />, fx_: 'zoom'},
-  {at: P(29), set: (t) => <Compare t={t} />, fx_: 'pop', ice: true},
+  {at: P(29), set: (t) => <Collect t={t} />, fx_: 'pop', ice: true},
   {at: P(30), set: (t) => <WhereIs t={t} />, fx_: 'swipe', ice: true},
   {at: P(31), set: (t) => <Pocket t={t} />, fx_: 'iris'},
   {at: P(32), set: () => <Name />, fx_: 'pop'},
@@ -429,7 +434,7 @@ export const DougCashCard = () => {
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
   if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
   const shk = (a: number) => tc > a && tc < a + 0.25 ? Math.sin(tc * 90) * 8 * (1 - (tc - a) / 0.25) : 0;
-  const shake = shk(SHOCK) + shk(P(29) + 0.98) + shk(P(34) + 1.2);
+  const shake = shk(P(29) + 0.6) + shk(P(34) + 1.2);
   const quiet = BIGS.some((b) => tc >= b.at && tc < b.until) || QUIET.some(([a, b]) => tc >= a && tc < b);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
@@ -449,9 +454,8 @@ export const DougCashCard = () => {
     <Sfx at={TEN[0]} name="user-cash-register" vol={0.4} />
     <Sfx at={TEN[1]} name="user-money" vol={0.3} />
     <Sfx at={P(1) + 0.1} name="swoosh-fast" vol={0.3} />
-    <Sfx at={SHOCK - 0.08} name="card-beep" vol={0.3} />
-    <Sfx at={SHOCK} name="user-boom" vol={0.5} />
-    <Sfx at={SHOCK + 0.05} name="penguin-squawk" vol={0.4} />
+    <Sfx at={SHOCK} name="card-beep" vol={0.4} />
+    <Sfx at={TEN[2]} name="user-ting" vol={0.4} />
     {/* story: cash */}
     <Sfx at={P(3)} name="penguin-honk" vol={0.3} />
     <Sfx at={P(4) + 0.1} name="user-ting" vol={0.4} />
@@ -482,8 +486,8 @@ export const DougCashCard = () => {
     {[1, 2, 3, 4, 5].map((i) => <Sfx key={`b${i}`} at={P(27) + 0.26 * i} name="card-beep" vol={0.3} />)}
     <Sfx at={P(28)} name="user-timer" vol={0.3} />
     {[0, 1, 2, 3, 4, 5].map((i) => <Sfx key={`c${i}`} at={P(28) + 0.14 * i} name="card-beep" vol={0.28} />)}
-    <Sfx at={P(29) + 0.98} name="user-boom" vol={0.5} />
-    <Sfx at={P(29) + 1.0} name="user-shock" vol={0.35} />
+    <Sfx at={P(29) + 0.6} name="user-cash-register" vol={0.45} />
+    <Sfx at={P(29) + 0.65} name="fox-snicker" vol={0.4} />
     <Sfx at={P(30)} name="user-fahh" vol={0.4} />
     <Sfx at={P(31)} name="user-cash-register" vol={0.4} />
     <Sfx at={P(31) + 0.2} name="fox-snicker" vol={0.4} />
