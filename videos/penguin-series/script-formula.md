@@ -31,6 +31,9 @@
 - Fake-happy ending: "Doug eat snow cone. Life is good." then the twist "Life is not good."
 - Keep the terms economically correct (the reference swaps cost-push / supply-shock).
 
+## Versus hook (user rule, 2026-10-19 — EP3 Venezuela, reuse for every A-vs-B video)
+why? title + self-drawing red arrow that swings A -> B, expensive price RED / cheap GREEN, containers fill with the product, red VS badge, big side labels above the flags, one "?" only, strong zoom to the side being spoken. Code: studio/src/videos/dougVenezuela.tsx (Hook).
+
 ## Hook template (user rule, 2026-10-16)
 - On-screen: blue title `<Topic> Explained by Doug` (HookTitle: #5EC4FA fill, #123B6B outline), Doug left vs other side right.
 - Spoken: starts with "If Doug ..." — two short parallel If-sentences with a contrast: "If Doug pay rent, Doug own nothing. If Larry get rent, Larry own igloo."
