@@ -261,9 +261,9 @@ const Move = ({t}: {t: number}) => {
       <Penguin id="doug" x={lerp(-300, 220, ease((t - P(25)) / 0.8))} y={G} h={360} pose={{beak: 'smile', brows: 'happy', walk: t}} />
     </> : <>
       <Pump x={720} y={G} t={t} run={t < P(26) + 1.4} dollars={Math.min(1.95, (t - P(26)) * 1.4)} />
-      <Penguin id="doug" x={360} y={G} h={420} pose={{turn: 0.6, look: [0.8, -0.3], eyeScale: 1.2, brows: 'shock'}} />
-      <Receipt x={360} y={500} t={t} at={P(26) + 1} />
-      <BigWord text="$1.95" x={360} y={440} at={P(26) + 1.2} color={GREEN} size={130} />
+      <Penguin id="doug" x={430} y={G} h={420} pose={{turn: 0.6, look: [0.8, -0.3], eyeScale: 1.2, brows: 'shock'}} />
+      <Receipt x={130} y={500} t={t} at={P(26) + 1} />
+      <BigWord text="$1.95" x={180} y={440} at={P(26) + 1.2} color={GREEN} size={130} />
       <BigWord text="full tank" x={720} y={560} at={P(26) + 0.3} size={100} />
     </>}
   </>;
@@ -271,11 +271,11 @@ const Move = ({t}: {t: number}) => {
 
 const Queue = ({t}: {t: number}) => {
   const back = ease((t - P(28)) / 1.2);
-  return <div style={{position: 'absolute', inset: 0, transform: `scale(${1 - 0.45 * back})`, transformOrigin: '850px 1300px'}}>
+  return <div style={{position: 'absolute', inset: 0, transform: `scale(${1 - 0.6 * back})`, transformOrigin: '850px 1300px'}}>
     <div style={{position: 'absolute', left: -2000, right: -400, top: G, height: 60, background: '#F2DCA0', borderTop: `5px solid ${INK}`}} />
     <Pump x={900} y={G} t={t} run={false} dollars={0.13} />
-    {Array.from({length: 14}, (_, i) => <LineAnimal key={i} i={i} x={700 - i * 190} y={G} h={300} />)}
-    <Penguin id="doug" x={700 - 14 * 190 + 40} y={G} h={300} pose={{brows: 'shock', eyeScale: 1.3, look: [0.8, 0]}} />
+    {Array.from({length: 10}, (_, i) => <LineAnimal key={i} i={i} x={700 - i * 150} y={G} h={300} />)}
+    <Penguin id="doug" x={700 - 10 * 150 + 20} y={G} h={300} pose={{brows: 'shock', eyeScale: 1.3, look: [0.8, 0]}} />
     {back > 0.6 && <BigWord text="the line" x={300} y={600} at={P(28) + 0.8} size={170} color={RED} />}
   </div>;
 };
