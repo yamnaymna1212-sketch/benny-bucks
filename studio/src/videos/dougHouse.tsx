@@ -2,8 +2,8 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
-import {INK, Penguin, onTwos} from '../penguin/rig';
-import {HookTitle} from '../penguin/world';
+import {Fish, INK, Penguin, onTwos} from '../penguin/rig';
+import {FishPile} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Sfx, beat} from '../penguin/edit';
 import TIM from '../data/doug-house.json';
@@ -25,24 +25,37 @@ const House = ({x, y, w = 440}: {x: number; y: number; w?: number}) =>
     <rect x={185} y={290} width={70} height={118} fill="#B23A2E" stroke={INK} strokeWidth={5} /><circle cx={242} cy={352} r={5} fill={INK} />
     {[85, 285].map((wx) => <g key={wx}><rect x={wx} y={240} width={72} height={66} fill="#BFE0F0" stroke={INK} strokeWidth={5} /><path d={`M${wx + 36} 240 L${wx + 36} 306 M${wx} 273 L${wx + 72} 273`} stroke={INK} strokeWidth={4} /></g>)}
     <rect x={30} y={404} width={380} height={12} fill="#9AA5AE" stroke={INK} strokeWidth={4} />
+    <g transform="translate(108 -40)"><line x1={0} y1={0} x2={0} y2={170} stroke={INK} strokeWidth={6} />
+      <rect width={96} height={60} fill="#fff" stroke={INK} strokeWidth={4} />{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 8.6} width={96} height={4.3} fill="#B22234" />)}
+      <rect width={42} height={32} fill="#3C3B6E" />{[0, 1, 2].map((i) => <circle key={i} cx={9 + i * 12} cy={10 + (i % 2) * 10} r={2.6} fill="#fff" />)}
+      <rect width={96} height={60} fill="none" stroke={INK} strokeWidth={4} /></g>
   </svg>;
 
 const Label = ({text, x, color}: {text: string; x: number; color: string}) =>
   <div style={{position: 'absolute', left: x, top: 620, transform: 'translate(-50%,-50%)', textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 92, color, lineHeight: 1}}>
     {text}<div style={{height: 9, background: color, borderRadius: 5, marginTop: 6, transform: 'rotate(-2deg)'}} /></div>;
 
+// Hook title: clean blue, thin outline, no heavy stroke/shadow, so it reads in the first second.
+const ClearTitle = ({lines, y, size}: {lines: string[]; y: number; size: number}) =>
+  <div style={{position: 'absolute', left: 540, top: y, transform: 'translate(-50%,-50%)', textAlign: 'center'}}>
+    {lines.map((l, i) => <div key={i} style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, lineHeight: 1.1, whiteSpace: 'nowrap', color: '#1A7FE0', WebkitTextStroke: '3px #0B3D7A', paintOrder: 'stroke fill'}}>{l}</div>)}
+  </div>;
+
 const RICHT = P(1);
 // User hook (2026-10-19): poor penguin vs rich penguin, POOR / RICH labels, an American house behind each, NO prices.
 const Hook = ({t}: {t: number}) => {
   const onRich = t >= RICHT;
   return <>
-    <HookTitle lines={['How Poor vs Rich', 'Penguins Buy a House']} at={-1} y={250} size={74} />
+    <ClearTitle lines={['How Poor vs Rich', 'Penguins Buy a House']} y={230} size={78} />
+    <div style={{position: 'absolute', left: 536, top: 520, width: 8, height: 1000, background: INK, borderRadius: 4}} />
     <Label text="POOR" x={270} color={RED} />
     <Label text="RICH" x={810} color={GREEN} />
     <House x={270} y={1260} w={500} />
     <House x={810} y={1260} w={500} />
     <Penguin id="doug" x={270} y={G} h={390} build="thin" pose={{turn: onRich ? 0.5 : 0, look: [onRich ? 0.9 : 0, -0.2], brows: onRich ? 'shock' : 'worried', eyeScale: onRich ? 1.2 : 1, pupil: onRich ? 0.5 : 1, sweat: true, beak: 'frown'}} />
-    <Penguin id="rich" x={810} y={G} h={400} build="fat" outfit="rich" pose={{turn: -0.2, lids: 0.45, beak: 'smile', brows: 'happy'}} />
+    <Penguin id="rich" x={745} y={G} h={400} build="fat" outfit="rich" pose={{turn: -0.2, lids: 0.45, beak: 'smile', brows: 'happy'}} />
+    <Fish id="onefish" x={385} y={1300} w={120} rot={-20} />
+    <FishPile x={935} y={G} n={15} w={95} />
   </>;
 };
 
