@@ -15,7 +15,7 @@ HOOK frame: split — left US flag + pump "$4.41 / GALLON", right Venezuela flag
 | 8 | This is called subsidy. | sparkle title card "SUBSIDY" | pop |
 | 9 | In America, no Boss Bear. Larry own refinery. Larry want profit. | Larry the walrus on refinery "LARRY OIL" | walrus-laugh, cash-register |
 | 10 | And Tax Gull take a piece. Every gallon. | Tax Gull lands on pump, grabs fish | gull-caw, slap |
-| 11 | Doug. | gag stare | shock |
+| 11 | Doug poor. | gag stare: Doug with empty wallet, one fish flies away | shock |
 | 12 | In real life, American gas is about four forty. Venezuela is thirteen cents. | real numbers on the pumps, note "AAA Oct 2026 / GlobalPetrolPrices" | ting |
 | 13 | Doug move to Venezuela. Doug fill whole tank for two dollars. Life is good. | Doug at pump, receipt "$1.95" | yeah |
 | 14 | Then Doug see the line. | camera pulls back: endless line of animals | wrong |

@@ -11,7 +11,7 @@
 | 6 | Everyone reacts | 15–22 s | Crowd / escalation, bigger and funnier each shot. |
 | 7 | The squeeze | 22–28 s | "More X. Same Y." visual equation. |
 | 8 | "This is called ___." | 28–31 s | Concept name AFTER the viewer already saw it. Sparkle title card. |
-| 9 | Recurring gag | 31–33 s | Doug stare: zoom to his face, 1 s silence, narrator: "Doug." |
+| 9 | Recurring gag | 31–33 s | Doug stare: zoom to his face, 1 s silence, narrator: "Doug + state" ("Doug poor." / "Doug happy." / "Doug angry." — never a bare "Doug.", user rule 2026-10-19) |
 | 10 | Real-life bridge | 33–42 s | ONE real US number, said simply ("prices went up about 23% since 2020"). |
 | 11 | Payoff + deadpan line | 42–55 s | Callback to the want from beat 3, with a twist (tiny snow cone). Broken-English line on screen ("is same snow cone."). |
 | 12 | Tease + question | 55–63 s | Name the next episode + one comment question. |
@@ -27,7 +27,7 @@
 - Drop articles and helper verbs: "Fish rare. Fish valuable." "Price go up." "Doug is penguin."
 - Repeat the key noun instead of pronouns (fish, fish, fish) — the repetition IS the teaching.
 - Teach with "If ..., ... . Because ..." chains, then say the concept name alone as its own line.
-- Several mini-lessons per video (2–3), each = If-chain -> name -> "Doug." gag.
+- Several mini-lessons per video (2–3), each = If-chain -> name -> "Doug <state>." gag.
 - Fake-happy ending: "Doug eat snow cone. Life is good." then the twist "Life is not good."
 - Keep the terms economically correct (the reference swaps cost-push / supply-shock).
 
@@ -43,5 +43,5 @@
 - Deep zooms: 6–10 per episode, camera dives (x1.5–1.9) onto the face/object named in that phrase, released on the next phrase. Not in the first 3 s.
 - User SFX (labels from the user, tools/sfx_user_map.json -> studio/public/sfx/user-<name>.wav):
   ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
-  wrong / aww / shock / fahh / fahh-long = bad news & the "Doug." gag; boom = big reveal; slap = hits; wow / yeah = good news;
+  wrong / aww / shock / fahh / fahh-long = bad news & the "Doug <state>." gag; boom = big reveal; slap = hits; wow / yeah = good news;
   notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
