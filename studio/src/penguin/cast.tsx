@@ -149,3 +149,38 @@ export const BigSeal = ({x, y, h = 520, id = 'bigseal', flip, pose = {}}: {x: nu
     </svg>
   </>;
 };
+
+// Fox the Banker: Arctic fox in a navy suit + red tie, sly half-lids, bushy tail. Faces left by default. (x, y) = feet point.
+export type FoxPose = {lids?: number; smirk?: boolean; flap?: number; mouth?: number; greedy?: boolean; santa?: boolean};
+export const Fox = ({x, y, h = 440, id = 'fox', flip, pose = {}}: {x: number; y: number; h?: number; id?: string; flip?: boolean; pose?: FoxPose}) => {
+  const t = useT2() + 1.7;
+  const {lids = 0.4, smirk = true, flap = 0, mouth = 0, greedy = false, santa = false} = pose;
+  const k = h / 460, w = 360 * k, sway = Math.sin(t * 3) * 4, blink = (t % 4.1) < 0.12 ? 0.1 : 1;
+  const ey = 11 * (1 - lids) * blink;
+  return <>
+    <Shadow x={x} y={y} w={w * 0.6} />
+    <svg width={w} height={h} viewBox="0 0 360 460" style={{position: 'absolute', left: x - w / 2, top: y - h, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
+      <defs><Boil id={id} amount={1.8 / k} /></defs>
+      <g filter={`url(#${id})`}>
+        <path d={`M240 380 C 350 370, 370 250, ${300 + sway} 200 C 330 300, 290 340, 236 336 Z`} fill="#F4F6F8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <rect x={128} y={392} width={38} height={52} fill="#1E2532" stroke={INK} strokeWidth={LW} />
+        <rect x={194} y={392} width={38} height={52} fill="#1E2532" stroke={INK} strokeWidth={LW} />
+        <path d="M118 222 L242 222 L262 400 L98 400 Z" fill="#2B3445" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M156 222 L180 290 L204 222 Z" fill="#fff" stroke={INK} strokeWidth={LW - 1} />
+        <path d="M175 232 L185 232 L192 292 L180 308 L168 292 Z" fill="#D83A2E" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        <g transform={`rotate(${flap} 236 244)`}><path d="M236 240 C 262 262, 270 300, 264 334 L242 334 C 242 302, 232 276, 214 256 Z" fill="#2B3445" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /><circle cx={253} cy={340} r={14} fill="#F4F6F8" stroke={INK} strokeWidth={LW} /></g>
+        <g transform={`rotate(${-flap * 0.3} 124 244)`}><path d="M124 240 C 98 262, 90 300, 96 334 L118 334 C 118 302, 128 276, 146 256 Z" fill="#2B3445" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /><circle cx={107} cy={340} r={14} fill="#F4F6F8" stroke={INK} strokeWidth={LW} /></g>
+        <path d="M122 112 L116 36 L168 86 Z M198 86 L248 36 L244 114 Z" fill="#F4F6F8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M128 98 L126 58 L152 84 Z M214 84 L238 58 L236 100 Z" fill="#F2B8C0" />
+        <path d="M112 160 C 102 110, 132 80, 182 80 C 232 80, 262 110, 252 160 C 242 200, 204 222, 182 222 C 152 222, 122 200, 112 160 Z" fill="#F4F6F8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d={`M122 158 L50 174 Q42 184 54 ${190 + mouth * 10} L132 198 Z`} fill="#F4F6F8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <circle cx={52} cy={178} r={10} fill={INK} />
+        {smirk && <path d="M72 194 Q100 206 128 192" fill="none" stroke={INK} strokeWidth={LW} strokeLinecap="round" />}
+        {[150, 204].map((cx) => <g key={cx}><ellipse cx={cx} cy={142} rx={12} ry={Math.max(1.5, ey)} fill={greedy ? '#2E9E4F' : INK} />
+          <path d={`M${cx - 16} ${142 - ey - 2} L${cx + 16} ${142 - ey - 2}`} stroke={INK} strokeWidth={LW} strokeLinecap="round" /></g>)}
+        <path d="M130 116 L166 126 M222 116 L188 126" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" />
+        {santa && <g><path d="M110 104 Q180 20 252 100 Q200 70 150 96 Z" fill="#D83A2E" stroke={INK} strokeWidth={LW} /><path d="M108 104 Q180 80 254 102" stroke="#fff" strokeWidth={18} strokeLinecap="round" fill="none" /><circle cx={252} cy={60} r={14} fill="#fff" stroke={INK} strokeWidth={3} /></g>}
+      </g>
+    </svg>
+  </>;
+};
