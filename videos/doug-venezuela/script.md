@@ -17,12 +17,14 @@ HOOK frame: split — left US flag + pump "$4.41 / GALLON", right Venezuela flag
 | 10 | And Tax Gull take a piece. Every gallon. | Tax Gull lands on pump, grabs fish | gull-caw, slap |
 | 11 | Doug poor. | gag stare: Doug with empty wallet, one fish flies away | shock |
 | 12 | In real life, American gas is about four forty. Venezuela is thirteen cents. | real numbers on the pumps, note "AAA Oct 2026 / GlobalPetrolPrices" | ting |
-| 13 | Doug move to Venezuela. Doug fill whole tank for two dollars. Life is good. | Doug at pump, receipt "$1.95" | yeah |
-| 14 | Then Doug see the line. | camera pulls back: endless line of animals | wrong |
-| 15 | Boss Bear pay for everyone's gas. Boss Bear run out of money. Refinery break. | Boss Bear's fish pile empties, refinery smoke + crack | Fahhh |
-| 16 | Cheap gas. No gas. | empty pump, "OUT OF GAS" sign | aww |
-| 17 | Three days later, Doug get gas. Then Doug remember. Venezuela have no snow. | Doug with full can, snowmobile on hot sand | horn |
-| 18 | Would you wait in line for thirteen-cent gas? Tell Doug in the comments. | Doug in line points down | pop |
+| 13 | Doug move to Venezuela. Doug fill whole tank for two dollars. | Doug at pump, receipt "$1.95" | yeah |
+| 14 | Doug happy. | gag stare: big grin, hugs the pump, sparkles | wow |
+| 15 | Then Doug see the line. | camera pulls back: endless line of animals | wrong |
+| 16 | Boss Bear pay for everyone's gas. Boss Bear run out of money. Refinery break. | Boss Bear's fish pile empties, refinery smoke + crack | Fahhh |
+| 17 | Cheap gas. No gas. | empty pump, "OUT OF GAS" sign | aww |
+| 18 | Doug angry. | gag stare: red face, steam from head, kicks empty can | slap |
+| 19 | Three days later, Doug get gas. Then Doug remember. Venezuela have no snow. | Doug with full can, snowmobile on hot sand | horn |
+| 20 | Would you wait in line for thirteen-cent gas? Tell Doug in the comments. | Doug in line points down | pop |
 
 Facts:
 - US regular ~$4.41 (AAA, Oct 1 2026; Sept 2026 avg $4.33 = record). Re-check gasprices.aaa.com on recording day.
