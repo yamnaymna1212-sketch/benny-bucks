@@ -4,7 +4,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {Fish, INK, Penguin, onTwos} from '../penguin/rig';
-import {BigSeal, Puffin, Seagull, Walrus} from '../penguin/cast';
+import {BigSeal, Seagull, Walrus} from '../penguin/cast';
 import {BigWord, FishFlight, FishPile, Stamp, Title} from '../penguin/world';
 import {MoneyBag, OilGush, Pump, Receipt, Refinery, Snowfall, Snowmobile, Sun} from './dougGas';
 import {Fx, cutFX} from '../penguin/acting';
@@ -128,10 +128,10 @@ const BarrelPile = ({x, y, rows, w = 70, flag}: {x: number; y: number; rows: num
     <line x1={0} y1={0} x2={0} y2={260} stroke={INK} strokeWidth={8} /><g transform="translate(4 6) scale(0.8)">{flag === 'us' ? <UsFlag /> : <VeFlag />}</g></svg></>;
 };
 
-// One small animal of the gas line (never penguins: walrus, gull, puffin, seal).
+// One small animal of the gas line (never penguin-like: gull, walrus, seal).
 const LineAnimal = ({i, x, y, h}: {i: number; x: number; y: number; h: number}) => {
-  const k = i % 4;
-  return k === 0 ? <Puffin id={`la${i}`} x={x} y={y} h={h} flip /> : k === 1 ? <Seagull id={`la${i}`} x={x} y={y} h={h} flip pose={{angry: false}} />
+  const k = i % 3 + 1;
+  return k === 1 ? <Seagull id={`la${i}`} x={x} y={y} h={h} flip pose={{angry: false}} />
     : k === 2 ? <Walrus id={`la${i}`} x={x} y={y} h={h * 1.1} flip hat={false} /> : <BigSeal id={`la${i}`} x={x} y={y} h={h} flip />;
 };
 
@@ -186,10 +186,10 @@ const Pay = ({t}: {t: number}) => {
     <Ground />
     <Pump x={760} y={G} t={t} run={pay} dollars={cut ? 0.13 : 9.99} />
     <BossBear x={260} y={G} h={500} mouth={pay ? 0.3 : 0} />
-    <div style={{position: 'absolute', left: 600, top: 520, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 110, color: INK}}>$$$</div>
-    {cut && <BigWord text="✕" x={700} y={580} at={P(13)} color={RED} size={200} />}
-    {cut && <BigWord text="1¢" x={880} y={760} at={P(13) + 0.4} color={GREEN} size={150} />}
-    <BigWord text="cost" x={450} y={580} at={P(12)} until={P(13)} size={90} />
+    <div style={{position: 'absolute', left: 560, top: 700, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 120, color: INK}}>$$$</div>
+    {cut && <BigWord text="✕" x={670} y={770} at={P(13)} color={RED} size={220} />}
+    {cut && <BigWord text="1¢" x={920} y={900} at={P(13) + 0.4} color={GREEN} size={160} />}
+    <BigWord text="cost" x={680} y={600} at={P(12)} until={P(13)} size={100} />
     <FishFlight x1={300} y1={G - 400} x2={760} y2={G - 250} a={P(14)} b={P(14) + 0.7} n={5} w={90} />
     <FishFlight x1={300} y1={G - 400} x2={760} y2={G - 250} a={P(14) + 0.5} b={P(14) + 1.2} n={5} w={90} seed={3} />
   </>;
@@ -254,7 +254,7 @@ const RealLife = ({t}: {t: number}) => <>
 const Move = ({t}: {t: number}) => {
   const fill = t >= P(26);
   return <>
-    <Sun x={880} y={480} t={t} size={140} />
+    {!fill && <Sun x={880} y={480} t={t} size={140} />}
     <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 60, background: '#F2DCA0', borderTop: `5px solid ${INK}`}} />
     {!fill ? <>
       <div style={{position: 'absolute', left: lerp(-500, 330, ease((t - P(25)) / 0.8)), top: G - 300, width: 460, height: 230, background: '#F2F2F2', border: `6px solid ${INK}`, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Architects Daughter', fontSize: 58, fontWeight: 700}}>VENEZUELA →</div>
@@ -376,7 +376,7 @@ const SHOTS: Shot[] = [
   {at: P(39), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[8, 600, 1000, 1.5], [10, 850, 1150, 1.6], [13, 800, 800, 1.5], [17, 540, 1100, 1.5], [21, 600, 1100, 1.4], [30, 330, 1000, 1.6], [33, 540, 1000, 1.5], [38, 540, 1000, 1.4]];
+const DEEP: [number, number, number, number][] = [[8, 600, 1000, 1.5], [10, 850, 1150, 1.6], [13, 740, 950, 1.3], [17, 540, 1100, 1.5], [21, 600, 1100, 1.4], [30, 330, 1000, 1.6], [33, 540, 1000, 1.5], [38, 540, 1000, 1.4]];
 
 export const DougVenezuela = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
