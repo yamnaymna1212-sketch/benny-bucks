@@ -1,14 +1,14 @@
 // EP6 "How Poor vs Rich Buy a House" — hook first (approval), full episode after. Temp timings in studio/src/data/doug-house.json until the hook line is approved + VO arrives.
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {Fish, INK, Penguin, onTwos} from '../penguin/rig';
 import {FishPile} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
-import {Sfx, beat} from '../penguin/edit';
+import {Captions, Sfx, beat} from '../penguin/edit';
 import TIM from '../data/doug-house.json';
 
-const P = (i: number) => TIM[i].start;
+const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
 export const DOUG_HOUSE_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
 const G = 1460;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -41,7 +41,7 @@ const ClearTitle = ({lines, y, size}: {lines: string[]; y: number; size: number}
     {lines.map((l, i) => <div key={i} style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.15, whiteSpace: 'nowrap', color: '#1A7FE0'}}>{l}</div>)}
   </div>;
 
-const RICHT = P(1);
+const POORT = P(1), RICHT = P(2);
 // User hook (2026-10-19): poor penguin vs rich penguin, POOR / RICH labels, an American house behind each, NO prices.
 const Hook = ({t}: {t: number}) => {
   const onRich = t >= RICHT;
@@ -65,16 +65,20 @@ export const DougHouse = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   // hook: push toward the side named (Doug's $1M house, then Larry's), release on "Same house."
-  const toL = ease((tc - 0.2) / 0.6) * (tc < RICHT ? 1 : 0), toR = ease((tc - RICHT) / 0.5) * (tc < P(2) ? 1 : 0);
-  const s = (1 + 0.08 * (toL + toR)) * beat(tc, TIM), fx = 540 - 150 * toL + 150 * toR, fy = 960 + 30 * (toL + toR);
+  const toL = ease((tc - POORT) / 0.35) * (tc < RICHT ? 1 : 0), toR = ease((tc - RICHT) / 0.35) * (tc < E(2) + 0.2 ? 1 : 0);
+  const s = (1 + 0.22 * (toL + toR)) * beat(tc, TIM), fx = 540 - 270 * toL + 270 * toR, fy = 960 + 150 * (toL + toR);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
       <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
     </AbsoluteFill>
+    <Captions t={tc} phrases={TIM} />
+    <Audio src={staticFile('doug-house-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={0.3} name="user-aww" vol={0.3} />
+    <Sfx at={POORT - 0.05} name="user-whoosh" vol={0.22} />
+    <Sfx at={POORT + 0.5} name="user-aww" vol={0.3} />
     <Sfx at={RICHT - 0.05} name="user-whoosh" vol={0.22} />
-    <Sfx at={RICHT + 0.2} name="user-wow" vol={0.3} />
+    <Sfx at={RICHT + 0.3} name="user-money" vol={0.35} />
+    <Sfx at={RICHT + 0.6} name="user-wow" vol={0.3} />
   </AbsoluteFill>;
 };

@@ -10,6 +10,8 @@ Cast exception (user): the rich one is a penguin too. Fox the Banker = bank.
 4. Fox give Doug fish. Doug pay back every month. For thirty years.
 5. But Fox want extra fish. Every month.
 6. This is called interest.
+6a. Doug pay Fox on birthday. Doug pay Fox on Christmas.
+6b. And Doug put tiny fish down. So Fox want more fish. For Fox insurance.
 7. Doug.
 8. Rich penguin not go to Fox. Rich penguin pay all at once.
 9. No Fox. No interest. No thirty years.
@@ -18,6 +20,8 @@ Cast exception (user): the rich one is a penguin too. Fox the Banker = bank.
 12. Same house. More than double.
 13. Then rich penguin buy second house. And rent it.
 14. Renter pay rich penguin every month. House pay for itself.
+14a. Rich penguin use renter fish. Buy third house. Then fourth house.
+14b. Doug still pay Fox.
 15. Thirty years later, Doug own house. Doug happy. Life is good.
 16. Then Doug see who rent rich penguin house.
 17. Doug's son.

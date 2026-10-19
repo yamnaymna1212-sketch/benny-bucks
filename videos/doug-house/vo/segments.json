@@ -1,0 +1,324 @@
+[
+{
+"a": 0,
+"b": 2.212,
+"line": 0,
+"text": "How poor vs rich penguins buy a house.",
+"gap_after": 0.3
+},
+{
+"a": 2.572,
+"b": 3.895,
+"line": 1,
+"text": "Poor Doug have one fish.",
+"gap_after": 0.3
+},
+{
+"a": 4.164,
+"b": 5.387,
+"line": 2,
+"text": "Rich penguin have many fish.",
+"gap_after": 0.3
+},
+{
+"a": 5.705,
+"b": 7.126,
+"line": 3,
+"text": "Poor Doug go to Fox the Banker.",
+"gap_after": 0.3
+},
+{
+"a": 7.444,
+"b": 8.536,
+"line": 4,
+"text": "Fox give Doug fish.",
+"gap_after": 0.3
+},
+{
+"a": 8.845,
+"b": 9.461,
+"line": 5,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 9.599,
+"b": 10.077,
+"line": 5,
+"text": "Doug pay back every month.",
+"gap_after": 0.3
+},
+{
+"a": 10.428,
+"b": 10.547,
+"line": 6,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 10.684,
+"b": 12.213,
+"line": 6,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 12.358,
+"b": 12.979,
+"line": 6,
+"text": "For thirty years. But Fox want extra fish.",
+"gap_after": 0.3
+},
+{
+"a": 13.259,
+"b": 13.88,
+"line": 7,
+"text": "Every month.",
+"gap_after": 0.3
+},
+{
+"a": 14.227,
+"b": 15.13,
+"line": 8,
+"text": "This is called interest.",
+"gap_after": 0.3
+},
+{
+"a": 15.435,
+"b": 16.56,
+"line": 9,
+"text": "Doug pay Fox on birthday.",
+"gap_after": 0.3
+},
+{
+"a": 16.967,
+"b": 18.101,
+"line": 10,
+"text": "Doug pay Fox on Christmas.",
+"gap_after": 0.3
+},
+{
+"a": 18.476,
+"b": 19.59,
+"line": 11,
+"text": "And Doug put tiny fish down.",
+"gap_after": 0.3
+},
+{
+"a": 19.907,
+"b": 21.149,
+"line": 12,
+"text": "So Fox want more fish.",
+"gap_after": 0.3
+},
+{
+"a": 21.593,
+"b": 22.341,
+"line": 13,
+"text": "For Fox insurance.",
+"gap_after": 0.3
+},
+{
+"a": 22.809,
+"b": 23.032,
+"line": 14,
+"text": "Doug.",
+"gap_after": 0.45
+},
+{
+"a": 23.472,
+"b": 25.0,
+"line": 15,
+"text": "Rich penguin not go to Fox.",
+"gap_after": 0.3
+},
+{
+"a": 25.376,
+"b": 26.812,
+"line": 16,
+"text": "Rich penguin pay all at once.",
+"gap_after": 0.3
+},
+{
+"a": 27.224,
+"b": 27.671,
+"line": 17,
+"text": "No Fox.",
+"gap_after": 0.3
+},
+{
+"a": 28.089,
+"b": 28.521,
+"line": 18,
+"text": "No interest.",
+"gap_after": 0.3
+},
+{
+"a": 29.058,
+"b": 29.879,
+"line": 19,
+"text": "No thirty years.",
+"gap_after": 0.3
+},
+{
+"a": 30.406,
+"b": 33.267,
+"line": 20,
+"text": "In real life, a home cost about four hundred twenty thousand dollars.",
+"gap_after": 0.3
+},
+{
+"a": 33.593,
+"b": 35.244,
+"line": 21,
+"text": "Mortgage rate is seven point four percent.",
+"gap_after": 0.3
+},
+{
+"a": 35.689,
+"b": 38.721,
+"line": 22,
+"text": "With small down payment, Doug pay over one million dollars in thirty years.",
+"gap_after": 0.3
+},
+{
+"a": 39.197,
+"b": 39.722,
+"line": 23,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 40.16,
+"b": 40.65,
+"line": 23,
+"text": "Same house. More than double.",
+"gap_after": 0.3
+},
+{
+"a": 41.192,
+"b": 41.391,
+"line": 24,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 41.59,
+"b": 42.851,
+"line": 24,
+"text": "Then rich penguin buy second house.",
+"gap_after": 0.3
+},
+{
+"a": 43.283,
+"b": 43.611,
+"line": 25,
+"text": "And rent it.",
+"gap_after": 0.3
+},
+{
+"a": 44.06,
+"b": 45.635,
+"line": 26,
+"text": "Renter pay rich penguin every month.",
+"gap_after": 0.3
+},
+{
+"a": 46.15,
+"b": 47.109,
+"line": 27,
+"text": "House pay for itself.",
+"gap_after": 0.3
+},
+{
+"a": 47.651,
+"b": 48.972,
+"line": 28,
+"text": "Rich penguin use renter fish.",
+"gap_after": 0.3
+},
+{
+"a": 49.443,
+"b": 50.142,
+"line": 29,
+"text": "Buy third house.",
+"gap_after": 0.3
+},
+{
+"a": 50.666,
+"b": 51.439,
+"line": 30,
+"text": "Then fourth house.",
+"gap_after": 0.3
+},
+{
+"a": 51.909,
+"b": 52.994,
+"line": 31,
+"text": "Doug still pay Fox.",
+"gap_after": 0.3
+},
+{
+"a": 53.55,
+"b": 54.231,
+"line": 32,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 54.662,
+"b": 55.513,
+"line": 32,
+"text": "Thirty years later, Doug own house.",
+"gap_after": 0.3
+},
+{
+"a": 56.08,
+"b": 56.252,
+"line": 33,
+"text": "",
+"gap_after": 0.1
+},
+{
+"a": 56.717,
+"b": 56.941,
+"line": 33,
+"text": "Doug happy.",
+"gap_after": 0.3
+},
+{
+"a": 57.705,
+"b": 58.172,
+"line": 34,
+"text": "Life is good.",
+"gap_after": 0.3
+},
+{
+"a": 58.67,
+"b": 60.248,
+"line": 35,
+"text": "Then Doug see who rent rich penguin house.",
+"gap_after": 0.3
+},
+{
+"a": 60.72,
+"b": 61.15,
+"line": 36,
+"text": "Doug's son.",
+"gap_after": 0.3
+},
+{
+"a": 61.699,
+"b": 63.385,
+"line": 37,
+"text": "Do you buy like Doug or like rich penguin?",
+"gap_after": 0.3
+},
+{
+"a": 63.8,
+"b": 64.717,
+"line": 38,
+"text": "Tell Doug in the comments.",
+"gap_after": 0.0
+}
+]
