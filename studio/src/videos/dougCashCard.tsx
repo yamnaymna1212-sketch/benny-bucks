@@ -125,6 +125,35 @@ const HookSet = ({t = -1}: {t?: number}) => { const d = t < 0 ? undefined : hook
     left={{label: 'CASH', price: '$10', unit: 'STAYS $10', obj: <CashIcon t={t} />, color: GREEN}}
     right={{label: 'CARD', price: '$10', unit: 'BECOMES $6.20', obj: <CardSide t={t} />, color: RED}} />; };
 export const DougCashCardHook = () => <HookSet />;
+
+// ---------- hook v2 (TikTok flagged "$10 vs $6.20" as misleading): "the difference" split, SAME $10 on both sides ----------
+// Left: Doug pays Puffin with the real $10 note. Right: Doug taps his card, the reader shows $10.00. Dashed divider + VS.
+const Counter = ({x, w}: {x: number; w: number}) => <>
+  <div style={{position: 'absolute', left: x, top: 1100, width: w, height: 300, background: '#C98F55', border: `7px solid ${INK}`, borderRadius: 10,
+    backgroundImage: `repeating-linear-gradient(90deg, transparent 0 52px, rgba(0,0,0,0.18) 52px 56px)`}} />
+  <div style={{position: 'absolute', left: x - 14, top: 1082, width: w + 28, height: 34, background: '#E0A96D', border: `7px solid ${INK}`, borderRadius: 8}} />
+</>;
+const DiffSide = ({side}: {side: 'cash' | 'card'}) => { const o = side === 'cash' ? 0 : 540;
+  return <>
+    <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={{look: -0.6, mouth: 0.15}} />
+    <Counter x={o + 270} w={260} />
+    {side === 'card' && <Reader x={o + 330} y={1086} w={96} t={-1} amount="$10" />}
+    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={{turn: 0.55, look: [0.8, -0.1], flapR: 62, beak: 'flat', lids: 0.25}} />
+    {side === 'cash' ? <Bill x={o + 300} y={1040} w={180} rot={-8} /> : <Card x={o + 255} y={1020} w={130} rot={-14} />}
+  </>; };
+export const DougCashCardHookV2 = () => <AbsoluteFill style={{background: '#fff'}}>
+  <Fonts /><HandFont />
+  <div style={{position: 'absolute', left: 0, top: 120, width: 1080, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontStyle: 'italic', fontSize: 132,
+    color: INK, letterSpacing: -4, textShadow: '5px 6px 0 rgba(0,0,0,0.18)'}}>the difference</div>
+  <div style={{position: 'absolute', left: 270 - 190, top: 340}}><RealTen w={380} /></div>
+  <div style={{position: 'absolute', left: 810 - 165, top: 320}}><CardIcon w={330} /></div>
+  <div style={{position: 'absolute', left: 0, top: 560, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, color: GREEN}}>CASH</div>
+  <div style={{position: 'absolute', left: 540, top: 560, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, color: BLUE}}>CARD</div>
+  <div style={{position: 'absolute', left: 536, top: 700, width: 0, height: 760, borderLeft: `8px dashed ${INK}`}} />
+  <div style={{position: 'absolute', left: 540 - 62, top: 560, width: 124, height: 124, borderRadius: '50%', background: '#F7CF3B', border: `7px solid ${INK}`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 54, color: INK}}>VS</div>
+  <DiffSide side="cash" /><DiffSide side="card" />
+</AbsoluteFill>;
 const hookCam = (t: number) => {
   const toL = ease((t - 0.6) / 0.9) * (1 - ease((t - P(1)) / 0.35));
   const toR = ease((t - P(1)) / 0.35) * (1 - ease((t - SHOCK - 0.15) / 0.3));
