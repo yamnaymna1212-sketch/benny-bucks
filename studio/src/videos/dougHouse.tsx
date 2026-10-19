@@ -35,10 +35,10 @@ const Label = ({text, x, color}: {text: string; x: number; color: string}) =>
   <div style={{position: 'absolute', left: x, top: 620, transform: 'translate(-50%,-50%)', textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 92, color, lineHeight: 1}}>
     {text}<div style={{height: 9, background: color, borderRadius: 5, marginTop: 6, transform: 'rotate(-2deg)'}} /></div>;
 
-// Hook title: clean blue, thin outline, no heavy stroke/shadow, so it reads in the first second.
+// Hook title: same hand font as the POOR / RICH labels, in blue (user).
 const ClearTitle = ({lines, y, size}: {lines: string[]; y: number; size: number}) =>
   <div style={{position: 'absolute', left: 540, top: y, transform: 'translate(-50%,-50%)', textAlign: 'center'}}>
-    {lines.map((l, i) => <div key={i} style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, lineHeight: 1.1, whiteSpace: 'nowrap', color: '#1A7FE0', WebkitTextStroke: '3px #0B3D7A', paintOrder: 'stroke fill'}}>{l}</div>)}
+    {lines.map((l, i) => <div key={i} style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.15, whiteSpace: 'nowrap', color: '#1A7FE0'}}>{l}</div>)}
   </div>;
 
 const RICHT = P(1);
@@ -46,7 +46,7 @@ const RICHT = P(1);
 const Hook = ({t}: {t: number}) => {
   const onRich = t >= RICHT;
   return <>
-    <ClearTitle lines={['How Poor vs Rich', 'Penguins Buy a House']} y={230} size={78} />
+    <ClearTitle lines={['How Poor vs Rich', 'Penguins Buy a House']} y={240} size={88} />
     <div style={{position: 'absolute', left: 536, top: 520, width: 8, height: 1000, background: INK, borderRadius: 4}} />
     <Label text="POOR" x={270} color={RED} />
     <Label text="RICH" x={810} color={GREEN} />
