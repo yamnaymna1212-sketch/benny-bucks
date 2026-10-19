@@ -143,8 +143,8 @@ const DiffSide = ({side}: {side: 'cash' | 'card'}) => { const o = side === 'cash
   </>; };
 export const DougCashCardHookV2 = () => <AbsoluteFill style={{background: '#fff'}}>
   <Fonts /><HandFont />
-  <div style={{position: 'absolute', left: 0, top: 120, width: 1080, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontStyle: 'italic', fontSize: 132,
-    color: INK, letterSpacing: -4, textShadow: '5px 6px 0 rgba(0,0,0,0.18)'}}>the difference</div>
+  <div style={{position: 'absolute', left: 0, top: 120, width: 1080, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontStyle: 'italic', fontSize: 96, whiteSpace: 'nowrap',
+    color: INK, letterSpacing: -3, textShadow: '5px 6px 0 rgba(0,0,0,0.18)'}}>What the difference</div>
   <div style={{position: 'absolute', left: 270 - 190, top: 340}}><RealTen w={380} /></div>
   <div style={{position: 'absolute', left: 810 - 165, top: 320}}><CardIcon w={330} /></div>
   <div style={{position: 'absolute', left: 0, top: 560, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, color: GREEN}}>CASH</div>
