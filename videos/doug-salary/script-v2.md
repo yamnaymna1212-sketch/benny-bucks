@@ -1,32 +1,48 @@
-# EP4 "Same Salary" v2 — neutral (NEUTRAL & CLEAR RULE, 2026-10-20). Dollars only, both sides fair, no advice, no get-rich promise.
+# EP4 "Same Salary" v3 — dream car vs bike. NEUTRAL & CLEAR RULE (2026-10-20): dollars only, both sides fair, no advice, no get-rich promise.
 
-Why two penguins make same salary… but one buy his dream car, and one buy old car?
+Why two penguins make same salary,
+but one buy his dream car,
+and one buy a bike?
 This is Doug. This is Ricky. Brothers.
-Same job. Same salary. Seventy thousand dollars a year.
-Both need a car.
-Doug buy new car. Forty-four thousand dollars. With a loan.
-Loan is six hundred fifty dollars every month. For seven years.
-New car have warranty. Few repairs. Doug happy.
-Ricky buy used car. Ten thousand dollars. Cash.
-Used car cost less. But used car can break more. Repairs cost money.
+Same job. Same salary.
+Seventy thousand dollars a year.
+Both need to go to work.
+Doug buy new car. Forty-four thousand dollars.
+With a loan.
+Loan is six hundred fifty dollars every month.
+For seven years.
+Car is fast. Car is warm.
+Doug happy.
+Ricky buy a bike. Four hundred dollars. Cash.
+Bike is cheap.
+But bike is slow. And snow is cold.
+Ricky freezing.
 Ricky put his extra money in stocks every month.
-Stocks can go up. Stocks can also go down. Ricky nervous.
-Money that grow on its own money is called compound interest.
-Every year, cars lose value. This is called depreciation.
-In real life, average new car loan is about forty-four thousand dollars, at about six percent.
-After seven years, Doug car is paid off. Doug own the car.
-If stocks grow seven percent a year, Ricky have about seventy thousand dollars, minus his repairs.
+Stocks can go up.
+Stocks can also go down.
+Money that grow on its own money,
+is called compound interest.
+Every year, cars lose value.
+This is called depreciation.
+In real life, average new car loan is about forty-four thousand dollars,
+at about six percent.
+After seven years, Doug car is paid off.
+Doug own the car.
+If stocks grow seven percent a year,
+Ricky have about seventy thousand dollars.
 If stocks fall, Ricky have less.
-Same salary. Different choices. Different numbers.
+Same salary.
+Different choices.
+Different numbers.
 
 ## Fairness check
-- Doug side: + warranty, few repairs, owns car after 7 y; − $650/mo, interest, depreciation.
-- Ricky side: + cheaper car, money can grow; − more repairs, stocks can go down.
-- No "poor/millionaire" labels, no advice, no pick-a-side question.
+- Doug: + fast, warm, owns the car after 7 y; - $650/mo for 7 y, car loses value.
+- Ricky: + bike is cheap ($400), money can grow; - slow, cold in snow, stocks can go down.
 ## Numbers
-- Experian Q1 2026: avg new-car loan $43,925, avg new rate 6.39% -> 84 mo ≈ $650/mo.
-- $650/mo at 7%/yr for 7 y ≈ $70,199 (assumption, said with risk).
+- Experian Q1 2026: avg new-car loan $43,925 at 6.39% -> 84 mo ~ $650/mo.
+- Statista: avg US bicycle price ~ $400 (2023).
+- $650/mo at 7%/yr for 7 y ~ $70,199 (assumption, said with its risk).
 ## Hook screen
-SAME SALARY $70,000 each. Doug: shiny dream car (sparkles, heart) + "$650/MONTH". Ricky: plain used car + "$10,000". No POOR/MILLIONAIRE stamps.
+$70,000 each -> Doug: red supercar (no logo) + $44,000 red; Ricky: blue city bike + $400 green. No extra text.
 ## TikTok
-Same salary, two different car choices — here are the numbers 🚗🐧 #carloan #usedcars #compoundinterest #personalfinance #moneytok
+Same salary: one buys his dream car, one buys a bike — here are the numbers 🚗🚲🐧 #carloan #biketowork #compoundinterest #personalfinance #moneytok

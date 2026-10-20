@@ -17,7 +17,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.15 ? 1.3 * ease(d / 0.15) : 1.3 - 0.3 * ease((d - 0.15) / 0.15); };
-const DRIVE = P(1), DREAM = P(1) + 0.75, JUNK = P(2); // supercar drives in to Doug, then Ricky's junk car rolls in
+const DRIVE = P(1), DREAM = P(1) + 0.75, JUNK = P(2); // supercar drives in to Doug, then Ricky's bike rolls in
 
 // Banded stack of green bills with three "shine" ticks above it.
 const CashStack = ({x, y, w = 300}: {x: number; y: number; w?: number}) =>
@@ -72,27 +72,23 @@ const SuperCar = ({x, y, w = 480, t = 0, spin = 0}: {x: number; y: number; w?: n
     {t > 0 && [[40, -10], [560, 20], [300, 30]].map(([sx, sy], i) => <path key={i} transform={`translate(${sx} ${sy}) scale(${0.7 + 0.3 * Math.sin(t * 8 + i)})`} d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="#F7C531" stroke={INK} strokeWidth={3} />)}
   </svg>;
 
-// Beat-up old sedan: faded paint, rust, dented door, cracked windshield, flat tyre, hanging bumper, duct tape, smoke.
-const JunkCar = ({x, y, w = 460, t = 0, smoke = true, hubcap = 0}: {x: number; y: number; w?: number; t?: number; smoke?: boolean; hubcap?: number}) =>
-  <svg width={w} height={w * 0.46} viewBox="0 0 560 258" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.46, overflow: 'visible'}}>
-    <ellipse cx={280} cy={246} rx={262} ry={12} fill="rgba(0,0,0,0.2)" />
-    {smoke && [0, 1, 2].map((i) => { const ph = (t * 0.9 + i * 0.33) % 1;
-      return <circle key={i} cx={470 + Math.sin(i * 2 + t * 2) * 14} cy={110 - ph * 150} r={22 + ph * 30} fill="#8E949A" stroke={INK} strokeWidth={4} opacity={0.85 - ph * 0.7} />; })}
-    <path d="M24 200 L22 150 Q24 132 52 128 L120 122 L170 66 Q180 56 200 56 L360 56 Q380 56 392 70 L436 122 L512 132 Q538 138 540 166 L540 206 L24 210 Z" fill="#9C8F6A" stroke={INK} strokeWidth={6} strokeLinejoin="round" />
-    <path d="M140 122 L184 72 L270 72 L270 122 Z" fill="#BFD2DA" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
-    <path d="M286 122 L286 72 L372 72 L414 122 Z" fill="#BFD2DA" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
-    <path d="M330 78 L344 96 L336 112 M344 96 L364 100 M344 96 L352 80" fill="none" stroke={INK} strokeWidth={3} />
-    <path d="M276 128 L392 128 L392 198 L276 198 Z" fill="#6E8398" stroke={INK} strokeWidth={5} />
-    <path d="M300 150 Q322 168 352 150 Q340 178 310 172 Z" fill="#5C6E80" stroke={INK} strokeWidth={3} />
-    {[[70, 150, 34], [200, 176, 26], [470, 170, 30]].map(([cx, cy, r], i) => <path key={i} d={`M${cx - r} ${cy} q${r * 0.5} ${-r * 0.7} ${r} ${-r * 0.2} q${r * 0.7} ${r * 0.1} ${r} ${r * 0.6} q${-r * 0.6} ${r * 0.7} ${-r * 1.2} ${r * 0.3} Z`} fill="#A55A24" stroke={INK} strokeWidth={3} opacity={0.9} />)}
-    <path d="M150 140 L196 160 M196 140 L150 160" stroke="#C9C9C9" strokeWidth={14} strokeLinecap="round" />
-    <path d="M150 140 L196 160 M196 140 L150 160" stroke={INK} strokeWidth={2} />
-    <path d="M512 196 L548 222 L556 214" fill="none" stroke="#777" strokeWidth={10} strokeLinecap="round" />
-    <path d="M520 150 L540 150" stroke="#E8D9A0" strokeWidth={10} strokeLinecap="round" />
-    <path d="M30 170 L22 186" stroke={INK} strokeWidth={4} />
-    <g><ellipse cx={120} cy={226} rx={50} ry={34} fill="#141414" stroke={INK} strokeWidth={5} /><ellipse cx={120} cy={226} rx={18} ry={13} fill="#777" /></g>
-    <g><circle cx={440} cy={212} r={46} fill="#141414" stroke={INK} strokeWidth={5} /><circle cx={440} cy={212} r={16} fill="#5A5A5A" /></g>
-    {hubcap > 0 && <g transform={`translate(${440 + hubcap * 90} ${212 + Math.min(1, hubcap * 2) * 24}) rotate(${hubcap * 540})`}><circle r={30} fill="#C9CDD2" stroke={INK} strokeWidth={4} /><circle r={8} fill="#888" /></g>}
+// City bike: diamond frame, spoked wheels (spin), saddle, handlebar, front basket. (x, y) = ground under its centre.
+const Bike = ({x, y, w = 420, spin = 0}: {x: number; y: number; w?: number; spin?: number}) =>
+  <svg width={w} height={w * 0.62} viewBox="0 0 420 260" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.62, overflow: 'visible'}}>
+    <ellipse cx={210} cy={252} rx={200} ry={9} fill="rgba(0,0,0,0.18)" />
+    {[95, 325].map((cx) => <g key={cx}>
+      <circle cx={cx} cy={185} r={68} fill="none" stroke={INK} strokeWidth={12} />
+      <circle cx={cx} cy={185} r={60} fill="none" stroke="#9AA0A6" strokeWidth={3} />
+      <g transform={`rotate(${spin} ${cx} 185)`}>{Array.from({length: 12}, (_, k) => <path key={k} transform={`rotate(${k * 15} ${cx} 185)`} d={`M${cx} 125 L${cx} 245`} stroke="#9AA0A6" strokeWidth={2} />)}</g>
+      <circle cx={cx} cy={185} r={9} fill="#555" stroke={INK} strokeWidth={3} />
+    </g>)}
+    <path d="M95 185 L175 185 L280 95 L150 95 Z M175 185 L150 95 M280 95 L325 185" fill="none" stroke="#2E8BC0" strokeWidth={12} strokeLinejoin="round" strokeLinecap="round" />
+    <path d="M150 95 L140 62 M118 56 Q140 48 166 56" fill="none" stroke={INK} strokeWidth={9} strokeLinecap="round" />
+    <path d="M280 95 L272 52 M250 44 Q268 40 286 50 Q300 56 296 70" fill="none" stroke={INK} strokeWidth={9} strokeLinecap="round" />
+    <path d="M296 62 L360 62 L352 106 L300 106 Z" fill="#C8A26A" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    {[312, 328, 344].map((xx) => <path key={xx} d={`M${xx} 64 L${xx - 2} 104`} stroke="#8B6A3A" strokeWidth={3} />)}
+    <circle cx={175} cy={185} r={16} fill="#666" stroke={INK} strokeWidth={4} />
+    <path d="M175 185 L190 212 L206 212" fill="none" stroke={INK} strokeWidth={6} strokeLinecap="round" />
   </svg>;
 
 // Yellow baseball cap (Ricky's signature), brim to the viewer's left; (x, y) = bottom-centre of the crown.
@@ -119,7 +115,7 @@ const Ricky = ({x, y, h = 590, pose = {}}: {x: number; y: number; h?: number; po
 const L = 290, R = 790;
 const Hook = ({t}: {t: number}) => {
   const out = ease((t - DRIVE) / 0.25), outR = ease((t - JUNK) / 0.25);
-  const inD = ease((t - DRIVE) / (DREAM - DRIVE)), inJ = ease((t - JUNK) / 0.45);
+  const inD = ease((t - DRIVE) / (DREAM - DRIVE)), inJ = ease((t - JUNK) / 0.5);
   const hopD = t > DREAM ? Math.abs(Math.sin((t - DREAM) * 10)) * 40 : 0, shrug = t > JUNK + 0.45;
   return <>
     <div style={{opacity: 1 - out, transform: `translateY(${-160 * out}px)`}}><CashStack x={L} y={560} /><Big x={L} y={570} text="$70,000" /></div>
@@ -131,8 +127,8 @@ const Hook = ({t}: {t: number}) => {
       <Big x={L} y={590} text="$44,000" color={RED} size={100} s={pop(t, DREAM)} />
     </>}
     {t >= JUNK && <>
-      <JunkCar x={R + 700 * (1 - inJ)} y={560} w={470} t={t} hubcap={t > JUNK + 0.5 ? (t - JUNK - 0.5) * 1.4 : 0} />
-      <Big x={R} y={590} text="$10,000" color={GREEN} size={100} s={pop(t, JUNK + 0.4)} />
+      <Bike x={R + 700 * (1 - inJ)} y={560} w={400} spin={inJ * 1100} />
+      <Big x={R} y={590} text="$400" color={GREEN} size={100} s={pop(t, JUNK + 0.4)} />
     </>}
     <Penguin x={L} y={1290 - hopD} h={560} id="doug" pose={t < DREAM ? {turn: 0.35, look: [t >= DRIVE ? -0.6 : 0.3, 0]}
       : {turn: 0.2, look: [0, -0.6], brows: 'happy', beak: 'smile', blush: 1, eyeScale: 1.2, flapL: 120, flapR: 120}} />
@@ -295,8 +291,8 @@ export const DougSalary = () => {
     <Sfx at={DREAM + 0.05} name="user-cash-register" vol={0.3} />
     <Sfx at={DREAM + 0.1} name="user-wow" vol={0.3} />
     <Sfx at={JUNK - 0.05} name="user-whoosh" vol={0.3} />
-    <Sfx at={JUNK + 0.3} name="user-horn" vol={0.35} />
-    <Sfx at={JUNK + 0.5} name="splat" vol={0.3} />
+    <Sfx at={JUNK + 0.4} name="user-ting" vol={0.35} />
+    <Sfx at={JUNK + 0.45} name="user-money" vol={0.3} />
     <Sfx at={P(3)} name="penguin-squawk" vol={0.35} />
     <Sfx at={P(4) + 0.6} name="penguin-honk" vol={0.35} />
     <Sfx at={P(5)} name="user-money" vol={0.3} />
