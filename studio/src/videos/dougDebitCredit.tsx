@@ -133,16 +133,17 @@ const Counter = ({x, w}: {x: number; w: number}) => <>
 const DiffSide = ({side, t = -1}: {side: 'debit' | 'credit'; t?: number}) => { const o = side === 'debit' ? 0 : 540;
   const w = side === 'debit' ? DEBITW : CREDITW, react = t >= w;
   const peek = side === 'credit' ? ease((t - CREDITW) / 0.3) : 0;
+  const tap = t < 0 ? 0 : ease((t - w + 0.3) / 0.35);
   return <>
     {side === 'credit' && <Fox x={o + 470} y={1000 + 120 * (1 - peek)} h={300} id="hfox" pose={{smirk: false, lids: 0.3, look: -0.5}} />}
     <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={react ? {look: -0.6, mouth: 0.35} : {look: -0.6, mouth: 0.15}} />
     <Counter x={o + 270} w={260} />
     <Reader x={o + 330} y={1086} w={96} t={t} beeps={[w + 0.1]} amount="$50" />
-    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={react ? (side === 'debit' ? {turn: 0.55, look: [0.8, -0.2], flapR: 62, beak: 'smile', brows: 'happy'}
-      : {turn: 0.55, look: [0.8, -0.3], flapR: 62, beak: 'smile', brows: 'worried', eyeScale: 1.15})
-      : {turn: 0.55, look: [0.8, -0.1], flapR: 62, beak: 'flat', lids: 0.25}} />
-    <div style={{position: 'absolute', left: 0, top: 0, transform: `scale(${react && t - w < 0.3 ? 1 + 0.2 * Math.sin(((t - w) / 0.3) * Math.PI) : 1})`, transformOrigin: `${o + 255}px 1020px`}}>
-      <Card x={o + 255} y={1020} w={130} kind={side} rot={-14} /></div>
+    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={react ? (side === 'debit' ? {turn: 0.55, look: [0.8, -0.2], flapR: 30 + 40 * tap, beak: 'smile', brows: 'happy'}
+      : {turn: 0.55, look: [0.8, -0.3], flapR: 30 + 40 * tap, beak: 'smile', brows: 'worried', eyeScale: 1.15})
+      : {turn: 0.55, look: [0.8, -0.1], flapR: 30 + 40 * tap, beak: 'flat', lids: 0.25}} />
+    {/* Doug pays: the card moves from his flipper to the reader on his side's word, then taps (beep) */}
+    <Card x={lerp(o + 205, o + 285, tap)} y={lerp(1150, 1000, tap) + 12 * Math.sin(cl((t - w - 0.1) / 0.2) * Math.PI)} w={130} kind={side} rot={lerp(10, -14, tap)} />
   </>; };
 const HookSplit = ({t = -1}: {t?: number}) => <AbsoluteFill style={{background: '#fff'}}>
   <Fonts /><HandFont />
@@ -233,10 +234,13 @@ const StillFull = ({t}: {t: number}) => <>
 </>;
 const FoxPays = ({t}: {t: number}) => { const a = P(17) + 0.6;
   return <>
-    <Fox x={230} y={G + 40} h={470} flip pose={{smirk: false, lids: 0.3, look: 0.5}} />
-    <IceBank x={150} y={G - 330} w={260} />
-    <BillFly t={t} x1={330} y1={G - 330} x2={800} y2={G - 360} a={a} b={a + 0.7} w={200} />
-    <Puffin x={840} y={G + 40} h={420} pose={{look: -0.5, mouth: t >= a + 0.7 ? 0.35 : 0.1}} />
+    {/* Doug still does the payment: he taps his credit card, Fox's money goes to Puffin */}
+    <Penguin id="doug" x={150} y={G + 60} h={380} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: 70}} />
+    <Reader x={360} y={G - 200} w={130} t={t} beeps={[P(17) + 0.3]} />
+    <Card x={lerp(250, 350, ease((t - P(17)) / 0.3))} y={G - 330} w={150} kind="credit" />
+    <Fox x={560} y={G + 40} h={420} pose={{smirk: false, lids: 0.3, look: 0.5}} />
+    <BillFly t={t} x1={600} y1={G - 420} x2={850} y2={G - 360} a={a} b={a + 0.7} w={200} arc={120} />
+    <Puffin x={900} y={G + 40} h={400} pose={{look: -0.5, mouth: t >= a + 0.7 ? 0.35 : 0.1}} />
     <NameTag x={540} y={320} text="FOX THE BANKER" color="#26324A" />
     <Small x={540} y={420} text="pays Puffin for Doug" size={48} color={INK} />
   </>; };
@@ -438,7 +442,8 @@ export const DougDebitCredit = () => {
     {/* credit */}
     <Sfx at={P(14)} name="card-beep" vol={0.45} />
     <Sfx at={P(16)} name="user-wow" vol={0.35} />
-    <Sfx at={P(17)} name="fox-snicker" vol={0.35} />
+    <Sfx at={P(17) + 0.3} name="card-beep" vol={0.4} />
+    <Sfx at={P(17)} name="fox-snicker" vol={0.3} />
     <Sfx at={P(17) + 0.6} name="user-money" vol={0.35} />
     <Sfx at={P(18) + 0.2} name="user-slap" vol={0.35} />
     <Sfx at={P(19) + 0.6} name="user-notif" vol={0.35} />
