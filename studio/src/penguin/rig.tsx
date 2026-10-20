@@ -69,8 +69,9 @@ export type PenguinPose = {
   eyeScale?: number; pupil?: number; walk?: number | null; lean?: number; squash?: number; tremble?: number; holding?: boolean;
   side?: boolean; beak?: Beak; lids?: number; tears?: boolean; sweat?: boolean; angry?: number; blush?: number; hop?: number; lie?: number; sit?: number; run?: boolean;
 };
-export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker' | 'casual';
+export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker' | 'casual' | 'jacket';
 const BELLY = '#FFF8EA', BODY = '#1F1F1F', SHADE = '#3A3A3A', CREAM_SHADE = '#EDE3CF';
+const JACKET = '#D83A2E', JACKET_D = '#9E2419', JACKET_L = '#F07263';
 const BUILD: Record<Build, {bx: number; eye: number}> = {normal: {bx: 1, eye: 1}, fat: {bx: 1.3, eye: 0.9}, thin: {bx: 0.8, eye: 1}, baby: {bx: 1.05, eye: 1.3}};
 
 // Soft contact shadow so the black/cream penguin never floats on the white stage.
@@ -109,9 +110,14 @@ export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit =
   </g>;
   const beakLine = (x0: number, x1: number, yy: number) => beak === 'flat' ? null :
     <path d={`M${x0} ${yy} Q${(x0 + x1) / 2} ${yy + (beak === 'smile' ? 16 : -14)} ${x1} ${yy}`} fill="none" stroke={INK} strokeWidth={LW} strokeLinecap="round" />;
+  const sleeve = outfit === 'jacket'; // red puffer sleeves: quilted bands, flipper tip stays black
   const flipper = (a: number, hold: boolean) => <g transform={`rotate(${-a})`}>
     <path d="M-8 0 C 20 30, 40 110, 36 172 C 34 182, 22 183, 18 174 C 10 120, -6 60, -22 14 Z" fill={BODY} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
-    <path d="M2 30 C 14 70, 22 110, 24 150" fill="none" stroke="#454545" strokeWidth={6} strokeLinecap="round" />
+    {sleeve ? <>
+      <path d="M-14 -6 C 22 26, 46 90, 44 132 L8 140 C 4 96, -10 50, -32 14 Z" fill={JACKET} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      {[40, 80, 116].map((yy) => <path key={yy} d={`M${-16 + yy * 0.12} ${yy - 6} Q${14 + yy * 0.12} ${yy + 6} ${38 + yy * 0.05} ${yy - 4}`} fill="none" stroke={JACKET_D} strokeWidth={4} strokeLinecap="round" />)}
+      <path d="M6 136 L44 128 L46 144 L8 152 Z" fill={JACKET_D} stroke={INK} strokeWidth={3} />
+    </> : <path d="M2 30 C 14 70, 22 110, 24 150" fill="none" stroke="#454545" strokeWidth={6} strokeLinecap="round" />}
     {hold && <g transform="translate(30 210) rotate(80) scale(0.62)"><FishShape t={t} /></g>}
   </g>;
   const shadowW = (side ? 230 : 300) * B.bx * k * (1 - Math.min(0.5, (-bob - hop) / 300));
@@ -232,6 +238,18 @@ const OutfitLayer = ({outfit, dx, t, sideView}: {outfit: Outfit; dx: number; t: 
     <text x={200} y={376} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={80} fill="#2E9E4F" stroke={INK} strokeWidth={3}>$</text>
     {[152, 248].map((fx) => <path key={fx} d={`M${fx - 24} 500 L${fx} 486 L${fx + 24} 500`} fill="none" stroke="#E8546A" strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" />)}
     {[152, 248].map((fx) => <rect key={`s${fx}`} x={fx - 42} y={505} width={84} height={9} rx={4} fill="#E8546A" stroke={INK} strokeWidth={3} />)}
+  </g>;
+  if (outfit === 'jacket' && !sideView) return <g transform={`translate(${dx * 0.7} 0)`}>
+    {/* open red puffer jacket: two quilted front panels (belly shows in the middle), fur-trimmed collar, zipper teeth, hem band */}
+    {[-1, 1].map((sd) => { const X = (v: number) => 200 + sd * v;
+      return <g key={sd}>
+        <path d={`M${X(150)} 262 C ${X(166)} 340, ${X(160)} 430, ${X(126)} 492 L${X(70)} 494 C ${X(66)} 420, ${X(60)} 340, ${X(74)} 270 Q${X(110)} 256 ${X(150)} 262 Z`} fill={JACKET} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        {[318, 372, 426].map((yy) => <path key={yy} d={`M${X(158)} ${yy} Q${X(116)} ${yy + 14} ${X(70)} ${yy + 2}`} fill="none" stroke={JACKET_D} strokeWidth={5} strokeLinecap="round" />)}
+        {[290, 344, 398, 452].map((yy) => <path key={`h${yy}`} d={`M${X(140)} ${yy} Q${X(112)} ${yy + 6} ${X(86)} ${yy}`} fill="none" stroke={JACKET_L} strokeWidth={6} strokeLinecap="round" opacity={0.8} />)}
+        <path d={`M${X(76)} 272 L${X(72)} 490`} stroke="#C9C9C9" strokeWidth={6} strokeDasharray="5 5" />
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => <circle key={i} cx={X(160 - i * 9)} cy={266 + Math.sin(i * 1.7) * 4} r={14} fill="#F6F1E7" stroke={INK} strokeWidth={3} />)}
+      </g>; })}
+    <rect x={208} y={318} width={10} height={26} rx={4} fill="#C9C9C9" stroke={INK} strokeWidth={3} />
   </g>;
   if (outfit === 'worker') return <g transform={`rotate(${wob} ${hx} 60)`}>
     <path d={`M${hx - 100} 70 Q${hx} 40 ${hx + 100} 70 Q${hx + 70} -20 ${hx} -22 Q${hx - 70} -20 ${hx - 100} 70 Z`} fill="#F2C230" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />

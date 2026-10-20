@@ -80,3 +80,11 @@ Reference episode: studio/src/videos/dougGasIran.tsx + videos/doug-gas-iran/doug
 - Each side's characters react when their word is said and keep that face: side A happy (Doug smile + small hop, cashier smiling);
   side B shows its own feeling (EP5: Doug smiling, cashier Puffin worried because he pays the fee).
 - Reference code: hookCam + DiffSide in studio/src/videos/dougCashCard.tsx (word times from the VO: silencedetect inside the hook line).
+
+## Visual rules v5 (user, 2026-10-20, EP6 feedback — every video)
+- NEVER an empty white page: every shot after the hook sits on `World` (studio/src/penguin/props.tsx: pale sky, distant snowy mountains + igloos, slow snow, ground at G=1250). Check EVERY second (1-fps contact sheet) for big white areas or unbalanced frames before sending.
+- Every shot has a character that MOVES (flipper idle, hop, tremble, look) or an event happening. No frozen stills.
+- Fixed zones so nothing feels scattered: title y 260–420 · info y 450–950 · characters stand on G · captions 1530. Characters big (h 420–760). Deep zooms gentle (<= x1.15, near centre) — never crop a character out.
+- Icons = penguin-world versions of REAL objects (props.tsx): `Note` (real US-note layout, corner numbers, centre oval with a fish, no words/portrait/seal), `BankCard` (chip, contactless, embossed number, fish network logo), `Phone` (Fish Bank app balance), `WallCalendar`, `PufferJacket` (+ Penguin outfit 'jacket'). No generic flat emoji-style icons.
+- Things sit where they belong in the world (jacket on a rack in the shop, then worn by Doug; card in Doug's flipper; reader on the counter).
+- Camera/pops/SFX land on the spoken word (word timings -> W(i)).
