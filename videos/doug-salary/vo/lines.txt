@@ -1,0 +1,34 @@
+Why two penguins make same salary,|0.04
+but one stay poor,|0.04
+and one become millionaire?|0.2
+This is Doug.|0.08
+This is Ricky. Doug brother.|0.1
+Same job. Same salary.|0.1
+Both need car.|0.1
+Doug buy new car. Four thousand four hundred fish.|0.1
+Doug no have four thousand four hundred fish.|0.1
+So Doug get loan.|0.06
+Sixty-five fish every month. Seven years.|0.1
+Doug happy.|0.3
+Ricky buy old car. One thousand fish. Cash.|0.1
+Doug laugh at Ricky car.|0.1
+But Ricky also take sixty-five fish every month.|0.08
+Ricky no give fish to bank.|0.06
+Ricky put fish in stock market.|0.1
+Doug fish go to bank.|0.06
+Ricky fish go to work.|0.1
+Every year, Doug car worth less.|0.08
+Every year, Ricky fish make baby fish.|0.06
+Baby fish make more fish.|0.12
+This is called compound interest.|0.15
+Doug poor.|0.35
+In real life, a forty-four thousand dollar car loan for seven years,|0.04
+is about six hundred fifty dollars a month.|0.1
+Invest that in stocks, about seven percent a year.|0.1
+Seven years: seventy thousand dollars.|0.08
+Thirty-five years: one point one million.|0.15
+Year seven. Doug make last payment.|0.06
+Doug car break.|0.12
+Ricky buy new car. Cash. With baby fish.|0.1
+Doug buy new car. With new loan.|0.15
+Team Doug, or team Ricky?|0.3
