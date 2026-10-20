@@ -23,25 +23,15 @@ const SHOCK = 3.55; // the word "card?"
 // "ten" of every spoken "ten dollars" (tightened VO times) -> the $10 bill pops on that word
 const TEN = [1.6, 2.9, 4.62, 11.3, 13.35]; // v3 VO (Edge TTS), estimated inside each phrase
 const tenPop = (tc: number) => { const d = TEN.map((a) => tc - a).find((x) => x >= 0 && x < 0.4); return d === undefined ? 1 : 1 + 0.2 * Math.sin((d / 0.4) * Math.PI); };
-// A real-looking US $10 note (drawn, not a photo): cream-green paper, guilloche border, "10" corners, portrait oval, seals, TEN DOLLARS.
+// Cartoon $10 note (v3): plain green bill with a big "$10" and a little fish (Doug-world money: 1 fish = $10).
+// No "United States", portrait, seals or serials, so it never reads as a copy of real currency.
 const RealTen = ({w = 300}: {w?: number}) =>
   <svg width={w} height={w * 0.425} viewBox="0 0 470 200" style={{display: 'block', overflow: 'visible'}}>
-    <rect x={3} y={3} width={464} height={194} rx={8} fill="#E7E9D6" stroke={INK} strokeWidth={6} />
-    <rect x={14} y={14} width={442} height={172} rx={4} fill="none" stroke="#5E7F5A" strokeWidth={5} />
-    <rect x={22} y={22} width={426} height={156} rx={3} fill="none" stroke="#9DB28F" strokeWidth={2} strokeDasharray="4 3" />
-    <path d="M300 60 Q340 40 380 70 Q420 100 440 80" fill="none" stroke="#E6B07A" strokeWidth={10} opacity={0.6} />
-    <text x={235} y={46} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={17} fill="#2E3B2C" textLength={270} lengthAdjust="spacingAndGlyphs">THE UNITED STATES OF AMERICA</text>
-    <ellipse cx={235} cy={108} rx={52} ry={58} fill="#D7DEC4" stroke="#3F5A3C" strokeWidth={4} />
-    <path d="M205 160 Q205 128 235 124 Q265 128 265 160 Z" fill="#4A5E47" />
-    <circle cx={235} cy={100} r={22} fill="#C9D3B5" stroke="#3F5A3C" strokeWidth={3} />
-    <path d="M213 94 Q216 72 238 74 Q258 76 258 96 Q250 84 236 84 Q222 86 213 94 Z" fill="#4A5E47" />
-    <circle cx={120} cy={108} r={26} fill="none" stroke="#2E3B2C" strokeWidth={3} /><text x={120} y={117} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={26} fill="#2E3B2C">L</text>
-    <circle cx={350} cy={118} r={24} fill="#C9DCC2" stroke="#3E7A4C" strokeWidth={4} /><path d="M338 118 L362 118 M350 106 L350 130" stroke="#3E7A4C" strokeWidth={3} />
-    <text x={40} y={64} fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
-    <text x={430} y={64} textAnchor="end" fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
-    <text x={40} y={176} fontFamily="Georgia, serif" fontWeight={700} fontSize={36} fill="#2E3B2C">10</text>
-    <text x={436} y={182} textAnchor="end" fontFamily="Georgia, serif" fontWeight={900} fontSize={62} fill="#C9702E" stroke={INK} strokeWidth={1.5}>10</text>
-    <text x={235} y={186} textAnchor="middle" fontFamily="Georgia, serif" fontWeight={700} fontSize={20} fill="#2E3B2C" textLength={150} lengthAdjust="spacingAndGlyphs">TEN DOLLARS</text>
+    <rect x={3} y={3} width={464} height={194} rx={16} fill="#BFE3B4" stroke={INK} strokeWidth={7} />
+    <rect x={20} y={20} width={430} height={160} rx={10} fill="none" stroke="#6FB062" strokeWidth={5} strokeDasharray="14 8" />
+    <text x={235} y={130} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={100} fill={INK}>$10</text>
+    <g transform="translate(60 100)"><path d="M-30 0 Q0 -26 26 0 Q0 26 -30 0 Z M26 0 L44 -16 L44 16 Z" fill="#5EC4FA" stroke={INK} strokeWidth={5} strokeLinejoin="round" /><circle cx={-14} cy={-4} r={4} fill={INK} /></g>
+    <g transform="translate(410 100) scale(-1 1)"><path d="M-30 0 Q0 -26 26 0 Q0 26 -30 0 Z M26 0 L44 -16 L44 16 Z" fill="#5EC4FA" stroke={INK} strokeWidth={5} strokeLinejoin="round" /><circle cx={-14} cy={-4} r={4} fill={INK} /></g>
   </svg>;
 const CashIcon = ({w = 250, t = -1}: {w?: number; t?: number}) => <div style={{transform: `rotate(-6deg) scale(${t < 0 ? 1 : tenPop(t)})`}}><RealTen w={w} /></div>;
 const CardIcon = ({w = 250}: {w?: number}) =>
