@@ -1,0 +1,296 @@
+[
+ {
+  "a": 0.0,
+  "b": 2.453,
+  "text": "Why full tank cost sixty-six dollars in USA...",
+  "line": 1,
+  "gap_after": 0.466
+ },
+ {
+  "a": 2.868,
+  "b": 3.506,
+  "text": "but in Iran,",
+  "line": 1,
+  "gap_after": 0.25
+ },
+ {
+  "a": 3.706,
+  "b": 4.545,
+  "text": "forty-five cents?",
+  "line": 1,
+  "gap_after": 0.75
+ },
+ {
+  "a": 5.046,
+  "b": 5.633,
+  "text": "Same gas.",
+  "line": 2,
+  "gap_after": 0.466
+ },
+ {
+  "a": 6.035,
+  "b": 6.832,
+  "text": "Doug smell a trick.",
+  "line": 2,
+  "gap_after": 0.65
+ },
+ {
+  "a": 7.312,
+  "b": 7.98,
+  "text": "This is Doug.",
+  "line": 3,
+  "gap_after": 0.466
+ },
+ {
+  "a": 8.444,
+  "b": 9.504,
+  "text": "Doug drive snowmobile.",
+  "line": 3,
+  "gap_after": 0.466
+ },
+ {
+  "a": 9.83,
+  "b": 10.261,
+  "text": "In America,",
+  "line": 4,
+  "gap_after": 0.25
+ },
+ {
+  "a": 10.447,
+  "b": 11.804,
+  "text": "Doug pay almost seven fish.",
+  "line": 4,
+  "gap_after": 0.466
+ },
+ {
+  "a": 12.184,
+  "b": 13.334,
+  "text": "So Doug fly to Iran.",
+  "line": 5,
+  "gap_after": 0.466
+ },
+ {
+  "a": 13.814,
+  "b": 15.639,
+  "text": "In Iran, Doug pay forty-five cents.",
+  "line": 6,
+  "gap_after": 0.466
+ },
+ {
+  "a": 16.162,
+  "b": 16.697,
+  "text": "Doug rich!",
+  "line": 6,
+  "gap_after": 0.6
+ },
+ {
+  "a": 17.24,
+  "b": 17.457,
+  "text": "How?",
+  "line": 7,
+  "gap_after": 0.3
+ },
+ {
+  "a": 17.92,
+  "b": 18.719,
+  "text": "Iran sit on oil.",
+  "line": 7,
+  "gap_after": 0.466
+ },
+ {
+  "a": 19.038,
+  "b": 19.62,
+  "text": "Lots of oil.",
+  "line": 7,
+  "gap_after": 0.466
+ },
+ {
+  "a": 20.072,
+  "b": 21.446,
+  "text": "And government pay part of the gas.",
+  "line": 8,
+  "gap_after": 0.466
+ },
+ {
+  "a": 21.742,
+  "b": 22.859,
+  "text": "Gas cheap on purpose.",
+  "line": 8,
+  "gap_after": 0.466
+ },
+ {
+  "a": 23.256,
+  "b": 24.061,
+  "text": "This is called subsidy.",
+  "line": 9,
+  "gap_after": 0.65
+ },
+ {
+  "a": 24.595,
+  "b": 24.804,
+  "text": "Doug.",
+  "line": 10,
+  "gap_after": 1.0
+ },
+ {
+  "a": 25.501,
+  "b": 26.218,
+  "text": "But here is the trick.",
+  "line": 11,
+  "gap_after": 0.85
+ },
+ {
+  "a": 26.655,
+  "b": 27.855,
+  "text": "Iran money is broken.",
+  "line": 12,
+  "gap_after": 0.5
+ },
+ {
+  "a": 28.353,
+  "b": 30.336,
+  "text": "One dollar buy almost two million rials.",
+  "line": 13,
+  "gap_after": 0.466
+ },
+ {
+  "a": 30.852,
+  "b": 31.408,
+  "text": "Cheap gas.",
+  "line": 14,
+  "gap_after": 0.466
+ },
+ {
+  "a": 31.887,
+  "b": 32.853,
+  "text": "Expensive everything else.",
+  "line": 14,
+  "gap_after": 0.466
+ },
+ {
+  "a": 33.426,
+  "b": 33.871,
+  "text": "Bread go up.",
+  "line": 15,
+  "gap_after": 0.466
+ },
+ {
+  "a": 34.494,
+  "b": 34.911,
+  "text": "Rent go up.",
+  "line": 15,
+  "gap_after": 0.466
+ },
+ {
+  "a": 35.504,
+  "b": 37.099,
+  "text": "Prices up almost seventy percent this year.",
+  "line": 15,
+  "gap_after": 0.65
+ },
+ {
+  "a": 37.647,
+  "b": 38.235,
+  "text": "And cheap gas?",
+  "line": 16,
+  "gap_after": 0.466
+ },
+ {
+  "a": 38.794,
+  "b": 39.956,
+  "text": "Only sixty liters a month.",
+  "line": 16,
+  "gap_after": 0.466
+ },
+ {
+  "a": 40.58,
+  "b": 41.433,
+  "text": "After that, price double.",
+  "line": 16,
+  "gap_after": 0.6
+ },
+ {
+  "a": 41.984,
+  "b": 42.817,
+  "text": "Doug look at gas.",
+  "line": 17,
+  "gap_after": 0.466
+ },
+ {
+  "a": 43.373,
+  "b": 43.825,
+  "text": "Gas cheap.",
+  "line": 17,
+  "gap_after": 0.466
+ },
+ {
+  "a": 44.385,
+  "b": 45.175,
+  "text": "Doug look at bread.",
+  "line": 17,
+  "gap_after": 0.466
+ },
+ {
+  "a": 45.739,
+  "b": 45.99,
+  "text": "Bread",
+  "line": 17,
+  "gap_after": 0.18
+ },
+ {
+  "a": 46.172,
+  "b": 46.503,
+  "text": "not cheap.",
+  "line": 17,
+  "gap_after": 0.65
+ },
+ {
+  "a": 47.105,
+  "b": 47.692,
+  "text": "Doug fly home.",
+  "line": 18,
+  "gap_after": 0.466
+ },
+ {
+  "a": 48.231,
+  "b": 48.938,
+  "text": "Pay four forty.",
+  "line": 18,
+  "gap_after": 0.466
+ },
+ {
+  "a": 49.5,
+  "b": 50.051,
+  "text": "Doug happy.",
+  "line": 18,
+  "gap_after": 0.6
+ },
+ {
+  "a": 50.591,
+  "b": 51.737,
+  "text": "Doug is confused penguin.",
+  "line": 19,
+  "gap_after": 0.95
+ },
+ {
+  "a": 52.268,
+  "b": 53.474,
+  "text": "Cheap gas with broken money,",
+  "line": 20,
+  "gap_after": 0.466
+ },
+ {
+  "a": 53.747,
+  "b": 55.566,
+  "text": "or expensive gas with strong money?",
+  "line": 20,
+  "gap_after": 0.466
+ },
+ {
+  "a": 56.276,
+  "b": 57.26,
+  "text": "Tell Doug in the comments.",
+  "line": 20,
+  "gap_after": 0.0
+ }
+]

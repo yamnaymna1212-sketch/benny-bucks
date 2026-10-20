@@ -1,14 +1,18 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
-For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
+For any new video type `/doug-episode` (manual-only skill) + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
 Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+HOOK = main template `WhyHook` (studio/src/penguin/whyHook.tsx): big "WHY" + two flag/price/object sides + plain confused Doug in the middle; never an "Explained by Doug" title.
+MASTER EDIT STYLE (every video) = 'Edit rules v4' in videos/penguin-series/script-formula.md, template studio/src/videos/dougGasIran.tsx: white hook, Doug acts the hook (looks A -> snaps to B -> shock), no pauses (0.08 s), new shot every ~2.5 s.
+HOOK CAMERA (every split hook): no zoom at first -> zoom into side A on its spoken word -> zoom to side B on its word -> back to full split; each side's characters react with their own expression (see "Hook camera rule" in script-formula.md).
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
+Posting times (best 3 per day, US): videos/penguin-series/posting-times.md — 10:00 / 12:00 / 18:00 ET.
 
 # TOKEN GUARD (user rule, always on)
 Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
 - Full video render / re-render (any render > 5 s) -> offer ONE still or the 5-s hook preview instead; never re-render a finished episode unless asked.
 - Many small fix requests in a row -> ask the user to batch all fixes into one message, then render once.
-- Long session (context > ~50% or several episodes in one chat) -> tell them to start a new session (one episode = one session; first message: "Use the doug-episode skill ...").
+- Long session (context > ~50% or several episodes in one chat) -> tell them to start a new session (one episode = one session; first message: "/doug-episode ...").
 - General chat / strategy questions inside the build session -> suggest asking in a normal claude.ai chat or using Sonnet.
 - Vague requests ("fix it", "analyse everything", "review the whole project") -> ask one short clarifying question instead of reading many files.
 - Big style changes mid-series -> warn that tools must be rebuilt; confirm first.
@@ -35,9 +39,18 @@ Script:
 
 Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on the shock, ding on the key number, synced exactly to the word or movement.
 
+## Truth rule (user, 2026-10-20, after EP5 cash vs card was removed twice on TikTok)
+- Every claim must be literally true, not "cartoon-simplified". If a number is a made-up example, say so on screen ("example").
+- Show both sides fairly: when someone takes a fee, also say what they give (service, safety, rewards). Never "they do nothing", "X hates Y", "secret trick", "banks are fighting cash" framings.
+- Never show money shrinking/disappearing; show who pays whom and why.
+- No financial advice ("always pay cash"); end with a question instead.
+- Every real-world number needs a named source in the script notes (e.g. Nilson Report 2025) and the pinned comment.
+- Never re-upload a removed video or a near-copy of it; change topic.
+
 ## Pre-send checklist
 - Is the contrast clear and exaggerated from the first frame, with no words?
 - Does each side have a price or a number an American recognizes?
 - Is it one line = one shot?
 - Are sound effects included?
+- Is every claim literally true and are both sides shown fairly (Truth rule)?
 If any item fails, rewrite before sending. Give me blunt, direct criticism of my ideas and don't flatter me.

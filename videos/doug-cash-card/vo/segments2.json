@@ -1,0 +1,345 @@
+[
+ {
+  "a": 0.0,
+  "b": 2.447,
+  "text": "What is the difference between paying ten dollars with cash...",
+  "line": 1,
+  "gap_after": 0.08
+ },
+ {
+  "a": 2.624,
+  "b": 3.855,
+  "text": "and ten dollars with card?",
+  "line": 1,
+  "gap_after": 0.3
+ },
+ {
+  "a": 4.232,
+  "b": 5.061,
+  "text": "Same ten dollars.",
+  "line": 2,
+  "gap_after": 0.08
+ },
+ {
+  "a": 5.344,
+  "b": 6.223,
+  "text": "This is Doug.",
+  "line": 3,
+  "gap_after": 0.08
+ },
+ {
+  "a": 6.49,
+  "b": 7.65,
+  "text": "Doug have three hairs.",
+  "line": 3,
+  "gap_after": 0.08
+ },
+ {
+  "a": 7.992,
+  "b": 9.114,
+  "text": "Doug need haircut.",
+  "line": 3,
+  "gap_after": 0.08
+ },
+ {
+  "a": 9.346,
+  "b": 10.403,
+  "text": "Puffin cut Doug hair.",
+  "line": 4,
+  "gap_after": 0.08
+ },
+ {
+  "a": 10.688,
+  "b": 11.958,
+  "text": "Doug pay ten dollars.",
+  "line": 4,
+  "gap_after": 0.08
+ },
+ {
+  "a": 12.2,
+  "b": 12.578,
+  "text": "Cash.",
+  "line": 4,
+  "gap_after": 0.08
+ },
+ {
+  "a": 13.087,
+  "b": 14.663,
+  "text": "Puffin go buy fish at Seal shop.",
+  "line": 5,
+  "gap_after": 0.08
+ },
+ {
+  "a": 14.988,
+  "b": 16.416,
+  "text": "Puffin pay same ten dollars.",
+  "line": 5,
+  "gap_after": 0.08
+ },
+ {
+  "a": 16.749,
+  "b": 18.531,
+  "text": "Seal go wash sled at Larry car wash.",
+  "line": 6,
+  "gap_after": 0.08
+ },
+ {
+  "a": 18.942,
+  "b": 20.353,
+  "text": "Seal pay same ten dollars.",
+  "line": 6,
+  "gap_after": 0.08
+ },
+ {
+  "a": 20.787,
+  "b": 21.629,
+  "text": "Twenty people later...",
+  "line": 7,
+  "gap_after": 0.08
+ },
+ {
+  "a": 21.943,
+  "b": 22.883,
+  "text": "still ten dollars.",
+  "line": 7,
+  "gap_after": 0.08
+ },
+ {
+  "a": 23.191,
+  "b": 24.288,
+  "text": "Cash go round and round.",
+  "line": 8,
+  "gap_after": 0.08
+ },
+ {
+  "a": 24.597,
+  "b": 25.658,
+  "text": "Cash never shrink.",
+  "line": 8,
+  "gap_after": 0.08
+ },
+ {
+  "a": 26.042,
+  "b": 27.318,
+  "text": "Now Doug pay with card.",
+  "line": 9,
+  "gap_after": 0.08
+ },
+ {
+  "a": 27.719,
+  "b": 27.991,
+  "text": "Beep.",
+  "line": 10,
+  "gap_after": 0.08
+ },
+ {
+  "a": 28.401,
+  "b": 29.941,
+  "text": "Puffin get only nine dollars seventy-six.",
+  "line": 10,
+  "gap_after": 0.08
+ },
+ {
+  "a": 30.261,
+  "b": 31.609,
+  "text": "Twenty-four cents go to Fox the Banker.",
+  "line": 11,
+  "gap_after": 0.08
+ },
+ {
+  "a": 31.775,
+  "b": 32.821,
+  "text": "Puffin pay Seal with card.",
+  "line": 12,
+  "gap_after": 0.08
+ },
+ {
+  "a": 33.152,
+  "b": 33.518,
+  "text": "Beep.",
+  "line": 12,
+  "gap_after": 0.08
+ },
+ {
+  "a": 33.752,
+  "b": 34.441,
+  "text": "Fox take a cut.",
+  "line": 12,
+  "gap_after": 0.08
+ },
+ {
+  "a": 34.739,
+  "b": 35.827,
+  "text": "Seal pay Larry with card.",
+  "line": 13,
+  "gap_after": 0.08
+ },
+ {
+  "a": 36.13,
+  "b": 36.317,
+  "text": "Beep.",
+  "line": 13,
+  "gap_after": 0.08
+ },
+ {
+  "a": 36.718,
+  "b": 37.5,
+  "text": "Fox take a cut.",
+  "line": 13,
+  "gap_after": 0.08
+ },
+ {
+  "a": 71.228,
+  "b": 72.822,
+  "text": "Every beep, Fox take a little more.",
+  "line": 14,
+  "gap_after": 0.08
+ },
+ {
+  "a": 73.313,
+  "b": 74.098,
+  "text": "After twenty beeps?",
+  "line": 15,
+  "gap_after": 0.08
+ },
+ {
+  "a": 74.555,
+  "b": 75.789,
+  "text": "Fox collect three dollars eighty.",
+  "line": 15,
+  "gap_after": 0.08
+ },
+ {
+  "a": 42.99,
+  "b": 44.292,
+  "text": "Where is three dollars eighty?",
+  "line": 16,
+  "gap_after": 0.08
+ },
+ {
+  "a": 44.524,
+  "b": 45.464,
+  "text": "In Fox pocket.",
+  "line": 16,
+  "gap_after": 0.08
+ },
+ {
+  "a": 45.719,
+  "b": 46.939,
+  "text": "This is called swipe fee.",
+  "line": 17,
+  "gap_after": 0.08
+ },
+ {
+  "a": 47.257,
+  "b": 47.635,
+  "text": "Doug.",
+  "line": 18,
+  "gap_after": 0.4
+ },
+ {
+  "a": 48.007,
+  "b": 51.594,
+  "text": "In real life, America pay one hundred ninety-eight billion dollars in swipe fees.",
+  "line": 19,
+  "gap_after": 0.08
+ },
+ {
+  "a": 51.843,
+  "b": 52.535,
+  "text": "In one year.",
+  "line": 19,
+  "gap_after": 0.08
+ },
+ {
+  "a": 52.86,
+  "b": 54.52,
+  "text": "That is about fifty dollars every month.",
+  "line": 20,
+  "gap_after": 0.08
+ },
+ {
+  "a": 54.882,
+  "b": 55.482,
+  "text": "For every person.",
+  "line": 20,
+  "gap_after": 0.08
+ },
+ {
+  "a": 55.812,
+  "b": 56.714,
+  "text": "Fox not cut hair.",
+  "line": 21,
+  "gap_after": 0.08
+ },
+ {
+  "a": 56.979,
+  "b": 57.945,
+  "text": "Fox not sell fish.",
+  "line": 21,
+  "gap_after": 0.08
+ },
+ {
+  "a": 58.2,
+  "b": 59.3,
+  "text": "Fox not wash sled.",
+  "line": 21,
+  "gap_after": 0.08
+ },
+ {
+  "a": 59.66,
+  "b": 60.975,
+  "text": "Fox just say beep.",
+  "line": 22,
+  "gap_after": 0.08
+ },
+ {
+  "a": 61.313,
+  "b": 63.297,
+  "text": "Now Doug understand why bank love card...",
+  "line": 23,
+  "gap_after": 0.08
+ },
+ {
+  "a": 63.32,
+  "b": 63.933,
+  "text": "and hate cash.",
+  "line": 23,
+  "gap_after": 0.08
+ },
+ {
+  "a": 64.305,
+  "b": 65.375,
+  "text": "Doug pay cash.",
+  "line": 24,
+  "gap_after": 0.08
+ },
+ {
+  "a": 65.564,
+  "b": 66.712,
+  "text": "Doug keep three hairs.",
+  "line": 24,
+  "gap_after": 0.08
+ },
+ {
+  "a": 67.036,
+  "b": 68.01,
+  "text": "Cash or card?",
+  "line": 25,
+  "gap_after": 0.08
+ },
+ {
+  "a": 68.363,
+  "b": 69.068,
+  "text": "Which one you use?",
+  "line": 25,
+  "gap_after": 0.08
+ },
+ {
+  "a": 69.488,
+  "b": 70.727,
+  "text": "Tell Doug in the comments.",
+  "line": 25,
+  "gap_after": 0.0
+ }
+]

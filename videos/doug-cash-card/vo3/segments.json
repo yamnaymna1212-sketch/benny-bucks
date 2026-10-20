@@ -1,0 +1,296 @@
+[
+ {
+  "a": 0.156,
+  "b": 4.298,
+  "text": "What is the difference between paying ten dollars with cash... and ten dollars with card?",
+  "line": 1,
+  "gap_after": 0.3
+ },
+ {
+  "a": 4.735,
+  "b": 5.645,
+  "text": "Same ten dollars.",
+  "line": 2,
+  "gap_after": 0.08
+ },
+ {
+  "a": 6.103,
+  "b": 6.57,
+  "text": "For Doug.",
+  "line": 3,
+  "gap_after": 0.08
+ },
+ {
+  "a": 6.984,
+  "b": 7.735,
+  "text": "But not for Puffin.",
+  "line": 4,
+  "gap_after": 0.08
+ },
+ {
+  "a": 8.166,
+  "b": 8.8,
+  "text": "This is Doug.",
+  "line": 5,
+  "gap_after": 0.08
+ },
+ {
+  "a": 9.211,
+  "b": 10.302,
+  "text": "Doug have three hairs.",
+  "line": 6,
+  "gap_after": 0.08
+ },
+ {
+  "a": 10.736,
+  "b": 11.476,
+  "text": "Doug need haircut.",
+  "line": 7,
+  "gap_after": 0.08
+ },
+ {
+  "a": 11.959,
+  "b": 13.024,
+  "text": "Puffin cut Doug hair.",
+  "line": 8,
+  "gap_after": 0.08
+ },
+ {
+  "a": 13.461,
+  "b": 14.529,
+  "text": "Doug pay ten dollars.",
+  "line": 9,
+  "gap_after": 0.08
+ },
+ {
+  "a": 14.975,
+  "b": 15.354,
+  "text": "Cash.",
+  "line": 10,
+  "gap_after": 0.08
+ },
+ {
+  "a": 15.796,
+  "b": 17.354,
+  "text": "Puffin keep all ten dollars.",
+  "line": 11,
+  "gap_after": 0.08
+ },
+ {
+  "a": 17.799,
+  "b": 19.574,
+  "text": "Next week, Doug pay with card.",
+  "line": 12,
+  "gap_after": 0.08
+ },
+ {
+  "a": 20.032,
+  "b": 20.271,
+  "text": "Beep.",
+  "line": 13,
+  "gap_after": 0.08
+ },
+ {
+  "a": 20.714,
+  "b": 22.703,
+  "text": "Puffin get nine dollars seventy-six.",
+  "line": 14,
+  "gap_after": 0.08
+ },
+ {
+  "a": 23.148,
+  "b": 25.195,
+  "text": "Twenty-four cents is the swipe fee.",
+  "line": 15,
+  "gap_after": 0.08
+ },
+ {
+  "a": 25.615,
+  "b": 27.689,
+  "text": "It go to the card bank and the card network.",
+  "line": 16,
+  "gap_after": 0.08
+ },
+ {
+  "a": 28.141,
+  "b": 28.848,
+  "text": "Fox the Banker.",
+  "line": 17,
+  "gap_after": 0.08
+ },
+ {
+  "a": 29.275,
+  "b": 29.999,
+  "text": "Is Fox lazy?",
+  "line": 18,
+  "gap_after": 0.08
+ },
+ {
+  "a": 30.419,
+  "b": 30.686,
+  "text": "No.",
+  "line": 19,
+  "gap_after": 0.08
+ },
+ {
+  "a": 31.135,
+  "b": 32.061,
+  "text": "Fox stop thieves.",
+  "line": 20,
+  "gap_after": 0.08
+ },
+ {
+  "a": 32.536,
+  "b": 34.362,
+  "text": "Fox give money back if card is stolen.",
+  "line": 21,
+  "gap_after": 0.08
+ },
+ {
+  "a": 34.843,
+  "b": 36.548,
+  "text": "Fox let Doug buy now, pay later.",
+  "line": 22,
+  "gap_after": 0.08
+ },
+ {
+  "a": 36.992,
+  "b": 39.033,
+  "text": "So Puffin pay a little for every beep.",
+  "line": 23,
+  "gap_after": 0.08
+ },
+ {
+  "a": 39.484,
+  "b": 40.484,
+  "text": "But Puffin is smart.",
+  "line": 24,
+  "gap_after": 0.08
+ },
+ {
+  "a": 40.934,
+  "b": 42.371,
+  "text": "Puffin raise the haircut price.",
+  "line": 25,
+  "gap_after": 0.08
+ },
+ {
+  "a": 42.828,
+  "b": 43.408,
+  "text": "For everybody.",
+  "line": 26,
+  "gap_after": 0.08
+ },
+ {
+  "a": 43.826,
+  "b": 44.555,
+  "text": "Cash people too.",
+  "line": 27,
+  "gap_after": 0.08
+ },
+ {
+  "a": 44.963,
+  "b": 45.218,
+  "text": "Doug.",
+  "line": 28,
+  "gap_after": 0.4
+ },
+ {
+  "a": 45.639,
+  "b": 46.871,
+  "text": "And card people get points.",
+  "line": 29,
+  "gap_after": 0.08
+ },
+ {
+  "a": 47.313,
+  "b": 47.886,
+  "text": "Cash back.",
+  "line": 30,
+  "gap_after": 0.08
+ },
+ {
+  "a": 48.322,
+  "b": 49.0,
+  "text": "Little gifts.",
+  "line": 31,
+  "gap_after": 0.08
+ },
+ {
+  "a": 49.469,
+  "b": 50.374,
+  "text": "Who pay for the gifts?",
+  "line": 32,
+  "gap_after": 0.08
+ },
+ {
+  "a": 50.831,
+  "b": 52.148,
+  "text": "Partly... the cash people.",
+  "line": 33,
+  "gap_after": 0.08
+ },
+ {
+  "a": 52.572,
+  "b": 58.914,
+  "text": "In real life, American stores paid one hundred ninety-eight billion dollars in swipe fees in twenty twenty-five.",
+  "line": 34,
+  "gap_after": 0.08
+ },
+ {
+  "a": 59.395,
+  "b": 63.581,
+  "text": "And Federal Reserve researchers found cash payers help pay for card rewards.",
+  "line": 35,
+  "gap_after": 0.08
+ },
+ {
+  "a": 64.021,
+  "b": 64.869,
+  "text": "Card is not evil.",
+  "line": 36,
+  "gap_after": 0.08
+ },
+ {
+  "a": 65.296,
+  "b": 66.252,
+  "text": "Cash is not magic.",
+  "line": 37,
+  "gap_after": 0.08
+ },
+ {
+  "a": 66.688,
+  "b": 68.329,
+  "text": "Cash: no fee for Puffin.",
+  "line": 38,
+  "gap_after": 0.08
+ },
+ {
+  "a": 68.759,
+  "b": 70.729,
+  "text": "Card: safe and fast for Doug.",
+  "line": 39,
+  "gap_after": 0.08
+ },
+ {
+  "a": 71.142,
+  "b": 71.977,
+  "text": "Cash or card?",
+  "line": 40,
+  "gap_after": 0.08
+ },
+ {
+  "a": 72.42,
+  "b": 73.145,
+  "text": "Which one you use?",
+  "line": 41,
+  "gap_after": 0.08
+ },
+ {
+  "a": 73.594,
+  "b": 74.788,
+  "text": "Tell Doug in the comments.",
+  "line": 42,
+  "gap_after": 0
+ }
+]

@@ -149,3 +149,63 @@ export const BigSeal = ({x, y, h = 520, id = 'bigseal', flip, pose = {}}: {x: nu
     </svg>
   </>;
 };
+
+// Fox the Banker: Arctic fox (white fur, pointy ears, bushy tail), navy suit + red tie, sly half-lidded eyes. Front view.
+// pose.flap raises his right arm (holds a card reader when holding), pocket = how full his suit pocket is (0..1).
+export type FoxPose = {mouth?: number; lids?: number; laugh?: number; flap?: number; look?: number; holding?: boolean; pocket?: number; smirk?: boolean};
+export const Fox = ({x, y, h = 520, id = 'fox', flip, pose = {}}: {x: number; y: number; h?: number; id?: string; flip?: boolean; pose?: FoxPose}) => {
+  const t = useT2() + 2.3;
+  const {mouth = 0, lids = 0.4, laugh = 0, flap = 0, look = 0, holding = false, pocket = 0, smirk = true} = pose;
+  const k = h / 520, w = 400 * k;
+  const br = 1 + 0.014 * Math.sin(t * 2.4) + laugh * 0.03 * Math.sin(t * 40), blink = (t % 4.1) < 0.12 ? 0.1 : 1;
+  const tail = Math.sin(t * 2.6) * 8, FUR = '#F7F9FB', FUR2 = '#DCE4EA', SUIT = '#26324A';
+  const eye = (cx: number) => <g>
+    <ellipse cx={cx} cy={150} rx={19} ry={17 * blink} fill="#fff" stroke={INK} strokeWidth={LW} />
+    <circle cx={cx + look * 7} cy={152} r={7} fill="#3E8FB0" stroke={INK} strokeWidth={2} /><circle cx={cx + look * 7} cy={152} r={3} fill={INK} />
+    {lids > 0 && <path d={`M${cx - 20} ${133 + 34 * lids} L${cx + 20} ${133 + 34 * lids} L${cx + 20} 130 L${cx - 20} 130 Z`} fill={FUR2} stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />}
+  </g>;
+  return <>
+    <Shadow x={x} y={y} w={w * 0.8} />
+    <svg width={w} height={h} viewBox="0 0 400 520" style={{position: 'absolute', left: x - w / 2, top: y - h, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
+      <defs><Boil id={id} amount={1.8 / k} /></defs>
+      <g filter={`url(#${id})`} transform={`translate(200 512) scale(1 ${br}) translate(-200 -512)`}>
+        {/* bushy tail */}
+        <g transform={`rotate(${tail} 270 440)`}><path d="M270 450 C 340 440, 390 380, 380 300 C 376 270, 352 262, 346 290 C 336 350, 300 400, 262 410 Z" fill={FUR} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+          <path d="M376 296 C 372 276, 356 270, 350 290 C 358 300, 368 302, 376 296 Z" fill={FUR2} /></g>
+        {/* legs + shoes */}
+        <path d="M150 440 L146 500 L186 500 L190 440 Z M210 440 L214 500 L254 500 L250 440 Z" fill={SUIT} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M134 500 Q140 486 186 490 L188 512 L132 512 Z M212 490 Q260 486 266 500 L268 512 L212 512 Z" fill="#111" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        {/* suit body */}
+        <path d="M120 250 C 110 320, 116 410, 130 452 L 270 452 C 284 410, 290 320, 280 250 C 250 228, 150 228, 120 250 Z" fill={SUIT} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M168 238 L200 318 L232 238 Z" fill="#fff" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        <path d="M193 248 L207 248 L204 262 L213 320 L200 336 L187 320 L196 262 Z" fill="#D83A2E" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        <path d="M168 238 L190 300 L150 270 Z M232 238 L210 300 L250 270 Z" fill="#33415E" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        {/* pocket (bulges as it fills) */}
+        <path d={`M214 ${372 - pocket * 14} Q236 ${360 - pocket * 30} 258 ${372 - pocket * 14} L256 404 Q236 ${410 + pocket * 16} 216 404 Z`} fill="#33415E" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+        {pocket > 0.05 && <path d={`M222 ${370 - pocket * 16} L236 ${346 - pocket * 30} L250 ${370 - pocket * 16}`} fill="#CFE8C8" stroke={INK} strokeWidth={3} />}
+        {[300, 340].map((yy) => <circle key={yy} cx={200} cy={yy + 30} r={5} fill="#E2B13C" stroke={INK} strokeWidth={2} />)}
+        {/* left arm (on hip) */}
+        <path d="M124 262 C 96 300, 92 350, 116 378 C 128 380, 136 372, 132 360 C 120 340, 124 310, 140 286 Z" fill={SUIT} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <circle cx={122} cy={378} r={15} fill={FUR} stroke={INK} strokeWidth={LW - 1} />
+        {/* right arm (raise with flap) */}
+        <g transform={`rotate(${-flap} 276 266)`}>
+          <path d="M276 262 C 304 300, 310 350, 290 380 C 278 384, 268 376, 272 364 C 284 340, 280 310, 262 286 Z" fill={SUIT} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+          <circle cx={284} cy={380} r={15} fill={FUR} stroke={INK} strokeWidth={LW - 1} />
+          {holding && <g transform="translate(262 330)"><rect x={0} y={0} width={70} height={110} rx={12} fill="#3A3F47" stroke={INK} strokeWidth={LW} />
+            <rect x={10} y={12} width={50} height={30} rx={4} fill="#9EE6A0" stroke={INK} strokeWidth={3} />
+            {[0, 1, 2].map((r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={12 + c * 17} y={54 + r * 16} width={12} height={10} rx={2} fill="#C9CED4" />))}</g>}
+        </g>
+        {/* head: ears, face, cheek fluff, snout */}
+        <path d="M118 120 L104 22 L176 82 Z M282 120 L296 22 L224 82 Z" fill={FUR} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M124 104 L116 46 L160 84 Z M276 104 L284 46 L240 84 Z" fill="#E9C9CF" />
+        <path d="M200 60 C 270 60, 300 110, 296 170 C 310 196, 290 222, 262 224 C 240 246, 160 246, 138 224 C 110 222, 90 196, 104 170 C 100 110, 130 60, 200 60 Z" fill={FUR} stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+        <path d="M150 196 C 170 186, 230 186, 250 196 C 244 226, 156 226, 150 196 Z" fill={FUR2} />
+        {eye(160)}{eye(240)}
+        <path d={`M138 120 L182 ${smirk ? 132 : 126} M262 120 L218 ${smirk ? 128 : 126}`} stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" />
+        <path d="M184 176 Q200 168 216 176 Q208 192 200 192 Q192 192 184 176 Z" fill={INK} />
+        {mouth + laugh > 0.05 ? <path d={`M176 204 Q200 ${210 + (mouth + laugh * 0.8) * 26} 228 204 Z`} fill="#7A1F1F" stroke={INK} strokeWidth={LW - 1} strokeLinejoin="round" />
+          : <path d={smirk ? 'M178 206 Q204 214 226 198' : 'M180 206 Q200 212 220 206'} fill="none" stroke={INK} strokeWidth={LW} strokeLinecap="round" />}
+      </g>
+    </svg>
+  </>;
+};

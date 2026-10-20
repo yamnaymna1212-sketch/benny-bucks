@@ -1,5 +1,5 @@
 """Original cartoon animal / comedy SFX (generated, royalty-free). Writes studio/public/sfx/<name>.wav.
-penguin-squawk, penguin-honk, walrus-grunt, walrus-laugh, gull-caw, gull-mine, splat, swoosh-fast, pop-high.
+penguin-squawk, penguin-honk, walrus-grunt, walrus-laugh, gull-caw, gull-mine, splat, swoosh-fast, pop-high, card-beep, fox-snicker.
 Usage: python3 tools/sfx_animals.py
 """
 import os, wave
@@ -51,4 +51,7 @@ save("gull-mine", mix((0, voice(lambda t: 1300 + 400 * t, 0.16, [(2400, 300, 1)]
 t = T(0.25); save("swoosh-fast", rng.standard_normal(len(t)) * np.sin(np.pi * t / 0.25) ** 2 * np.convolve(np.ones(len(t)), np.ones(1), 'same'))
 t = T(0.09); save("pop-high", np.sin(2 * np.pi * (900 + 2200 * t / 0.09) * t) * np.exp(-t * 40))
 t = T(0.3); n = rng.standard_normal(len(t)); save("splat", np.convolve(n, np.ones(25) / 25, 'same') * np.exp(-t * 14) + 0.5 * np.sin(2 * np.pi * 90 * t) * np.exp(-t * 20))
+# card reader: short clean "beep" (square-ish 1.9 kHz), and a sly fox "heh-heh"
+t = T(0.16); save("card-beep", np.sign(np.sin(2 * np.pi * 1900 * t)) * 0.4 * env(len(t), 0.004, 0.02))
+save("fox-snicker", mix(*[(i * 0.14, voice(lambda t, i=i: 520 - 30 * i, 0.1, [(1500, 200, 1), (2900, 300, .4)], buzz=0.6)) for i in range(3)]))
 print("ok")
