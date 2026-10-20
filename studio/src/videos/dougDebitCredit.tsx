@@ -9,15 +9,25 @@ import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import {Fox, Puffin} from '../penguin/cast';
 import TIM from '../data/doug-debit-credit.json';
+import WORDS from '../data/doug-debit-credit.words.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
+// W(i) = start of spoken word i (Edge TTS word boundaries mapped onto the tightened VO, videos/doug-debit-credit/vo/voice.words.json) — camera moves and pops land on the word
+const W = (i: number) => WORDS[i].a;
 export const DOUG_DEBIT_CREDIT_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
 const G = 1250, RED = '#D83A2E', GREEN = '#2E9E4F', BLUE = '#2F5DA8', GOLD = '#E2A90F';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => { const q = cl(p); return q * q * (3 - 2 * q); };
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const DEBITW = 1.7; // the word "debit..."
-const CREDITW = 3.5; // the word "credit?"
+const DEBITW = W(8); // the word "debit..."
+const CREDITW = W(13); // the word "credit?"
+// Doug's right flipper tip on screen (mirrors rig.tsx flipper geometry: shoulder (300 + turn*20, 232), tip (28, 178), rotate(-flap)) so the card sits IN his flipper
+const hand = (x: number, y: number, h: number, flap: number, turn = 0.55): [number, number] => {
+  const k = h / 520, a = (-flap * Math.PI) / 180, tx = 28 * Math.cos(a) - 178 * Math.sin(a), ty = 28 * Math.sin(a) + 178 * Math.cos(a);
+  return [x - 200 * k + (300 + turn * 20 + tx) * k, y - h + (232 + ty) * k];
+};
+// flipper angle: rest 62 -> tap 115 around time `at` (rises 0.3 s before, holds 0.35 s, comes back)
+const tapFlap = (t: number, at: number) => 62 + 53 * (ease((t - at + 0.3) / 0.3) - ease((t - at - 0.35) / 0.3));
 
 // ---------- money props ----------
 // Cartoon $50 note: plain green bill with a big "$50" and fish (Doug-world money). No real-currency details.
@@ -133,17 +143,17 @@ const Counter = ({x, w}: {x: number; w: number}) => <>
 const DiffSide = ({side, t = -1}: {side: 'debit' | 'credit'; t?: number}) => { const o = side === 'debit' ? 0 : 540;
   const w = side === 'debit' ? DEBITW : CREDITW, react = t >= w;
   const peek = side === 'credit' ? ease((t - CREDITW) / 0.3) : 0;
-  const tap = t < 0 ? 0 : ease((t - w + 0.3) / 0.35);
+  const fl = t < 0 ? 62 : tapFlap(t, w + 0.1), [hx, hy] = hand(o + 150, 1420, 410, fl);
   return <>
     {side === 'credit' && <Fox x={o + 470} y={1000 + 120 * (1 - peek)} h={300} id="hfox" pose={{smirk: false, lids: 0.3, look: -0.5}} />}
     <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={react ? {look: -0.6, mouth: 0.35} : {look: -0.6, mouth: 0.15}} />
     <Counter x={o + 270} w={260} />
     <Reader x={o + 330} y={1086} w={96} t={t} beeps={[w + 0.1]} amount="$50" />
-    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={react ? (side === 'debit' ? {turn: 0.55, look: [0.8, -0.2], flapR: 30 + 40 * tap, beak: 'smile', brows: 'happy'}
-      : {turn: 0.55, look: [0.8, -0.3], flapR: 30 + 40 * tap, beak: 'smile', brows: 'worried', eyeScale: 1.15})
-      : {turn: 0.55, look: [0.8, -0.1], flapR: 30 + 40 * tap, beak: 'flat', lids: 0.25}} />
+    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={react ? (side === 'debit' ? {turn: 0.55, look: [0.8, -0.2], flapR: fl, beak: 'smile', brows: 'happy'}
+      : {turn: 0.55, look: [0.8, -0.3], flapR: fl, beak: 'smile', brows: 'worried', eyeScale: 1.15})
+      : {turn: 0.55, look: [0.8, -0.1], flapR: fl, beak: 'flat', lids: 0.25}} />
     {/* Doug pays: the card moves from his flipper to the reader on his side's word, then taps (beep) */}
-    <Card x={lerp(o + 205, o + 285, tap)} y={lerp(1150, 1000, tap) + 12 * Math.sin(cl((t - w - 0.1) / 0.2) * Math.PI)} w={130} kind={side} rot={lerp(10, -14, tap)} />
+    <Card x={hx} y={hy} w={120} kind={side} rot={fl - 90} />
   </>; };
 const HookSplit = ({t = -1}: {t?: number}) => <AbsoluteFill style={{background: '#fff'}}>
   <Fonts /><HandFont />
@@ -193,15 +203,15 @@ const Shop = ({t}: {t: number}) => <>
   <PriceTag x={440} y={470} price="$50" fish="jacket" at={P(6)} color={RED} size={1.2} />
   <Penguin id="doug" x={170} y={G + 60} h={360} pose={{turn: 0.5, look: [0.8, -0.4], brows: 'happy', beak: 'smile'}} />
 </>;
-const PayDebit = ({t}: {t: number}) => { const tap = ease((t - P(7) - 0.5) / 0.4);
+const PayDebit = ({t}: {t: number}) => { const fl = tapFlap(t, P(8)), [hx, hy] = hand(330, G + 40, 440, fl, 0.5);
   return <>
-    <Penguin id="doug" x={290} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: 70}} />
+    <Penguin id="doug" x={330} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: fl}} />
     <Puffin x={840} y={G + 40} h={430} pose={{look: -0.5}} />
     <Reader x={640} y={G - 260} w={190} t={t} beeps={[P(8)]} />
-    <Card x={lerp(420, 600, tap)} y={G - 400 + 40 * tap} w={220} kind="debit" />
-    <Stamp text="DEBIT" x={540} y={330} at={P(7) + 0.3} color={GREEN} size={110} />
+    <Card x={hx} y={hy} w={170} kind="debit" rot={fl - 90} />
+    <Stamp text="DEBIT" x={540} y={330} at={W(32)} color={GREEN} size={110} />
   </>; };
-const LeaveAccount = ({t}: {t: number}) => { const a = P(9) + 0.4, out = t >= a + 0.6;
+const LeaveAccount = ({t}: {t: number}) => { const a = W(39), out = t >= a + 0.6;
   return <>
     <Account x={300} y={620} w={480} balance={out ? '$70' : '$120'} color={out ? INK : GREEN} />
     <Small x={300} y={790} text="(example)" size={40} />
@@ -214,30 +224,30 @@ const Done = ({t}: {t: number}) => <>
   <Penguin id="doug" x={540} y={G + 200} h={720} pose={{beak: 'smile', brows: 'happy', flapR: 60, flapL: 60, hop: Math.max(0, 25 * Math.sin((t - P(11)) * 8))}} />
   <Jacket x={540} y={G - 230} w={330} />
   <Check x={830} y={430} at={P(11)} t={t} />
-  {t >= P(12) && <BigWord text="simple" x={540} y={380} at={P(12)} size={120} color={GREEN} />}
+  {t >= W(45) && <BigWord text="simple" x={540} y={380} at={W(45)} size={120} color={GREEN} />}
 </>;
-const PayCredit = ({t}: {t: number}) => { const tap = ease((t - P(13) - 1.0) / 0.4);
+const PayCredit = ({t}: {t: number}) => { const fl = tapFlap(t, P(14)), [hx, hy] = hand(330, G + 40, 440, fl, 0.5);
   return <>
     <Snow t={t} />
-    <Penguin id="doug" x={290} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: 70}} />
+    <Penguin id="doug" x={330} y={G + 40} h={440} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: fl}} />
     <Puffin x={840} y={G + 40} h={430} pose={{look: -0.5}} />
     <Reader x={640} y={G - 260} w={190} t={t} beeps={[P(14)]} />
-    <Card x={lerp(420, 600, tap)} y={G - 400 + 40 * tap} w={220} kind="credit" />
+    <Card x={hx} y={hy} w={170} kind="credit" rot={fl - 90} />
     <NameTag x={540} y={300} text="NEXT WINTER" color={BLUE} size={64} />
   </>; };
 const StillFull = ({t}: {t: number}) => <>
   <Account x={540} y={680} w={600} balance="$120" color={GREEN} />
   <Small x={540} y={880} text="(example)" size={42} />
-  {t < P(16) && <BigWord text="?" x={900} y={400} at={P(15)} size={180} />}
-  {t >= P(16) && <Stamp text="STILL FULL" x={540} y={360} at={P(16)} color={GREEN} size={110} />}
+  {t < W(56) && <BigWord text="?" x={900} y={400} at={P(15)} size={180} />}
+  {t >= W(56) && <Stamp text="STILL FULL" x={540} y={360} at={W(56)} color={GREEN} size={110} />}
   <Penguin id="doug" x={180} y={G + 160} h={330} pose={{brows: 'happy', beak: 'smile', look: [0.7, -0.5]}} />
 </>;
-const FoxPays = ({t}: {t: number}) => { const a = P(17) + 0.6;
+const FoxPays = ({t}: {t: number}) => { const a = W(62), fl = tapFlap(t, W(61)), [hx, hy] = hand(170, G + 60, 380, fl, 0.5);
   return <>
     {/* Doug still does the payment: he taps his credit card, Fox's money goes to Puffin */}
-    <Penguin id="doug" x={150} y={G + 60} h={380} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: 70}} />
-    <Reader x={360} y={G - 200} w={130} t={t} beeps={[P(17) + 0.3]} />
-    <Card x={lerp(250, 350, ease((t - P(17)) / 0.3))} y={G - 330} w={150} kind="credit" />
+    <Penguin id="doug" x={170} y={G + 60} h={380} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', flapR: fl}} />
+    <Reader x={370} y={G - 120} w={130} t={t} beeps={[W(61)]} />
+    <Card x={hx} y={hy} w={140} kind="credit" rot={fl - 90} />
     <Fox x={560} y={G + 40} h={420} pose={{smirk: false, lids: 0.3, look: 0.5}} />
     <BillFly t={t} x1={600} y1={G - 420} x2={850} y2={G - 360} a={a} b={a + 0.7} w={200} arc={120} />
     <Puffin x={900} y={G + 40} h={400} pose={{look: -0.5, mouth: t >= a + 0.7 ? 0.35 : 0.1}} />
@@ -247,28 +257,28 @@ const FoxPays = ({t}: {t: number}) => { const a = P(17) + 0.6;
 const Owe = ({t}: {t: number}) => <>
   <Penguin id="doug" x={300} y={G + 40} h={480} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'worried', beak: 'frown'}} />
   <Fox x={790} y={G + 40} h={470} pose={{smirk: false, lids: 0.25, look: -0.5}} />
-  <Paper x={540} y={600} w={400} title="DOUG OWES FOX" amount="$50" at={P(18) + 0.2} rot={-3} id="iou" />
+  <Paper x={540} y={600} w={400} title="DOUG OWES FOX" amount="$50" at={W(67)} rot={-3} id="iou" />
 </>;
-const BillCome = ({t}: {t: number}) => { const p = ease((t - P(19) - 0.6) / 0.5);
+const BillCome = ({t}: {t: number}) => { const p = ease((t - W(75) + 0.25) / 0.4);
   return <>
     <Calendar x={800} y={520} t={t} a={P(19) + 10} w={240} />
     <Small x={800} y={660} text="1 month later" size={46} color={INK} />
     <div style={{position: 'absolute', left: 0, top: 0, transform: `translateY(${(1 - p) * -600}px)`}}>
-      <Paper x={360} y={700} w={380} title="CARD BILL" amount="$50" at={P(19) + 0.6} rot={4} id="bill" /></div>
+      <Paper x={360} y={700} w={380} title="CARD BILL" amount="$50" at={W(75) - 0.25} rot={4} id="bill" /></div>
     <Penguin id="doug" x={300} y={G + 160} h={340} pose={{brows: 'worried', look: [0, -0.8]}} />
   </>; };
-const PayFull = ({t}: {t: number}) => { const a = P(20) + 0.6;
+const PayFull = ({t}: {t: number}) => { const a = W(80);
   return <>
     <Penguin id="doug" x={250} y={G + 40} h={450} pose={{turn: 0.5, look: [0.8, -0.2], beak: 'smile', brows: 'happy', flapR: 60}} />
     <Fox x={830} y={G + 40} h={450} pose={{smirk: false, lids: 0.3, look: -0.5}} />
     <BillFly t={t} x1={400} y1={G - 280} x2={760} y2={G - 380} a={a} b={a + 0.7} w={200} />
     <Small x={540} y={300} text="all $50, on time" size={56} color={INK} />
-    {t >= P(20) + 2.3 && <Big x={540} y={480} text="INTEREST: $0" size={96} color={GREEN} />}
+    {t >= W(86) && <Big x={540} y={480} text="INTEREST: $0" size={96} color={GREEN} />}
   </>; };
 const Points = ({t}: {t: number}) => <>
   <Penguin id="doug" x={260} y={G + 60} h={470} pose={{beak: 'smile', brows: 'happy', flapR: 70, turn: 0.3}} />
-  <PriceTag x={300} y={420} price="+points" fish="rewards" at={P(21) + 0.3} color={GREEN} size={0.9} />
-  {t >= P(22) && <><Gauge x={780} y={720} t={t} a={P(22) + 0.5} w={440} /><Small x={780} y={760} text="credit score can go up" size={42} color={INK} /></>}
+  <PriceTag x={300} y={420} price="+points" fish="rewards" at={W(90)} color={GREEN} size={0.9} />
+  {t >= P(22) && <><Gauge x={780} y={720} t={t} a={W(96)} w={440} /><Small x={780} y={760} text="credit score can go up" size={42} color={INK} /></>}
 </>;
 const Smart = ({t}: {t: number}) => <>
   <Penguin id="doug" x={540} y={G + 300} h={950} pose={{beak: 'smile', brows: 'happy', lids: 0.2, look: [0, 0]}} />
@@ -279,22 +289,22 @@ const Smart = ({t}: {t: number}) => <>
 const PayLittle = ({t}: {t: number}) => <>
   <Penguin id="doug" x={250} y={G + 40} h={450} pose={{turn: 0.5, look: [0.8, -0.2], brows: 'worried', beak: 'flat', flapR: 40}} />
   <Fox x={830} y={G + 40} h={450} pose={{smirk: true, lids: 0.3, look: -0.5}} />
-  <Coin x={lerp(400, 740, ease((t - P(24) - 0.5) / 0.6))} y={G - 360} text="a bit" w={130} />
-  <Paper x={540} y={480} w={360} title="STILL OWE" amount="most of it" at={P(24) + 0.8} rot={-4} id="owe2" />
+  <Coin x={lerp(400, 740, ease((t - W(106)) / 0.5))} y={G - 360} text="a bit" w={130} />
+  <Paper x={540} y={480} w={360} title="STILL OWE" amount="most of it" at={W(106) + 0.4} rot={-4} id="owe2" />
 </>;
-const Interest = ({t}: {t: number}) => { const n = Math.max(0, Math.min(6, Math.floor((t - P(25) - 0.3) / 0.25)));
+const Interest = ({t}: {t: number}) => { const n = Math.max(0, Math.min(6, Math.floor((t - W(109)) / 0.25)));
   return <>
     <Fox x={260} y={G + 40} h={470} flip pose={{smirk: false, lids: 0.3, look: 0.5}} />
     <Paper x={720} y={640} w={360} title="DOUG'S BILL" amount="$50" at={-1} rot={3} id="b3" />
     {Array.from({length: n}, (_, i) => <div key={i} style={{position: 'absolute', left: 860 + (i % 2) * 60, top: 820 - i * 70, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 64, color: RED}}>+</div>)}
-    <Stamp text="+ INTEREST" x={720} y={340} at={P(25) + 0.2} color={RED} size={100} />
-    {t >= P(26) && <Calendar x={420} y={560} t={t} a={P(26)} w={210} />}
+    <Stamp text="+ INTEREST" x={720} y={340} at={W(109)} color={RED} size={100} />
+    {t >= W(110) && <Calendar x={420} y={560} t={t} a={W(110)} w={210} />}
   </>; };
-const RealLife = ({t}: {t: number}) => { const n = Math.round(22 * ease((t - P(27) - 2.0) / 1.0));
+const RealLife = ({t}: {t: number}) => { const n = Math.round(22 * ease((t - W(121)) / 0.5));
   return <>
     <NameTag x={540} y={360} text="IN REAL LIFE · USA" color={BLUE} />
     <Small x={540} y={470} text="average credit card interest" size={56} color={INK} />
-    <Big x={540} y={720} text={`~${n}%`} size={260} color={RED} op={t >= P(27) + 2.0 ? 1 : 0} />
+    <Big x={540} y={720} text={`~${n}%`} size={260} color={RED} op={t >= W(121) ? 1 : 0} />
     <Small x={540} y={900} text="a year" size={64} color={INK} />
   </>; };
 const FedData = ({t}: {t: number}) => <>
@@ -306,10 +316,10 @@ const OneYear = ({t}: {t: number}) => <>
   <Bill x={330} y={640} w={420} rot={-4} />
   <Calendar x={800} y={640} t={t} a={P(29) + 0.2} w={240} />
   <Small x={540} y={300} text="$50 not paid back for 1 year" size={54} color={INK} />
-  {t >= P(30) + 0.4 && <Big x={540} y={930} text="+$11 EXTRA" size={130} color={RED} />}
-  {t >= P(30) + 0.4 && <Small x={540} y={1330} text="about 22% a year (example)" />}
+  {t >= W(139) && <Big x={540} y={930} text="+$11 EXTRA" size={130} color={RED} />}
+  {t >= W(139) && <Small x={540} y={1330} text="about 22% a year (example)" />}
 </>;
-const Steal = ({t}: {t: number}) => { const run = ease((t - P(31) - 0.6) / 1.0);
+const Steal = ({t}: {t: number}) => { const run = ease((t - W(145)) / 1.0);
   return <>
     <Dark />
     <div style={{position: 'absolute', left: 820, top: 220, width: 140, height: 140, borderRadius: '50%', background: '#F7E9A8', boxShadow: '0 0 60px #F7E9A8'}} />
@@ -320,7 +330,7 @@ const Steal = ({t}: {t: number}) => { const run = ease((t - P(31) - 0.6) / 1.0);
   </>; };
 const DebitStolen = ({t}: {t: number}) => <>
   <NameTag x={540} y={300} text="WITH DEBIT" color={GREEN} />
-  <Account x={540} y={650} w={520} balance={t >= P(33) ? '$0' : '$120'} color={t >= P(33) ? RED : GREEN} />
+  <Account x={540} y={650} w={520} balance={t >= W(153) ? '$0' : '$120'} color={t >= W(153) ? RED : GREEN} />
   <Small x={540} y={830} text="Doug's own money (example)" size={42} />
   {t >= P(34) && <><IceBank x={820} y={G + 20} w={340} /><Penguin id="doug" x={330} y={G + 60} h={420} pose={{turn: 0.5, look: [0.8, -0.2], brows: 'worried', beak: 'frown', sweat: true}} />
     <BigWord text="waiting..." x={330} y={1000} at={P(34)} size={80} /></>}
@@ -328,10 +338,10 @@ const DebitStolen = ({t}: {t: number}) => <>
 const CreditStolen = ({t}: {t: number}) => <>
   <NameTag x={540} y={300} text="WITH CREDIT" color={GOLD} />
   <Fox x={300} y={G + 40} h={460} flip pose={{smirk: false, lids: 0.3, look: 0.5}} />
-  {t >= P(36) && <Small x={300} y={560} text="Fox's money" size={56} color={INK} />}
+  {t >= W(163) && <Small x={300} y={560} text="Fox's money" size={56} color={INK} />}
   {t >= P(37) && <div style={{position: 'absolute', left: 620, top: 470}}><Shield s={1.4} /></div>}
-  {t >= P(37) + 0.3 && <Big x={760} y={830} text="$50 MAX" size={110} color={GREEN} />}
-  {t >= P(37) + 1.9 && <Big x={760} y={960} text="usually $0" size={80} color={INK} />}
+  {t >= W(169) && <Big x={760} y={830} text="$50 MAX" size={110} color={GREEN} />}
+  {t >= W(172) && <Big x={760} y={960} text="usually $0" size={80} color={INK} />}
   {t >= P(37) && <Small x={540} y={1330} text="Fair Credit Billing Act" />}
 </>;
 const Summary = ({t}: {t: number}) => <>
@@ -341,12 +351,12 @@ const Summary = ({t}: {t: number}) => <>
   <Card x={270} y={600} w={300} kind="debit" rot={-5} />
   <Card x={810} y={600} w={300} kind="credit" rot={5} />
   <Big x={270} y={860} text="your money" size={62} color={INK} />
-  {t >= P(39) && <Big x={810} y={860} text="you borrow" size={62} color={INK} />}
-  {t >= P(40) && <><Big x={810} y={980} text="+ points" size={52} color={GREEN} /><Big x={810} y={1060} text="+ protection" size={52} color={BLUE} /><Big x={810} y={1160} text="pay in full!" size={56} color={RED} /></>}
+  {t >= W(183) && <Big x={810} y={860} text="you borrow" size={62} color={INK} />}
+  {t >= W(184) && <><Big x={810} y={980} text="+ points" size={52} color={GREEN} /><Big x={810} y={1060} text="+ protection" size={52} color={BLUE} /><Big x={810} y={1160} text="pay in full!" size={56} color={RED} /></>}
 </>;
 const SameBeep = ({t}: {t: number}) => <>
-  <Reader x={300} y={1000} w={220} t={t} beeps={[P(41) + 0.1]} />
-  <Reader x={780} y={1000} w={220} t={t} beeps={[P(41) + 0.1]} />
+  <Reader x={300} y={1000} w={220} t={t} beeps={[W(193)]} />
+  <Reader x={780} y={1000} w={220} t={t} beeps={[W(193)]} />
   <Card x={300} y={420} w={200} kind="debit" rot={-6} />
   <Card x={780} y={420} w={200} kind="credit" rot={6} />
   {t >= P(42) && <><Paper x={300} y={1130} w={260} title="BILL" amount="$50" at={P(42)} rot={-3} id="sb1" />
@@ -391,8 +401,9 @@ const SHOTS: Shot[] = [
   {at: P(43), set: (t) => <Choice t={t} />, fx_: 'pop', ice: true},
 ];
 // deep zooms [phrase, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [
-  [6, 440, 520, 1.35], [10, 540, 500, 1.2], [16, 540, 680, 1.25], [30, 540, 900, 1.25], [33, 540, 650, 1.3], [37, 760, 800, 1.2],
+const DEEP: [number, number, number, number, number][] = [
+  [W(28), E(6), 440, 520, 1.35], [W(42), E(10), 540, 500, 1.2], [W(56), E(16), 540, 680, 1.25], [W(86), E(20), 540, 480, 1.25], [W(90), W(91), 300, 420, 1.2],
+  [W(121), E(27), 540, 720, 1.25], [W(139), E(30), 540, 930, 1.25], [W(153), E(33), 540, 650, 1.3], [W(169), E(37), 760, 830, 1.2],
 ];
 const BIGS: {text: string; at: number; until: number; x?: number; y?: number; color?: string; size: number}[] = [
   {text: 'BEEP!', at: P(8), until: P(9), y: 420, color: GREEN, size: 200},
@@ -405,11 +416,11 @@ export const DougDebitCredit = () => {
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { const c = hookCam(tc); s0 = c.s; fx = c.x; fy = c.y; }
-  const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
-  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
-  if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
+  const dz = DEEP.find(([a, b]) => tc >= a - 0.08 && tc < b + 0.15), dp = dz ? ease((tc - dz[0] + 0.08) / 0.22) : 0;
+  const s = (dz ? s0 + (dz[4] - s0) * dp : s0) * beat(tc, TIM);
+  if (dz) { fx += (dz[2] - fx) * dp; fy += (dz[3] - fy) * dp; }
   const shk = (a: number) => tc > a && tc < a + 0.25 ? Math.sin(tc * 90) * 8 * (1 - (tc - a) / 0.25) : 0;
-  const shake = shk(P(27) + 2.0) + shk(P(33));
+  const shake = shk(W(121)) + shk(W(153));
   const quiet = BIGS.some((b) => tc >= b.at && tc < b.until) || QUIET.some(([a, b]) => tc >= a && tc < b);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
@@ -436,38 +447,38 @@ export const DougDebitCredit = () => {
     <Sfx at={P(4) + 0.2} name="user-aww" vol={0.3} />
     <Sfx at={P(6)} name="user-cash-register" vol={0.4} />
     <Sfx at={P(8)} name="card-beep" vol={0.45} />
-    <Sfx at={P(9) + 0.4} name="user-money-transfer" vol={0.35} />
-    <Sfx at={P(10)} name="user-ting" vol={0.4} />
+    <Sfx at={W(39)} name="user-money-transfer" vol={0.35} />
+    <Sfx at={W(42)} name="user-ting" vol={0.4} />
     <Sfx at={P(11)} name="user-yeah" vol={0.35} />
     {/* credit */}
     <Sfx at={P(14)} name="card-beep" vol={0.45} />
-    <Sfx at={P(16)} name="user-wow" vol={0.35} />
-    <Sfx at={P(17) + 0.3} name="card-beep" vol={0.4} />
+    <Sfx at={W(56)} name="user-wow" vol={0.35} />
+    <Sfx at={W(61)} name="card-beep" vol={0.4} />
     <Sfx at={P(17)} name="fox-snicker" vol={0.3} />
-    <Sfx at={P(17) + 0.6} name="user-money" vol={0.35} />
-    <Sfx at={P(18) + 0.2} name="user-slap" vol={0.35} />
-    <Sfx at={P(19) + 0.6} name="user-notif" vol={0.35} />
-    <Sfx at={P(20) + 0.6} name="user-money" vol={0.3} />
-    <Sfx at={P(20) + 2.3} name="user-ting" vol={0.45} />
-    <Sfx at={P(21) + 0.3} name="user-wow" vol={0.35} />
-    <Sfx at={P(22) + 0.5} name="user-yeah" vol={0.3} />
+    <Sfx at={W(62)} name="user-money" vol={0.35} />
+    <Sfx at={W(67)} name="user-slap" vol={0.35} />
+    <Sfx at={W(75)} name="user-notif" vol={0.35} />
+    <Sfx at={W(80)} name="user-money" vol={0.3} />
+    <Sfx at={W(86)} name="user-ting" vol={0.45} />
+    <Sfx at={W(90)} name="user-wow" vol={0.35} />
+    <Sfx at={W(96)} name="user-yeah" vol={0.3} />
     <Sfx at={P(23)} name="user-pop" vol={0.4} />
-    <Sfx at={P(24) + 0.8} name="user-wrong" vol={0.35} />
-    <Sfx at={P(25) + 0.2} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(26)} name="user-timer" vol={0.35} />
+    <Sfx at={W(106) + 0.4} name="user-wrong" vol={0.35} />
+    <Sfx at={W(109)} name="user-cash-register" vol={0.35} />
+    <Sfx at={W(110)} name="user-timer" vol={0.35} />
     {/* real life */}
-    <Sfx at={P(27) + 2.0} name="user-boom" vol={0.45} />
+    <Sfx at={W(121)} name="user-boom" vol={0.45} />
     <Sfx at={P(28)} name="user-ting" vol={0.35} />
-    <Sfx at={P(30) + 0.4} name="user-shock" vol={0.35} />
+    <Sfx at={W(139)} name="user-shock" vol={0.35} />
     {/* stolen card */}
-    <Sfx at={P(31) + 0.6} name="swoosh-fast" vol={0.35} />
-    <Sfx at={P(33)} name="user-fahh" vol={0.4} />
-    <Sfx at={P(37)} name="user-ting" vol={0.4} />
-    <Sfx at={P(37) + 1.9} name="user-yeah" vol={0.35} />
+    <Sfx at={W(145)} name="swoosh-fast" vol={0.35} />
+    <Sfx at={W(153)} name="user-fahh" vol={0.4} />
+    <Sfx at={W(169)} name="user-ting" vol={0.4} />
+    <Sfx at={W(172)} name="user-yeah" vol={0.35} />
     {/* wrap-up */}
-    <Sfx at={P(39)} name="user-pop" vol={0.35} />
-    <Sfx at={P(41) + 0.1} name="card-beep" vol={0.45} />
-    <Sfx at={P(42)} name="user-boom" vol={0.35} />
+    <Sfx at={W(183)} name="user-pop" vol={0.35} />
+    <Sfx at={W(193)} name="card-beep" vol={0.45} />
+    <Sfx at={W(196)} name="user-boom" vol={0.35} />
     <Sfx at={P(43)} name="user-pop" vol={0.35} />
     <Sfx at={P(43) + 0.4} name="user-pop" vol={0.35} />
     <Sfx at={P(45)} name="user-ting" vol={0.35} />
