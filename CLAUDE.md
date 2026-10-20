@@ -48,10 +48,28 @@ Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on
 - Every real-world number needs a named source in the script notes (e.g. Nilson Report 2025) and the pinned comment.
 - Never re-upload a removed video or a near-copy of it; change topic.
 
+## Pre-render safety + fun check (user rule 2026-10-20, EVERY video — run on the script AND on a contact sheet BEFORE any full render; fix, then render)
+Safety / fairness (anything that can get a TikTok video removed or limited):
+- No misleading or unfair comparison; same unit, same amount, same conditions on both sides (e.g. same $50). Say "example" for made-up numbers.
+- No favouring one side: never push the viewer to use A or avoid B, no "always/never use X", no financial advice — end with a question.
+- No distorting, belittling, mocking or demonising a side, a company type, a job (bankers, landlords, stores) or a group; the "villain" animal must also show what it gives (service, safety, rewards).
+- No racism, stereotypes, national/ethnic jokes, religion, politics, body shaming, debt shaming.
+- No false or outdated facts; every real number has a named official source (on screen small + pinned comment); no unofficial big exaggerations ("10x", "everyone", "secret").
+- No get-rich-quick, guaranteed returns, "passive income", wealth flexing, crypto/gambling/loans promotion, fake urgency ("before it's too late").
+- No real brands, logos, real people, real currency copies (fish versions only); no copyrighted music.
+- No dangerous acts, theft shown as cool/rewarded (a thief always fails or is the problem), no minors in risky situations.
+- Label AI-generated voice/visuals; caption + description must match the video (no clickbait the video does not deliver).
+Fun / curiosity (never boring):
+- A simple, NEW angle a 10-year-old gets in one look; caveman-English lines, one idea per shot.
+- A humour beat every ~6–8 s: visual gag, "Doug <state>." gag, character reaction, running gags (Fox snicker, Doug's jacket...).
+- Keep curiosity alive: open a question early ("but..."), reveal the key number late, never give the answer in the first 3 s; twist or loop ending + comment question.
+- Playful tone: mock situations, never people or sides.
+
 ## Pre-send checklist
 - Is the contrast clear and exaggerated from the first frame, with no words?
 - Does each side have a price or a number an American recognizes?
 - Is it one line = one shot?
 - Are sound effects included?
 - Is every claim literally true and are both sides shown fairly (Truth rule)?
+- Did the pre-render safety + fun check pass (nothing removable, nothing boring, curiosity kept)?
 If any item fails, rewrite before sending. Give me blunt, direct criticism of my ideas and don't flatter me.

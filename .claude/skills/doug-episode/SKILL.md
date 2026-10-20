@@ -28,5 +28,8 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 - Render full, check a 20-frame contact sheet, fix overlaps (keep big words out of y 1500–1600 = caption zone), compress `-crf 22 -preset slow`, < 30 MB, commit + push, send.
 - Give the TikTok description (keyword question + 5 specific hashtags) — see PROJECT_LOG.
 
+## Before ANY full render
+- Run the 'Pre-render safety + fun check' in CLAUDE.md on the script and a 1-fps contact sheet; list what you checked to the user in Arabic (1–3 lines), fix anything that fails, then render.
+
 ## Never
 - Re-render a finished episode unless asked. Use real photos/brand logos. Copy Monkey/Primate Economics wording ("explained with bananas", "monkey understand now").
