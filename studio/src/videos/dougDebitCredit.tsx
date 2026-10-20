@@ -292,7 +292,7 @@ const RealLife = ({t}: {t: number}) => { const n = Math.round(22 * ease((t - W(1
     <Board y={640} h={600}>
       <div style={{position: 'absolute', left: 0, top: 50, width: '100%', textAlign: 'center'}}><NameTag x={430} y={20} text="IN REAL LIFE · USA" color={BLUE} /></div>
       <div style={{position: 'absolute', left: 0, top: 130, width: '100%', textAlign: 'center', fontFamily: HAND, fontSize: 54, color: INK}}>average credit card interest</div>
-      <div style={{position: 'absolute', left: 0, top: 200, width: '100%', textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 230, color: RED, opacity: t >= W(121) ? 1 : 0}}>~{n}%</div>
+      <div style={{position: 'absolute', left: 0, top: 200, width: '100%', textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 230, color: t >= W(121) ? RED : '#9AA4AD', transform: t >= W(121) ? undefined : `scale(${1 + 0.06 * Math.sin(t * 8)})`}}>{t >= W(121) ? `~${n}%` : '?%'}</div>
       <div style={{position: 'absolute', left: 0, top: 470, width: '100%', textAlign: 'center', fontFamily: HAND, fontSize: 60, color: INK}}>a year</div>
     </Board>
     <Penguin id="doug" x={150} y={G + 80} h={380} outfit="jacket" pose={t >= W(121) ? {brows: 'shock', eyeScale: 1.3, look: [0.6, -0.8], mouth: 0.5, flapR: 70, flapL: 70} : {look: [0.6, -0.8], flapR: 10 + idle(t)}} />
