@@ -1,6 +1,6 @@
 # EP4 "Same Salary" v2 — neutral (NEUTRAL & CLEAR RULE, 2026-10-20). Dollars only, both sides fair, no advice, no get-rich promise.
 
-Why two penguins make same salary… but have different money after seven years?
+Why two penguins make same salary… but only one buy his dream car?
 This is Doug. This is Ricky. Brothers.
 Same job. Same salary. Seventy thousand dollars a year.
 Both need a car.
@@ -27,6 +27,6 @@ Same salary. Different choices. Different numbers.
 - Experian Q1 2026: avg new-car loan $43,925, avg new rate 6.39% -> 84 mo ≈ $650/mo.
 - $650/mo at 7%/yr for 7 y ≈ $70,199 (assumption, said with risk).
 ## Hook screen
-SAME SALARY $70,000 each. Doug: new car + "$650/MONTH". Ricky: used car + stock chart with "?" (up/down). No POOR/MILLIONAIRE stamps.
+SAME SALARY $70,000 each. Doug: shiny dream car (sparkles, heart) + "$650/MONTH". Ricky: plain used car + "$10,000". No POOR/MILLIONAIRE stamps.
 ## TikTok
 Same salary, two different car choices — here are the numbers 🚗🐧 #carloan #usedcars #compoundinterest #personalfinance #moneytok
