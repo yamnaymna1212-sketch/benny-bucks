@@ -15,12 +15,12 @@
   "line": 3,
   "text": "Same soda.",
   "start": 5.79,
-  "end": 6.46
+  "end": 6.47
  },
  {
   "line": 4,
   "text": "Same fifteen dollars.",
-  "start": 6.54,
+  "start": 6.55,
   "end": 7.74
  },
  {
@@ -57,12 +57,12 @@
   "line": 10,
   "text": "Fifteen dollars.",
   "start": 11.95,
-  "end": 12.8
+  "end": 12.81
  },
  {
   "line": 11,
   "text": "Doug pay cash.",
-  "start": 12.88,
+  "start": 12.89,
   "end": 13.75
  },
  {
@@ -81,18 +81,18 @@
   "line": 14,
   "text": "Next day.",
   "start": 16.48,
-  "end": 17.01
+  "end": 17.02
  },
  {
   "line": 15,
   "text": "Same burger.",
-  "start": 17.09,
-  "end": 17.82
+  "start": 17.1,
+  "end": 17.83
  },
  {
   "line": 16,
   "text": "Same soda.",
-  "start": 17.9,
+  "start": 17.91,
   "end": 18.58
  },
  {
@@ -105,30 +105,30 @@
   "line": 18,
   "text": "Beep.",
   "start": 20.48,
-  "end": 20.78
+  "end": 20.79
  },
  {
   "line": 19,
   "text": "Puffin get a little less than fifteen dollars.",
-  "start": 20.86,
+  "start": 20.87,
   "end": 23.07
  },
  {
   "line": 20,
   "text": "Where is the rest?",
   "start": 23.15,
-  "end": 23.95
+  "end": 23.96
  },
  {
   "line": 21,
   "text": "It pay for the beep.",
-  "start": 24.03,
-  "end": 24.96
+  "start": 24.04,
+  "end": 24.97
  },
  {
   "line": 22,
   "text": "The card machine.",
-  "start": 25.04,
+  "start": 25.05,
   "end": 25.76
  },
  {
@@ -141,12 +141,12 @@
   "line": 24,
   "text": "Keeping Doug money safe.",
   "start": 26.69,
-  "end": 27.98
+  "end": 27.99
  },
  {
   "line": 25,
   "text": "Puffin do not mind.",
-  "start": 28.06,
+  "start": 28.07,
   "end": 29.08
  },
  {
@@ -159,96 +159,156 @@
   "line": 27,
   "text": "Customers love it.",
   "start": 30.07,
-  "end": 30.86
+  "end": 30.87
  },
  {
   "line": 28,
   "text": "But every beep cost Puffin a few cents.",
-  "start": 30.94,
+  "start": 30.95,
   "end": 33.21
  },
  {
   "line": 29,
-  "text": "So one day... the burger price go up.",
+  "text": "Puffin Burger is busy.",
   "start": 33.29,
-  "end": 35.38
+  "end": 34.48
  },
  {
   "line": 30,
-  "text": "A little.",
-  "start": 35.46,
-  "end": 35.89
+  "text": "One hundred customers a day.",
+  "start": 34.56,
+  "end": 35.81
  },
  {
   "line": 31,
-  "text": "For everybody.",
-  "start": 35.97,
-  "end": 36.61
+  "text": "Most of them pay with card.",
+  "start": 35.89,
+  "end": 37.21
  },
  {
   "line": 32,
-  "text": "Card people.",
-  "start": 36.69,
-  "end": 37.3
+  "text": "Beep.",
+  "start": 37.29,
+  "end": 37.6
  },
  {
   "line": 33,
-  "text": "Cash people.",
-  "start": 37.38,
-  "end": 38.0
+  "text": "Beep.",
+  "start": 37.68,
+  "end": 37.98
  },
  {
   "line": 34,
-  "text": "Doug.",
-  "start": 38.08,
-  "end": 38.4
+  "text": "Beep.",
+  "start": 38.06,
+  "end": 38.37
  },
  {
   "line": 35,
-  "text": "Card people get points back.",
-  "start": 38.8,
-  "end": 40.13
+  "text": "A few cents... times one hundred beeps... every day.",
+  "start": 38.45,
+  "end": 41.55
  },
  {
   "line": 36,
-  "text": "Cash people get... nothing extra.",
-  "start": 40.21,
-  "end": 42.03
+  "text": "That is real money for a small shop.",
+  "start": 41.63,
+  "end": 43.21
  },
  {
   "line": 37,
-  "text": "Some shops say: pay cash, small discount.",
-  "start": 42.11,
-  "end": 44.97
+  "text": "So one day... the burger price go up.",
+  "start": 43.29,
+  "end": 45.39
  },
  {
   "line": 38,
-  "text": "Some shops say: pay card, small extra fee.",
-  "start": 45.05,
-  "end": 48.07
+  "text": "A little.",
+  "start": 45.47,
+  "end": 45.89
  },
  {
   "line": 39,
-  "text": "Now Doug look at the sign before he pay.",
-  "start": 48.15,
-  "end": 49.97
+  "text": "For everybody.",
+  "start": 45.97,
+  "end": 46.62
  },
  {
   "line": 40,
-  "text": "Cash or card?",
-  "start": 50.05,
-  "end": 50.96
+  "text": "Card people.",
+  "start": 46.7,
+  "end": 47.31
  },
  {
   "line": 41,
-  "text": "Which one you use?",
-  "start": 51.04,
-  "end": 51.83
+  "text": "Cash people.",
+  "start": 47.39,
+  "end": 48.0
  },
  {
   "line": 42,
+  "text": "Doug.",
+  "start": 48.08,
+  "end": 48.4
+ },
+ {
+  "line": 43,
+  "text": "Card people get points back.",
+  "start": 48.8,
+  "end": 50.14
+ },
+ {
+  "line": 44,
+  "text": "Cash people get... nothing extra.",
+  "start": 50.22,
+  "end": 52.03
+ },
+ {
+  "line": 45,
+  "text": "Some shops say: pay cash, small discount.",
+  "start": 52.11,
+  "end": 54.98
+ },
+ {
+  "line": 46,
+  "text": "Some shops say: pay card, small extra fee.",
+  "start": 55.06,
+  "end": 58.07
+ },
+ {
+  "line": 47,
+  "text": "Now Doug look at the sign before he pay.",
+  "start": 58.15,
+  "end": 59.98
+ },
+ {
+  "line": 48,
+  "text": "Card: fast, safe, points.",
+  "start": 60.06,
+  "end": 62.54
+ },
+ {
+  "line": 49,
+  "text": "Cash: no beep, no extra cost for Puffin.",
+  "start": 62.62,
+  "end": 65.63
+ },
+ {
+  "line": 50,
+  "text": "Cash or card?",
+  "start": 65.71,
+  "end": 66.62
+ },
+ {
+  "line": 51,
+  "text": "Which one you use?",
+  "start": 66.7,
+  "end": 67.49
+ },
+ {
+  "line": 52,
   "text": "Tell Doug in the comments.",
-  "start": 51.91,
-  "end": 53.17
+  "start": 67.57,
+  "end": 68.83
  }
 ]

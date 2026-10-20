@@ -111,58 +111,98 @@ Customers love it.
 But every beep cost Puffin a few cents.
 
 29
-00:00:41,000 --> 00:00:43,462
-So one day... the burger price go up.
+00:00:41,000 --> 00:00:42,537
+Puffin Burger is busy.
 
 30
-00:00:43,462 --> 00:00:44,250
-A little.
+00:00:42,537 --> 00:00:44,125
+One hundred customers a day.
 
 31
-00:00:44,250 --> 00:00:45,262
-For everybody.
+00:00:44,125 --> 00:00:45,800
+Most of them pay with card.
 
 32
-00:00:45,262 --> 00:00:46,225
-Card people.
+00:00:45,800 --> 00:00:46,487
+Beep.
 
 33
-00:00:46,225 --> 00:00:47,200
-Cash people.
+00:00:46,487 --> 00:00:47,175
+Beep.
 
 34
-00:00:47,200 --> 00:00:47,875
-Doug.
+00:00:47,175 --> 00:00:47,862
+Beep.
 
 35
-00:00:47,875 --> 00:00:49,575
-Card people get points back.
+00:00:47,862 --> 00:00:51,287
+A few cents... times one hundred beeps... every day.
 
 36
-00:00:49,575 --> 00:00:51,737
-Cash people get... nothing extra.
+00:00:51,287 --> 00:00:53,325
+That is real money for a small shop.
 
 37
-00:00:51,737 --> 00:00:54,975
-Some shops say: pay cash, small discount.
+00:00:53,325 --> 00:00:55,787
+So one day... the burger price go up.
 
 38
-00:00:54,975 --> 00:00:58,325
-Some shops say: pay card, small extra fee.
+00:00:55,787 --> 00:00:56,575
+A little.
 
 39
-00:00:58,325 --> 00:01:00,487
-Now Doug look at the sign before he pay.
+00:00:56,575 --> 00:00:57,587
+For everybody.
 
 40
-00:01:00,487 --> 00:01:01,762
-Cash or card?
+00:00:57,587 --> 00:00:58,550
+Card people.
 
 41
-00:01:01,762 --> 00:01:02,937
-Which one you use?
+00:00:58,550 --> 00:00:59,525
+Cash people.
 
 42
-00:01:02,937 --> 00:01:04,587
+00:00:59,525 --> 00:01:00,200
+Doug.
+
+43
+00:01:00,200 --> 00:01:01,900
+Card people get points back.
+
+44
+00:01:01,900 --> 00:01:04,062
+Cash people get... nothing extra.
+
+45
+00:01:04,062 --> 00:01:07,300
+Some shops say: pay cash, small discount.
+
+46
+00:01:07,300 --> 00:01:10,650
+Some shops say: pay card, small extra fee.
+
+47
+00:01:10,650 --> 00:01:12,812
+Now Doug look at the sign before he pay.
+
+48
+00:01:12,812 --> 00:01:15,675
+Card: fast, safe, points.
+
+49
+00:01:15,675 --> 00:01:19,050
+Cash: no beep, no extra cost for Puffin.
+
+50
+00:01:19,050 --> 00:01:20,325
+Cash or card?
+
+51
+00:01:20,325 --> 00:01:21,500
+Which one you use?
+
+52
+00:01:21,500 --> 00:01:23,150
 Tell Doug in the comments.
 

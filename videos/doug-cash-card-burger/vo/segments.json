@@ -7,14 +7,14 @@
   "gap_after": 0.3
  },
  {
-  "a": 5.086,
+  "a": 5.087,
   "b": 5.754,
   "text": "Same burger.",
   "line": 2,
   "gap_after": 0.08
  },
  {
-  "a": 6.193,
+  "a": 6.188,
   "b": 6.797,
   "text": "Same soda.",
   "line": 3,
@@ -22,7 +22,7 @@
  },
  {
   "a": 7.205,
-  "b": 8.331,
+  "b": 8.328,
   "text": "Same fifteen dollars.",
   "line": 4,
   "gap_after": 0.08
@@ -50,7 +50,7 @@
  },
  {
   "a": 12.352,
-  "b": 12.908,
+  "b": 12.91,
   "text": "One burger.",
   "line": 8,
   "gap_after": 0.08
@@ -196,101 +196,171 @@
   "gap_after": 0.08
  },
  {
-  "a": 41.15,
-  "b": 43.176,
-  "text": "So one day... the burger price go up.",
+  "a": 41.156,
+  "b": 42.281,
+  "text": "Puffin Burger is busy.",
   "line": 29,
   "gap_after": 0.08
  },
  {
-  "a": 43.613,
-  "b": 43.966,
-  "text": "A little.",
+  "a": 42.695,
+  "b": 43.873,
+  "text": "One hundred customers a day.",
   "line": 30,
   "gap_after": 0.08
  },
  {
-  "a": 44.416,
-  "b": 44.995,
-  "text": "For everybody.",
+  "a": 44.271,
+  "b": 45.514,
+  "text": "Most of them pay with card.",
   "line": 31,
   "gap_after": 0.08
  },
  {
-  "a": 45.409,
-  "b": 45.943,
-  "text": "Card people.",
+  "a": 45.969,
+  "b": 46.209,
+  "text": "Beep.",
   "line": 32,
   "gap_after": 0.08
  },
  {
-  "a": 46.371,
-  "b": 46.918,
-  "text": "Cash people.",
+  "a": 46.657,
+  "b": 46.896,
+  "text": "Beep.",
   "line": 33,
   "gap_after": 0.08
  },
  {
-  "a": 47.351,
-  "b": 47.603,
-  "text": "Doug.",
+  "a": 47.345,
+  "b": 47.584,
+  "text": "Beep.",
   "line": 34,
-  "gap_after": 0.4
+  "gap_after": 0.08
  },
  {
-  "a": 48.021,
-  "b": 49.286,
-  "text": "Card people get points back.",
+  "a": 48.009,
+  "b": 51.037,
+  "text": "A few cents... times one hundred beeps... every day.",
   "line": 35,
   "gap_after": 0.08
  },
  {
-  "a": 49.726,
-  "b": 51.47,
-  "text": "Cash people get... nothing extra.",
+  "a": 51.445,
+  "b": 52.957,
+  "text": "That is real money for a small shop.",
   "line": 36,
   "gap_after": 0.08
  },
  {
-  "a": 51.888,
-  "b": 54.686,
-  "text": "Some shops say: pay cash, small discount.",
+  "a": 53.476,
+  "b": 55.501,
+  "text": "So one day... the burger price go up.",
   "line": 37,
   "gap_after": 0.08
  },
  {
-  "a": 55.126,
-  "b": 58.07,
-  "text": "Some shops say: pay card, small extra fee.",
+  "a": 55.938,
+  "b": 56.291,
+  "text": "A little.",
   "line": 38,
   "gap_after": 0.08
  },
  {
-  "a": 58.477,
-  "b": 60.231,
-  "text": "Now Doug look at the sign before he pay.",
+  "a": 56.74,
+  "b": 57.32,
+  "text": "For everybody.",
   "line": 39,
   "gap_after": 0.08
  },
  {
-  "a": 60.644,
-  "b": 61.477,
-  "text": "Cash or card?",
+  "a": 57.734,
+  "b": 58.268,
+  "text": "Card people.",
   "line": 40,
   "gap_after": 0.08
  },
  {
-  "a": 61.92,
-  "b": 62.643,
-  "text": "Which one you use?",
+  "a": 58.696,
+  "b": 59.243,
+  "text": "Cash people.",
   "line": 41,
   "gap_after": 0.08
  },
  {
-  "a": 63.094,
-  "b": 64.288,
-  "text": "Tell Doug in the comments.",
+  "a": 59.676,
+  "b": 59.928,
+  "text": "Doug.",
   "line": 42,
+  "gap_after": 0.4
+ },
+ {
+  "a": 60.346,
+  "b": 61.609,
+  "text": "Card people get points back.",
+  "line": 43,
+  "gap_after": 0.08
+ },
+ {
+  "a": 62.051,
+  "b": 63.795,
+  "text": "Cash people get... nothing extra.",
+  "line": 44,
+  "gap_after": 0.08
+ },
+ {
+  "a": 64.213,
+  "b": 67.014,
+  "text": "Some shops say: pay cash, small discount.",
+  "line": 45,
+  "gap_after": 0.08
+ },
+ {
+  "a": 67.456,
+  "b": 70.395,
+  "text": "Some shops say: pay card, small extra fee.",
+  "line": 46,
+  "gap_after": 0.08
+ },
+ {
+  "a": 70.802,
+  "b": 72.556,
+  "text": "Now Doug look at the sign before he pay.",
+  "line": 47,
+  "gap_after": 0.08
+ },
+ {
+  "a": 72.959,
+  "b": 75.375,
+  "text": "Card: fast, safe, points.",
+  "line": 48,
+  "gap_after": 0.08
+ },
+ {
+  "a": 75.824,
+  "b": 78.766,
+  "text": "Cash: no beep, no extra cost for Puffin.",
+  "line": 49,
+  "gap_after": 0.08
+ },
+ {
+  "a": 79.206,
+  "b": 80.039,
+  "text": "Cash or card?",
+  "line": 50,
+  "gap_after": 0.08
+ },
+ {
+  "a": 80.483,
+  "b": 81.207,
+  "text": "Which one you use?",
+  "line": 51,
+  "gap_after": 0.08
+ },
+ {
+  "a": 81.656,
+  "b": 82.85,
+  "text": "Tell Doug in the comments.",
+  "line": 52,
   "gap_after": 0
  }
 ]

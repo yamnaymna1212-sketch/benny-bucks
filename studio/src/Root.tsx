@@ -1,6 +1,7 @@
 import {Composition} from 'remotion';
 import {WhyHookDemo} from './penguin/whyHook';
 import {DougDoorDashHook} from './videos/dougDoorDash';
+import {DougCashBurger, DougCashBurgerHook, DOUG_CASH_BURGER_SECONDS} from './videos/dougCashBurger';
 import {DougCashCard, DougCashCardHook, DougCashCardHookV2, DOUG_CASH_CARD_SECONDS} from './videos/dougCashCard';
 import {DougGasIran, DougGasIranHook, DOUG_GAS_IRAN_SECONDS} from './videos/dougGasIran';
 import {PenguinWorld} from './videos/penguinWorld';
@@ -13,6 +14,8 @@ export const Root = () => (
     <Composition id="doug-gas-iran" component={DougGasIran} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_GAS_IRAN_SECONDS * 30)} />
     <Composition id="doug-gas-iran-hook" component={DougGasIranHook} width={1080} height={1920} fps={30} durationInFrames={150} />
     <Composition id="doug-cash-card" component={DougCashCard} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_CASH_CARD_SECONDS * 30)} />
+    <Composition id="doug-cash-burger" component={DougCashBurger} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_CASH_BURGER_SECONDS * 30)} />
+    <Composition id="doug-cash-burger-hook" component={DougCashBurgerHook} width={1080} height={1920} fps={30} durationInFrames={90} />
     <Composition id="doug-cash-card-hook-v2" component={DougCashCardHookV2} width={1080} height={1920} fps={30} durationInFrames={90} />
     <Composition id="doug-cash-card-hook" component={DougCashCardHook} width={1080} height={1920} fps={30} durationInFrames={150} />
     <Composition id="doug-doordash-hook" component={DougDoorDashHook} width={1080} height={1920} fps={30} durationInFrames={150} />
