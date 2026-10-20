@@ -1,247 +1,212 @@
 [
  {
   "start": 0.04,
-  "end": 2.38,
-  "text": "What is the difference between paying ten dollars with cash..."
+  "end": 4.03,
+  "text": "What is the difference between paying ten dollars with cash... and ten dollars with card?"
  },
  {
-  "start": 2.52,
-  "end": 3.72,
-  "text": "and ten dollars with card?"
- },
- {
-  "start": 4.08,
-  "end": 4.88,
+  "start": 4.39,
+  "end": 5.27,
   "text": "Same ten dollars."
  },
  {
-  "start": 5.03,
-  "end": 5.88,
+  "start": 5.41,
+  "end": 5.85,
+  "text": "For Doug."
+ },
+ {
+  "start": 6.0,
+  "end": 6.73,
+  "text": "But not for Puffin."
+ },
+ {
+  "start": 6.88,
+  "end": 7.48,
   "text": "This is Doug."
  },
  {
-  "start": 6.03,
-  "end": 7.16,
+  "start": 7.63,
+  "end": 8.68,
   "text": "Doug have three hairs."
  },
  {
-  "start": 7.3,
-  "end": 8.39,
+  "start": 8.82,
+  "end": 9.54,
   "text": "Doug need haircut."
  },
  {
-  "start": 8.53,
-  "end": 9.56,
+  "start": 9.68,
+  "end": 10.71,
   "text": "Puffin cut Doug hair."
  },
  {
-  "start": 9.71,
-  "end": 10.94,
+  "start": 10.86,
+  "end": 11.88,
   "text": "Doug pay ten dollars."
  },
  {
-  "start": 11.09,
-  "end": 11.45,
+  "start": 12.03,
+  "end": 12.39,
   "text": "Cash."
  },
  {
-  "start": 11.59,
-  "end": 13.13,
-  "text": "Puffin go buy fish at Seal shop."
+  "start": 12.54,
+  "end": 14.04,
+  "text": "Puffin keep all ten dollars."
  },
  {
-  "start": 13.27,
-  "end": 14.66,
-  "text": "Puffin pay same ten dollars."
+  "start": 14.19,
+  "end": 15.89,
+  "text": "Next week, Doug pay with card."
  },
  {
-  "start": 14.81,
-  "end": 16.53,
-  "text": "Seal go wash sled at Larry car wash."
- },
- {
-  "start": 16.68,
-  "end": 18.05,
-  "text": "Seal pay same ten dollars."
- },
- {
-  "start": 18.19,
-  "end": 19.01,
-  "text": "Twenty people later..."
- },
- {
-  "start": 19.16,
-  "end": 20.07,
-  "text": "still ten dollars."
- },
- {
-  "start": 20.21,
-  "end": 21.28,
-  "text": "Cash go round and round."
- },
- {
-  "start": 21.43,
-  "end": 22.46,
-  "text": "Cash never shrink."
- },
- {
-  "start": 22.6,
-  "end": 23.84,
-  "text": "Now Doug pay with card."
- },
- {
-  "start": 23.99,
-  "end": 24.25,
+  "start": 16.04,
+  "end": 16.27,
   "text": "Beep."
  },
  {
-  "start": 24.4,
-  "end": 25.89,
-  "text": "Puffin get only nine dollars seventy-six."
+  "start": 16.41,
+  "end": 18.33,
+  "text": "Puffin get nine dollars seventy-six."
  },
  {
-  "start": 26.04,
-  "end": 27.35,
-  "text": "Twenty-four cents go to Fox the Banker."
+  "start": 18.48,
+  "end": 20.45,
+  "text": "Twenty-four cents is the swipe fee."
  },
  {
-  "start": 27.5,
-  "end": 28.5,
-  "text": "Puffin pay Seal with card."
+  "start": 20.6,
+  "end": 22.59,
+  "text": "It go to the card bank and the card network."
  },
  {
-  "start": 28.65,
-  "end": 29.01,
-  "text": "Beep."
+  "start": 22.74,
+  "end": 23.42,
+  "text": "Fox the Banker."
  },
  {
-  "start": 29.16,
-  "end": 29.83,
-  "text": "Fox take a cut."
+  "start": 23.57,
+  "end": 24.26,
+  "text": "Is Fox lazy?"
  },
  {
-  "start": 29.97,
-  "end": 31.02,
-  "text": "Seal pay Larry with card."
+  "start": 24.41,
+  "end": 24.67,
+  "text": "No."
  },
  {
-  "start": 31.17,
-  "end": 31.35,
-  "text": "Beep."
+  "start": 24.81,
+  "end": 25.71,
+  "text": "Fox stop thieves."
  },
  {
-  "start": 31.5,
-  "end": 32.25,
-  "text": "Fox take a cut."
+  "start": 25.85,
+  "end": 27.61,
+  "text": "Fox give money back if card is stolen."
  },
  {
-  "start": 32.4,
-  "end": 33.95,
-  "text": "Every beep, Fox take a little more."
+  "start": 27.75,
+  "end": 29.4,
+  "text": "Fox let Doug buy now, pay later."
  },
  {
-  "start": 34.1,
-  "end": 34.85,
-  "text": "After twenty beeps?"
+  "start": 29.55,
+  "end": 31.51,
+  "text": "So Puffin pay a little for every beep."
+ },
+ {
+  "start": 31.66,
+  "end": 32.62,
+  "text": "But Puffin is smart."
+ },
+ {
+  "start": 32.77,
+  "end": 34.16,
+  "text": "Puffin raise the haircut price."
+ },
+ {
+  "start": 34.3,
+  "end": 34.86,
+  "text": "For everybody."
  },
  {
   "start": 35.0,
-  "end": 36.2,
-  "text": "Fox collect three dollars eighty."
+  "end": 35.71,
+  "text": "Cash people too."
  },
  {
-  "start": 36.35,
-  "end": 37.61,
-  "text": "Where is three dollars eighty?"
- },
- {
-  "start": 37.76,
-  "end": 38.67,
-  "text": "In Fox pocket."
- },
- {
-  "start": 38.82,
-  "end": 40.0,
-  "text": "This is called swipe fee."
- },
- {
-  "start": 40.15,
-  "end": 40.51,
+  "start": 35.85,
+  "end": 36.09,
   "text": "Doug."
  },
  {
-  "start": 40.97,
-  "end": 44.45,
-  "text": "In real life, America pay one hundred ninety-eight billion dollars in swipe fees."
+  "start": 36.55,
+  "end": 37.73,
+  "text": "And card people get points."
  },
  {
-  "start": 44.59,
-  "end": 45.27,
-  "text": "In one year."
+  "start": 37.88,
+  "end": 38.44,
+  "text": "Cash back."
  },
  {
-  "start": 45.42,
-  "end": 47.03,
-  "text": "That is about fifty dollars every month."
+  "start": 38.58,
+  "end": 39.23,
+  "text": "Little gifts."
  },
  {
-  "start": 47.17,
-  "end": 47.76,
-  "text": "For every person."
+  "start": 39.37,
+  "end": 40.25,
+  "text": "Who pay for the gifts?"
  },
  {
-  "start": 47.9,
-  "end": 48.78,
-  "text": "Fox not cut hair."
+  "start": 40.4,
+  "end": 41.67,
+  "text": "Partly... the cash people."
  },
  {
-  "start": 48.92,
-  "end": 49.85,
-  "text": "Fox not sell fish."
+  "start": 41.81,
+  "end": 47.93,
+  "text": "In real life, American stores paid one hundred ninety-eight billion dollars in swipe fees in twenty twenty-five."
  },
  {
-  "start": 50.0,
-  "end": 51.07,
-  "text": "Fox not wash sled."
+  "start": 48.07,
+  "end": 52.1,
+  "text": "And Federal Reserve researchers found cash payers help pay for card rewards."
  },
  {
-  "start": 51.21,
-  "end": 52.5,
-  "text": "Fox just say beep."
+  "start": 52.25,
+  "end": 53.07,
+  "text": "Card is not evil."
  },
  {
-  "start": 52.64,
-  "end": 54.56,
-  "text": "Now Doug understand why bank love card..."
+  "start": 53.21,
+  "end": 54.14,
+  "text": "Cash is not magic."
  },
  {
-  "start": 54.71,
-  "end": 55.31,
-  "text": "and hate cash."
+  "start": 54.28,
+  "end": 55.86,
+  "text": "Cash: no fee for Puffin."
  },
  {
-  "start": 55.46,
-  "end": 56.5,
-  "text": "Doug pay cash."
+  "start": 56.01,
+  "end": 57.91,
+  "text": "Card: safe and fast for Doug."
  },
  {
-  "start": 56.64,
-  "end": 57.75,
-  "text": "Doug keep three hairs."
- },
- {
-  "start": 57.89,
-  "end": 58.84,
+  "start": 58.05,
+  "end": 58.85,
   "text": "Cash or card?"
  },
  {
-  "start": 58.99,
-  "end": 59.67,
+  "start": 59.0,
+  "end": 59.7,
   "text": "Which one you use?"
  },
  {
-  "start": 59.82,
-  "end": 61.02,
+  "start": 59.85,
+  "end": 60.99,
   "text": "Tell Doug in the comments."
  }
 ]
