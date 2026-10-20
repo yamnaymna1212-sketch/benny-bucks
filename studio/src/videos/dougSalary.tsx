@@ -12,12 +12,12 @@ import TIM from '../data/doug-salary.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
 const G = 1300;
-export const DOUG_SALARY_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
+export const DOUG_SALARY_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 1.5) * 30) / 30;
 const RED = '#D83A2E', GREEN = '#2E9E4F';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.15 ? 1.3 * ease(d / 0.15) : 1.3 - 0.3 * ease((d - 0.15) / 0.15); };
-const POOR = P(1), RICH = P(2);
+const DREAM = P(1) + 0.8, USED = P(1) + 1.4; // dream car -> Doug's car pops; then Ricky's used car
 
 // Banded stack of green bills with three "shine" ticks above it.
 const CashStack = ({x, y, w = 300}: {x: number; y: number; w?: number}) =>
@@ -56,7 +56,7 @@ const YellowCap = ({x, y, w = 250}: {x: number; y: number; w?: number}) =>
 
 const Big = ({x, y, text, color = INK, s = 1, size = 92}: {x: number; y: number; text: string; color?: string; s?: number; size?: number}) =>
   <div style={{position: 'absolute', left: x - 300, width: 600, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900,
-    fontSize: size, color, letterSpacing: -2, transform: `scale(${s})`, opacity: s > 0 ? 1 : 0}}>{text}</div>;
+    fontSize: size, color, letterSpacing: -2, whiteSpace: 'nowrap', transform: `scale(${s})`, opacity: s > 0 ? 1 : 0}}>{text}</div>;
 
 type Pose = React.ComponentProps<typeof Penguin>['pose'];
 const Ricky = ({x, y, h = 590, pose = {}}: {x: number; y: number; h?: number; pose?: Pose}) => <>
@@ -67,24 +67,23 @@ const Ricky = ({x, y, h = 590, pose = {}}: {x: number; y: number; h?: number; po
 // ---------- hook: same salary -> Doug's cash becomes a car payment, Ricky's cash becomes a fish mountain ----------
 const L = 290, R = 790;
 const Hook = ({t}: {t: number}) => {
-  const out = ease((t - POOR) / 0.25), outR = ease((t - RICH) / 0.25), hop = t < RICH ? 0 : Math.abs(Math.sin((t - RICH) * 9)) * 30;
+  const out = ease((t - DREAM) / 0.25), outR = ease((t - USED) / 0.25);
   return <>
     <div style={{opacity: 1 - out, transform: `translateY(${-160 * out}px)`}}><CashStack x={L} y={550} /><Big x={L} y={560} text="$70,000" /></div>
     <div style={{opacity: 1 - outR, transform: `translateY(${-160 * outR}px)`}}><CashStack x={R} y={550} /><Big x={R} y={560} text="$70,000" /></div>
-    {t >= POOR && <div style={{position: 'absolute', inset: 0, transform: `scale(${pop(t, POOR)})`, transformOrigin: `${L}px 450px`}}><Car x={L} y={540} w={400} shiny /></div>}
-    <Big x={L} y={570} text="$650/MONTH" color={RED} size={70} s={pop(t, POOR + 0.15)} />
-    {t >= RICH && <FishPile x={R} y={540} n={Math.min(12, 3 + Math.floor((t - RICH) * 14))} w={170} seed={2} />}
-    <Big x={R} y={570} text="$1,170,000" color={GREEN} size={86} s={pop(t, RICH + 0.2)} />
-    <Penguin x={L} y={1290} h={560} id="doug" pose={t < POOR ? {turn: 0.35, look: [0.3, 0]}
-      : {turn: 0.2, look: [0, -0.4], brows: 'worried', beak: 'frown', tears: true, flapL: 20, flapR: 20}} />
-    <Ricky x={R} y={1290} pose={t < RICH ? {turn: -0.35, look: [-0.3, 0]} : {turn: -0.2, look: [0, -0.3], hop, flapL: 45, flapR: 45}} />
+    {t >= DREAM && <div style={{position: 'absolute', inset: 0, transform: `scale(${pop(t, DREAM)})`, transformOrigin: `${L}px 450px`}}><Car x={L} y={540} w={420} shiny /></div>}
+    {t >= DREAM + 0.2 && <div style={{position: 'absolute', left: L + 120, top: 250 + Math.sin(t * 5) * 12, fontSize: 90, transform: `scale(${pop(t, DREAM + 0.2)})`}}>❤️</div>}
+    <Big x={L} y={570} text="$44,000" color={RED} size={96} s={pop(t, DREAM + 0.15)} />
+    {t >= USED && <div style={{position: 'absolute', inset: 0, transform: `scale(${pop(t, USED)})`, transformOrigin: `${R}px 450px`}}><Car x={R} y={540} w={380} color="#5B8DB8" /></div>}
+    <Big x={R} y={570} text="$10,000" color={GREEN} size={96} s={pop(t, USED + 0.15)} />
+    <Penguin x={L} y={1290} h={560} id="doug" pose={t < DREAM ? {turn: 0.35, look: [0.3, 0]}
+      : {turn: 0.2, look: [0, -0.5], brows: 'happy', beak: 'smile', blush: 1, eyeScale: 1.15, flapL: 80, flapR: 80}} />
+    <Ricky x={R} y={1290} pose={t < USED ? {turn: -0.35, look: [-0.3, 0]} : {turn: -0.2, look: [0, -0.4], flapR: 30}} />
     <Big x={L} y={1320} text="Doug" size={84} />
     <Big x={R} y={1320} text="Ricky" size={84} />
-    <Stamp text="POOR" x={L} y={1170} at={POOR + 0.3} color={RED} size={100} />
-    <Stamp text="MILLIONAIRE" x={R} y={1170} at={RICH + 0.35} color={GREEN} size={74} rot={8} />
+    {t >= P(0) + 0.3 && t < P(1) && <Big x={540} y={170} text="SAME SALARY" size={84} s={pop(t, P(0) + 0.3)} />}
   </>;
 };
-
 
 // ---------- more props ----------
 const StockBoard = ({x, y, w = 460, t, at = -99}: {x: number; y: number; w?: number; t: number; at?: number}) => {
@@ -218,8 +217,8 @@ export const DougSalary = () => {
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { // hook: push toward Doug on "stay poor", swing to Ricky on "millionaire"
-    const toL = ease((tc - POOR) / 0.3) * (tc < RICH ? 1 : 0), toR = ease((tc - RICH) / 0.3) * (tc < P(3) - 0.3 ? 1 : 0);
-    s0 = 1 + 0.22 * (toL + toR); fx = 540 - 250 * toL + 250 * toR; fy = 960 + 90 * (toL + toR);
+    const toL = ease((tc - P(1)) / 0.3) * (tc < USED ? 1 : 0); // push to Doug on "only one buy his dream car", back to both for Ricky
+    s0 = 1 + 0.22 * toL; fx = 540 - 250 * toL; fy = 960 + 90 * toL;
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
@@ -234,10 +233,11 @@ export const DougSalary = () => {
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.5} name="user-money" vol={0.3} />
-    <Sfx at={POOR + 0.15} name="user-cash-register" vol={0.3} />
-    <Sfx at={POOR + 0.3} name="user-wrong" vol={0.3} />
-    <Sfx at={RICH + 0.2} name="user-boom" vol={0.45} />
-    <Sfx at={RICH + 0.4} name="user-money-transfer" vol={0.3} />
+    <Sfx at={P(1) - 0.05} name="user-whoosh" vol={0.25} />
+    <Sfx at={DREAM} name="user-boom" vol={0.4} />
+    <Sfx at={DREAM + 0.15} name="user-cash-register" vol={0.3} />
+    <Sfx at={USED - 0.05} name="user-whoosh" vol={0.25} />
+    <Sfx at={USED + 0.15} name="user-money" vol={0.3} />
     <Sfx at={P(3)} name="penguin-squawk" vol={0.35} />
     <Sfx at={P(4) + 0.6} name="penguin-honk" vol={0.35} />
     <Sfx at={P(5)} name="user-money" vol={0.3} />

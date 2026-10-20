@@ -1,0 +1,35 @@
+Why two penguins make same salary,|0.04
+but only one buy his dream car?|0.2
+This is Doug. This is Ricky. Brothers.|0.1
+Same job. Same salary.|0.06
+Seventy thousand dollars a year.|0.1
+Both need a car.|0.1
+Doug buy new car. Forty-four thousand dollars.|0.06
+With a loan.|0.1
+Loan is six hundred fifty dollars every month.|0.06
+For seven years.|0.1
+New car have warranty. Few repairs.|0.1
+Doug happy.|0.3
+Ricky buy used car. Ten thousand dollars. Cash.|0.1
+Used car cost less.|0.06
+But used car can break more.|0.06
+Repairs cost money.|0.1
+Ricky put his extra money in stocks every month.|0.1
+Stocks can go up.|0.06
+Stocks can also go down.|0.1
+Ricky nervous.|0.3
+Money that grow on its own money,|0.04
+is called compound interest.|0.12
+Every year, cars lose value.|0.06
+This is called depreciation.|0.12
+In real life, average new car loan is about forty-four thousand dollars,|0.04
+at about six percent.|0.1
+After seven years, Doug car is paid off.|0.06
+Doug own the car.|0.1
+If stocks grow seven percent a year,|0.04
+Ricky have about seventy thousand dollars,|0.04
+minus his repairs.|0.1
+If stocks fall, Ricky have less.|0.15
+Same salary.|0.06
+Different choices.|0.06
+Different numbers.|0.3
