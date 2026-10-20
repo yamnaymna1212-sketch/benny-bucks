@@ -58,7 +58,7 @@ Safety / fairness (anything that can get a TikTok video removed or limited):
 - No get-rich-quick, guaranteed returns, "passive income", wealth flexing, crypto/gambling/loans promotion, fake urgency ("before it's too late").
 - No real brands, logos, real people, real currency copies (fish versions only); no copyrighted music.
 - No dangerous acts, theft shown as cool/rewarded (a thief always fails or is the problem), no minors in risky situations.
-- Label AI-generated voice/visuals; caption + description must match the video (no clickbait the video does not deliver).
+- Never write "AI-generated" in the video or the description (user: not professional). Only remind the user to switch on TikTok's built-in AI-content toggle in the post settings (realistic AI voice). Caption + description must match the video (no clickbait the video does not deliver).
 Fun / curiosity (never boring):
 - A simple, NEW angle a 10-year-old gets in one look; caveman-English lines, one idea per shot.
 - A humour beat every ~6–8 s: visual gag, "Doug <state>." gag, character reaction, running gags (Fox snicker, Doug's jacket...).
