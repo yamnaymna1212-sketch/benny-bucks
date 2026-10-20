@@ -17,7 +17,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.15 ? 1.3 * ease(d / 0.15) : 1.3 - 0.3 * ease((d - 0.15) / 0.15); };
-const DRIVE = P(1), DREAM = P(1) + 0.5, JUNK = P(1) + 1.05; // supercar drives in to Doug, then Ricky's junk car rolls in
+const DRIVE = P(1), DREAM = P(1) + 0.75, JUNK = P(2); // supercar drives in to Doug, then Ricky's junk car rolls in
 
 // Banded stack of green bills with three "shine" ticks above it.
 const CashStack = ({x, y, w = 300}: {x: number; y: number; w?: number}) =>
@@ -273,7 +273,7 @@ export const DougSalary = () => {
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { // hook: push toward Doug on "stay poor", swing to Ricky on "millionaire"
     // push in on Doug as the supercar arrives, swing over to Ricky's junk car, settle on both
-    const toL = ease((tc - DRIVE) / 0.3) * (tc < JUNK ? 1 : 0), toR = ease((tc - JUNK) / 0.3) * (tc < P(2) - 0.25 ? 1 : 0);
+    const toL = ease((tc - DRIVE) / 0.3) * (tc < JUNK ? 1 : 0), toR = ease((tc - JUNK) / 0.3) * (tc < P(3) - 0.25 ? 1 : 0);
     s0 = 1 + 0.3 * (toL + toR); fx = 540 - 250 * toL + 250 * toR; fy = 960 - 120 * (toL + toR);
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;

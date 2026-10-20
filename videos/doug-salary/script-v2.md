@@ -1,6 +1,6 @@
 # EP4 "Same Salary" v2 — neutral (NEUTRAL & CLEAR RULE, 2026-10-20). Dollars only, both sides fair, no advice, no get-rich promise.
 
-Why two penguins make same salary… but only one buy his dream car?
+Why two penguins make same salary… but one buy his dream car, and one buy old car?
 This is Doug. This is Ricky. Brothers.
 Same job. Same salary. Seventy thousand dollars a year.
 Both need a car.

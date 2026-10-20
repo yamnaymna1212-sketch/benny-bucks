@@ -1,5 +1,6 @@
 Why two penguins make same salary,|0.04
-but only one buy his dream car?|0.2
+but one buy his dream car,|0.04
+and one buy old car?|0.2
 This is Doug. This is Ricky. Brothers.|0.1
 Same job. Same salary.|0.06
 Seventy thousand dollars a year.|0.1

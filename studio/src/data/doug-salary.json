@@ -6,172 +6,177 @@
  },
  {
   "start": 1.92,
-  "end": 3.65,
-  "text": "but only one buy his dream car?"
+  "end": 3.29,
+  "text": "but one buy his dream car,"
  },
  {
-  "start": 3.85,
-  "end": 5.83,
+  "start": 3.33,
+  "end": 4.42,
+  "text": "and one buy old car?"
+ },
+ {
+  "start": 4.62,
+  "end": 6.61,
   "text": "This is Doug. This is Ricky. Brothers."
  },
  {
-  "start": 5.93,
-  "end": 7.44,
+  "start": 6.71,
+  "end": 8.22,
   "text": "Same job. Same salary."
  },
  {
-  "start": 7.5,
-  "end": 9.17,
+  "start": 8.28,
+  "end": 9.94,
   "text": "Seventy thousand dollars a year."
  },
  {
-  "start": 9.27,
-  "end": 10.21,
+  "start": 10.04,
+  "end": 10.99,
   "text": "Both need a car."
  },
  {
-  "start": 10.31,
-  "end": 12.99,
+  "start": 11.09,
+  "end": 13.77,
   "text": "Doug buy new car. Forty-four thousand dollars."
  },
  {
-  "start": 13.05,
-  "end": 13.74,
+  "start": 13.83,
+  "end": 14.51,
   "text": "With a loan."
  },
  {
-  "start": 13.84,
-  "end": 16.4,
+  "start": 14.61,
+  "end": 17.17,
   "text": "Loan is six hundred fifty dollars every month."
  },
  {
-  "start": 16.46,
-  "end": 17.41,
+  "start": 17.23,
+  "end": 18.18,
   "text": "For seven years."
  },
  {
-  "start": 17.51,
-  "end": 19.56,
+  "start": 18.28,
+  "end": 20.34,
   "text": "New car have warranty. Few repairs."
  },
  {
-  "start": 19.66,
-  "end": 20.41,
+  "start": 20.44,
+  "end": 21.18,
   "text": "Doug happy."
  },
  {
-  "start": 20.71,
-  "end": 23.54,
+  "start": 21.48,
+  "end": 24.31,
   "text": "Ricky buy used car. Ten thousand dollars. Cash."
  },
  {
-  "start": 23.64,
-  "end": 24.83,
+  "start": 24.41,
+  "end": 25.6,
   "text": "Used car cost less."
  },
  {
-  "start": 24.89,
-  "end": 26.38,
+  "start": 25.66,
+  "end": 27.16,
   "text": "But used car can break more."
  },
  {
-  "start": 26.44,
-  "end": 27.51,
+  "start": 27.22,
+  "end": 28.28,
   "text": "Repairs cost money."
  },
  {
-  "start": 27.61,
-  "end": 30.17,
+  "start": 28.38,
+  "end": 30.94,
   "text": "Ricky put his extra money in stocks every month."
  },
  {
-  "start": 30.27,
-  "end": 31.3,
+  "start": 31.04,
+  "end": 32.07,
   "text": "Stocks can go up."
  },
  {
-  "start": 31.36,
-  "end": 32.78,
+  "start": 32.13,
+  "end": 33.56,
   "text": "Stocks can also go down."
  },
  {
-  "start": 32.88,
-  "end": 33.74,
+  "start": 33.66,
+  "end": 34.52,
   "text": "Ricky nervous."
  },
  {
-  "start": 34.04,
-  "end": 35.58,
+  "start": 34.82,
+  "end": 36.35,
   "text": "Money that grow on its own money,"
  },
  {
-  "start": 35.62,
-  "end": 37.04,
+  "start": 36.39,
+  "end": 37.82,
   "text": "is called compound interest."
  },
  {
-  "start": 37.16,
-  "end": 38.81,
+  "start": 37.94,
+  "end": 39.58,
   "text": "Every year, cars lose value."
  },
  {
-  "start": 38.87,
-  "end": 40.36,
+  "start": 39.64,
+  "end": 41.14,
   "text": "This is called depreciation."
  },
  {
-  "start": 40.48,
-  "end": 44.99,
+  "start": 41.26,
+  "end": 45.76,
   "text": "In real life, average new car loan is about forty-four thousand dollars,"
  },
  {
-  "start": 45.03,
-  "end": 46.18,
+  "start": 45.8,
+  "end": 46.95,
   "text": "at about six percent."
  },
  {
-  "start": 46.28,
-  "end": 48.55,
+  "start": 47.05,
+  "end": 49.33,
   "text": "After seven years, Doug car is paid off."
  },
  {
-  "start": 48.61,
-  "end": 49.49,
+  "start": 49.39,
+  "end": 50.27,
   "text": "Doug own the car."
  },
  {
-  "start": 49.59,
-  "end": 51.51,
+  "start": 50.37,
+  "end": 52.28,
   "text": "If stocks grow seven percent a year,"
  },
  {
-  "start": 51.55,
-  "end": 53.69,
+  "start": 52.32,
+  "end": 54.46,
   "text": "Ricky have about seventy thousand dollars,"
  },
  {
-  "start": 53.73,
-  "end": 54.84,
+  "start": 54.5,
+  "end": 55.61,
   "text": "minus his repairs."
  },
  {
-  "start": 54.94,
-  "end": 56.56,
+  "start": 55.71,
+  "end": 57.33,
   "text": "If stocks fall, Ricky have less."
  },
  {
-  "start": 56.71,
-  "end": 57.56,
+  "start": 57.48,
+  "end": 58.33,
   "text": "Same salary."
  },
  {
-  "start": 57.62,
-  "end": 58.57,
+  "start": 58.39,
+  "end": 59.34,
   "text": "Different choices."
  },
  {
-  "start": 58.63,
-  "end": 59.52,
+  "start": 59.41,
+  "end": 60.29,
   "text": "Different numbers."
  }
 ]
