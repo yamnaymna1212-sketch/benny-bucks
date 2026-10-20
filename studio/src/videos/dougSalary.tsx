@@ -17,7 +17,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.15 ? 1.3 * ease(d / 0.15) : 1.3 - 0.3 * ease((d - 0.15) / 0.15); };
-const DREAM = P(1) + 0.8, USED = P(1) + 1.4; // dream car -> Doug's car pops; then Ricky's used car
+const DRIVE = P(1), DREAM = P(1) + 0.5, JUNK = P(1) + 1.05; // supercar drives in to Doug, then Ricky's junk car rolls in
 
 // Banded stack of green bills with three "shine" ticks above it.
 const CashStack = ({x, y, w = 300}: {x: number; y: number; w?: number}) =>
@@ -44,6 +44,57 @@ export const Car = ({x, y, w = 380, color = RED, shiny}: {x: number; y: number; 
     {shiny && [[60, 20], [360, 40], [200, 6]].map(([sx, sy], i) => <path key={i} transform={`translate(${sx} ${sy})`} d="M0 -18 L5 -5 L18 0 L5 5 L0 18 L-5 5 L-18 0 L-5 -5 Z" fill="#F7C531" stroke={INK} strokeWidth={3} />)}
   </svg>;
 
+// Dream supercar (no logo): low wedge body, tinted canopy, side intake, spoiler, big spoked rims. (x, y) = ground under its centre.
+const SuperCar = ({x, y, w = 480, t = 0, spin = 0}: {x: number; y: number; w?: number; t?: number; spin?: number}) =>
+  <svg width={w} height={w * 0.38} viewBox="0 0 600 228" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.38, overflow: 'visible'}}>
+    <defs>
+      <linearGradient id="scBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FF4B3A" /><stop offset="0.55" stopColor="#D8231A" /><stop offset="1" stopColor="#8E1410" /></linearGradient>
+      <linearGradient id="scGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#3A4A5C" /><stop offset="1" stopColor="#11161C" /></linearGradient>
+    </defs>
+    <ellipse cx={300} cy={214} rx={280} ry={14} fill="rgba(0,0,0,0.22)" />
+    <path d="M14 176 L18 150 Q24 128 70 120 L190 104 Q250 62 330 58 Q400 58 452 92 L540 112 Q584 120 590 150 L588 178 Q586 188 572 188 L14 188 Z" fill="url(#scBody)" stroke={INK} strokeWidth={6} strokeLinejoin="round" />
+    <path d="M206 104 Q258 70 330 68 Q392 68 440 98 L420 108 L222 112 Z" fill="url(#scGlass)" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    <path d="M250 84 Q300 74 352 76" fill="none" stroke="#fff" strokeWidth={5} strokeLinecap="round" opacity={0.55} />
+    <path d="M318 70 L312 110" stroke={INK} strokeWidth={4} />
+    <path d="M60 132 Q260 116 560 128" fill="none" stroke="#FF8A7A" strokeWidth={5} strokeLinecap="round" opacity={0.8} />
+    <path d="M300 128 L380 124 L392 160 L316 162 Z" fill="#2A0A08" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+    {[0, 1, 2].map((i) => <path key={i} d={`M${318 + i * 22} 134 L${328 + i * 22} 156`} stroke="#5A1A14" strokeWidth={4} />)}
+    <path d="M520 104 L578 92 L582 104 L530 112 Z" fill="#8E1410" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    <path d="M556 132 Q574 132 586 142 L560 146 Z" fill="#FFF3B0" stroke={INK} strokeWidth={4} />
+    <path d="M18 150 L44 146 L42 160 L16 162 Z" fill="#FFD84A" stroke={INK} strokeWidth={4} />
+    {[130, 470].map((cx) => <g key={cx}>
+      <path d={`M${cx - 78} 186 Q${cx - 76} 118 ${cx} 116 Q${cx + 76} 118 ${cx + 78} 186 Z`} fill="#1A0605" />
+      <circle cx={cx} cy={180} r={54} fill="#141414" stroke={INK} strokeWidth={5} />
+      <circle cx={cx} cy={180} r={36} fill="#C9CDD2" stroke={INK} strokeWidth={4} />
+      <g transform={`rotate(${spin} ${cx} 180)`}>{[0, 1, 2, 3, 4].map((k) => <path key={k} transform={`rotate(${k * 72} ${cx} 180)`} d={`M${cx - 6} 180 L${cx} 148 L${cx + 6} 180 Z`} fill="#8A9097" stroke={INK} strokeWidth={2} />)}</g>
+      <circle cx={cx} cy={180} r={9} fill="#D8231A" stroke={INK} strokeWidth={3} />
+    </g>)}
+    {t > 0 && [[40, -10], [560, 20], [300, 30]].map(([sx, sy], i) => <path key={i} transform={`translate(${sx} ${sy}) scale(${0.7 + 0.3 * Math.sin(t * 8 + i)})`} d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="#F7C531" stroke={INK} strokeWidth={3} />)}
+  </svg>;
+
+// Beat-up old sedan: faded paint, rust, dented door, cracked windshield, flat tyre, hanging bumper, duct tape, smoke.
+const JunkCar = ({x, y, w = 460, t = 0, smoke = true, hubcap = 0}: {x: number; y: number; w?: number; t?: number; smoke?: boolean; hubcap?: number}) =>
+  <svg width={w} height={w * 0.46} viewBox="0 0 560 258" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.46, overflow: 'visible'}}>
+    <ellipse cx={280} cy={246} rx={262} ry={12} fill="rgba(0,0,0,0.2)" />
+    {smoke && [0, 1, 2].map((i) => { const ph = (t * 0.9 + i * 0.33) % 1;
+      return <circle key={i} cx={470 + Math.sin(i * 2 + t * 2) * 14} cy={110 - ph * 150} r={22 + ph * 30} fill="#8E949A" stroke={INK} strokeWidth={4} opacity={0.85 - ph * 0.7} />; })}
+    <path d="M24 200 L22 150 Q24 132 52 128 L120 122 L170 66 Q180 56 200 56 L360 56 Q380 56 392 70 L436 122 L512 132 Q538 138 540 166 L540 206 L24 210 Z" fill="#9C8F6A" stroke={INK} strokeWidth={6} strokeLinejoin="round" />
+    <path d="M140 122 L184 72 L270 72 L270 122 Z" fill="#BFD2DA" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    <path d="M286 122 L286 72 L372 72 L414 122 Z" fill="#BFD2DA" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    <path d="M330 78 L344 96 L336 112 M344 96 L364 100 M344 96 L352 80" fill="none" stroke={INK} strokeWidth={3} />
+    <path d="M276 128 L392 128 L392 198 L276 198 Z" fill="#6E8398" stroke={INK} strokeWidth={5} />
+    <path d="M300 150 Q322 168 352 150 Q340 178 310 172 Z" fill="#5C6E80" stroke={INK} strokeWidth={3} />
+    {[[70, 150, 34], [200, 176, 26], [470, 170, 30]].map(([cx, cy, r], i) => <path key={i} d={`M${cx - r} ${cy} q${r * 0.5} ${-r * 0.7} ${r} ${-r * 0.2} q${r * 0.7} ${r * 0.1} ${r} ${r * 0.6} q${-r * 0.6} ${r * 0.7} ${-r * 1.2} ${r * 0.3} Z`} fill="#A55A24" stroke={INK} strokeWidth={3} opacity={0.9} />)}
+    <path d="M150 140 L196 160 M196 140 L150 160" stroke="#C9C9C9" strokeWidth={14} strokeLinecap="round" />
+    <path d="M150 140 L196 160 M196 140 L150 160" stroke={INK} strokeWidth={2} />
+    <path d="M512 196 L548 222 L556 214" fill="none" stroke="#777" strokeWidth={10} strokeLinecap="round" />
+    <path d="M520 150 L540 150" stroke="#E8D9A0" strokeWidth={10} strokeLinecap="round" />
+    <path d="M30 170 L22 186" stroke={INK} strokeWidth={4} />
+    <g><ellipse cx={120} cy={226} rx={50} ry={34} fill="#141414" stroke={INK} strokeWidth={5} /><ellipse cx={120} cy={226} rx={18} ry={13} fill="#777" /></g>
+    <g><circle cx={440} cy={212} r={46} fill="#141414" stroke={INK} strokeWidth={5} /><circle cx={440} cy={212} r={16} fill="#5A5A5A" /></g>
+    {hubcap > 0 && <g transform={`translate(${440 + hubcap * 90} ${212 + Math.min(1, hubcap * 2) * 24}) rotate(${hubcap * 540})`}><circle r={30} fill="#C9CDD2" stroke={INK} strokeWidth={4} /><circle r={8} fill="#888" /></g>}
+  </svg>;
+
 // Yellow baseball cap (Ricky's signature), brim to the viewer's left; (x, y) = bottom-centre of the crown.
 const YellowCap = ({x, y, w = 250}: {x: number; y: number; w?: number}) =>
   <svg width={w} height={w * 0.6} viewBox="0 0 250 150" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.48, overflow: 'visible'}}>
@@ -67,21 +118,25 @@ const Ricky = ({x, y, h = 590, pose = {}}: {x: number; y: number; h?: number; po
 // ---------- hook: same salary -> Doug's cash becomes a car payment, Ricky's cash becomes a fish mountain ----------
 const L = 290, R = 790;
 const Hook = ({t}: {t: number}) => {
-  const out = ease((t - DREAM) / 0.25), outR = ease((t - USED) / 0.25);
+  const out = ease((t - DRIVE) / 0.25), outR = ease((t - JUNK) / 0.25);
+  const inD = ease((t - DRIVE) / (DREAM - DRIVE)), inJ = ease((t - JUNK) / 0.45);
+  const hopD = t > DREAM ? Math.abs(Math.sin((t - DREAM) * 10)) * 40 : 0, shrug = t > JUNK + 0.45;
   return <>
-    <div style={{opacity: 1 - out, transform: `translateY(${-160 * out}px)`}}><CashStack x={L} y={550} /><Big x={L} y={560} text="$70,000" /></div>
-    <div style={{opacity: 1 - outR, transform: `translateY(${-160 * outR}px)`}}><CashStack x={R} y={550} /><Big x={R} y={560} text="$70,000" /></div>
-    {t >= DREAM && <div style={{position: 'absolute', inset: 0, transform: `scale(${pop(t, DREAM)})`, transformOrigin: `${L}px 450px`}}><Car x={L} y={540} w={420} shiny /></div>}
-    {t >= DREAM + 0.2 && <div style={{position: 'absolute', left: L + 120, top: 250 + Math.sin(t * 5) * 12, fontSize: 90, transform: `scale(${pop(t, DREAM + 0.2)})`}}>❤️</div>}
-    <Big x={L} y={570} text="$44,000" color={RED} size={96} s={pop(t, DREAM + 0.15)} />
-    {t >= USED && <div style={{position: 'absolute', inset: 0, transform: `scale(${pop(t, USED)})`, transformOrigin: `${R}px 450px`}}><Car x={R} y={540} w={380} color="#5B8DB8" /></div>}
-    <Big x={R} y={570} text="$10,000" color={GREEN} size={96} s={pop(t, USED + 0.15)} />
-    <Penguin x={L} y={1290} h={560} id="doug" pose={t < DREAM ? {turn: 0.35, look: [0.3, 0]}
-      : {turn: 0.2, look: [0, -0.5], brows: 'happy', beak: 'smile', blush: 1, eyeScale: 1.15, flapL: 80, flapR: 80}} />
-    <Ricky x={R} y={1290} pose={t < USED ? {turn: -0.35, look: [-0.3, 0]} : {turn: -0.2, look: [0, -0.4], flapR: 30}} />
-    <Big x={L} y={1320} text="Doug" size={84} />
-    <Big x={R} y={1320} text="Ricky" size={84} />
-    {t >= P(0) + 0.3 && t < P(1) && <Big x={540} y={170} text="SAME SALARY" size={84} s={pop(t, P(0) + 0.3)} />}
+    <div style={{opacity: 1 - out, transform: `translateY(${-160 * out}px)`}}><CashStack x={L} y={560} /><Big x={L} y={570} text="$70,000" /></div>
+    <div style={{opacity: 1 - outR, transform: `translateY(${-160 * outR}px)`}}><CashStack x={R} y={560} /><Big x={R} y={570} text="$70,000" /></div>
+    {t >= DRIVE && <>
+      {inD < 1 && <div style={{position: 'absolute', left: L - 700 * (1 - inD) - 330, top: 440, width: 260, height: 100, opacity: 1 - inD}}>
+        {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', top: i * 34, left: i * 30, width: 200, height: 8, borderRadius: 4, background: INK}} />)}</div>}
+      <SuperCar x={L - 700 * (1 - inD)} y={560} w={500} t={t > DREAM ? t : 0} spin={inD * 1400} />
+      <Big x={L} y={590} text="$44,000" color={RED} size={100} s={pop(t, DREAM)} />
+    </>}
+    {t >= JUNK && <>
+      <JunkCar x={R + 700 * (1 - inJ)} y={560} w={470} t={t} hubcap={t > JUNK + 0.5 ? (t - JUNK - 0.5) * 1.4 : 0} />
+      <Big x={R} y={590} text="$10,000" color={GREEN} size={100} s={pop(t, JUNK + 0.4)} />
+    </>}
+    <Penguin x={L} y={1290 - hopD} h={560} id="doug" pose={t < DREAM ? {turn: 0.35, look: [t >= DRIVE ? -0.6 : 0.3, 0]}
+      : {turn: 0.2, look: [0, -0.6], brows: 'happy', beak: 'smile', blush: 1, eyeScale: 1.2, flapL: 120, flapR: 120}} />
+    <Ricky x={R} y={1290} pose={t < JUNK ? {turn: -0.35, look: [-0.3, 0]} : shrug ? {turn: -0.1, look: [0, -0.6], flapL: 70, flapR: 70, brows: 'worried', beak: 'flat'} : {turn: -0.2, look: [0.6, -0.4]}} />
   </>;
 };
 
@@ -217,8 +272,9 @@ export const DougSalary = () => {
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { // hook: push toward Doug on "stay poor", swing to Ricky on "millionaire"
-    const toL = ease((tc - P(1)) / 0.3) * (tc < USED ? 1 : 0); // push to Doug on "only one buy his dream car", back to both for Ricky
-    s0 = 1 + 0.22 * toL; fx = 540 - 250 * toL; fy = 960 + 90 * toL;
+    // push in on Doug as the supercar arrives, swing over to Ricky's junk car, settle on both
+    const toL = ease((tc - DRIVE) / 0.3) * (tc < JUNK ? 1 : 0), toR = ease((tc - JUNK) / 0.3) * (tc < P(2) - 0.25 ? 1 : 0);
+    s0 = 1 + 0.3 * (toL + toR); fx = 540 - 250 * toL + 250 * toR; fy = 960 - 120 * (toL + toR);
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
@@ -233,11 +289,14 @@ export const DougSalary = () => {
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.5} name="user-money" vol={0.3} />
-    <Sfx at={P(1) - 0.05} name="user-whoosh" vol={0.25} />
-    <Sfx at={DREAM} name="user-boom" vol={0.4} />
-    <Sfx at={DREAM + 0.15} name="user-cash-register" vol={0.3} />
-    <Sfx at={USED - 0.05} name="user-whoosh" vol={0.25} />
-    <Sfx at={USED + 0.15} name="user-money" vol={0.3} />
+    <Sfx at={DRIVE - 0.05} name="user-whoosh" vol={0.35} />
+    <Sfx at={DRIVE} name="swoosh-fast" vol={0.35} />
+    <Sfx at={DREAM} name="user-boom" vol={0.45} />
+    <Sfx at={DREAM + 0.05} name="user-cash-register" vol={0.3} />
+    <Sfx at={DREAM + 0.1} name="user-wow" vol={0.3} />
+    <Sfx at={JUNK - 0.05} name="user-whoosh" vol={0.3} />
+    <Sfx at={JUNK + 0.3} name="user-horn" vol={0.35} />
+    <Sfx at={JUNK + 0.5} name="splat" vol={0.3} />
     <Sfx at={P(3)} name="penguin-squawk" vol={0.35} />
     <Sfx at={P(4) + 0.6} name="penguin-honk" vol={0.35} />
     <Sfx at={P(5)} name="user-money" vol={0.3} />
