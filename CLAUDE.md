@@ -1,8 +1,10 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video type `/doug-episode` (manual-only skill) + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice, NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+Doug rules: 61–65 s, the user's ElevenLabs voice (if out of credits: free Edge TTS `en-US-AndrewNeural`, see VOICE below; keep ONE voice per series), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 HOOK = main template `WhyHook` (studio/src/penguin/whyHook.tsx): big "WHY" + two flag/price/object sides + plain confused Doug in the middle; never an "Explained by Doug" title.
 MASTER EDIT STYLE (every video) = 'Edit rules v4' in videos/penguin-series/script-formula.md, template studio/src/videos/dougGasIran.tsx: white hook, Doug acts the hook (looks A -> snaps to B -> shock), no pauses (0.08 s), new shot every ~2.5 s.
+HOOK TEMPLATE 2 = "What the difference" split (HookB in studio/src/videos/dougCashBurger.tsx, user-approved 2026-10-20): italic title "What the difference" (user wording, keep), SAME price on both sides + the real object (food etc.), CASH vs CARD style labels with a VS badge, dashed divider, Doug paying a cashier at a counter on each side. Use it for "same price, different way" topics; WhyHook for "different price" topics.
+VOICE fallback: `edge-tts --proxy "$HTTPS_PROXY" --voice en-US-AndrewNeural -f voice.txt --write-media raw.mp3 --write-subtitles raw.srt` (host speech.platform.bing.com must be allowed in the environment network settings); segments from the .srt snapped to silences, then tools/tighten_vo.py + atempo.
 HOOK CAMERA (every split hook): no zoom at first -> zoom into side A on its spoken word -> zoom to side B on its word -> back to full split; each side's characters react with their own expression (see "Hook camera rule" in script-formula.md).
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
@@ -46,6 +48,12 @@ Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on
 - No financial advice ("always pay cash"); end with a question instead.
 - Every real-world number needs a named source in the script notes (e.g. Nilson Report 2025) and the pinned comment.
 - Never re-upload a removed video or a near-copy of it; change topic.
+
+## Safe-reach rules (user, 2026-10-20, after limited reach on TikTok)
+- Money is always a CARTOON note (green, "$" only): no "United States", portraits, seals, serials, no real bills/photos. Cards are plain blue, no brand/logo.
+- No sensitive words in hook, on-screen text or caption: bank profits, "billions", tax man "takes everything", "secret", "trick", "scam", named companies. Say it indirectly ("a few cents", "the card company").
+- Post directly from the TikTok app (not a scheduler), run Post check in TikTok Studio first, turn on the AI-generated label.
+- If US reach is low, check Analytics -> Viewers (countries) before changing content: low US share across all videos = account region, not content.
 
 ## Pre-send checklist
 - Is the contrast clear and exaggerated from the first frame, with no words?

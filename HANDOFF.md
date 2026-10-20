@@ -1,3 +1,7 @@
+# LATEST (2026-10-20) — read CLAUDE.md first: Truth rule, Safe-reach rules, Hook template 2, Hook camera rule, voice fallback.
+Last episode: EP5 cash vs card, burger version (videos/doug-cash-card-burger/, comp doug-cash-burger). Work branch: claude/vigilant-ritchie-i04nqw.
+Next idea drafted: EP6 Debit vs Credit (videos/doug-debit-credit/voice.txt) — on hold until EP5 reach is checked (Analytics -> Viewers).
+
 # HANDOFF — continue the "Doug the Penguin" channel in a new session
 
 Read this first, then PROJECT_LOG.md (decisions) and videos/penguin-series/script-formula.md (series rules).
