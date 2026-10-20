@@ -1,0 +1,422 @@
+[
+ {
+  "a": 0.153,
+  "b": 2.377,
+  "text": "What the difference between paying fifty dollars with debit... and fifty dollars with credit?",
+  "line": 1,
+  "gap_after": 0.12
+ },
+ {
+  "a": 2.501,
+  "b": 2.796,
+  "text": "What the difference between paying fifty dollars with debit... and fifty dollars with credit?",
+  "line": 1,
+  "gap_after": 0.12
+ },
+ {
+  "a": 3.13,
+  "b": 4.403,
+  "text": "What the difference between paying fifty dollars with debit... and fifty dollars with credit?",
+  "line": 1,
+  "gap_after": 0.3
+ },
+ {
+  "a": 4.851,
+  "b": 5.928,
+  "text": "Same fifty dollars.",
+  "line": 2,
+  "gap_after": 0.08
+ },
+ {
+  "a": 6.38,
+  "b": 6.697,
+  "text": "Today.",
+  "line": 3,
+  "gap_after": 0.08
+ },
+ {
+  "a": 7.104,
+  "b": 7.738,
+  "text": "This is Doug.",
+  "line": 4,
+  "gap_after": 0.08
+ },
+ {
+  "a": 8.148,
+  "b": 9.159,
+  "text": "Doug need new jacket.",
+  "line": 5,
+  "gap_after": 0.08
+ },
+ {
+  "a": 9.609,
+  "b": 10.586,
+  "text": "Puffin sell jacket.",
+  "line": 6,
+  "gap_after": 0.08
+ },
+ {
+  "a": 11.053,
+  "b": 11.734,
+  "text": "Fifty dollars.",
+  "line": 7,
+  "gap_after": 0.08
+ },
+ {
+  "a": 12.174,
+  "b": 13.314,
+  "text": "Doug pay with debit card.",
+  "line": 8,
+  "gap_after": 0.08
+ },
+ {
+  "a": 13.77,
+  "b": 14.009,
+  "text": "Beep.",
+  "line": 9,
+  "gap_after": 0.08
+ },
+ {
+  "a": 14.48,
+  "b": 15.493,
+  "text": "Fifty dollars leave Doug bank account.",
+  "line": 10,
+  "gap_after": 0.12
+ },
+ {
+  "a": 15.628,
+  "b": 16.444,
+  "text": "Fifty dollars leave Doug bank account.",
+  "line": 10,
+  "gap_after": 0.08
+ },
+ {
+  "a": 16.875,
+  "b": 17.282,
+  "text": "Right now.",
+  "line": 11,
+  "gap_after": 0.08
+ },
+ {
+  "a": 17.702,
+  "b": 17.944,
+  "text": "Done.",
+  "line": 12,
+  "gap_after": 0.08
+ },
+ {
+  "a": 18.359,
+  "b": 18.709,
+  "text": "Simple.",
+  "line": 13,
+  "gap_after": 0.08
+ },
+ {
+  "a": 19.137,
+  "b": 19.756,
+  "text": "Next winter, Doug pay with credit card.",
+  "line": 14,
+  "gap_after": 0.12
+ },
+ {
+  "a": 20.096,
+  "b": 21.304,
+  "text": "Next winter, Doug pay with credit card.",
+  "line": 14,
+  "gap_after": 0.08
+ },
+ {
+  "a": 21.757,
+  "b": 21.996,
+  "text": "Beep.",
+  "line": 15,
+  "gap_after": 0.08
+ },
+ {
+  "a": 22.424,
+  "b": 22.937,
+  "text": "Doug account?",
+  "line": 16,
+  "gap_after": 0.08
+ },
+ {
+  "a": 23.374,
+  "b": 23.933,
+  "text": "Still full.",
+  "line": 17,
+  "gap_after": 0.08
+ },
+ {
+  "a": 24.389,
+  "b": 26.253,
+  "text": "Fox the Banker pay Puffin for Doug.",
+  "line": 18,
+  "gap_after": 0.08
+ },
+ {
+  "a": 26.664,
+  "b": 28.353,
+  "text": "Now Doug owe Fox fifty dollars.",
+  "line": 19,
+  "gap_after": 0.08
+ },
+ {
+  "a": 28.806,
+  "b": 29.468,
+  "text": "One month later, the bill come.",
+  "line": 20,
+  "gap_after": 0.12
+ },
+ {
+  "a": 29.729,
+  "b": 30.324,
+  "text": "One month later, the bill come.",
+  "line": 20,
+  "gap_after": 0.08
+ },
+ {
+  "a": 30.737,
+  "b": 33.027,
+  "text": "If Doug pay all fifty dollars on time... interest: zero.",
+  "line": 21,
+  "gap_after": 0.12
+ },
+ {
+  "a": 33.47,
+  "b": 33.934,
+  "text": "If Doug pay all fifty dollars on time... interest: zero.",
+  "line": 21,
+  "gap_after": 0.12
+ },
+ {
+  "a": 34.175,
+  "b": 34.632,
+  "text": "If Doug pay all fifty dollars on time... interest: zero.",
+  "line": 21,
+  "gap_after": 0.08
+ },
+ {
+  "a": 35.036,
+  "b": 36.049,
+  "text": "Doug even get points.",
+  "line": 22,
+  "gap_after": 0.08
+ },
+ {
+  "a": 36.488,
+  "b": 37.804,
+  "text": "And his credit score can go up.",
+  "line": 23,
+  "gap_after": 0.08
+ },
+ {
+  "a": 38.238,
+  "b": 38.747,
+  "text": "Doug smart.",
+  "line": 24,
+  "gap_after": 0.4
+ },
+ {
+  "a": 39.196,
+  "b": 40.504,
+  "text": "But if Doug pay only a little...",
+  "line": 25,
+  "gap_after": 0.08
+ },
+ {
+  "a": 40.972,
+  "b": 41.761,
+  "text": "Fox add interest.",
+  "line": 26,
+  "gap_after": 0.08
+ },
+ {
+  "a": 42.209,
+  "b": 42.779,
+  "text": "Every month.",
+  "line": 27,
+  "gap_after": 0.08
+ },
+ {
+  "a": 43.214,
+  "b": 43.949,
+  "text": "In real life, average credit card interest is about twenty-two percent a year.",
+  "line": 28,
+  "gap_after": 0.12
+ },
+ {
+  "a": 44.259,
+  "b": 47.237,
+  "text": "In real life, average credit card interest is about twenty-two percent a year.",
+  "line": 28,
+  "gap_after": 0.08
+ },
+ {
+  "a": 47.673,
+  "b": 48.96,
+  "text": "That is Federal Reserve data.",
+  "line": 29,
+  "gap_after": 0.08
+ },
+ {
+  "a": 49.399,
+  "b": 50.526,
+  "text": "Fifty dollars for one year?",
+  "line": 30,
+  "gap_after": 0.08
+ },
+ {
+  "a": 50.961,
+  "b": 52.729,
+  "text": "Doug pay more than ten dollars extra.",
+  "line": 31,
+  "gap_after": 0.08
+ },
+ {
+  "a": 53.157,
+  "b": 53.616,
+  "text": "One night, Stoat steal Doug card.",
+  "line": 32,
+  "gap_after": 0.12
+ },
+ {
+  "a": 53.9,
+  "b": 55.106,
+  "text": "One night, Stoat steal Doug card.",
+  "line": 32,
+  "gap_after": 0.08
+ },
+ {
+  "a": 55.547,
+  "b": 55.944,
+  "text": "With debit?",
+  "line": 33,
+  "gap_after": 0.08
+ },
+ {
+  "a": 56.429,
+  "b": 57.299,
+  "text": "Doug own money gone.",
+  "line": 34,
+  "gap_after": 0.08
+ },
+ {
+  "a": 57.724,
+  "b": 58.676,
+  "text": "Doug wait for the bank.",
+  "line": 35,
+  "gap_after": 0.08
+ },
+ {
+  "a": 59.122,
+  "b": 59.55,
+  "text": "With credit?",
+  "line": 36,
+  "gap_after": 0.08
+ },
+ {
+  "a": 60.039,
+  "b": 60.797,
+  "text": "It is Fox money.",
+  "line": 37,
+  "gap_after": 0.08
+ },
+ {
+  "a": 61.231,
+  "b": 61.657,
+  "text": "By law, Doug pay fifty dollars max. Usually zero.",
+  "line": 38,
+  "gap_after": 0.12
+ },
+ {
+  "a": 61.953,
+  "b": 64.288,
+  "text": "By law, Doug pay fifty dollars max. Usually zero.",
+  "line": 38,
+  "gap_after": 0.08
+ },
+ {
+  "a": 64.698,
+  "b": 64.97,
+  "text": "Debit: you spend only money you have.",
+  "line": 39,
+  "gap_after": 0.12
+ },
+ {
+  "a": 65.413,
+  "b": 65.78,
+  "text": "Debit: you spend only money you have.",
+  "line": 39,
+  "gap_after": 0.12
+ },
+ {
+  "a": 65.908,
+  "b": 66.946,
+  "text": "Debit: you spend only money you have.",
+  "line": 39,
+  "gap_after": 0.08
+ },
+ {
+  "a": 67.381,
+  "b": 67.61,
+  "text": "Credit: you borrow.",
+  "line": 40,
+  "gap_after": 0.12
+ },
+ {
+  "a": 67.946,
+  "b": 68.456,
+  "text": "Credit: you borrow.",
+  "line": 40,
+  "gap_after": 0.08
+ },
+ {
+  "a": 68.869,
+  "b": 69.835,
+  "text": "Points and protection, but pay back in full.",
+  "line": 41,
+  "gap_after": 0.12
+ },
+ {
+  "a": 70.171,
+  "b": 71.266,
+  "text": "Points and protection, but pay back in full.",
+  "line": 41,
+  "gap_after": 0.08
+ },
+ {
+  "a": 71.685,
+  "b": 72.211,
+  "text": "Same beep.",
+  "line": 42,
+  "gap_after": 0.08
+ },
+ {
+  "a": 72.654,
+  "b": 73.408,
+  "text": "Very different bill.",
+  "line": 43,
+  "gap_after": 0.08
+ },
+ {
+  "a": 73.838,
+  "b": 74.521,
+  "text": "Debit or credit?",
+  "line": 44,
+  "gap_after": 0.08
+ },
+ {
+  "a": 74.97,
+  "b": 75.694,
+  "text": "Which one you use?",
+  "line": 45,
+  "gap_after": 0.08
+ },
+ {
+  "a": 76.144,
+  "b": 77.333,
+  "text": "Tell Doug in the comments.",
+  "line": 46,
+  "gap_after": 0.08
+ }
+]
