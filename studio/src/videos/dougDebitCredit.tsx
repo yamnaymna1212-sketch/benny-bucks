@@ -309,7 +309,7 @@ const RealLife = ({t}: {t: number}) => { const n = Math.round(22 * ease((t - W(1
   </>; };
 const FedData = ({t}: {t: number}) => <>
   <Paper x={540} y={700} w={520} title="FEDERAL RESERVE" amount="22%" at={P(28)} rot={-3} id="fed" />
-  <Small x={540} y={1330} text="source: Federal Reserve G.19, 2026" />
+  <Small x={620} y={1080} text="source: Federal Reserve G.19, 2026" />
   <Penguin id="doug" x={170} y={G + 140} h={360} pose={{brows: 'shock', eyeScale: 1.25, look: [0.8, -0.4]}} />
 </>;
 const OneYear = ({t}: {t: number}) => <>
@@ -317,16 +317,16 @@ const OneYear = ({t}: {t: number}) => <>
   <Calendar x={800} y={640} t={t} a={P(29) + 0.2} w={240} />
   <Small x={540} y={300} text="$50 not paid back for 1 year" size={54} color={INK} />
   {t >= W(139) && <Big x={540} y={930} text="+$11 EXTRA" size={130} color={RED} />}
-  {t >= W(139) && <Small x={540} y={1330} text="about 22% a year (example)" />}
+  {t >= W(139) && <Small x={540} y={1040} text="about 22% a year (example)" />}
 </>;
 const Steal = ({t}: {t: number}) => { const run = ease((t - W(145)) / 1.0);
   return <>
     <Dark />
     <div style={{position: 'absolute', left: 820, top: 220, width: 140, height: 140, borderRadius: '50%', background: '#F7E9A8', boxShadow: '0 0 60px #F7E9A8'}} />
-    <Penguin id="doug" x={250} y={G + 40} h={380} pose={{lie: 1, lids: 1}} />
-    <BigWord text="zzz" x={280} y={760} at={-1} size={80} color="#fff" />
-    <Stoat x={lerp(520, 1150, run)} y={G + 40} h={380} t={t} />
-    <Card x={lerp(560, 1190, run)} y={G - 240} w={140} kind="debit" rot={-10} />
+    <Penguin id="doug" x={480} y={G + 40} h={380} pose={{lie: 1, lids: 1}} />
+    <BigWord text="zzz" x={360} y={760} at={-1} size={80} color="#fff" />
+    <Stoat x={lerp(700, 1250, run)} y={G + 40} h={380} t={t} />
+    <Card x={lerp(780, 1330, run)} y={G - 120} w={130} kind="debit" rot={-10} />
   </>; };
 const DebitStolen = ({t}: {t: number}) => <>
   <NameTag x={540} y={300} text="WITH DEBIT" color={GREEN} />
@@ -338,11 +338,11 @@ const DebitStolen = ({t}: {t: number}) => <>
 const CreditStolen = ({t}: {t: number}) => <>
   <NameTag x={540} y={300} text="WITH CREDIT" color={GOLD} />
   <Fox x={300} y={G + 40} h={460} flip pose={{smirk: false, lids: 0.3, look: 0.5}} />
-  {t >= W(163) && <Small x={300} y={560} text="Fox's money" size={56} color={INK} />}
+  {t >= W(163) && <Small x={360} y={560} text="Fox's money" size={56} color={INK} />}
   {t >= P(37) && <div style={{position: 'absolute', left: 620, top: 470}}><Shield s={1.4} /></div>}
   {t >= W(169) && <Big x={760} y={830} text="$50 MAX" size={110} color={GREEN} />}
   {t >= W(172) && <Big x={760} y={960} text="usually $0" size={80} color={INK} />}
-  {t >= P(37) && <Small x={540} y={1330} text="Fair Credit Billing Act" />}
+  {t >= P(37) && <Small x={760} y={1050} text="Fair Credit Billing Act" />}
 </>;
 const Summary = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: 0, top: 320, width: 540, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 84, color: GREEN}}>DEBIT</div>
@@ -402,8 +402,8 @@ const SHOTS: Shot[] = [
 ];
 // deep zooms [phrase, focusX, focusY, scale]
 const DEEP: [number, number, number, number, number][] = [
-  [W(28), E(6), 440, 520, 1.35], [W(42), E(10), 540, 500, 1.2], [W(56), E(16), 540, 680, 1.25], [W(86), E(20), 540, 480, 1.25], [W(90), W(91), 300, 420, 1.2],
-  [W(121), E(27), 540, 720, 1.25], [W(139), E(30), 540, 930, 1.25], [W(153), E(33), 540, 650, 1.3], [W(169), E(37), 760, 830, 1.2],
+  [W(28), E(6), 440, 520, 1.35], [W(56), E(16), 540, 680, 1.25], [W(86), E(20), 540, 480, 1.25], [W(90), W(91), 300, 420, 1.2],
+  [W(121), E(27), 540, 720, 1.25], [W(139), E(30), 540, 930, 1.25], [W(153), E(33), 540, 650, 1.3], [W(169), E(37), 640, 800, 1.12],
 ];
 const BIGS: {text: string; at: number; until: number; x?: number; y?: number; color?: string; size: number}[] = [
   {text: 'BEEP!', at: P(8), until: P(9), y: 420, color: GREEN, size: 200},
