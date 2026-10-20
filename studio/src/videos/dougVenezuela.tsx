@@ -383,11 +383,11 @@ export const DougVenezuela = () => {
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { // hook: push toward the side named (America, then Venezuela)
-    const toUS = ease((tc - 0.3) / 0.6) * (tc < VE ? 1 : 0), toVE = ease((tc - VE) / 0.5) * (tc < SAME ? 1 : 0);
+    const toUS = ease((tc - 1.0) / 0.6) * (tc < VE ? 1 : 0), toVE = ease((tc - VE) / 0.5) * (tc < SAME ? 1 : 0);
     s0 = 1 + 0.22 * (toUS + toVE); fx = 540 - 230 * toUS + 230 * toVE; fy = 960 + 40 * (toUS + toVE);
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
-  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
+  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (tc < 1.0 ? 1 : beat(tc, TIM)); // hook: first second = wide, no zoom/kick
   if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
