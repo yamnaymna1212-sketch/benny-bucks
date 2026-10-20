@@ -35,7 +35,7 @@ export const DougSalaryHook = () => {
     <Salary x={L} y={660} />
     <Salary x={R} y={660} />
     <Penguin x={L} y={1290} h={560} id="doug" pose={{turn: 0.35, look: [0.3, 0]}} />
-    <Penguin x={R} y={1290} h={560} id="ricky" seed={0.7} pose={{turn: -0.35, look: [-0.3, 0]}} />
+    <Penguin x={R} y={1290} h={590} id="ricky" seed={0.7} build="thin" outfit="banker" pose={{turn: -0.35, look: [-0.3, 0], brows: "up", beak: "smile"}} />
     <Name x={L} y={1320} text="Doug" />
     <Name x={R} y={1320} text="Ricky" />
     <div style={{position: 'absolute', left: 0, right: 0, top: 1500, textAlign: 'center', fontFamily: HAND, fontSize: 66, color: INK, transform: 'rotate(-2deg)'}}>
