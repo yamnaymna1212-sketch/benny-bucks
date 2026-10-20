@@ -17,11 +17,12 @@ const G = 1250, RED = '#D83A2E', GREEN = '#2E9E4F', BLUE = '#2F5DA8';
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => { const q = cl(p); return q * q * (3 - 2 * q); };
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const SHOCK = 3.55; // the word "card?"
+const SHOCK = 3.6; // the word "card?"
+const CASHW = 2.35; // the word "cash..."
 
 // ---------- money props ----------
 // "ten" of every spoken "ten dollars" (tightened VO times) -> the $10 bill pops on that word
-const TEN = [1.6, 2.9, 4.62, 11.3, 13.35]; // v3 VO (Edge TTS), estimated inside each phrase
+const TEN = [1.7, 3.2, 4.62, 11.3, 13.35]; // v3 VO (Edge TTS), estimated inside each phrase
 const tenPop = (tc: number) => { const d = TEN.map((a) => tc - a).find((x) => x >= 0 && x < 0.4); return d === undefined ? 1 : 1 + 0.2 * Math.sin((d / 0.4) * Math.PI); };
 // Cartoon $10 note (v3): plain green bill with a big "$10" and a little fish (Doug-world money: 1 fish = $10).
 // No "United States", portrait, seals or serials, so it never reads as a copy of real currency.
@@ -124,11 +125,13 @@ const Counter = ({x, w}: {x: number; w: number}) => <>
   <div style={{position: 'absolute', left: x - 14, top: 1082, width: w + 28, height: 34, background: '#E0A96D', border: `7px solid ${INK}`, borderRadius: 8}} />
 </>;
 const DiffSide = ({side, t = -1}: {side: 'cash' | 'card'; t?: number}) => { const o = side === 'cash' ? 0 : 540;
+  const react = t >= (side === 'cash' ? CASHW : SHOCK); // each side reacts when its word is said (and stays)
   return <>
-    <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={{look: -0.6, mouth: 0.15}} />
+    <Puffin x={o + 445} y={1180} h={330} id={`hp${side}`} pose={react ? (side === 'cash' ? {look: -0.6, mouth: 0.35} : {look: 0.2, lids: 0.45, mouth: 0}) : {look: -0.6, mouth: 0.15}} />
     <Counter x={o + 270} w={260} />
     {side === 'card' && <Reader x={o + 330} y={1086} w={96} t={t} beeps={[SHOCK]} amount="$10" />}
-    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={{turn: 0.55, look: [0.8, -0.1], flapR: 62, beak: 'flat', lids: 0.25}} />
+    <Penguin id={`hd${side}`} x={o + 150} y={1420} h={410} pose={react ? {turn: 0.55, look: [0.8, -0.2], flapR: 62, beak: 'smile', brows: 'happy', hop: side === 'cash' ? Math.max(0, 20 * Math.sin((t - CASHW) * 9)) : 0}
+      : {turn: 0.55, look: [0.8, -0.1], flapR: 62, beak: 'flat', lids: 0.25}} />
     {side === 'cash' ? <Bill x={o + 300} y={1040} w={180} rot={-8} /> : <div style={{position: 'absolute', left: 0, top: 0, transform: `scale(${t < 0 ? 1 : tenPop(t - (SHOCK - TEN[1])) })`, transformOrigin: `${o + 255}px 1020px`}}><Card x={o + 255} y={1020} w={130} rot={-14} /></div>}
   </>; };
 const HookV2 = ({t = -1}: {t?: number}) => <AbsoluteFill style={{background: '#fff'}}>
@@ -145,10 +148,12 @@ const HookV2 = ({t = -1}: {t?: number}) => <AbsoluteFill style={{background: '#f
   <DiffSide side="cash" t={t} /><DiffSide side="card" t={t} />
 </AbsoluteFill>;
 export const DougCashCardHookV2 = () => <HookV2 />;
+// Hook camera (user rule): still for the first beat, zoom into side A on its word ("cash"), cut-zoom to side B on its word ("card"),
+// back to the full split on the next line ("Same ten dollars") so both sides read together.
 const hookCam = (t: number) => {
-  const toL = ease((t - 0.6) / 0.9) * (1 - ease((t - P(1)) / 0.35));
-  const toR = ease((t - P(1)) / 0.35) * (1 - ease((t - SHOCK - 0.15) / 0.3));
-  return {s: 1 + 0.16 * (toL + toR), x: 540 + (225 - 540) * toL + (855 - 540) * toR, y: 960 + (760 - 960) * (toL + toR)};
+  const toL = ease((t - CASHW + 0.1) / 0.3) * (1 - ease((t - SHOCK + 0.1) / 0.3));
+  const toR = ease((t - SHOCK + 0.1) / 0.3) * (1 - ease((t - P(1)) / 0.35));
+  return {s: 1 + 0.5 * (toL + toR), x: 540 + (270 - 540) * toL + (810 - 540) * toR, y: 960 + (900 - 960) * (toL + toR)};
 };
 
 // ---------- stage ----------
@@ -396,7 +401,8 @@ export const DougCashCard = () => {
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     {/* hook */}
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={0.75} name="user-whoosh" vol={0.25} />
+    <Sfx at={CASHW - 0.15} name="user-whoosh" vol={0.25} />
+    <Sfx at={SHOCK - 0.15} name="swoosh-fast" vol={0.3} />
     <Sfx at={TEN[0]} name="user-cash-register" vol={0.4} />
     <Sfx at={TEN[1]} name="user-money" vol={0.3} />
     <Sfx at={SHOCK} name="card-beep" vol={0.4} />

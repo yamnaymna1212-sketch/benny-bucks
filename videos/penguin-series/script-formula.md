@@ -68,3 +68,12 @@ Reference episode: studio/src/videos/dougGasIran.tsx + videos/doug-gas-iran/doug
 - DEEP ZOOMS only on a face/object that stays in frame; never zoom where it cuts a BigWord, price tag or stamp. Big words never overlap tags
   (put them above the headers). Always check a contact sheet of every shot before sending; fix empty shots (props must be on screen at once).
 - Length 61–62 s, render, compress crf 22 slow (<15 MB), commit + push, send.
+
+## Hook camera rule (user, 2026-10-20, EP5 v3 — use on every split hook)
+- Frame 0 to the first side's word: NO zoom, the full split is the cover.
+- On the spoken word of side A (e.g. "cash"): zoom ~1.5x into side A (0.3 s ease), whoosh.
+- On the spoken word of side B (e.g. "card"): zoom straight across to side B, swoosh-fast.
+- Next line ("Same ten dollars"): zoom back out to the full split.
+- Each side's characters react when their word is said and keep that face: side A happy (Doug smile + small hop, cashier smiling);
+  side B shows its own feeling (EP5: Doug smiling, cashier Puffin worried because he pays the fee).
+- Reference code: hookCam + DiffSide in studio/src/videos/dougCashCard.tsx (word times from the VO: silencedetect inside the hook line).

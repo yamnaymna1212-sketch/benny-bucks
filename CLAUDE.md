@@ -3,6 +3,7 @@ For any new video type `/doug-episode` (manual-only skill) + HANDOFF.md + the la
 Doug rules: 61–65 s, the user's ElevenLabs voice, NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 HOOK = main template `WhyHook` (studio/src/penguin/whyHook.tsx): big "WHY" + two flag/price/object sides + plain confused Doug in the middle; never an "Explained by Doug" title.
 MASTER EDIT STYLE (every video) = 'Edit rules v4' in videos/penguin-series/script-formula.md, template studio/src/videos/dougGasIran.tsx: white hook, Doug acts the hook (looks A -> snaps to B -> shock), no pauses (0.08 s), new shot every ~2.5 s.
+HOOK CAMERA (every split hook): no zoom at first -> zoom into side A on its spoken word -> zoom to side B on its word -> back to full split; each side's characters react with their own expression (see "Hook camera rule" in script-formula.md).
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 Posting times (best 3 per day, US): videos/penguin-series/posting-times.md — 10:00 / 12:00 / 18:00 ET.
