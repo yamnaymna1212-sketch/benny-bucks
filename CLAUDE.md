@@ -38,9 +38,18 @@ Script:
 
 Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on the shock, ding on the key number, synced exactly to the word or movement.
 
+## Truth rule (user, 2026-10-20, after EP5 cash vs card was removed twice on TikTok)
+- Every claim must be literally true, not "cartoon-simplified". If a number is a made-up example, say so on screen ("example").
+- Show both sides fairly: when someone takes a fee, also say what they give (service, safety, rewards). Never "they do nothing", "X hates Y", "secret trick", "banks are fighting cash" framings.
+- Never show money shrinking/disappearing; show who pays whom and why.
+- No financial advice ("always pay cash"); end with a question instead.
+- Every real-world number needs a named source in the script notes (e.g. Nilson Report 2025) and the pinned comment.
+- Never re-upload a removed video or a near-copy of it; change topic.
+
 ## Pre-send checklist
 - Is the contrast clear and exaggerated from the first frame, with no words?
 - Does each side have a price or a number an American recognizes?
 - Is it one line = one shot?
 - Are sound effects included?
+- Is every claim literally true and are both sides shown fairly (Truth rule)?
 If any item fails, rewrite before sending. Give me blunt, direct criticism of my ideas and don't flatter me.
