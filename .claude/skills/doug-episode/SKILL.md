@@ -4,11 +4,11 @@ description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — s
 ---
 # Doug episode workflow (proven on EP1 Rent, EP2 Gas)
 
-Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
+FIRST obey the NEUTRAL & CLEAR RULE in CLAUDE.md (dollars only, no bias, no advice, no get-rich promise, neutral ending). Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
 
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).
-- Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
+- Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = neutral fact/summary (no advice, no pick-a-side question). ~150–190 words.
 - Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
 
 ## 2. Voice (user's ElevenLabs mp3)
@@ -23,7 +23,7 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 - Then one set per idea, new shot every 2–4 s, `cutFX` transitions (swipe/zoom/iris/pop), DEEP zooms on the named subject (6–10), `beat()` punch per phrase, `Captions` (hand-written, one colour), Larry the walrus owns everything (running gag), only Doug (+family) are penguins.
 - SFX: user library (tools/sfx_user_map.json; rebuild with tools/import_user_sfx.py): user-ting at 0 s, whoosh on every cut, money/cash-register on payments, boom on reveals, slap/wrong/aww/shock/fahh on pain, wow/yeah on good news, timer for "every month"; plus tools/sfx_animals.py voices. NO music.
 - Render full, check a 20-frame contact sheet, fix overlaps (keep big words out of y 1500–1600 = caption zone), compress `-crf 22 -preset slow`, < 30 MB, commit + push, send.
-- Give the TikTok description (keyword question + 5 specific hashtags) — see PROJECT_LOG.
+- Give the TikTok description (neutral keyword line + 5 specific hashtags; no 'Team X or Y', no advice) — see PROJECT_LOG.
 
 ## Never
 - Re-render a finished episode unless asked. Use real photos/brand logos. Copy Monkey/Primate Economics wording ("explained with bananas", "monkey understand now").

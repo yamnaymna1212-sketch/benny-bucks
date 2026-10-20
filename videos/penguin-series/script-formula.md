@@ -1,4 +1,6 @@
-# Penguin series — script formula (from the Monkey/Primate Economics shorts + our EP1/EP2)
+# Penguin series — script formula
+
+> NEUTRAL & CLEAR RULE (CLAUDE.md, 2026-10-20) overrides everything below: dollars only, both sides fair, no advice, no get-rich promise, neutral ending. (from the Monkey/Primate Economics shorts + our EP1/EP2)
 
 ## 12 beats, 61–64 s, ~150 spoken words, one sentence = one shot
 | # | Beat | Time | Rule |
@@ -14,7 +16,7 @@
 | 9 | Recurring gag | 31–33 s | Doug stare: zoom to his face, 1 s silence, narrator: "Doug + state" ("Doug poor." / "Doug happy." / "Doug angry." — never a bare "Doug.", user rule 2026-10-19) |
 | 10 | Real-life bridge | 33–42 s | ONE real US number, said simply ("prices went up about 23% since 2020"). |
 | 11 | Payoff + deadpan line | 42–55 s | Callback to the want from beat 3, with a twist (tiny snow cone). Broken-English line on screen ("is same snow cone."). |
-| 12 | Tease + question | 55–63 s | Name the next episode + one comment question. |
+| 12 | Neutral close | 55–63 s | One neutral fact/summary line. NO advice, NO pick-a-side question, NO get-rich promise (user rule 2026-10-20). |
 
 ## Sentence rules
 - Present tense. Subject + verb + object. Max ~12 words. Words a 7-year-old knows.

@@ -1,7 +1,7 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
 Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
-Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
+Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Money: say and show DOLLARS only (fish = drawn money only, never counted next to dollars — user rule 2026-10-20).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 
 # TOKEN GUARD (user rule, always on)
@@ -14,6 +14,14 @@ Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offe
 - Big style changes mid-series -> warn that tools must be rebuilt; confirm first.
 - Many screenshots/images -> ask for one clear image or a text description.
 Cheap habits to recommend: scripts/ideas on Sonnet, build on Opus; read only the last 20 lines of PROJECT_LOG.md; named files (ep3-voice.mp3, money.mp3).
+
+# NEUTRAL & CLEAR RULE (user rule 2026-10-20, every video, every new project — overrides older rules)
+- ONE money unit per video, understood by a child: say and show DOLLARS only. Fish may appear only as drawn money, never as a spoken/printed count next to dollars.
+- No misleading content: every number is real + sourced; any assumption (e.g. stock return) is said out loud with its risk ("stocks can also go down").
+- No bias: show both sides fairly (pros AND cons of each choice). Never label one side good/smart/rich and the other bad/poor/stupid.
+- Never tell the viewer what to do: no advice, no "do this", no "which team are you", no making them pick a side.
+- No get-rich promises: no "become a millionaire", fast wealth, money tricks/schemes or "secret" methods — especially in the hook.
+- Ending = a neutral fact or summary line (e.g. "Same salary. Different choices. Different numbers."), not advice and not a pick-a-side question.
 
 # Permanent rules (TikTok, American audience)
 
@@ -31,7 +39,7 @@ Hook (first 3 seconds):
 
 Script:
 - Short lines. One line = one idea = one shot. Explicit numbers.
-- Sequence: contrast shock, then the reason, then a number that confirms it, then an ending with value or a question that provokes comments.
+- Sequence: contrast shock, then the reason, then a number that confirms it, then a neutral ending (fact/summary — see NEUTRAL & CLEAR RULE; no pick-a-side question, no advice).
 
 Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on the shock, ding on the key number, synced exactly to the word or movement.
 
