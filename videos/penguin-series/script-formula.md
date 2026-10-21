@@ -48,3 +48,19 @@ why? title + self-drawing red arrow that swings A -> B, expensive price RED / ch
   ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
   wrong / aww / shock / fahh / fahh-long = bad news & the "Doug <state>." gag; boom = big reveal; slap = hits; wow / yeah = good news;
   notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
+
+## Lessons (user corrections, EP7 bank error 2026-10-21) — apply by default, never make the user repeat them
+Voice
+- FREE Kokoro made by Claude, never ElevenLabs, never ask about voice: `/opt/tts/venv/bin/python tools/tts.py lines.txt voice am_michael 1.17 0.08` (tools/make_voice.py does not exist). Pauses `|0.05` on every line, `|0.3` only after "Doug <state>.", `|0.25` on the last line. Slow narration = boring. Spoken hook ≤ 4 s.
+- Too short for 61 s? ADD short sentences (append inside the same line so set indices P(i) don't shift). Never slow the voice or add pauses.
+- Fresh container: `mkdir -p /opt/tts && python3 -m venv /opt/tts/venv && /opt/tts/venv/bin/pip install kokoro-onnx soundfile` + kokoro-v1.0.onnx / voices-v1.0.bin (github thewh1teagle/kokoro-onnx, model-files-v1.0) into /opt/tts; `mkdir -p studio/public/sfx` before tools/sfx_animals.py; `cp assets/audio/sfx/synth/ding.wav studio/public/sfx/`; `cd studio && npm install`. Render WITHOUT `--concurrency=8` (crashes).
+Hook (3 versions rejected before the approved one)
+- Side by side, HORIZONTAL: side A LEFT vs side B RIGHT (e.g. BANK + US flag left, Doug + phone right), a line/arrow between them showing what moves. Never stacked top/bottom.
+- Few elements, few colours, nothing decorative (no extra boards, VS badges, repeated numbers, extra lines). A child must get it. Add ONE real American thing (US flag / real object).
+- Every element appears ON ITS SPOKEN WORD (onsets: `ffmpeg -i voice.wav -af silencedetect=n=-32dB:d=0.03 -f null -`). Nothing all at once in second 0; never show a number before it is said.
+- First ~1 s readable (no zoom), then LIGHT zoom (≤ x1.2) on one element at a time; never crop one side for long.
+- Top never empty: big title in screen space ("WHAT HAPPENS?"). Don't caption the spoken hook line (no repeated words): `Captions phrases={TIM.slice(1)}`.
+- Phones/screens never blank white: show the app (BANK header + mini flag + BALANCE + amount) — `BankApp` in studio/src/videos/dougBankError.tsx.
+Build
+- Newest template: studio/src/videos/dougBankError.tsx (hook CAM keyframes, BankApp, Moose, House, Car, Desk911, Monitor, Siren, Bubble). BigWords ≤ ~130 px for long words; check deep zooms don't crop them (contact sheet before compressing).
+- Real cases: "Police arrested her" unless there is a verdict; no jail shown without a verdict.
