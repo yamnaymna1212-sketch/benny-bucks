@@ -5,79 +5,84 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
 import {Captions, Sfx, beat} from '../penguin/edit';
+import {IceBank, Thought} from '../penguin/world';
+import {Bill, Fox} from './dougLaundering';
 import TIM from '../data/doug-bank-error.json';
 
 const P = (i: number) => TIM[i].start;
 export const DOUG_BANK_ERROR_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
-const G = 1460;
+const G = 1420, TOP = 820; // TOP = bank floor (sender), G = Doug's floor (receiver)
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const RED = '#D83A2E', GREEN = '#2E9E4F';
 
 // word timings inside the hook lines (syllable estimate on the Kokoro take)
-const MILLION = P(0) + 1.85, MISTAKE = P(0) + 3.6, EIGHTY2 = P(1) + 0.75;
+const MILLION = P(0) + 1.85, SEND = MILLION + 0.15, LAND = SEND + 0.65, MISTAKE = P(0) + 3.6, EIGHTY2 = P(1) + 0.75;
 
-// ---------- hook props ----------
-const UsFlag = ({x, y, w = 90}: {x: number; y: number; w?: number}) =>
-  <svg width={w} height={w * 0.55} viewBox="0 0 190 105" style={{position: 'absolute', left: x, top: y}}>
-    {Array.from({length: 7}, (_, i) => <rect key={i} x={0} y={i * 15} width={190} height={7.5} fill={RED} />)}
-    <rect x={0} y={0} width={190} height={105} fill="none" stroke={INK} strokeWidth={6} />
-    <rect x={0} y={0} width={80} height={56} fill="#2C4A9E" stroke={INK} strokeWidth={4} />
-    {Array.from({length: 9}, (_, i) => <circle key={i} cx={14 + (i % 3) * 26} cy={12 + Math.floor(i / 3) * 16} r={4} fill="#fff" />)}
-  </svg>;
-// Big price board: label on top, number below; `kick` = punch time (spoken word).
-const Board = ({x, y, label, value, color, t, at, kick}: {x: number; y: number; label: string; value: string; color: string; t: number; at: number; kick: number}) => {
-  const p = ease((t - at) / 0.2), k = t > kick ? Math.sin(cl((t - kick) / 0.3) * Math.PI) * 0.14 : 0;
-  return <div style={{position: 'absolute', left: x - 235, top: y, width: 470, height: 330, transform: `scale(${p * (1 + k)}) rotate(${color === RED ? 2 : -2}deg)`, opacity: p > 0 ? 1 : 0}}>
-    <div style={{position: 'absolute', inset: 0, background: '#fff', border: `9px solid ${color}`, borderRadius: 30, boxShadow: `0 10px 0 ${INK}`}} />
-    <div style={{position: 'absolute', left: 0, right: 0, top: 30, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 64, color: INK}}>{label}</div>
-    <div style={{position: 'absolute', left: 0, right: 0, top: 130, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: value.length > 5 ? 76 : 150, lineHeight: '150px', color}}>{value}</div>
-  </div>;
+// ---------- hook: Fox types $82, paw slips -> $1,200,000, SEND, bills fly into Doug's phone ----------
+const MX = 820, MY = 560; // monitor screen centre
+const PX = 700, PY = 1120; // Doug's phone centre
+const typed = (t: number) => {
+  if (t < 0.35) return '$';
+  if (t < 0.6) return '$8';
+  if (t < 1.1) return '$82';
+  const n = Math.round(82 + (1200000 - 82) * ease((t - 1.1) / (MILLION - 1.1)));
+  return `$${n.toLocaleString('en-US')}`;
 };
-const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
-  const p = ease((t - 0.3) / 0.25);
-  return <div style={{position: 'absolute', left: x - 70, top: y - 70, width: 140, height: 140, borderRadius: '50%', background: RED, border: `7px solid ${INK}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 66, color: '#fff', transform: `scale(${p}) rotate(${-8 + Math.sin(t * 4) * 3}deg)`}}>VS</div>;
+const Monitor = ({t}: {t: number}) => {
+  const wrong = t >= 1.1, sh = wrong && t < MILLION + 0.3 ? Math.sin(t * 60) * 4 : 0, push = t > SEND && t < SEND + 0.25;
+  return <>
+    <div style={{position: 'absolute', left: MX - 25, top: MY + 110, width: 50, height: 120, background: INK}} />
+    <div style={{position: 'absolute', left: MX - 200, top: MY + 225, width: 400, height: 40, background: '#fff', border: `6px solid ${INK}`, borderRadius: 10}} />
+    <div style={{position: 'absolute', left: MX - 190, top: MY - 130 + sh, width: 380, height: 260, background: INK, borderRadius: 22}}>
+      <div style={{position: 'absolute', left: 14, right: 14, top: 14, bottom: 14, background: '#fff', borderRadius: 12}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 30, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: wrong ? 56 : 90, color: wrong ? RED : INK}}>{typed(t)}</div>
+        <div style={{position: 'absolute', left: 90, right: 90, bottom: 26, height: 64, borderRadius: 14, background: push ? INK : '#fff', color: push ? '#fff' : INK, border: `5px solid ${INK}`, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 36, textAlign: 'center', lineHeight: '54px'}}>SEND</div>
+      </div>
+    </div>
+  </>;
 };
-// Bank app phone: header with US flag, balance counts 0 -> 1,200,000 on "million", red "deposit" banner.
-const Phone = ({x, y, w = 330, t}: {x: number; y: number; w?: number; t: number}) => {
-  const h = w * 1.9, c = ease((t - MILLION) / 0.5), bal = Math.round(82 + (1200000 - 82) * c);
-  const shown = t < MILLION ? '$0.00' : `$${bal.toLocaleString('en-US')}.00`;
-  const ban = ease((t - MILLION - 0.1) / 0.2);
-  return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, height: h}}>
-    <div style={{position: 'absolute', inset: 0, background: INK, borderRadius: 46}} />
-    <div style={{position: 'absolute', left: 16, right: 16, top: 16, bottom: 16, background: '#F4F9FC', borderRadius: 34, overflow: 'hidden'}}>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 120, background: '#1F5FAF', borderBottom: `5px solid ${INK}`}}>
-        <UsFlag x={20} y={38} w={84} />
-        <div style={{position: 'absolute', left: 116, top: 36, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 42, color: '#fff'}}>BANK</div>
-      </div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 170, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 800, fontSize: 30, color: '#6B7C8C'}}>BALANCE</div>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 215, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: shown.length > 9 ? 40 : 58, color: t < MILLION ? INK : RED}}>{shown}</div>
-      <div style={{position: 'absolute', left: 20, right: 20, top: 320, height: 120, background: '#fff', border: `5px solid ${INK}`, borderRadius: 20, transform: `scale(${ban})`}}>
-        <div style={{textAlign: 'center', marginTop: 14, fontFamily: 'Montserrat', fontWeight: 800, fontSize: 24, color: '#6B7C8C'}}>DEPOSIT</div>
-        <div style={{textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 38, color: RED}}>+$1,200,000</div>
-      </div>
-      {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: 30, right: 30, top: 480 + i * 34, height: 16, background: '#DCE6EE', borderRadius: 8}} />)}
+const Phone = ({t, y}: {t: number; y: number}) => {
+  const got = ease((t - LAND) / 0.2), buzz = t > LAND && t < LAND + 0.4 ? Math.sin(t * 80) * 5 : 0;
+  return <div style={{position: 'absolute', left: PX - 140 + buzz, top: y - 230, width: 280, height: 460, background: INK, borderRadius: 40}}>
+    <div style={{position: 'absolute', left: 14, right: 14, top: 14, bottom: 14, background: '#fff', borderRadius: 30, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{position: 'absolute', left: '50%', top: 14, width: 70, height: 16, marginLeft: -35, borderRadius: 8, background: INK}} />
+      <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 38, color: GREEN, transform: `scale(${got})`, textAlign: 'center', lineHeight: 1.1}}>+$1,200,000</div>
     </div>
   </div>;
 };
-
 const Hook = ({t}: {t: number}) => {
-  // Doug: happy hops on "million", then freezes in shock on "mistake"
-  const jumping = t > MILLION && t < MISTAKE, hop = jumping ? Math.abs(Math.sin((t - MILLION) * 7)) * 110 : 0;
-  const frozen = t >= MISTAKE, wait = t >= P(1);
+  const jumping = t > LAND && t < MISTAKE, hop = jumping ? Math.abs(Math.sin((t - LAND) * 7)) * 90 : 0;
+  const frozen = t >= MISTAKE;
   const pose = frozen
-    ? {brows: 'shock' as const, eyeScale: 1.45, beak: 'frown' as const, flapR: 70, flapL: 40, look: [0.6, wait ? -0.9 : -0.2] as [number, number], tremble: 0.4, sweat: true}
-    : jumping ? {brows: 'happy' as const, beak: 'smile' as const, flapR: 70, flapL: 150 + Math.sin(t * 14) * 15, hop, look: [0.6, -0.2] as [number, number]}
-    : {flapR: 70, look: [0.6, -0.1] as [number, number], beak: 'flat' as const};
+    ? {brows: 'shock' as const, eyeScale: 1.5, beak: 'frown' as const, flapR: 60, flapL: 20, look: [0.5, -0.1] as [number, number], tremble: 0.4}
+    : jumping ? {brows: 'happy' as const, beak: 'smile' as const, flapR: 60, flapL: 150 + Math.sin(t * 14) * 15, hop, look: [0.5, -0.1] as [number, number]}
+    : {flapR: 60, look: [t < SEND ? -0.6 : 0.5, -0.1] as [number, number]};
+  const typing = t > 0.25 && t < SEND + 0.1;
   return <>
-    <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
-    <Board x={275} y={170} label="SHOULD GET" value="$82" color={GREEN} t={t} at={5 / FPS} kick={EIGHTY2} />
-    <Board x={805} y={170} label="GOT" value="$1,200,000" color={RED} t={t} at={9 / FPS} kick={MILLION} />
-    <Vs x={540} y={520} t={t} />
-    <Penguin id="doug" x={330} y={G} h={560} pose={pose} />
-    <Phone x={720} y={640 - hop * (560 / 520)} t={t} />
-    {frozen && <div style={{position: 'absolute', left: 150, top: 760 + Math.sin(t * 6) * 8, fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 130, color: INK, transform: 'rotate(-12deg)'}}>?</div>}
+    <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 700, background: '#F2F8FC', borderTop: `5px solid ${INK}`}} />
+    <div style={{position: 'absolute', left: 30, width: 1020, top: TOP, height: 16, background: INK, borderRadius: 8}} />
+    <IceBank x={190} y={TOP} w={340} />
+    <Fox x={480} y={TOP} h={420} flip mouth={t > MILLION && t < MILLION + 0.6 ? 0.6 : 0} sly={typing ? 0.2 : 1} />
+    <Monitor t={t} />
+    {t > SEND && t < LAND + 0.1 && [0, 1, 2, 3, 4].map((i) => { const p = cl((t - SEND - i * 0.06) / 0.5);
+      return p > 0 && p < 1 ? <Bill key={i} x={MX + (PX - MX) * p} y={MY + (PY - MY) * p - Math.sin(p * Math.PI) * 330} w={130} rot={p * 400} /> : null; })}
+    <Penguin id="doug" x={420} y={G} h={520} pose={pose} />
+    <Phone t={t} y={PY - hop} />
+    <Thought x={190} y={1000} w={290} tx={320} ty={1110} at={EIGHTY2 - 0.15}>
+      <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 92, color: INK}}>$82</div>
+    </Thought>
   </>;
+};
+// light camera: one main element at a time [time, scale, focusX, focusY]
+const CAM: [number, number, number, number][] = [
+  [0, 1.1, 540, 880], [0.5, 1.3, 660, 600], [SEND, 1.3, 660, 600], [SEND + 0.35, 1.05, 560, 860],
+  [LAND, 1.25, 600, 1080], [MISTAKE, 1.25, 600, 1080], [MISTAKE + 0.25, 1.4, 470, 1060], [EIGHTY2 - 0.4, 1.4, 470, 1060], [EIGHTY2, 1.2, 420, 1060],
+];
+const cam = (tc: number) => {
+  let i = 0; while (i < CAM.length - 1 && tc >= CAM[i + 1][0]) i++;
+  const a = CAM[i], b = CAM[Math.min(i + 1, CAM.length - 1)], p = b === a ? 0 : ease((tc - a[0]) / (b[0] - a[0]));
+  return [1, 2, 3].map((k) => a[k] + (b[k] - a[k]) * p);
 };
 
 // ---------- shots ----------
@@ -90,20 +95,19 @@ export const DougBankError = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s = 1, fx = 540, fy = 960;
-  if (sh.at === 0) { // first second wide, push to the red $1.2M side on "million", swing to the green $82 on "eighty two"
-    const toR = ease((tc - MILLION) / 0.35) * (tc < EIGHTY2 ? 1 : 0), toG = ease((tc - EIGHTY2) / 0.35);
-    s = 1 + 0.12 * toR + 0.12 * toG; fx = 540 + 120 * toR - 120 * toG; fy = 960 - 120 * toR - 120 * toG;
-    s *= tc < 1.0 ? 1 : beat(tc, TIM);
-  }
+  if (sh.at === 0) [s, fx, fy] = cam(tc);
+  else s = beat(tc, TIM);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
     <Captions t={tc} phrases={TIM} />
     <Audio src={staticFile('doug-bank-error-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={5 / FPS} name="user-pop" vol={0.3} />
+    {[0.35, 0.6, 1.1, 1.25, 1.4, 1.55].map((x, i) => <Sfx key={i} at={x} name="user-pop" vol={0.2} />)}
     <Sfx at={MILLION} name="user-cash-register" vol={0.45} />
-    <Sfx at={MILLION + 0.3} name="penguin-squawk" vol={0.3} />
+    <Sfx at={SEND} name="user-whoosh" vol={0.35} />
+    <Sfx at={LAND} name="user-money-transfer" vol={0.4} />
+    <Sfx at={LAND + 0.2} name="penguin-squawk" vol={0.3} />
     <Sfx at={MISTAKE} name="user-shock" vol={0.4} />
     <Sfx at={EIGHTY2} name="ding" vol={0.45} />
   </AbsoluteFill>;
