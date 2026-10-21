@@ -8,7 +8,7 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).
-- Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
+- Script template = videos/doug-gas/script.md: spoken hook opener VARIES per script (What happened / How / Why / What if / If / direct dive-in; pick by context, differ from last episode), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
 - Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
 
 ## 2. Voice (user's ElevenLabs mp3)

@@ -1,6 +1,6 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook opener VARIES per script (see HOOK OPENER VARIETY below), hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 
@@ -27,7 +27,8 @@ My most successful videos are built on a strong, exaggerated contrast between tw
 Hook (first 3 seconds):
 - Contrast understood in under 2 seconds, aimed at Americans: gas, iPhone, burger, rent, coffee, the dollar.
 - Each side has a price, a number, or a recognizable real object in large text.
-- The first line is a "Why" question or a shock tied directly to the image. No intros.
+- The first line is a question or a shock tied directly to the image. No intros.
+- HOOK OPENER VARIETY (user rule 2026-10-21): do NOT always start with "Why". Rotate by script context between: "What happened...", "How...", "Why...", "What if...", "If...", or a direct dive into the topic (a statement/number, no question word). Pick the one that fits the story best and vary it from the previous episode.
 
 Script:
 - Short lines. One line = one idea = one shot. Explicit numbers.
