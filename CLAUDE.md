@@ -15,6 +15,10 @@ Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offe
 - Many screenshots/images -> ask for one clear image or a text description.
 Cheap habits to recommend: scripts/ideas on Sonnet, build on Opus; read only the last 20 lines of PROJECT_LOG.md; named files (ep3-voice.mp3, money.mp3).
 
+# SIMPLIFY RULE (user rule 2026-10-21)
+Any complex or big topic (money, banks, taxes, laws, economy) must be made SIMPLE, funny, and useful for ages 17-30 (Americans). Caveman-simple English, one idea per line, no jargon (or explain it with a daily-life object/price), one joke beat after each info beat, end with something the viewer can DO or a comment question.
+Script structure: hook (number/contrast) -> real story with number -> joke -> re-hook ("But here's the catch") -> twist + number -> what to do (3 short lines) -> callback joke -> CTA question.
+
 # Permanent rules (TikTok, American audience)
 
 ## Language
