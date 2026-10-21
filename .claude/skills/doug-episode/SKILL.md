@@ -9,10 +9,11 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).
 - Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
-- Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
+- Write the clean script to videos/<slug>/vo/lines.txt (one line per row = one clip), commit + push.
 
-## 2. Voice (user's ElevenLabs mp3)
-- Save to videos/<slug>/vo/raw.mp3. Detect speech with `silencedetect=n=-38dB:d=0.12`, write segments.json (all gaps 0.07 s, ~0.35 s after the "Doug <state>." gag), run `python3 tools/tighten_vo.py raw.wav segments.json tight`.
+## 2. Voice (Chatterbox on the user's Mac M3 GPU — user rule 2026-10-21, replaces ElevenLabs/Kokoro)
+- No GPU in the cloud container: the user runs it. One-time: `bash tools/chatterbox_mac/setup.sh`. Each episode: `git pull`, then `~/chatterbox-venv/bin/python tools/chatterbox_mac/doug_voice.py videos/<slug>/vo/lines.txt videos/<slug>/vo`, then commit + push raw.wav/raw.mp3/segments.json. Give the user these exact commands in Arabic.
+- Voice clone ref = videos/voice-ref/narrator-ref.wav (same narrator every episode). segments.json already has gaps (0.07 s, 0.35 s after the "Doug <state>." gag) -> run `python3 tools/tighten_vo.py videos/<slug>/vo/raw.wav videos/<slug>/vo/segments.json videos/<slug>/vo/tight`.
 - If still > 62 s, speed with `ffmpeg -af atempo=<x>` (EP2 used 1.2) and divide segment times by x -> voice.segments.json. Target 61–62 s.
 - Map segments to script phrases IN ORDER by length (sentence fragments; "Doug <state>." ~0.7 s is the anchor) -> studio/src/data/<slug>.json [{start,end,text}].
 - Copy voice.mp3 to studio/public/<slug>-voice.mp3.
