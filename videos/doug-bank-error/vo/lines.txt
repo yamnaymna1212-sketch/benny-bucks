@@ -1,30 +1,30 @@
-What happen if bank send Doug one point two million dollars by mistake?|0.3
-Doug wait for eighty two dollars.|0.3
-This is Doug.|0.15
-Doug answer emergency calls. Nine one one.|0.15
-Fox the banker owe Doug eighty two dollars.|0.15
-Fox type wrong number.|0.15
-Fox send one point two million.|0.15
-Doug open app.|0.15
-Doug blink. Doug blink again.|0.15
-Fox call. Mistake. Give fish back.|0.15
-Doug say nothing.|0.15
-Doug move fish. Fast.|0.15
-Doug buy house.|0.15
-Doug buy shiny car.|0.15
-Life is good.|0.3
-Then Sheriff Moose knock.|0.15
-Theft. Bank fraud.|0.15
-Doug lose job.|0.15
-Fox sue Doug.|0.3
-Doug poor.|0.6
-This is called bank error.|0.15
-Bank error is not a gift.|0.3
-In real life, Louisiana, twenty twenty one.|0.15
-A woman got one point two million instead of eighty two dollars.|0.15
-She bought a house and a car.|0.15
-Police arrested her.|0.3
-Doug answer emergency calls.|0.15
-Now Doug is the emergency.|0.3
-Would you give it back? Be honest.|0.15
-Tell Doug in the comments.|0.4
+What happen if bank send Doug one point two million dollars by mistake?|0.05
+Doug wait for eighty two dollars. Only eighty two.|0.05
+This is Doug.|0.05
+Doug answer emergency calls. Nine one one. Doug save lives every day.|0.05
+Fox the banker owe Doug eighty two dollars. Small refund.|0.05
+Fox type wrong number.|0.05
+Fox send one point two million.|0.05
+Doug open app.|0.05
+Doug blink. Doug blink again. Still one point two million.|0.05
+Fox call. Mistake. Give fish back.|0.05
+Doug say nothing.|0.05
+Doug move fish. Fast. New account. Then another account.|0.05
+Doug buy house. Big house.|0.05
+Doug buy shiny car. Brand new SUV.|0.05
+Life is good.|0.05
+Then Sheriff Moose knock.|0.05
+Theft. Bank fraud. Illegal money transfer.|0.05
+Doug lose job.|0.05
+Fox sue Doug. Fox want every fish back.|0.05
+Doug poor.|0.3
+This is called bank error.|0.05
+Bank error is not a gift. Bank always find the money.|0.05
+In real life, Louisiana, twenty twenty one.|0.05
+A woman got one point two million instead of eighty two dollars.|0.05
+She bought a house and a car.|0.05
+Police arrested her. Her bank sued her too.|0.05
+Doug answer emergency calls.|0.05
+Now Doug is the emergency.|0.05
+Would you give it back? Be honest.|0.05
+Tell Doug in the comments.|0.25

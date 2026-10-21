@@ -20,7 +20,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 
 // word timings inside the hook lines (syllable estimate on the Kokoro take)
 // word onsets from silencedetect on the Kokoro take: each element enters on its own word
-const BANK = P(0) + 1.0, SENDW = P(0) + 1.25, ONE = P(0) + 1.83, MILLION = P(0) + 2.85, LAND = MILLION + 0.6, MISTAKE = P(0) + 3.85, EIGHTY2 = P(1) + 0.93;
+const BANK = P(0) + 0.85, SENDW = P(0) + 1.07, ONE = P(0) + 1.6, MILLION = P(0) + 2.45, LAND = MILLION + 0.5, MISTAKE = P(0) + 3.35, EIGHTY2 = P(1) + 0.8;
 
 // ---------- hook (side by side, like every versus hook): BANK + US flag left --- money line ---> Doug + phone right ----------
 // Synced to the words: Doug (0 s) -> bank ("bank") -> line ("send") -> $1,200,000 ("one point two") -> bills ("million") -> phone -> freeze ("mistake").
@@ -218,43 +218,43 @@ const Job = ({t, until}: {t: number; until?: number}) => <>
   <Desk911 t={t} ring />
   <Penguin id="doug" x={360} y={1060} h={460} pose={{beak: 'smile', brows: 'happy', mouth: Math.abs(Math.sin(t * 14)) * 0.6, look: [0.6, 0]}} />
   <Headset x={360} y={1060} h={460} />
-  {until === undefined && <BigWord text="9-1-1" x={540} y={330} at={P(3) + 1.9} size={190} color={RED} />}
-  {until === undefined && <BigWord text="emergency" x={540} y={330} at={P(3) + 0.3} until={P(3) + 1.9} size={130} />}
+  {until === undefined && <BigWord text="9-1-1" x={540} y={330} at={P(3) + 1.52} size={190} color={RED} />}
+  {until === undefined && <BigWord text="emergency" x={540} y={330} at={P(3) + 0.24} until={P(3) + 1.52} size={130} />}
 </>;
 const Owe = ({t}: {t: number}) => <>
   <Snow />
   <IceBank x={300} y={SG} w={520} />
-  <Fox x={330} y={SG} h={520} flip mouth={t > P(4) && t < P(4) + 1.2 ? 0.3 + 0.2 * Math.sin(t * 20) : 0} />
+  <Fox x={330} y={SG} h={520} flip mouth={t > P(4) && t < P(4) + 0.96 ? 0.3 + 0.2 * Math.sin(t * 20) : 0} />
   <Penguin id="doug" x={820} y={SG} h={460} pose={{turn: -0.6, look: [-0.8, -0.1], flapL: 60, beak: 'smile'}} />
-  <BigWord text="Fox the banker" x={540} y={360} at={P(4)} until={P(4) + 1.4} size={110} />
-  <Paper x={620} y={720} w={300} title="FOX OWES DOUG" amount="$82" at={P(4) + 1.2} />
-  <BigWord text="$82" x={540} y={360} at={P(4) + 1.6} size={190} color={GREEN} />
+  <BigWord text="Fox the banker" x={540} y={360} at={P(4)} until={P(4) + 1.12} size={110} />
+  <Paper x={620} y={720} w={300} title="FOX OWES DOUG" amount="$82" at={P(4) + 0.96} />
+  <BigWord text="$82" x={540} y={360} at={P(4) + 1.28} size={190} color={GREEN} />
 </>;
 const Typing = ({t}: {t: number}) => {
-  const slip = P(5) + 0.6, n = t < slip ? 82 : Math.round(82 + (1200000 - 82) * ease((t - slip) / 0.7));
-  const press = t > P(6) + 0.3 && t < P(6) + 0.6;
+  const slip = P(5) + 0.48, n = t < slip ? 82 : Math.round(82 + (1200000 - 82) * ease((t - slip) / 0.7));
+  const press = t > P(6) + 0.24 && t < P(6) + 0.48;
   return <>
     <Snow />
     <Monitor x={640} y={760} t={t} text={`$${n.toLocaleString('en-US')}`} color={t < slip ? GREEN : RED} press={press} />
     <div style={{position: 'absolute', left: 380, top: 1150, width: 520, height: 60, background: '#fff', border: `6px solid ${INK}`, borderRadius: 12}} />
-    <Fox x={230} y={SG} h={560} flip sly={t < slip ? 0.3 : 1} mouth={t > P(6) && t < P(6) + 0.9 ? 0.3 : 0} />
+    <Fox x={230} y={SG} h={560} flip sly={t < slip ? 0.3 : 1} mouth={t > P(6) && t < P(6) + 0.72 ? 0.3 : 0} />
     {t >= slip && t < P(6) && <BigWord text="oops" x={300} y={420} at={slip} size={130} color={RED} />}
-    {t >= P(6) && <Fly x1={640} y1={760} x2={1300} y2={500} t={t} a={P(6) + 0.4} n={8} />}
-    {t >= P(6) && <BigWord text="SEND" x={640} y={370} at={P(6) + 0.3} size={150} />}
+    {t >= P(6) && <Fly x1={640} y1={760} x2={1300} y2={500} t={t} a={P(6) + 0.32} n={8} />}
+    {t >= P(6) && <BigWord text="SEND" x={640} y={370} at={P(6) + 0.24} size={150} />}
   </>;
 };
 const OpenApp = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={300} y={SG} h={520} pose={{turn: 0.5, look: [0.8, -0.2], flapR: 60}} />
-  <BankApp x={720} y={820} w={440} amount="$1,200,000" color={GREEN} buzz={t < P(7) + 0.4 ? Math.sin(t * 80) * 6 : 0} />
+  <BankApp x={720} y={820} w={440} amount="$1,200,000" color={GREEN} buzz={t < P(7) + 0.32 ? Math.sin(t * 80) * 6 : 0} />
   <Sparkles x={720} y={500} t={t} />
 </>;
 const Blink = ({t}: {t: number}) => {
-  const b = (t > P(8) + 0.15 && t < P(8) + 0.35) || (t > P(8) + 1.0 && t < P(8) + 1.2);
+  const b = (t > P(8) + 0.12 && t < P(8) + 0.28) || (t > P(8) + 0.8 && t < P(8) + 0.96);
   return <>
     <Penguin id="doug" x={540} y={SG + 900} h={1500} pose={{lids: b ? 1 : 0, eyeScale: 1.3, look: [0, -0.2], brows: 'shock'}} />
-    <BigWord text="blink" x={250} y={330} at={P(8) + 0.15} size={110} />
-    <BigWord text="blink" x={820} y={430} at={P(8) + 1.0} size={110} />
+    <BigWord text="blink" x={250} y={330} at={P(8) + 0.12} size={110} />
+    <BigWord text="blink" x={820} y={430} at={P(8) + 0.8} size={110} />
   </>;
 };
 const FoxCall = ({t}: {t: number}) => <>
@@ -263,14 +263,14 @@ const FoxCall = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: 300, top: 860, width: 60, height: 110, background: INK, borderRadius: 12, transform: 'rotate(-20deg)'}} />
   <Penguin id="doug" x={830} y={SG} h={440} pose={{turn: -0.5, look: [-0.8, 0], brows: 'worried', flapL: 60}} />
   <BankApp x={680} y={1050} w={150} amount="" call="FOX" buzz={Math.sin(t * 80) * 4} />
-  <Bubble text="MISTAKE!" x={330} y={330} at={P(9) + 0.6} t={t} w={460} size={72} tailX={-60} />
-  <Bubble text="give fish back" x={600} y={560} at={P(9) + 1.2} t={t} w={520} size={60} tailX={-200} />
+  <Bubble text="MISTAKE!" x={330} y={330} at={P(9) + 0.48} t={t} w={460} size={72} tailX={-60} />
+  <Bubble text="give fish back" x={600} y={560} at={P(9) + 0.96} t={t} w={520} size={60} tailX={-200} />
 </>;
 const Nothing = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={540} y={SG} h={700} pose={{lids: 0.45, look: [0.5, 0], beak: 'flat'}} />
   <div style={{position: 'absolute', left: 470, top: 860, width: 140, height: 30, background: '#9AA3AB', border: `5px solid ${INK}`, borderRadius: 8, transform: 'rotate(-4deg)'}} />
-  <BigWord text="..." x={820} y={480} at={P(10) + 0.3} size={220} />
+  <BigWord text="..." x={820} y={480} at={P(10) + 0.24} size={220} />
 </>;
 const Move = ({t}: {t: number}) => {
   const x = lerp(-250, 1350, cl((t - P(11)) / 1.6));
@@ -283,7 +283,7 @@ const Move = ({t}: {t: number}) => {
     <FishPile x={x - 165} y={SG - 145} n={6} w={120} />
     <Penguin id="doug" x={x + 60} y={SG} h={420} pose={{side: true, run: true, walk: t * 3, turn: 1, lean: 12}} />
     <SpeedLines x={x - 340} y={SG - 60} dir={1} h={300} />
-    <BigWord text="FAST" x={540} y={420} at={P(11) + 0.9} size={200} color={RED} />
+    <BigWord text="FAST" x={540} y={420} at={P(11) + 0.72} size={200} color={RED} />
   </>;
 };
 const BuyHouse = ({t}: {t: number}) => <>
@@ -297,7 +297,7 @@ const BuyCar = ({t}: {t: number}) => <>
   <Car x={lerp(1500, 560, ease((t - P(13)) / 0.5))} y={SG} w={700} t={t} />
   <Sparkles x={560} y={900} t={t} />
   <Penguin id="doug" x={180} y={SG + 80} h={360} pose={{beak: 'smile', brows: 'happy', lids: 0.3, flapR: 110}} />
-  <BigWord text="shiny car" x={540} y={400} at={P(13) + 0.6} size={150} />
+  <BigWord text="shiny car" x={540} y={400} at={P(13) + 0.48} size={150} />
 </>;
 const Good = ({t}: {t: number}) => <>
   <Snow />
@@ -308,14 +308,14 @@ const Good = ({t}: {t: number}) => <>
   <Sparkles x={540} y={560} t={t} />
 </>;
 const Knock = ({t}: {t: number}) => {
-  const k = P(15) + 1.05, shake = (t > k && t < k + 0.15) || (t > k + 0.3 && t < k + 0.45) ? Math.sin(t * 90) * 8 : 0;
+  const k = P(15) + 0.84, shake = (t > k && t < k + 0.15) || (t > k + 0.3 && t < k + 0.45) ? Math.sin(t * 90) * 8 : 0;
   return <>
     <Snow />
     <div style={{position: 'absolute', left: 120 + shake, top: 330, width: 420, height: 970, background: '#7A4E2A', border: `9px solid ${INK}`, boxSizing: 'border-box'}}>
       <div style={{position: 'absolute', right: 40, top: 480, width: 46, height: 46, borderRadius: '50%', background: '#F2C230', border: `5px solid ${INK}`}} />
     </div>
     <Moose x={lerp(1350, 800, ease((t - P(15) - 0.2) / 0.5))} y={SG} h={760} mouth={0} angry={1} />
-    <BigWord text="Sheriff Moose" x={540} y={250} at={P(15) + 0.4} until={k} size={110} />
+    <BigWord text="Sheriff Moose" x={540} y={250} at={P(15) + 0.32} until={k} size={110} />
     {t > k && <BigWord text="KNOCK KNOCK" x={330} y={250} at={k} size={100} color={RED} />}
   </>;
 };
@@ -324,28 +324,28 @@ const Charges = ({t}: {t: number}) => <>
   <Moose x={300} y={SG} h={720} flip angry={1} mouth={0.4} />
   <Penguin id="doug" x={830} y={SG} h={420} pose={{brows: 'worried', sweat: true, tremble: 1, eyeScale: 1.2, beak: 'frown', look: [-0.8, -0.2]}} />
   <Stamp text="THEFT" x={540} y={360} at={P(16)} color={RED} size={130} />
-  <Stamp text="BANK FRAUD" x={540} y={600} at={P(16) + 0.6} color={RED} size={110} rot={8} />
+  <Stamp text="BANK FRAUD" x={540} y={600} at={P(16) + 0.48} color={RED} size={110} rot={8} />
 </>;
 const Fired = ({t}: {t: number}) => <>
   <Snow />
   <Desk911 t={t} dark />
   <Penguin id="doug" x={360} y={1060} h={460} pose={{brows: 'worried', beak: 'frown', lids: 0.3, look: [0.6, 0.2]}} />
-  {t < P(17) + 0.4 && <Headset x={360} y={1060} h={460} />}
-  {t >= P(17) + 0.4 && <div style={{position: 'absolute', left: 0, top: 0, transform: `translate(${(t - P(17) - 0.4) * 1400}px, ${-(t - P(17) - 0.4) * 900}px) rotate(${(t - P(17)) * 500}deg)`, transformOrigin: '360px 700px'}}><Headset x={360} y={1060} h={460} /></div>}
-  <Stamp text="FIRED" x={540} y={360} at={P(17) + 0.4} color={RED} size={170} />
+  {t < P(17) + 0.32 && <Headset x={360} y={1060} h={460} />}
+  {t >= P(17) + 0.32 && <div style={{position: 'absolute', left: 0, top: 0, transform: `translate(${(t - P(17) - 0.4) * 1400}px, ${-(t - P(17) - 0.4) * 900}px) rotate(${(t - P(17)) * 500}deg)`, transformOrigin: '360px 700px'}}><Headset x={360} y={1060} h={460} /></div>}
+  <Stamp text="FIRED" x={540} y={360} at={P(17) + 0.32} color={RED} size={170} />
 </>;
 const Sue = ({t}: {t: number}) => <>
   <Snow />
   <Fox x={330} y={SG} h={600} flip mouth={0.3} sly={1} />
-  <Paper x={720} y={760} w={360} title="LAWSUIT" amount="$1,200,000" at={P(18) + 0.2} rot={6} />
-  <Stamp text="SUED" x={720} y={380} at={P(18) + 0.6} color={RED} size={150} />
+  <Paper x={720} y={760} w={360} title="LAWSUIT" amount="$1,200,000" at={P(18) + 0.16} rot={6} />
+  <Stamp text="SUED" x={720} y={380} at={P(18) + 0.48} color={RED} size={150} />
 </>;
 const Poor = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', inset: -400, background: '#E9EDF0'}} />
   <Penguin id="doug" x={540} y={SG + 300} h={950} pose={{lids: 0.35, brows: 'worried', beak: 'frown', tears: true}} />
   <BigWord text="Doug poor." x={540} y={340} at={P(19)} size={150} color={RED} />
 </>;
-const Called = ({t}: {t: number}) => <Title lines={['BANK ERROR']} y={880} at={P(20) + 0.6} size={135} />;
+const Called = ({t}: {t: number}) => <Title lines={['BANK ERROR']} y={880} at={P(20) + 0.48} size={135} />;
 const Gift = ({t}: {t: number}) => <>
   <Snow />
   <div style={{position: 'absolute', left: 340, top: 800, width: 400, height: 380, background: '#D83A2E', border: `8px solid ${INK}`, borderRadius: 16, boxSizing: 'border-box'}}>
@@ -353,30 +353,30 @@ const Gift = ({t}: {t: number}) => <>
   </div>
   <div style={{position: 'absolute', left: 310, top: 720, width: 460, height: 100, background: '#D83A2E', border: `8px solid ${INK}`, borderRadius: 16, boxSizing: 'border-box'}} />
   <BankApp x={540} y={640} w={150} amount="$1.2M" color={GREEN} />
-  <BigWord text="✗" x={540} y={950} at={P(21) + 0.7} size={560} color={RED} rot={0} />
-  <BigWord text="not a gift" x={540} y={330} at={P(21) + 0.7} size={150} color={RED} />
+  <BigWord text="✗" x={540} y={950} at={P(21) + 0.56} size={560} color={RED} rot={0} />
+  <BigWord text="not a gift" x={540} y={330} at={P(21) + 0.56} size={150} color={RED} />
 </>;
 const RealLife = ({t}: {t: number}) => <>
   <BigWord text="real life" x={540} y={360} at={P(22)} size={130} />
   <BigFlag x={540} y={500} w={360} />
-  <BigWord text="LOUISIANA" x={540} y={870} at={P(22) + 0.9} size={150} color="#2C4A9E" rot={0} />
-  <BigWord text="2021" x={540} y={1100} at={P(22) + 1.9} size={190} color={RED} />
+  <BigWord text="LOUISIANA" x={540} y={870} at={P(22) + 0.72} size={150} color="#2C4A9E" rot={0} />
+  <BigWord text="2021" x={540} y={1100} at={P(22) + 1.52} size={190} color={RED} />
 </>;
 const Woman = ({t}: {t: number}) => <>
   <BigWord text="should get" x={540} y={300} at={P(23)} size={90} />
-  <BigWord text="$82" x={540} y={470} at={P(23) + 0.2} size={200} color={GREEN} rot={0} />
-  <BigWord text="got" x={540} y={720} at={P(23) + 0.8} size={90} />
-  <BigWord text="$1,200,000" x={540} y={900} at={P(23) + 0.9} size={170} color={RED} rot={0} />
-  {t > P(23) + 0.9 && <Sparkles x={540} y={1120} t={t} />}
+  <BigWord text="$82" x={540} y={470} at={P(23) + 0.16} size={200} color={GREEN} rot={0} />
+  <BigWord text="got" x={540} y={720} at={P(23) + 0.64} size={90} />
+  <BigWord text="$1,200,000" x={540} y={900} at={P(23) + 0.72} size={170} color={RED} rot={0} />
+  {t > P(23) + 0.72 && <Sparkles x={540} y={1120} t={t} />}
   <div style={{position: 'absolute', left: 0, right: 0, top: 1340, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 34, color: '#888'}}>Charles Schwab transfer error, Louisiana 2021 (news reports)</div>
 </>;
 const Bought = ({t}: {t: number}) => <>
   <Snow />
   <House x={300} y={SG} w={480} />
   <Car x={800} y={SG} w={440} t={t} />
-  <BigWord text="✓" x={300} y={620} at={P(24) + 0.5} size={200} color={GREEN} rot={0} />
-  <BigWord text="✓" x={800} y={860} at={P(24) + 1.1} size={200} color={GREEN} rot={0} />
-  <BigWord text="house + car" x={540} y={360} at={P(24) + 0.5} size={130} />
+  <BigWord text="✓" x={300} y={620} at={P(24) + 0.4} size={200} color={GREEN} rot={0} />
+  <BigWord text="✓" x={800} y={860} at={P(24) + 0.88} size={200} color={GREEN} rot={0} />
+  <BigWord text="house + car" x={540} y={360} at={P(24) + 0.4} size={130} />
 </>;
 const Arrested = ({t}: {t: number}) => <>
   <Siren t={t} />
@@ -386,7 +386,7 @@ const Arrested = ({t}: {t: number}) => <>
     <circle cx={190} cy={75} r={55} fill="none" stroke="#9AA3AB" strokeWidth={18} /><circle cx={190} cy={75} r={55} fill="none" stroke={INK} strokeWidth={4} />
     <rect x={118} y={66} width={24} height={18} fill="#9AA3AB" stroke={INK} strokeWidth={4} />
   </svg>
-  <Stamp text="ARRESTED" x={540} y={420} at={P(25) + 0.3} color={RED} size={140} />
+  <Stamp text="ARRESTED" x={540} y={420} at={P(25) + 0.24} color={RED} size={140} />
 </>;
 const Callback = ({t}: {t: number}) => <Job t={t} until={1} />;
 const Emergency = ({t}: {t: number}) => <>
@@ -394,20 +394,20 @@ const Emergency = ({t}: {t: number}) => <>
   <Snow />
   <Moose x={300} y={SG} h={700} flip angry={1} cuffs />
   <Penguin id="doug" x={790} y={SG} h={460} pose={{brows: 'shock', eyeScale: 1.3, beak: 'frown', sweat: true, tremble: 1, look: [-0.8, -0.2]}} />
-  <BigWord text="EMERGENCY" x={540} y={360} at={P(27) + 0.6} size={115} color={RED} />
+  <BigWord text="EMERGENCY" x={540} y={360} at={P(27) + 0.48} size={115} color={RED} />
 </>;
 const Ask = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={540} y={SG} h={480} pose={{look: [0, -0.6], brows: 'worried', flapR: 90}} />
   {[['GIVE IT BACK', GREEN, 280], ['KEEP IT', RED, 800]].map(([txt, c, x], i) => { const p = ease((t - P(28) - 0.2 - i * 0.3) / 0.25);
     return <div key={i} style={{position: 'absolute', left: (x as number) - 210, top: 500, width: 420, height: 170, background: c as string, border: `7px solid ${INK}`, borderRadius: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 48, color: '#fff', transform: `scale(${p}) rotate(${i ? 3 : -3}deg)`}}>{txt}</div>; })}
-  <BigWord text="be honest" x={540} y={330} at={P(28) + 1.2} size={110} />
+  <BigWord text="be honest" x={540} y={330} at={P(28) + 0.96} size={110} />
 </>;
 const Cta = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={540} y={SG} h={560} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0.3, 0.6]}} />
   <BigWord text="comments" x={540} y={380} at={P(29)} size={150} />
-  <BigWord text="👇" x={800} y={700} at={P(29) + 0.3} size={160} />
+  <BigWord text="👇" x={800} y={700} at={P(29) + 0.24} size={160} />
 </>;
 
 // ---------- shots ----------
@@ -476,44 +476,44 @@ export const DougBankError = () => {
     <Sfx at={MISTAKE} name="user-shock" vol={0.4} />
     <Sfx at={EIGHTY2} name="ding" vol={0.45} />
     <Sfx at={P(2)} name="penguin-squawk" vol={0.35} />
-    <Sfx at={P(3) + 0.3} name="user-notif" vol={0.35} />
-    <Sfx at={P(3) + 1.9} name="user-boom" vol={0.35} />
-    <Sfx at={P(4) + 1.6} name="ding" vol={0.4} />
-    <Sfx at={P(5) + 0.6} name="user-wrong" vol={0.35} />
-    <Sfx at={P(6) + 0.3} name="user-pop" vol={0.35} />
-    <Sfx at={P(6) + 0.4} name="user-money-transfer" vol={0.35} />
+    <Sfx at={P(3) + 0.24} name="user-notif" vol={0.35} />
+    <Sfx at={P(3) + 1.52} name="user-boom" vol={0.35} />
+    <Sfx at={P(4) + 1.28} name="ding" vol={0.4} />
+    <Sfx at={P(5) + 0.48} name="user-wrong" vol={0.35} />
+    <Sfx at={P(6) + 0.24} name="user-pop" vol={0.35} />
+    <Sfx at={P(6) + 0.32} name="user-money-transfer" vol={0.35} />
     <Sfx at={P(7)} name="user-cash-register" vol={0.4} />
-    <Sfx at={P(7) + 0.4} name="user-wow" vol={0.35} />
-    <Sfx at={P(8) + 0.15} name="user-pop" vol={0.3} />
-    <Sfx at={P(8) + 1.0} name="user-pop" vol={0.3} />
+    <Sfx at={P(7) + 0.32} name="user-wow" vol={0.35} />
+    <Sfx at={P(8) + 0.12} name="user-pop" vol={0.3} />
+    <Sfx at={P(8) + 0.8} name="user-pop" vol={0.3} />
     <Sfx at={P(9)} name="user-notif2" vol={0.35} />
-    <Sfx at={P(9) + 0.6} name="user-wrong" vol={0.3} />
-    <Sfx at={P(10) + 0.3} name="user-horn" vol={0.25} />
+    <Sfx at={P(9) + 0.48} name="user-wrong" vol={0.3} />
+    <Sfx at={P(10) + 0.24} name="user-horn" vol={0.25} />
     <Sfx at={P(11)} name="swoosh-fast" vol={0.35} />
-    <Sfx at={P(11) + 0.9} name="user-money-transfer" vol={0.35} />
+    <Sfx at={P(11) + 0.72} name="user-money-transfer" vol={0.35} />
     <Sfx at={P(12)} name="user-cash-register" vol={0.35} />
     <Sfx at={P(13)} name="user-cash-register" vol={0.35} />
     <Sfx at={P(14)} name="user-yeah" vol={0.4} />
-    <Sfx at={P(15) + 1.05} name="user-slap" vol={0.4} />
-    <Sfx at={P(15) + 1.35} name="user-slap" vol={0.4} />
+    <Sfx at={P(15) + 0.84} name="user-slap" vol={0.4} />
+    <Sfx at={P(15) + 1.08} name="user-slap" vol={0.4} />
     <Sfx at={P(16)} name="user-boom" vol={0.4} />
-    <Sfx at={P(16) + 0.6} name="user-boom" vol={0.4} />
-    <Sfx at={P(17) + 0.4} name="user-slap" vol={0.35} />
-    <Sfx at={P(18) + 0.6} name="user-wrong" vol={0.35} />
+    <Sfx at={P(16) + 0.48} name="user-boom" vol={0.4} />
+    <Sfx at={P(17) + 0.32} name="user-slap" vol={0.35} />
+    <Sfx at={P(18) + 0.48} name="user-wrong" vol={0.35} />
     <Sfx at={P(19)} name="user-fahh" vol={0.45} />
-    <Sfx at={P(20) + 0.6} name="user-ting" vol={0.35} />
-    <Sfx at={P(21) + 0.7} name="user-wrong" vol={0.35} />
+    <Sfx at={P(20) + 0.48} name="user-ting" vol={0.35} />
+    <Sfx at={P(21) + 0.56} name="user-wrong" vol={0.35} />
     <Sfx at={P(22)} name="user-pop" vol={0.3} />
-    <Sfx at={P(22) + 1.9} name="ding" vol={0.35} />
-    <Sfx at={P(23) + 0.2} name="ding" vol={0.4} />
-    <Sfx at={P(23) + 0.9} name="user-cash-register" vol={0.4} />
-    <Sfx at={P(24) + 0.5} name="user-money" vol={0.3} />
-    <Sfx at={P(24) + 1.1} name="user-money" vol={0.3} />
-    <Sfx at={P(25) + 0.3} name="user-boom" vol={0.45} />
+    <Sfx at={P(22) + 1.52} name="ding" vol={0.35} />
+    <Sfx at={P(23) + 0.16} name="ding" vol={0.4} />
+    <Sfx at={P(23) + 0.72} name="user-cash-register" vol={0.4} />
+    <Sfx at={P(24) + 0.4} name="user-money" vol={0.3} />
+    <Sfx at={P(24) + 0.88} name="user-money" vol={0.3} />
+    <Sfx at={P(25) + 0.24} name="user-boom" vol={0.45} />
     <Sfx at={P(26)} name="user-notif" vol={0.3} />
-    <Sfx at={P(27) + 0.6} name="user-shock" vol={0.45} />
-    <Sfx at={P(28) + 0.2} name="user-pop" vol={0.3} />
-    <Sfx at={P(28) + 0.5} name="user-pop" vol={0.3} />
+    <Sfx at={P(27) + 0.48} name="user-shock" vol={0.45} />
+    <Sfx at={P(28) + 0.16} name="user-pop" vol={0.3} />
+    <Sfx at={P(28) + 0.4} name="user-pop" vol={0.3} />
     <Sfx at={P(29)} name="user-pop" vol={0.35} />
   </AbsoluteFill>;
 };
