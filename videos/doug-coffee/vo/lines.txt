@@ -1,0 +1,37 @@
+Why poor Doug pay forty-one dollars for a six-dollar coffee?|0.12
+Rich Doug pay six dollars. Same coffee.|0.12
+This is Doug.|0.07
+Doug have five dollars.|0.07
+Doug want coffee.|0.07
+Coffee cost six dollars.|0.07
+Doug tap card. Beep.|0.07
+Bank say yes. Bank is nice.|0.3
+Bank is not nice.|0.12
+Next day, letter from Fox the Banker.|0.07
+Coffee: six dollars.|0.07
+Fee: thirty-five dollars.|0.07
+If Doug spend money Doug don't have,|0.07
+bank take more money.|0.07
+This is called overdraft fee.|0.12
+Doug poor.|0.35
+Now Doug have minus thirty-six dollars.|0.07
+Doug buy gum.|0.07
+Another fee. Thirty-five dollars.|0.07
+Small gum. Big fee.|0.12
+Now rich Doug.|0.07
+Rich Doug have big money in bank.|0.07
+Rich Doug buy same coffee.|0.07
+Card give money back.|0.07
+This is called cashback.|0.07
+Poor Doug pay more. Rich Doug pay less.|0.12
+In real life, big banks still charge up to thirty-five dollars for one overdraft.|0.12
+Being poor is expensive.|0.12
+Doug go home.|0.07
+Doug make coffee at home.|0.07
+Home coffee cost thirty cents.|0.07
+Doug happy.|0.35
+Then Doug check bank.|0.07
+Coffee maker. Ninety-nine dollars.|0.07
+Doug have five.|0.12
+Doug poor again.|0.35
+What's the worst fee your bank ever charged you?|0.1
