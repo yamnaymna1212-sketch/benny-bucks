@@ -1,6 +1,6 @@
 # EP7 "Mortgage Explained by Doug" (~61.5 s)
 
-HOOK (versus): left DOUG PAYS $997,000 (RED, pile of bills grows) vs right HOUSE PRICE $400,000 (GREEN), same house drawn twice.
+HOOK v2 (user feedback 2026-10-21: one American house, US flag, show $1,000,000 not $997,000): ONE two-storey American house + flag pole on a green lawn; price boards DOUG PAYS $1,000,000 (RED) vs HOUSE PRICE $400,000 (GREEN), bills pile up on the lawn.
 why? title, red arrow left -> swings right on "four hundred thousand", VS badge, SAME HOUSE stamp, zoom x1.22 to the side spoken.
 SFX: ting 0 s, cash-register on "million", ting on "$400,000", boom on "Same house".
 
