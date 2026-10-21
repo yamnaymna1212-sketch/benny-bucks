@@ -345,7 +345,7 @@ const Poor = ({t}: {t: number}) => <>
   <Penguin id="doug" x={540} y={SG + 300} h={950} pose={{lids: 0.35, brows: 'worried', beak: 'frown', tears: true}} />
   <BigWord text="Doug poor." x={540} y={340} at={P(19)} size={150} color={RED} />
 </>;
-const Called = ({t}: {t: number}) => <Title lines={['BANK ERROR']} y={880} at={P(20) + 0.6} size={170} />;
+const Called = ({t}: {t: number}) => <Title lines={['BANK ERROR']} y={880} at={P(20) + 0.6} size={135} />;
 const Gift = ({t}: {t: number}) => <>
   <Snow />
   <div style={{position: 'absolute', left: 340, top: 800, width: 400, height: 380, background: '#D83A2E', border: `8px solid ${INK}`, borderRadius: 16, boxSizing: 'border-box'}}>
@@ -394,13 +394,13 @@ const Emergency = ({t}: {t: number}) => <>
   <Snow />
   <Moose x={300} y={SG} h={700} flip angry={1} cuffs />
   <Penguin id="doug" x={790} y={SG} h={460} pose={{brows: 'shock', eyeScale: 1.3, beak: 'frown', sweat: true, tremble: 1, look: [-0.8, -0.2]}} />
-  <BigWord text="EMERGENCY" x={540} y={360} at={P(27) + 0.6} size={150} color={RED} />
+  <BigWord text="EMERGENCY" x={540} y={360} at={P(27) + 0.6} size={115} color={RED} />
 </>;
 const Ask = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={540} y={SG} h={480} pose={{look: [0, -0.6], brows: 'worried', flapR: 90}} />
   {[['GIVE IT BACK', GREEN, 280], ['KEEP IT', RED, 800]].map(([txt, c, x], i) => { const p = ease((t - P(28) - 0.2 - i * 0.3) / 0.25);
-    return <div key={i} style={{position: 'absolute', left: (x as number) - 210, top: 500, width: 420, height: 170, background: c as string, border: `7px solid ${INK}`, borderRadius: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 58, color: '#fff', transform: `scale(${p}) rotate(${i ? 3 : -3}deg)`}}>{txt}</div>; })}
+    return <div key={i} style={{position: 'absolute', left: (x as number) - 210, top: 500, width: 420, height: 170, background: c as string, border: `7px solid ${INK}`, borderRadius: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 48, color: '#fff', transform: `scale(${p}) rotate(${i ? 3 : -3}deg)`}}>{txt}</div>; })}
   <BigWord text="be honest" x={540} y={330} at={P(28) + 1.2} size={110} />
 </>;
 const Cta = ({t}: {t: number}) => <>
@@ -443,7 +443,7 @@ const SHOTS: Shot[] = [
   {at: P(29), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[3, 640, 760, 1.35], [4, 620, 720, 1.4], [6, 640, 760, 1.3], [8, 540, 760, 1.25], [10, 540, 760, 1.4], [16, 540, 480, 1.25], [19, 540, 700, 1.3], [23, 540, 900, 1.2], [27, 790, 950, 1.4]];
+const DEEP: [number, number, number, number][] = [[4, 560, 760, 1.2], [6, 640, 760, 1.25], [8, 540, 760, 1.25], [10, 540, 760, 1.3], [19, 540, 700, 1.25], [27, 620, 820, 1.15]];
 
 export const DougBankError = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
