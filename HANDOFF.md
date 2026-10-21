@@ -2,6 +2,7 @@
 
 Read this first, then PROJECT_LOG.md (decisions) and videos/penguin-series/script-formula.md (series rules).
 Talk to the user in Arabic. Video text/voice in English.
+VOICE: edge-tts en-US-AndrewNeural, one take, `python3 tools/make_voice.py <slug>` (always tightened). Never ask the user about the voice (user rule 2026-10-21). Hook rules: see CLAUDE.md.
 
 ## 1. Get the project
 - Repo: github.com/yamnaymna1212-sketch/benny-bucks — branch `claude/benny-tiktok-factory-design-lex9ua` (also merged into `main`).
@@ -21,7 +22,8 @@ Talk to the user in Arabic. Video text/voice in English.
   User VO (ElevenLabs) tightened + sped x1.2 to 61.5 s: videos/doug-gas/vo/voice.mp3; speech segments (start/end in the final file,
   52 segments, seg 36 = "Doug.") in videos/doug-gas/vo/voice.segments.json. NEXT: map segments -> script lines (by order/length,
   like EP1), save as studio/src/data/doug-gas.json, build all shots after the hook, render, compress (<30 MB).
-- Voice tightening tool: tools/tighten_vo.py (cut pauses to ~0.07 s; keep ~0.35–0.75 s after "Doug.").
+- Voice pipeline: tools/make_voice.py (edge-tts take -> tools/tighten_vo.py 0.07 s gaps, 0.35 s after "Doug <state>." -> atempo -> comma pauses 0.10 s).
+- Fix one scene without a full re-render: render that frame range (--frames a-b --muted) and splice with ffmpeg trim+concat (NOT overlay — it shifts white to 235).
 
 ## 4. Rules that matter (see PROJECT_LOG for all)
 - No music. Captions = hand-written, one ink colour, small. Deep zooms on named subjects; fast rhythm; user SFX (ting at 0 s of every hook).

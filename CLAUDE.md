@@ -1,6 +1,8 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+VOICE (user rule 2026-10-21 — FINAL, the user will not mention the voice again; NEVER ask about voice/credits/ElevenLabs): edge-tts `en-US-AndrewNeural`, ONE take, built with `python3 tools/make_voice.py <slug>` (lines.txt -> pauses 0.07 s, 0.35 s after "Doug <state>.", comma pauses 0.10 s, atempo if long -> voice.mp3 + studio/src/data/<slug>.json). ALWAYS tightened, even if the raw length is fine (slow pauses = choppy, each sentence feels alone). Voice < 60 s -> add script lines and make ONE new take; never keep pauses to fill time. Spell numbers in words, no hyphens in lines.txt.
+HOOK (user rules 2026-10-21): ONE real American object (never drawn twice) + US symbol (flag); the two prices on big boards visible from frame ~5 (not on the spoken word); the number on screen = the number spoken (rounded, e.g. $1,000,000); nothing else on screen (no piles/stamps/"?" that distract); Doug ACTS the line (walks, reacts, pays) — never stands still.
+Doug rules: 61–65 s, NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 

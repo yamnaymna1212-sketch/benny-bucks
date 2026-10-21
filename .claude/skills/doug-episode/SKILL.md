@@ -9,9 +9,10 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).
 - Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
-- Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
+- Write the script to videos/<slug>/vo/lines.txt (numbers in words, no hyphens). Do NOT ask the user for a voice — the voice is ours (step 2).
 
-## 2. Voice (user's ElevenLabs mp3)
+## 2. Voice (edge-tts en-US-AndrewNeural, ONE take — user rule 2026-10-21, never ask the user)
+- Run `python3 tools/make_voice.py <slug>` (pip install edge-tts numpy soundfile). It does steps below automatically; re-tighten an existing take with `--no-tts` (never a 2nd take just to re-tighten).
 - ALWAYS tighten, for ANY voice source (ElevenLabs, edge-tts, Kokoro) — even when the raw length is already 61–65 s (user rule 2026-10-21: TTS pauses of 0.3–0.5 s make every sentence feel alone and choppy). Also cut comma pauses inside sentences to ~0.10 s. If the tight voice is < 61 s, ADD script lines (one idea each) and make one new take — never keep slow pauses to fill time.
 - Save to videos/<slug>/vo/raw.mp3. Detect speech with `silencedetect=n=-38dB:d=0.12`, write segments.json (all gaps 0.07 s, ~0.35 s after the "Doug <state>." gag), run `python3 tools/tighten_vo.py raw.wav segments.json tight`.
 - If still > 62 s, speed with `ffmpeg -af atempo=<x>` (EP2 used 1.2) and divide segment times by x -> voice.segments.json. Target 61–62 s.
