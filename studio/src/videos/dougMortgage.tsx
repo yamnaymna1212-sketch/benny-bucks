@@ -5,6 +5,7 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
 import {Captions, Sfx} from '../penguin/edit';
+import {Bill} from './dougLaundering';
 import TIM from '../data/doug-mortgage.json';
 
 const P = (i: number) => TIM[i].start;
@@ -108,6 +109,27 @@ const Tag = ({x, y, label, price, color, at, t}: {x: number; y: number; label: s
 // ---------- sets ----------
 const LX = 255, RX = 825;
 // Only what explains the topic in the first second: why? + two prices + VS + one American house + Doug.
+// Doug acts: walks in, PAYS (bills fly to the red board) on "one million", jaw-drops at the green price, sad on "Same house".
+const DX = 430, DY = G + 140, PAY0 = 0.85, PAY1 = 2.0;
+const PayDoug = ({t}: {t: number}) => {
+  const walkP = ease(t / 0.8), x = 150 + (DX - 150) * walkP;
+  const paying = t >= PAY0 && t < FOUR, shocked = t >= FOUR && t < SAME, sad = t >= SAME;
+  const throwA = paying ? 95 + Math.sin((t - PAY0) * 14) * 35 : 6;
+  const pose = t < PAY0 ? {walk: t < 0.8 ? t * 2.4 : null, look: [0.3, -0.6] as [number, number], beak: 'smile' as const, brows: 'happy' as const}
+    : paying ? {flapL: throwA, flapR: throwA, look: [-0.6, -0.8] as [number, number], brows: 'worried' as const, beak: 'frown' as const, sweat: true, tremble: 0.3}
+    : shocked ? {turn: 1, look: [0.9, -0.9] as [number, number], eyeScale: 1.5, mouth: 0.8, brows: 'shock' as const, tremble: 0.6, flapL: 40, flapR: 40, hop: t < FOUR + 0.3 ? Math.sin((t - FOUR) / 0.3 * Math.PI) * 50 : 0}
+    : {look: [0, 0.2] as [number, number], brows: 'worried' as const, beak: 'frown' as const, tears: true, squash: 0.25, flapL: 0, flapR: 0};
+  return <Penguin id="doug" x={x} y={DY} h={360} pose={pose} />;
+};
+// Bills fly in an arc from Doug's flippers to the red DOUG PAYS board.
+const PayStream = ({t}: {t: number}) => <>
+  {Array.from({length: 9}, (_, i) => {
+    const a = PAY0 + i * 0.13, p = (t - a) / 0.45;
+    if (p < 0 || p > 1) return null;
+    const x = DX + (LX - DX) * p, y = DY - 230 + (640 - (DY - 230)) * p - Math.sin(p * Math.PI) * 220;
+    return <Bill key={i} x={x} y={y} w={130 * (1 - 0.35 * p)} rot={p * 360 + i * 40} />;
+  })}
+</>;
 const Hook = ({t}: {t: number}) => <>
   <Why t={t} />
   <Ground />
@@ -116,7 +138,8 @@ const Hook = ({t}: {t: number}) => <>
   <Tag x={RX} y={470} label="HOUSE PRICE" price="$400,000" color={GREEN} at={0.15} t={t} />
   <Vs x={540} y={575} t={t} />
   <Arrow x={540} y={760} t={t} swingAt={FOUR} />
-  <Penguin id="doug" x={540} y={G + 170} h={260} pose={{look: [t < FOUR ? -0.8 : 0.8, -0.6], brows: 'shock', eyeScale: 1.2, beak: 'frown'}} />
+  <PayDoug t={t} />
+  <PayStream t={t} />
 </>;
 
 // ---------- shots ----------
@@ -142,6 +165,10 @@ export const DougMortgage = () => {
     <Sfx at={0.2} name="swoosh-fast" vol={0.3} />
     <Sfx at={0.8} name="user-whoosh" vol={0.25} />
     <Sfx at={MILLION} name="user-cash-register" vol={0.35} />
+    <Sfx at={PAY0} name="user-money" vol={0.35} />
+    <Sfx at={PAY0 + 0.6} name="user-money" vol={0.3} />
+    <Sfx at={FOUR + 0.05} name="penguin-squawk" vol={0.35} />
+    <Sfx at={SAME + 0.3} name="user-aww" vol={0.3} />
     <Sfx at={FOUR} name="user-whoosh" vol={0.25} />
     <Sfx at={FOUR + 0.6} name="user-ting" vol={0.35} />
     <Sfx at={SAME} name="user-boom" vol={0.45} />
