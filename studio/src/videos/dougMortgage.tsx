@@ -4,9 +4,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
-import {Stamp} from '../penguin/world';
 import {Captions, Sfx} from '../penguin/edit';
-import {Bill} from './dougLaundering';
 import TIM from '../data/doug-mortgage.json';
 
 const P = (i: number) => TIM[i].start;
@@ -44,7 +42,7 @@ const Label = ({text, x, y, at, t, size = 80, color = INK}: {text: string; x: nu
   return <div style={{position: 'absolute', left: x - 270, width: 540, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, color, opacity: p, transform: `scale(${0.5 + 0.5 * p})`, whiteSpace: 'nowrap'}}>{text}</div>;
 };
 const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
-  const p = ease((t - 0.5) / 0.3);
+  const p = ease((t - 0.2) / 0.25);
   return <div style={{position: 'absolute', left: x - 62, top: y - 62, width: 124, height: 124, borderRadius: '50%', background: RED, border: `7px solid ${INK}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 60, color: '#fff', transform: `scale(${p}) rotate(${-8 + Math.sin(t * 4) * 3}deg)`}}>VS</div>;
 };
 // US flag (13 stripes + blue canton with stars). (x, y) = top-left, waves a little.
@@ -97,7 +95,7 @@ export const House = ({x, y, w = 700, t = 0}: {x: number; y: number; w?: number;
     <FlagUS x={6 * k} y={118 * k} w={130 * k} t={t} />
   </div>;
 };
-const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 800, background: '#8CCB5E', borderTop: `5px solid ${INK}`}} />;
+const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 800, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />;
 // Price board: label + big price, coloured frame.
 const Tag = ({x, y, label, price, color, at, t}: {x: number; y: number; label: string; price: string; color: string; at: number; t: number}) => {
   const p = ease((t - at) / 0.25);
@@ -109,25 +107,17 @@ const Tag = ({x, y, label, price, color, at, t}: {x: number; y: number; label: s
 
 // ---------- sets ----------
 const LX = 255, RX = 825;
-const Hook = ({t}: {t: number}) => {
-  // Doug's pile of payments grows while "one million dollars" is spoken
-  const bills = Math.round(2 + 14 * ease((t - 0.7) / 1.3));
-  return <>
-    <Why t={t} />
-    <Ground />
-    <House x={540} y={G} w={720} t={t} />
-    <Tag x={LX} y={470} label="DOUG PAYS" price="$1,000,000" color={RED} at={MILLION - 0.15} t={t} />
-    <Tag x={RX} y={470} label="HOUSE PRICE" price="$400,000" color={GREEN} at={FOUR - 0.1} t={t} />
-    <Vs x={540} y={575} t={t} />
-    <Arrow x={540} y={760} t={t} swingAt={FOUR} />
-    {/* Doug's payments pile up on the lawn */}
-    {Array.from({length: bills}, (_, i) => <Bill key={i} x={110 + (i % 4) * 75} y={G + 90 - Math.floor(i / 4) * 38} w={140} rot={((i * 37) % 30) - 15} />)}
-    <Stamp text="SAME HOUSE" x={540} y={1010} at={SAME} color={RED} size={100} rot={-8} />
-    {/* Doug on the lawn, one "?" */}
-    <Penguin id="doug" x={830} y={G + 210} h={300} pose={{look: [t < FOUR ? -0.8 : 0.2, -0.6], brows: 'shock', eyeScale: 1.2, beak: 'frown'}} />
-    <div style={{position: 'absolute', left: 950, top: G - 60 + Math.sin(t * 6) * 8, fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 110, color: INK, transform: 'rotate(14deg)'}}>?</div>
-  </>;
-};
+// Only what explains the topic in the first second: why? + two prices + VS + one American house + Doug.
+const Hook = ({t}: {t: number}) => <>
+  <Why t={t} />
+  <Ground />
+  <House x={540} y={G} w={720} t={t} />
+  <Tag x={LX} y={470} label="DOUG PAYS" price="$1,000,000" color={RED} at={0.05} t={t} />
+  <Tag x={RX} y={470} label="HOUSE PRICE" price="$400,000" color={GREEN} at={0.15} t={t} />
+  <Vs x={540} y={575} t={t} />
+  <Arrow x={540} y={760} t={t} swingAt={FOUR} />
+  <Penguin id="doug" x={540} y={G + 170} h={260} pose={{look: [t < FOUR ? -0.8 : 0.8, -0.6], brows: 'shock', eyeScale: 1.2, beak: 'frown'}} />
+</>;
 
 // ---------- shots ----------
 type Shot = {at: number; set: (t: number) => React.ReactNode};
@@ -139,7 +129,7 @@ export const DougMortgage = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s = 1, fx = 540, fy = 960;
-  if (sh.at === 0) { // hook: strong zoom to the side being spoken (left on "million", right on "four hundred thousand"), out to both on "Same house"
+  if (sh.at === 0) { // hook: strong zoom to the price being spoken (left on "million", right on "four hundred thousand"), out to both on "Same house"
     const toL = ease((tc - 0.8) / 0.35) * (tc < FOUR ? 1 : 0), toR = ease((tc - FOUR) / 0.35) * (tc < SAME ? 1 : 0), z = Math.max(toL, toR);
     s = 1 + 0.22 * z; fx = 540 - 240 * toL + 240 * toR; fy = 960 - 150 * z;
   }
