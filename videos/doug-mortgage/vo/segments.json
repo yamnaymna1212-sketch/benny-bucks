@@ -1,0 +1,310 @@
+[
+ {
+  "a": 0.1,
+  "b": 3.691,
+  "text": "Why Doug pay one million dollars for a four hundred thousand dollar house?",
+  "line": 0,
+  "gap_after": 0.07
+ },
+ {
+  "a": 4.075,
+  "b": 4.739,
+  "text": "Same house.",
+  "line": 1,
+  "gap_after": 0.07
+ },
+ {
+  "a": 5.125,
+  "b": 5.812,
+  "text": "This is Doug.",
+  "line": 2,
+  "gap_after": 0.07
+ },
+ {
+  "a": 6.224,
+  "b": 6.891,
+  "text": "Doug want igloo.",
+  "line": 3,
+  "gap_after": 0.07
+ },
+ {
+  "a": 7.308,
+  "b": 7.925,
+  "text": "Big igloo.",
+  "line": 4,
+  "gap_after": 0.07
+ },
+ {
+  "a": 8.346,
+  "b": 8.961,
+  "text": "With garage.",
+  "line": 5,
+  "gap_after": 0.07
+ },
+ {
+  "a": 9.383,
+  "b": 11.661,
+  "text": "Igloo cost four hundred thousand dollars.",
+  "line": 6,
+  "gap_after": 0.07
+ },
+ {
+  "a": 12.112,
+  "b": 13.509,
+  "text": "That is forty thousand fish.",
+  "line": 7,
+  "gap_after": 0.07
+ },
+ {
+  "a": 13.949,
+  "b": 14.675,
+  "text": "Doug have zero.",
+  "line": 8,
+  "gap_after": 0.07
+ },
+ {
+  "a": 15.037,
+  "b": 16.004,
+  "text": "So Doug go to bank.",
+  "line": 9,
+  "gap_after": 0.07
+ },
+ {
+  "a": 16.473,
+  "b": 17.667,
+  "text": "Fox lend Doug the fish.",
+  "line": 10,
+  "gap_after": 0.07
+ },
+ {
+  "a": 18.122,
+  "b": 19.299,
+  "text": "But Fox want something back.",
+  "line": 11,
+  "gap_after": 0.07
+ },
+ {
+  "a": 19.773,
+  "b": 20.588,
+  "text": "Fox want interest.",
+  "line": 12,
+  "gap_after": 0.07
+ },
+ {
+  "a": 20.988,
+  "b": 22.311,
+  "text": "Interest is rent for money.",
+  "line": 13,
+  "gap_after": 0.07
+ },
+ {
+  "a": 22.724,
+  "b": 23.637,
+  "text": "Doug rent the fish.",
+  "line": 14,
+  "gap_after": 0.07
+ },
+ {
+  "a": 24.074,
+  "b": 26.745,
+  "text": "Every year, Fox take seven point four percent.",
+  "line": 15,
+  "gap_after": 0.07
+ },
+ {
+  "a": 27.186,
+  "b": 28.209,
+  "text": "Doug pay every month.",
+  "line": 16,
+  "gap_after": 0.07
+ },
+ {
+  "a": 28.666,
+  "b": 29.432,
+  "text": "For thirty years.",
+  "line": 17,
+  "gap_after": 0.07
+ },
+ {
+  "a": 29.912,
+  "b": 31.2,
+  "text": "Three hundred sixty payments.",
+  "line": 18,
+  "gap_after": 0.07
+ },
+ {
+  "a": 31.704,
+  "b": 32.255,
+  "text": "First payment:",
+  "line": 19,
+  "gap_after": 0.07
+ },
+ {
+  "a": 32.538,
+  "b": 34.482,
+  "text": "two thousand four hundred go to Fox.",
+  "line": 20,
+  "gap_after": 0.07
+ },
+ {
+  "a": 34.875,
+  "b": 36.383,
+  "text": "Only three hundred go to igloo.",
+  "line": 21,
+  "gap_after": 0.07
+ },
+ {
+  "a": 36.801,
+  "b": 40.482,
+  "text": "Ten years later, Doug still owe three hundred forty six thousand.",
+  "line": 22,
+  "gap_after": 0.07
+ },
+ {
+  "a": 40.934,
+  "b": 41.927,
+  "text": "This is called a mortgage.",
+  "line": 23,
+  "gap_after": 0.07
+ },
+ {
+  "a": 42.362,
+  "b": 44.849,
+  "text": "In old French, mortgage mean death pledge.",
+  "line": 24,
+  "gap_after": 0.07
+ },
+ {
+  "a": 45.237,
+  "b": 45.747,
+  "text": "Doug poor.",
+  "line": 25,
+  "gap_after": 0.35
+ },
+ {
+  "a": 46.185,
+  "b": 51.862,
+  "text": "In real life, at seven point four percent, Doug pay two thousand seven hundred seventy dollars a month.",
+  "line": 26,
+  "gap_after": 0.07
+ },
+ {
+  "a": 52.379,
+  "b": 53.238,
+  "text": "Thirty years later:",
+  "line": 27,
+  "gap_after": 0.07
+ },
+ {
+  "a": 53.683,
+  "b": 55.222,
+  "text": "almost one million dollars.",
+  "line": 28,
+  "gap_after": 0.07
+ },
+ {
+  "a": 55.668,
+  "b": 57.679,
+  "text": "Six hundred thousand is just interest.",
+  "line": 29,
+  "gap_after": 0.07
+ },
+ {
+  "a": 58.075,
+  "b": 59.776,
+  "text": "All interest go to Larry's bank.",
+  "line": 30,
+  "gap_after": 0.07
+ },
+ {
+  "a": 60.212,
+  "b": 60.812,
+  "text": "Larry laugh.",
+  "line": 31,
+  "gap_after": 0.07
+ },
+ {
+  "a": 61.212,
+  "b": 62.243,
+  "text": "Doug make last payment.",
+  "line": 32,
+  "gap_after": 0.07
+ },
+ {
+  "a": 62.686,
+  "b": 63.274,
+  "text": "Doug is old.",
+  "line": 33,
+  "gap_after": 0.07
+ },
+ {
+  "a": 63.712,
+  "b": 64.64,
+  "text": "Igloo is Doug's.",
+  "line": 34,
+  "gap_after": 0.07
+ },
+ {
+  "a": 65.073,
+  "b": 65.689,
+  "text": "Life is good.",
+  "line": 35,
+  "gap_after": 0.07
+ },
+ {
+  "a": 66.121,
+  "b": 67.005,
+  "text": "Then Tax Gull come.",
+  "line": 36,
+  "gap_after": 0.07
+ },
+ {
+  "a": 67.431,
+  "b": 68.212,
+  "text": "Property tax.",
+  "line": 37,
+  "gap_after": 0.07
+ },
+ {
+  "a": 68.645,
+  "b": 69.174,
+  "text": "Every year.",
+  "line": 38,
+  "gap_after": 0.07
+ },
+ {
+  "a": 69.616,
+  "b": 70.025,
+  "text": "Forever.",
+  "line": 39,
+  "gap_after": 0.07
+ },
+ {
+  "a": 70.412,
+  "b": 71.137,
+  "text": "Doug own igloo.",
+  "line": 40,
+  "gap_after": 0.07
+ },
+ {
+  "a": 71.549,
+  "b": 72.323,
+  "text": "Igloo own Doug.",
+  "line": 41,
+  "gap_after": 0.07
+ },
+ {
+  "a": 72.688,
+  "b": 75.108,
+  "text": "Would you rent or buy at seven point four percent?",
+  "line": 42,
+  "gap_after": 0.07
+ },
+ {
+  "a": 75.556,
+  "b": 76.75,
+  "text": "Tell Doug in the comments.",
+  "line": 43,
+  "gap_after": 0.07
+ }
+]

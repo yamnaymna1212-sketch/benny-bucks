@@ -12,6 +12,7 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 - Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
 
 ## 2. Voice (user's ElevenLabs mp3)
+- ALWAYS tighten, for ANY voice source (ElevenLabs, edge-tts, Kokoro) — even when the raw length is already 61–65 s (user rule 2026-10-21: TTS pauses of 0.3–0.5 s make every sentence feel alone and choppy). Also cut comma pauses inside sentences to ~0.10 s. If the tight voice is < 61 s, ADD script lines (one idea each) and make one new take — never keep slow pauses to fill time.
 - Save to videos/<slug>/vo/raw.mp3. Detect speech with `silencedetect=n=-38dB:d=0.12`, write segments.json (all gaps 0.07 s, ~0.35 s after the "Doug <state>." gag), run `python3 tools/tighten_vo.py raw.wav segments.json tight`.
 - If still > 62 s, speed with `ffmpeg -af atempo=<x>` (EP2 used 1.2) and divide segment times by x -> voice.segments.json. Target 61–62 s.
 - Map segments to script phrases IN ORDER by length (sentence fragments; "Doug <state>." ~0.7 s is the anchor) -> studio/src/data/<slug>.json [{start,end,text}].
