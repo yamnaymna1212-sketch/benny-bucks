@@ -115,28 +115,53 @@ const Sparkles = ({x, y, t}: {x: number; y: number; t: number}) => <>
 // ---------- sets ----------
 const POOR = P(0) + 1.35, MILLION = P(1);
 const WX = 540, WY = G, DOOR_Y = WY - 460 * 1.12 * 0.42; // washer + door centre
+const UsFlag = ({x, y, w = 220, t}: {x: number; y: number; w?: number; t: number}) => {
+  const wave = Math.sin(t * 5) * 3;
+  return <svg width={w} height={w * 0.63} viewBox="0 0 190 120" style={{position: 'absolute', left: x, top: y, overflow: 'visible', transform: `skewY(${wave}deg)`}}>
+    <rect width={190} height={120} fill="#fff" stroke={INK} strokeWidth={5} />
+    {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 17.4} width={190} height={8.7} fill="#B22234" />)}
+    <rect width={84} height={64} fill="#3C3B6E" />
+    {Array.from({length: 12}, (_, i) => <circle key={i} cx={12 + (i % 4) * 20} cy={12 + Math.floor(i / 4) * 20} r={4} fill="#fff" />)}
+    <rect width={190} height={120} fill="none" stroke={INK} strokeWidth={5} />
+  </svg>;
+};
+const ROPE = (x: number) => 740 + 40 * Math.sin(((x - 640) / 400) * Math.PI); // sagging clothesline y at x
+const PINS = [700, 790, 880, 970];
+const WX2 = 360, DOOR2 = G - 340 * 1.12 * 0.42; // hook washer + door centre
 const Hook = ({t}: {t: number}) => {
-  const tt = ease(t / 0.25), cleanN = 2 + Math.min(4, Math.floor(cl(t - 0.6) * 4));
+  const tt = ease(t / 0.25);
+  // Doug scrubs, then throws clean bills onto the line: slot 2 at 0.8 s, slot 3 at 1.3 s
+  const throws = [0.8, 1.3], hung = 2 + throws.filter((a) => t >= a + 0.35).length;
+  const scrub = Math.sin(t * 12) * 30;
   return <>
-    <div style={{position: 'absolute', left: 0, right: 0, top: 170, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: '128px', color: INK, transform: `scale(${0.6 + 0.4 * tt})`, opacity: tt}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: 150, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 112, lineHeight: '122px', color: INK, transform: `scale(${0.6 + 0.4 * tt})`, opacity: tt}}>
       HOW MONEY<br />LAUNDERING<span style={{color: RED}}>?</span>
     </div>
     <Ground />
-    <Washer x={WX} y={WY} t={t} money="both" />
-    {/* dirty money in (left) */}
-    <Label text="DIRTY $" x={205} y={520} at={0.2} t={t} size={78} color={RED} />
-    {[0, 1, 2, 3, 4].map((i) => <Bill key={i} x={130 + (i % 3) * 45} y={G - 30 - Math.floor(i / 2) * 55} w={170} rot={(i * 23) % 30 - 15} dirty />)}
-    <Stinky x={170} y={G - 160} t={t} />
-    <Stream x1={180} y1={G - 200} x2={WX - 40} y2={DOOR_Y} t={t} a={0.2} dirty />
-    {/* clean money out (right) */}
-    <Label text="CLEAN $" x={880} y={520} at={0.6} t={t} size={78} color={GREEN} />
-    <Stream x1={WX + 40} y1={DOOR_Y} x2={910} y2={G - 200} t={t} a={0.6} />
-    {Array.from({length: cleanN}, (_, i) => <Bill key={i} x={870 + (i % 3) * 45} y={G - 30 - Math.floor(i / 2) * 55} w={170} rot={(i * 17) % 20 - 10} />)}
-    {t > 0.6 && <Sparkles x={910} y={G - 120} t={t} />}
-    <Label text="$1,000,000" x={910} y={620} at={MILLION + 0.6} t={t} size={70} color={GREEN} />
-    {/* Doug watches from the front, small, one "?" */}
-    <Penguin id="doug" x={540} y={G + 270} h={290} pose={{look: [t < 1 ? -0.7 : 0.7, -0.4], brows: 'shock', eyeScale: 1.2, beak: 'frown'}} />
-    <div style={{position: 'absolute', left: 660, top: G - 10 + Math.sin(t * 6) * 8, fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 110, color: INK, transform: 'rotate(14deg)'}}>?</div>
+    {/* left: BEFORE = dirty dollars */}
+    <Label text="DIRTY $" x={200} y={470} at={0.1} t={t} size={78} color={RED} />
+    {[0, 1, 2, 3, 4].map((i) => <Bill key={i} x={80 + (i % 3) * 50} y={G - 30 - Math.floor(i / 3) * 55} w={150} rot={(i * 23) % 30 - 15} dirty />)}
+    <Stinky x={120} y={G - 150} t={t} />
+    <Stream x1={120} y1={G - 140} x2={WX2} y2={DOOR2} t={t} a={0.1} dirty gap={0.35} dur={0.6} />
+    {/* right: AFTER = clean dollars drying on the line, US flag on the pole */}
+    <Label text="CLEAN $" x={850} y={470} at={0.3} t={t} size={78} color={GREEN} />
+    <div style={{position: 'absolute', left: 632, top: 550, width: 16, height: G - 550, background: '#8B5A2B', border: `4px solid ${INK}`, boxSizing: 'border-box'}} />
+    <div style={{position: 'absolute', left: 1032, top: 700, width: 16, height: G - 700, background: '#8B5A2B', border: `4px solid ${INK}`, boxSizing: 'border-box'}} />
+    <UsFlag x={646} y={556} w={210} t={t} />
+    <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+      <path d={`M640 ${ROPE(640)} ${PINS.map((x) => `L${x} ${ROPE(x)}`).join(' ')} L1040 ${ROPE(1040)}`} fill="none" stroke={INK} strokeWidth={5} />
+    </svg>
+    {PINS.slice(0, hung).map((x, i) => { const sw = Math.sin(t * 4 + i) * 5;
+      return <React.Fragment key={i}>
+        <div style={{position: 'absolute', left: x - 60, top: ROPE(x), transform: `rotate(${sw}deg)`, transformOrigin: '60px 0'}}><Bill x={60} y={70} w={150} rot={90} /></div>
+        <div style={{position: 'absolute', left: x - 7, top: ROPE(x) - 18, width: 14, height: 40, background: '#E8B04A', border: `3px solid ${INK}`, borderRadius: 4}} />
+      </React.Fragment>; })}
+    {throws.map((a, i) => { const p = (t - a) / 0.35; if (p < 0 || p > 1) return null; const x2 = PINS[2 + i];
+      return <Bill key={i} x={lerp(WX2, x2, p)} y={lerp(DOOR2, ROPE(x2) + 70, p) - Math.sin(p * Math.PI) * 180} w={150} rot={90 * p} />; })}
+    {t > 0.3 && <Sparkles x={840} y={980} t={t} />}
+    {/* middle: washing machine, Doug next to it hangs the clean dollars */}
+    <Washer x={WX2} y={G} w={340} t={t} money="both" />
+    <Penguin id="doug" x={575} y={G + 30} h={360} pose={{turn: 0.5, look: [0.8, -0.5], brows: 'happy', beak: 'smile', flapR: 120 + scrub * 0.5, flapL: 40}} />
   </>;
 };
 
@@ -474,9 +499,9 @@ export const DougLaundering = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
-  if (sh.at === 0) { // hook: slow push toward the washer door, then toward the clean money on "one million"
-    const toW = ease((tc - 1.0) / 0.6) * (tc < MILLION ? 1 : 0), toC = ease((tc - MILLION) / 0.4);
-    s0 = 1 + 0.08 * toW + 0.2 * toC; fx = 540 + 280 * toC; fy = 960 + 60 * toW + 100 * toC;
+  if (sh.at === 0) { // hook: slow push toward the clothesline
+    const toW = ease((tc - 1.0) / 0.6);
+    s0 = 1 + 0.03 * toW;
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (tc < 1.0 ? 1 : beat(tc, TIM));
@@ -490,8 +515,8 @@ export const DougLaundering = () => {
     <Audio src={staticFile('doug-laundering-voice.mp3')} />
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={0.2} name="swoosh-fast" vol={0.3} />
-    <Sfx at={0.75} name="user-cash-register" vol={0.3} />
+    <Sfx at={0.15} name="swoosh-fast" vol={0.3} />
+    <Sfx at={1.15} name="user-cash-register" vol={0.3} />
     <Sfx at={POOR} name="user-boom" vol={0.45} />
     <Sfx at={P(1) + 0.4} name="user-money" vol={0.35} />
     <Sfx at={P(2)} name="penguin-squawk" vol={0.35} />
