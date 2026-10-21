@@ -108,7 +108,7 @@ const Stinky = ({x, y, t}: {x: number; y: number; t: number}) => <>
     <path d="M20 115 C 0 90, 40 70, 20 45 C 0 20, 40 10, 20 0" fill="none" stroke="#6B8E23" strokeWidth={7} strokeLinecap="round" /></svg>)}
   {[0, 1].map((i) => <div key={`f${i}`} style={{position: 'absolute', left: x - 30 + Math.sin(t * 9 + i * 2) * 90, top: y - 120 + Math.cos(t * 7 + i) * 40, width: 14, height: 14, borderRadius: '50%', background: INK}} />)}
 </>;
-const Sparkles = ({x, y, t}: {x: number; y: number; t: number}) => <>
+export const Sparkles = ({x, y, t}: {x: number; y: number; t: number}) => <>
   {[0, 1, 2, 3].map((i) => <div key={i} style={{position: 'absolute', left: x - 120 + i * 75, top: y - 150 - (i % 2) * 70, fontSize: 60, transform: `scale(${0.6 + 0.4 * Math.abs(Math.sin(t * 5 + i))})`}}>✨</div>)}
 </>;
 
@@ -162,7 +162,7 @@ export const Fox = ({x, y, h = 520, flip, mouth = 0, sly = 1, pen}: {x: number; 
   </svg>;
 };
 // Speech bubble (hand-written).
-const Bubble = ({text, x, y, at, t, w = 520, tailX = 0, size = 58}: {text: string; x: number; y: number; at: number; t: number; w?: number; tailX?: number; size?: number}) => {
+export const Bubble = ({text, x, y, at, t, w = 520, tailX = 0, size = 58}: {text: string; x: number; y: number; at: number; t: number; w?: number; tailX?: number; size?: number}) => {
   const p = ease((t - at) / 0.2); if (p <= 0) return null;
   return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, transform: `scale(${p})`, transformOrigin: `${w / 2 + tailX}px 100%`}}>
     <div style={{background: '#fff', border: `6px solid ${INK}`, borderRadius: 40, padding: '22px 26px', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.15, textAlign: 'center', color: INK}}>{text}</div>
