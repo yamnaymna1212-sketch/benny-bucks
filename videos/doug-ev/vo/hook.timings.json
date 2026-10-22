@@ -1,0 +1,20 @@
+[
+ {
+  "voice": "am_puck",
+  "text": "Why does this car cost thirteen bucks to fill up...",
+  "start": 0.0,
+  "end": 2.1
+ },
+ {
+  "voice": "am_puck",
+  "text": "and this one a hundred twenty-eight?",
+  "start": 2.13,
+  "end": 3.27
+ },
+ {
+  "voice": "am_puck",
+  "text": "Same three hundred miles.",
+  "start": 3.32,
+  "end": 4.42
+ }
+]
