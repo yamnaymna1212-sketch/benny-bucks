@@ -1,22 +1,21 @@
 // EP7 "Sanctions" — hook preview first (user picked: "Why does America punish Iran... when it makes YOUR gas more expensive?").
 // Layout from the user's reference image: two floating islands (USA green / Iran desert), Doug in the middle on an ice floe
-// in the Strait of Hormuz. Leaders are animals with their signature heads (gold-hair polar bear / turbaned musk ox).
+// in the sea. Leaders are animals with their signature heads (gold-hair polar bear / turbaned musk ox).
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos, talk} from '../penguin/rig';
-import {Stamp} from '../penguin/world';
 import {Captions, Sfx} from '../penguin/edit';
 import TIM from '../data/doug-sanctions-hook.json';
 
-export const DOUG_SANCTIONS_HOOK_SECONDS = 5;
+export const DOUG_SANCTIONS_HOOK_SECONDS = 4;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 const RED = '#D83A2E', GREEN = '#2E9E4F';
 
 // word times in the hook voice (syllable-aligned)
-const W = {america: 0.36, punish: 1.07, iran: 1.43, your: 2.43, gas: 2.61, expensive: 2.97, end: 3.71};
+const W = {america: 0.25, punish: 0.75, iran: 1.12, your: 1.92, gas: 2.1, expensive: 2.54, end: 3.14};
 
 // ---------- flags ----------
 const UsFlag = () => <g>
@@ -50,15 +49,6 @@ const Island = ({x, w, top, kind}: {x: number; w: number; top: number; kind: 'gr
   </svg>;
 };
 
-const WhiteHouse = ({x, y}: {x: number; y: number}) => <svg width={200} height={130} viewBox="0 0 200 130" style={{position: 'absolute', left: x - 100, top: y - 130, overflow: 'visible'}}>
-  <rect x={4} y={50} width={192} height={78} fill="#fff" stroke={INK} strokeWidth={5} />
-  <rect x={60} y={30} width={80} height={98} fill="#fff" stroke={INK} strokeWidth={5} />
-  <path d="M54 32 L100 6 L146 32 Z" fill="#fff" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
-  {[72, 88, 104, 120].map((cx) => <line key={cx} x1={cx} y1={40} x2={cx} y2={126} stroke={INK} strokeWidth={4} />)}
-  {[18, 40, 160, 182].map((cx) => <rect key={cx} x={cx - 6} y={66} width={12} height={20} fill="#BFD9EA" stroke={INK} strokeWidth={3} />)}
-  <line x1={100} y1={6} x2={100} y2={-20} stroke={INK} strokeWidth={3} /><rect x={100} y={-20} width={22} height={13} fill="#B22234" stroke={INK} strokeWidth={2} />
-</svg>;
-
 // Gas pump with a big price window (price counts up when Iran's oil is blocked).
 const GasPump = ({x, y, price, red, shake}: {x: number; y: number; price: number; red: boolean; shake: number}) =>
   <svg width={210} height={330} viewBox="0 0 210 330" style={{position: 'absolute', left: x - 105 + shake, top: y - 330, overflow: 'visible'}}>
@@ -72,49 +62,10 @@ const GasPump = ({x, y, price, red, shake}: {x: number; y: number; price: number
     <rect x={40} y={312} width={150} height={16} fill="#555" stroke={INK} strokeWidth={4} />
   </svg>;
 
-// Nodding oil pumpjack (stops when sanctioned).
-const PumpJack = ({x, y, t, on}: {x: number; y: number; t: number; on: boolean}) => {
-  const a = on ? Math.sin(t * 4) * 14 : 10;
-  return <svg width={240} height={220} viewBox="0 0 240 220" style={{position: 'absolute', left: x - 120, top: y - 220, overflow: 'visible'}}>
-    <rect x={10} y={205} width={220} height={14} fill="#666" stroke={INK} strokeWidth={4} />
-    <path d="M90 205 L120 70 L150 205" fill="none" stroke={INK} strokeWidth={9} strokeLinejoin="round" />
-    <g transform={`rotate(${a} 120 70)`}>
-      <rect x={20} y={60} width={190} height={20} rx={6} fill="#3A3A3A" stroke={INK} strokeWidth={4} />
-      <path d="M20 50 Q -8 70 20 110 Z" fill="#3A3A3A" stroke={INK} strokeWidth={4} />
-      <line x1={8} y1={100} x2={8} y2={205} stroke={INK} strokeWidth={4} />
-    </g>
-    <rect x={180} y={150} width={40} height={55} fill={RED} stroke={INK} strokeWidth={4} />
-  </svg>;
-};
-
 const Barrel = ({x, y, s = 1}: {x: number; y: number; s?: number}) => <svg width={70 * s} height={90 * s} viewBox="0 0 70 90" style={{position: 'absolute', left: x - 35 * s, top: y - 90 * s, overflow: 'visible'}}>
   <rect x={3} y={3} width={64} height={84} rx={10} fill="#262626" stroke={INK} strokeWidth={5} />
   <line x1={3} y1={30} x2={67} y2={30} stroke="#666" strokeWidth={5} /><line x1={3} y1={60} x2={67} y2={60} stroke="#666" strokeWidth={5} />
   <path d="M35 36 C 28 46, 28 52, 35 54 C 42 52, 42 46, 35 36 Z" fill="#fff" />
-</svg>;
-
-// Chain wrapped over the barrels + padlock (drawn on at `at`).
-const Chains = ({x, y, w, at, t}: {x: number; y: number; w: number; at: number; t: number}) => {
-  if (t < at) return null;
-  const p = ease((t - at) / 0.25), n = Math.floor(w / 26);
-  return <svg width={w} height={120} style={{position: 'absolute', left: x - w / 2, top: y - 60, overflow: 'visible', opacity: p}}>
-    {[20, 70].map((yy, r) => Array.from({length: n}, (_, i) => <ellipse key={`${r}${i}`} cx={14 + i * 26} cy={yy + (i % 2) * 4 + r * 4} rx={16} ry={9} fill="none" stroke="#9AA3AB" strokeWidth={6} />))}
-    <g transform={`translate(${w / 2 - 28} ${30 + (1 - p) * -60})`}>
-      <path d="M12 26 L12 12 Q28 -8 44 12 L44 26" fill="none" stroke={INK} strokeWidth={7} />
-      <rect x={0} y={24} width={56} height={46} rx={8} fill="#F5C518" stroke={INK} strokeWidth={5} />
-      <circle cx={28} cy={45} r={6} fill={INK} />
-    </g>
-  </svg>;
-};
-
-// Oil tanker in the strait (sails toward America, stops + red X when blocked).
-const Tanker = ({x, y, blocked}: {x: number; y: number; blocked: boolean}) => <svg width={260} height={120} viewBox="0 0 260 120" style={{position: 'absolute', left: x - 130, top: y - 100, overflow: 'visible'}}>
-  <path d="M0 60 L260 60 L235 108 L22 108 Z" fill="#A8322B" stroke={INK} strokeWidth={6} strokeLinejoin="round" />
-  <rect x={0} y={48} width={260} height={14} fill="#3A3A3A" stroke={INK} strokeWidth={5} />
-  <rect x={190} y={8} width={52} height={42} fill="#fff" stroke={INK} strokeWidth={5} /><rect x={208} y={-10} width={14} height={20} fill={INK} />
-  {[40, 85, 130].map((cx) => <ellipse key={cx} cx={cx} cy={46} rx={18} ry={9} fill="#E8E2D2" stroke={INK} strokeWidth={4} />)}
-  <text x={110} y={95} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={28} fill="#fff">OIL</text>
-  {blocked && <path d="M60 0 L200 110 M200 0 L60 110" stroke={RED} strokeWidth={16} strokeLinecap="round" />}
 </svg>;
 
 // ---------- Boss Bear USA (polar bear, gold swoop hair, navy suit, red tie) — faces right ----------
@@ -205,7 +156,7 @@ const OxLeader = ({x, y, h = 380, t, mood, mouth}: {x: number; y: number; h?: nu
 
 // Red sanction letter flying on an arc from America to Iran.
 const SanctionNote = ({x1, y1, x2, y2, a, t, rot = 0}: {x1: number; y1: number; x2: number; y2: number; a: number; t: number; rot?: number}) => {
-  const p = (t - a) / 0.55; if (p < 0 || p > 1) return null;
+  const p = (t - a) / 0.4; if (p < 0 || p > 1) return null;
   const x = lerp(x1, x2, p), y = lerp(y1, y2, p) - Math.sin(p * Math.PI) * 160;
   return <div style={{position: 'absolute', left: x - 70, top: y - 46, width: 140, height: 92, background: '#fff', border: `6px solid ${RED}`, borderRadius: 8,
     transform: `rotate(${rot + p * 360}deg) scale(${0.7 + 0.3 * Math.sin(p * Math.PI)})`, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -225,51 +176,44 @@ const Label = ({text, x, y, at, t, color = '#fff'}: {text: string; x: number; y:
 
 const SEA = 1150;
 const Hook = ({t}: {t: number}) => {
-  const blocked = t >= W.iran + 0.15;
-  const tankerX = blocked ? 600 : lerp(700, 600, t / (W.iran + 0.15));
-  const price = t < W.gas ? 2.98 : lerp(2.98, 4.56, ease((t - W.gas) / 0.7));
+  const blocked = t >= W.iran + 0.1;
+  const price = t < W.gas ? 2.98 : lerp(2.98, 4.56, ease((t - W.gas) / 0.5));
   const red = t >= W.gas + 0.1;
   const bearMood: Mood = t >= W.expensive ? 'shock' : t >= W.punish - 0.15 ? 'angry' : 'smug';
-  const point = ease((t - W.america) / 0.3) * (t < W.your ? 1 : 1 - ease((t - W.your) / 0.3));
+  const point = ease((t - W.america) / 0.25) * (t < W.your ? 1 : 1 - ease((t - W.your) / 0.25));
   const bearTalk = t > W.america && t < W.iran + 0.2 ? talk(t, [[W.america, W.iran + 0.2]]) * 0.8 : bearMood === 'shock' ? 0.6 : 0;
   // Doug: points at the side being named, then at the viewer ("YOUR"), then at the pump.
   const side = t < W.punish ? -1 : t < W.your ? 1 : t < W.gas ? 0 : -1;
-  const dougTalk = talk(t, [[0, 1.79], [1.89, W.end]]);
+  const x = ease((t - W.iran - 0.1) / 0.15);
   return <>
     <Why t={t} />
-    {/* sea / Strait of Hormuz */}
     <div style={{position: 'absolute', left: -300, right: -300, top: SEA, height: 800, background: '#BFE6F7', borderTop: `6px solid ${INK}`}} />
-    {[0, 1, 2, 3, 4, 5].map((i) => <div key={i} style={{position: 'absolute', left: ((i * 230 + t * 40) % 1300) - 120, top: SEA + 60 + (i % 3) * 90, width: 90, height: 14, borderTop: '6px solid #8CCDEB', borderRadius: '50%'}} />)}
-    <div style={{position: 'absolute', left: 0, right: 0, top: 1474, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 36, color: '#3A7FA6', letterSpacing: 2}}>STRAIT OF HORMUZ</div>
 
-    {/* USA island */}
+    {/* USA island: flag, gas pump, Boss Bear */}
     <Island x={-30} w={500} top={800} kind="grass" />
-    <FlagPole x={14} y={840} t={t} kind="us" />
-    <WhiteHouse x={120} y={846} />
-    <GasPump x={405} y={846} price={price} red={red} shake={red && t < W.expensive + 0.6 ? Math.sin(t * 70) * 4 : 0} />
-    <TrumpBear x={215} y={880} h={360} t={t} mood={bearMood} point={point} mouth={bearTalk} />
+    <FlagPole x={392} y={840} t={t} kind="us" />
+    <GasPump x={118} y={846} price={price} red={red} shake={red && t < W.expensive + 0.5 ? Math.sin(t * 70) * 4 : 0} />
+    <TrumpBear x={300} y={880} h={360} t={t} mood={bearMood} point={point} mouth={bearTalk} />
     <Label text="USA" x={220} y={980} at={W.america} t={t} />
 
-    {/* Iran island */}
+    {/* Iran island: flag, oil barrels, musk ox */}
     <Island x={610} w={500} top={800} kind="sand" />
-    <PumpJack x={960} y={840} t={t} on={!blocked} />
-    <Barrel x={860} y={850} s={0.9} /><Barrel x={920} y={856} s={0.9} /><Barrel x={890} y={790} s={0.9} />
     <FlagPole x={872} y={790} t={t} kind="ir" />
-    <Chains x={890} y={790} w={150} at={W.iran + 0.25} t={t} />
+    <Barrel x={880} y={850} /><Barrel x={960} y={856} /><Barrel x={920} y={772} />
+    {blocked && <svg width={240} height={240} style={{position: 'absolute', left: 800, top: 640, overflow: 'visible'}}>
+      <path d="M20 20 L220 220 M220 20 L20 220" stroke={RED} strokeWidth={26} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - x} />
+    </svg>}
     <OxLeader x={725} y={880} h={360} t={t} mood={blocked ? 'angry' : 'stern'} mouth={0} />
     <Label text="IRAN" x={850} y={980} at={W.iran} t={t} />
 
-    {/* the strait: oil tanker, then Doug on his ice floe */}
-    <Tanker x={tankerX} y={SEA + 4} blocked={blocked} />
+    {/* Doug on his ice floe in the middle */}
     <div style={{position: 'absolute', left: 350, top: 1430, width: 380, height: 60, background: '#F2FAFF', border: `6px solid ${INK}`, borderRadius: '40% 50% 45% 40%'}} />
-    <Penguin id="doug" x={540} y={1448} h={270} pose={{turn: side * 0.5, look: [side * 0.8, side ? -0.3 : 0], mouth: dougTalk,
+    <Penguin id="doug" x={540} y={1448} h={300} pose={{turn: side * 0.5, look: [side * 0.8, side ? -0.3 : 0], mouth: talk(t, [[0, W.end]]),
       flapL: side < 0 ? 105 + Math.sin(t * 9) * 6 : 20, flapR: side > 0 ? 105 + Math.sin(t * 9) * 6 : side === 0 ? 70 : 20,
       brows: t >= W.expensive ? 'shock' : 'worried', eyeScale: t >= W.expensive ? 1.25 : 1}} />
 
     {/* sanctions fly America -> Iran on "punish" */}
-    {[0, 1, 2].map((i) => <SanctionNote key={i} x1={300} y1={600} x2={760 + i * 60} y2={620 - i * 30} a={W.punish - 0.05 + i * 0.12} t={t} rot={-10 + i * 12} />)}
-    <Stamp text="SANCTIONED" x={830} y={470} at={W.iran + 0.2} color={RED} size={58} rot={-10} />
-    {t >= W.gas + 0.7 && <div style={{position: 'absolute', left: 300, top: 400, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 70, color: RED, transform: `rotate(-6deg) scale(${ease((t - W.gas - 0.7) / 0.2)})`, WebkitTextStroke: `3px ${INK}`, paintOrder: 'stroke fill'}}>+53%</div>}
+    {[0, 1].map((i) => <SanctionNote key={i} x1={300} y1={600} x2={880 + i * 40} y2={720} a={W.punish - 0.05 + i * 0.12} t={t} rot={-10 + i * 14} />)}
   </>;
 };
 
@@ -277,9 +221,9 @@ export const DougSanctionsHook = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   // very light push toward the side being named (USA -> Iran -> USA pump), back to wide at the end
   const toUS = ease((tc - W.america) / 0.4) * (tc < W.punish + 0.1 ? 1 : 0), toIR = tc >= W.punish + 0.1 && tc < W.gas ? ease((tc - W.punish - 0.1) / 0.4) : 0;
-  const toPump = tc >= W.gas && tc < 4.0 ? ease((tc - W.gas) / 0.4) : 0;
+  const toPump = tc >= W.gas && tc < 3.5 ? ease((tc - W.gas) / 0.4) : 0;
   const s = 1 + 0.05 * toUS + 0.05 * toIR + 0.07 * toPump;
-  const fx = 540 - 200 * toUS + 220 * toIR - 180 * toPump, fy = 960 - 40 * toPump;
+  const fx = 540 - 200 * toUS + 220 * toIR - 330 * toPump, fy = 960 - 40 * toPump;
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={t} /></AbsoluteFill>
@@ -287,9 +231,9 @@ export const DougSanctionsHook = () => {
     <Audio src={staticFile('doug-sanctions-hook-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={W.punish - 0.05} name="user-whoosh" vol={0.35} />
-    <Sfx at={W.iran + 0.2} name="user-boom" vol={0.45} />
+    <Sfx at={W.iran + 0.1} name="user-boom" vol={0.45} />
     <Sfx at={W.gas} name="user-cash-register" vol={0.35} />
-    <Sfx at={W.gas + 0.7} name="user-ting" vol={0.4} />
+    <Sfx at={W.gas + 0.5} name="user-ting" vol={0.4} />
     <Sfx at={W.expensive + 0.2} name="user-shock" vol={0.35} />
   </AbsoluteFill>;
 };
