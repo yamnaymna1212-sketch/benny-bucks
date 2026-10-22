@@ -138,7 +138,6 @@ export const DougEnemyOilHook = () => {
 // =====================================================================================================
 const P = (i: number) => EP[i].start, E = (i: number) => EP[i].end;
 export const DOUG_ENEMY_OIL_SECONDS = Math.ceil((EP[EP.length - 1].end + 0.8) * 30) / 30;
-const DOUG_LINES = [0, 2, 8, 14, 22, 26]; // lines asked by the Puffin (voice am_liam)
 const HOT = /^(ENEMIES\?|3|REASONS\.?|CHEAP\.?|40%|RUSSIA\.?|€?21\.9|18\.7|42|BILLION\.?|BANNED|DIRTY\.?|CLEAN\.?|WAR\.?|WAR|SHOCKED|ENEMY|CRAZIEST\.?|LAUNDROMAT\.?|PUMP\.?|ONE,|TWO,|THREE\?|THREE)$/;
 
 // every spoken word with its time (character-weighted inside each line)
@@ -374,11 +373,11 @@ const SHOTS: Shot[] = [
 
 // ---------- the two on the bottom: Doug explains, the naive Puffin asks ----------
 type DPose = 'count' | 'explain' | 'point' | 'shrug' | 'sad' | 'angry' | 'happy' | 'shock' | 'smug';
-const DOUG_POSE: Record<number, DPose> = {1: 'count', 3: 'happy', 4: 'point', 5: 'explain', 6: 'shrug', 7: 'sad', 9: 'angry', 10: 'count', 11: 'happy', 12: 'point', 13: 'explain',
+const DOUG_POSE: Record<number, DPose> = {0: 'point', 1: 'count', 3: 'happy', 4: 'point', 5: 'explain', 6: 'shrug', 7: 'sad', 9: 'angry', 10: 'count', 11: 'happy', 12: 'point', 13: 'explain',
   15: 'count', 16: 'point', 17: 'explain', 18: 'point', 19: 'shock', 20: 'smug', 21: 'happy', 23: 'angry', 24: 'explain', 25: 'point', 27: 'shrug', 28: 'smug', 29: 'happy'};
-const PUFFIN_REACT: Record<number, EmoteKind> = {1: 'question', 5: 'shock', 7: 'sweat', 12: 'shock', 13: 'shock', 19: 'shock', 21: 'question', 25: 'sweat', 27: 'sweat', 28: 'question'};
+const PUFFIN_REACT: Record<number, EmoteKind> = {0: 'question', 1: 'question', 5: 'shock', 7: 'sweat', 12: 'shock', 13: 'shock', 19: 'shock', 21: 'question', 25: 'sweat', 27: 'sweat', 28: 'question'};
 const Duo = ({t, li}: {t: number; li: number}) => {
-  const asks = EP[li]?.voice === 'am_liam' || DOUG_LINES.includes(li);
+  const asks = EP[li]?.voice === 'am_liam'; // the Puffin's lines
   const lt = li >= 0 ? t - EP[li].start : 0, kick = 1 + 0.04 * Math.exp(-lt * 8); // small punch on every new line
   const ps: DPose = asks ? 'explain' : DOUG_POSE[li] ?? 'explain';
   const osc = Math.sin(t * 7), dm = asks ? 0 : talk(t, [[EP[li].start, EP[li].end]]);
