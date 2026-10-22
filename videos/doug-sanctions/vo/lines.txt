@@ -1,33 +1,33 @@
-Why does America punish Iran, when it makes YOUR gas more expensive?|0.08
-This is Doug. Doug drives a snowmobile.|0.05
-am_liam|Punish how?|0.05
-Iran sits on oil. Oil is money.|0.05
-But oil is sold in dollars.|0.05
-And the dollar belongs to America.|0.05
-America says: buy Iran oil, lose your dollars.|0.05
-Banks get scared. Buyers run.|0.05
-This is called sanctions.|0.05
-America has done this to Iran since 1979.|0.1
-am_liam|So Iran is broke?|0.05
-Not really. China still buys it. On sale.|0.05
-About eight dollars off, every barrel.|0.05
-Doug confused.|0.4
-Then, war. Iran closes the Strait of Hormuz.|0.05
-One in five barrels of the world's oil goes through here.|0.05
-Ships stop. Less oil. Higher price. For everyone.|0.05
-am_liam|But America has its own oil!|0.05
-Yes. America makes the most oil on Earth.|0.05
-But oil has one world price.|0.05
-Larry's oil company sells at that price too. Larry happy.|0.1
-Doug poor.|0.4
-In real life, gas went from two ninety-eight, to four fifty-six, in under three months.|0.05
-am_liam|Wait. So Doug pays for the punishment?|0.05
-So why do it? No oil money, no missiles.|0.05
-Sounds smart, right? But it has two big problems.|0.05
-Problem one: Iran still sells oil, just cheaper.|0.05
-Problem two: the bill lands at Doug's pump.|0.05
-Sanctions are a war, without bullets.|0.05
-And the real weapon is not a missile. It's the dollar.|0.05
-Since 1944, the whole world trades in America's dollar.|0.05
-And this is just the tip of the iceberg.|0.05
+Why does America punish Iran, when it makes YOUR gas more expensive?|0.03
+This is Doug. Doug drives a snowmobile.|0.03
+am_liam|Punish how?|0.03
+Iran sits on oil. Oil is money.|0.03
+But oil is sold in dollars.|0.03
+And the dollar belongs to America.|0.03
+America says: buy Iran oil, lose your dollars.|0.03
+Banks get scared. Buyers run.|0.03
+This is called sanctions.|0.03
+America has done this to Iran since 1979.|0.03
+am_liam|So Iran is broke?|0.03
+Not really. China still buys it. On sale.|0.03
+About eight dollars off, every barrel.|0.03
+Doug confused.|0.15
+Then, war. Iran closes the Strait of Hormuz.|0.03
+One in five barrels of the world's oil goes through here.|0.03
+Ships stop. Less oil. Higher price. For everyone.|0.03
+am_liam|But America has its own oil!|0.03
+Yes. America makes the most oil on Earth.|0.03
+But oil has one world price.|0.03
+Larry's oil company sells at that price too. Larry happy.|0.03
+Doug poor.|0.15
+In real life, gas went from two ninety-eight, to four fifty-six, in under three months.|0.03
+am_liam|Wait. So Doug pays for the punishment?|0.03
+So why do it? No oil money, no missiles.|0.03
+Sounds smart, right? But it has two big problems.|0.03
+Problem one: Iran still sells oil, just cheaper.|0.03
+Problem two: the bill lands at Doug's pump.|0.03
+Sanctions are a war, without bullets.|0.03
+And the real weapon is not a missile. It's the dollar.|0.03
+Since 1944, the whole world trades in America's dollar.|0.03
+And this is just the tip of the iceberg.|0.03
 Would you pay more for gas to punish Iran?|0.3

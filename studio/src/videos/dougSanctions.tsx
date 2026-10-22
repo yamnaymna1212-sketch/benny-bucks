@@ -354,6 +354,14 @@ const DougMood = ({t, at, kind}: {t: number; at: number; kind: 'confused' | 'poo
   </>;
 };
 
+// Doug peeking in from the screen edge, watching what happens (so no shot is ever empty).
+const Peek = ({t, at, side = -1, y = G + 120, h = 560, shock}: {t: number; at: number; side?: number; y?: number; h?: number; shock?: boolean}) => {
+  const p = ease((t - at - 0.15) / 0.35);
+  const x = side < 0 ? lerp(-260, -40, p) : lerp(1340, 1120, p);
+  return <Penguin id="peek" x={x} y={y + Math.sin(t * 3) * 6} h={h} pose={{turn: -side * 0.7, look: [-side * 0.9, -0.2], lean: -side * 14, brows: shock ? 'shock' : 'worried',
+    eyeScale: shock ? 1.3 : 1.1, pupil: shock ? 0.6 : 1, flapL: side < 0 ? 6 : 50, flapR: side > 0 ? 6 : 50}} />;
+};
+
 // ---------- sets ----------
 const Intro = ({t}: {t: number}) => {
   const x = lerp(-250, 560, ease((t - P(1)) / 0.9));
@@ -391,6 +399,7 @@ const Dollars = ({t}: {t: number}) => <>
   <Ground sand />
   <Barrel x={540} y={G} s={5.5} />
   <PriceTag x={800} y={640} price="$" at={P(4) + 0.5} rot={10} size={2} color={GREEN} />
+  <Peek t={t} at={P(4)} side={-1} />
 </>;
 
 const BelongsUS = ({t}: {t: number}) => <>
@@ -420,12 +429,16 @@ const Run = ({t}: {t: number}) => {
     <Walrus id="w7" x={lerp(330, -250, d)} y={G} h={360} hat={false} pose={{mouth: 0.8, lids: 0}} />
     <Seagull id="g7" x={lerp(500, -200, d)} y={lerp(G - 500, G - 900, d)} h={300} pose={{fly: true, mouth: 0.6}} />
     <BigWord text="!!" x={480} y={560} at={P(7)} size={170} color={RED} />
+    <Peek t={t} at={P(7) + 0.4} side={1} shock />
   </>;
 };
 
 const SanctionsTitle = ({t}: {t: number}) => <>
   {[0, 1, 2, 3].map((i) => <SanctionNote key={i} x1={-100} y1={500 + i * 300} x2={1180} y2={400 + i * 300} a={P(8) + i * 0.15 - 0.1} t={t} rot={i * 20} />)}
-  <Title lines={['SANCTIONS']} y={960} at={P(8)} size={150} />
+  <Title lines={['SANCTIONS']} y={760} at={P(8)} size={150} />
+  <Ground />
+  <TrumpBear x={300} y={G} h={420} t={t} mood="angry" point={1} mouth={0} />
+  <OxLeader x={800} y={G} h={420} t={t} mood="angry" mouth={0} />
 </>;
 
 const Since = ({t}: {t: number}) => {
@@ -461,6 +474,7 @@ const Discount = ({t}: {t: number}) => <>
   <Ground sand />
   <Barrel x={540} y={G} s={3.6} />
   <PriceTag x={780} y={640} price="-$8" fish="per barrel" at={P(12) + 0.3} rot={10} size={1.4} />
+  <Panda x={180} y={G + 60} h={420} t={t} />
 </>;
 
 const War = ({t}: {t: number}) => {
@@ -524,6 +538,7 @@ const NumberOne = ({t}: {t: number}) => <>
 const OnePrice = ({t}: {t: number}) => <>
   <Globe x={540} y={980} r={330} t={t} />
   <PriceTag x={760} y={560} price="1 price" at={P(19) + 0.5} rot={8} size={1.1} />
+  <Peek t={t} at={P(19)} side={-1} y={G + 260} />
 </>;
 
 const Larry = ({t}: {t: number}) => {
@@ -544,6 +559,7 @@ const RealLife = ({t}: {t: number}) => {
     <BigPump x={298} y={500} price={price} red={p > 0.05} s={2.3} />
     <div style={{position: 'absolute', left: 0, right: 0, top: 1310, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 80, color: INK}}>{p < 0.5 ? 'FEB 2026' : 'MAY 2026'}</div>
     <div style={{position: 'absolute', left: 0, right: 0, top: 1420, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 34, color: '#888'}}>AAA national average, 2026</div>
+    <Peek t={t} at={P(22) + 0.6} side={1} y={G + 160} shock={p > 0.6} />
   </>;
 };
 
@@ -569,6 +585,8 @@ const TwoProblems = ({t}: {t: number}) => <>
   <BigWord text="smart?" x={540} y={600} at={P(25)} until={P(25) + 0.9} size={160} color={GREEN} />
   {t >= P(25) + 0.9 && <><NumBadge n={1} x={360} y={960} at={P(25) + 1.0} t={t} /><NumBadge n={2} x={720} y={960} at={P(25) + 1.25} t={t} /></>}
   <BigWord text="problems" x={540} y={1250} at={P(25) + 1.2} size={130} color={RED} />
+  <Peek t={t} at={P(25)} side={-1} y={G + 220} />
+  <Peek t={t} at={P(25) + 0.9} side={1} y={G + 220} shock />
 </>;
 
 const ProblemOne = ({t}: {t: number}) => {
@@ -611,6 +629,7 @@ const Weapon = ({t}: {t: number}) => {
         {Array.from({length: 12}, (_, i) => <path key={i} d="M0 0 L-60 -560 L60 -560 Z" fill="#FFF2B3" transform={`rotate(${i * 30})`} />)}</svg>
       <div style={{position: 'absolute', left: 0, top: 0, transform: `scale(${p})`, transformOrigin: '540px 900px'}}><Bill x={540} y={900} w={760} rot={-6} /></div>
     </>}
+    <Peek t={t} at={P(29)} side={1} y={G + 200} shock={dollar} />
   </>;
 };
 
@@ -619,6 +638,7 @@ const World = ({t}: {t: number}) => <>
   {Array.from({length: 5}, (_, i) => { const a = t * 1.6 + i * (Math.PI * 2 / 5);
     return <Bill key={i} x={540 + Math.cos(a) * 420} y={1000 + Math.sin(a) * 150} w={170} rot={Math.cos(a) * 20} />; })}
   <BigWord text="1944" x={540} y={460} at={P(30) + 0.2} size={200} />
+  <Peek t={t} at={P(30) + 0.3} side={-1} y={G + 300} />
 </>;
 
 const Iceberg = ({t}: {t: number}) => {
