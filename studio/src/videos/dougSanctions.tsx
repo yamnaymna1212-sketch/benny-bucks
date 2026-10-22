@@ -56,7 +56,7 @@ const Island = ({x, w, top, kind}: {x: number; w: number; top: number; kind: 'gr
 };
 
 // Gas pump with a big price window (price counts up when Iran's oil is blocked).
-const GasPump = ({x, y, price, red, shake}: {x: number; y: number; price: number; red: boolean; shake: number}) =>
+export const GasPump = ({x, y, price, red, shake}: {x: number; y: number; price: number; red: boolean; shake: number}) =>
   <svg width={210} height={330} viewBox="0 0 210 330" style={{position: 'absolute', left: x - 105 + shake, top: y - 330, overflow: 'visible'}}>
     <rect x={20} y={0} width={190} height={92} rx={12} fill="#fff" stroke={red ? RED : INK} strokeWidth={7} />
     <text x={115} y={66} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={58} fill={red ? RED : INK}>${price.toFixed(2)}</text>
@@ -314,7 +314,7 @@ const Missile = ({x, y, w = 420, rot = -20}: {x: number; y: number; w?: number; 
   <path d="M40 30 L10 6 L70 30 M40 60 L10 84 L70 60" fill="#8A9399" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
 </svg>;
 
-const Globe = ({x, y, r = 300, t}: {x: number; y: number; r?: number; t: number}) => {
+export const Globe = ({x, y, r = 300, t}: {x: number; y: number; r?: number; t: number}) => {
   const o = (t * 40) % 600;
   return <svg width={r * 2} height={r * 2} viewBox="-150 -150 300 300" style={{position: 'absolute', left: x - r, top: y - r, overflow: 'visible'}}>
     <defs><clipPath id="globe"><circle r={140} /></clipPath></defs>
