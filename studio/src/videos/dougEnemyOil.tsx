@@ -7,6 +7,7 @@ import {FPS, Fonts} from '../base';
 import {INK, Penguin, onTwos, talk} from '../penguin/rig';
 import {Sfx} from '../penguin/edit';
 import {Bill, Washer} from './dougLaundering';
+import {Puffin} from '../penguin/cast';
 import {GasCan} from './dougGas';
 import {GasPump, Globe} from './dougSanctions';
 import {Fx, cutFX} from '../penguin/acting';
@@ -17,7 +18,7 @@ export const DOUG_ENEMY_OIL_HOOK_SECONDS = 5;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const RED = '#D83A2E';
+const RED = '#D83A2E', GOLD = '#F5C518', GREEN = '#2E9E4F';
 const DY = 60; // whole picture pushed down a little (TikTok top bar)
 
 // spoken words (syllable-aligned to the voice)
@@ -86,11 +87,31 @@ const Hook = ({t}: {t: number}) => {
     <Actor src="trump" left={100 * F} top={165 * F + DY + usaB} w={234 * F} fx={215 * F} fy={430 * F + DY + usaB} hop={tHop} rot={tLean + tJab} dx={tShake} />
     {[0, 1, 2].map((i) => { const f = fly(t, T.buying + i * 0.13, 0.55, 165, 460 + DY, 820, 380 + DY); return f && <Bill key={i} x={f.x} y={f.y} w={120} rot={f.p * 360} />; })}
     {SHIP.map(([a, x, y], i) => { const f = fly(t, a, 0.6, FROM.x, FROM.y + DY, x, y + DY, 230); return f && <Barrel key={i} x={f.x} y={f.y} s={lerp(1.1, 0.9, f.p)} rot={f.p * -360} />; })}
-    <BigWord t={t} />
-    <Penguin id="doug" x={540} y={1880} h={780} pose={{turn: side * 0.45, look: [side * 0.8, side ? -0.6 : 0], mouth: talk(t, [[0, T.end]]),
-      flapL: side < 0 ? 140 + Math.sin(t * 9) * 6 : 25, flapR: side > 0 ? 140 + Math.sin(t * 9) * 6 : t >= T.three ? 150 : 25,
-      brows: enemy && t < 3.24 ? 'angry' : 'worried', eyeScale: t >= T.three ? 1.15 : 1}} />
+    {t >= T.buying + 0.55 && t < T.enemies && <Emote kind="money" x={750} y={240 + DY + ruB - pBounce} t={t} />}
+    {enemy && <Emote kind="anger" x={300 - tShake} y={230 + DY + usaB} t={t} />}
+    {enemy && <Emote kind="laugh" x={900} y={230 + DY + ruB - pLaugh} t={t} />}
   </>;
+};
+const HookDoug = ({t}: {t: number}) => {
+  const enemy = t >= T.enemies, side = t < T.buying ? -1 : t < T.enemies - 0.4 ? 0 : t < 3.24 ? 1 : 0;
+  return <Penguin id="doug" x={540} y={1880} h={780} pose={{turn: side * 0.45, look: [side * 0.8, side ? -0.6 : 0], mouth: talk(t, [[0, T.end]]),
+    flapL: side < 0 ? 140 + Math.sin(t * 9) * 6 : 25, flapR: side > 0 ? 140 + Math.sin(t * 9) * 6 : t >= T.three ? 150 : 25,
+    brows: enemy && t < 3.24 ? 'angry' : 'worried', eyeScale: t >= T.three ? 1.15 : 1}} />;
+};
+
+// Cartoon emotes drawn next to a head (the user's picture can't change faces, so feelings are shown around them).
+type EmoteKind = 'anger' | 'laugh' | 'sweat' | 'money' | 'shock' | 'question';
+const Emote = ({kind, x, y, t, s = 1}: {kind: EmoteKind; x: number; y: number; t: number; s?: number}) => {
+  const k = s * (1 + 0.12 * Math.sin(t * 12));
+  const box: React.CSSProperties = {position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${k})`, fontFamily: 'Montserrat', fontWeight: 900, lineHeight: 1};
+  if (kind === 'anger') return <svg width={90} height={90} viewBox="-45 -45 90 90" style={{...box, overflow: 'visible'}}>
+    {[0, 90, 180, 270].map((a) => <path key={a} transform={`rotate(${a})`} d="M8 -34 Q 4 -12, 30 -8" fill="none" stroke={RED} strokeWidth={10} strokeLinecap="round" />)}</svg>;
+  if (kind === 'laugh') return <div style={{...box, fontSize: 54, color: RED, WebkitTextStroke: `3px ${INK}`, transform: `translate(-50%,-50%) rotate(${Math.sin(t * 20) * 8}deg) scale(${k})`}}>HA!</div>;
+  if (kind === 'money') return <div style={{...box, fontSize: 64, color: GREEN, WebkitTextStroke: `3px ${INK}`}}>$$</div>;
+  if (kind === 'shock') return <div style={{...box, fontSize: 90, color: RED, WebkitTextStroke: `4px ${INK}`}}>!</div>;
+  if (kind === 'question') return <div style={{...box, fontSize: 90, color: GOLD, WebkitTextStroke: `4px ${INK}`}}>?</div>;
+  const p = (t * 1.2) % 1;
+  return <svg width={60} height={80} viewBox="-30 -40 60 80" style={{...box, top: y + p * 40, opacity: 1 - p * 0.6, overflow: 'visible'}}><path d="M0 -30 C 10 -10, 18 4, 0 18 C -18 4, -10 -10, 0 -30 Z" fill="#9AD6F5" stroke={INK} strokeWidth={4} /></svg>;
 };
 
 export const DougEnemyOilHook = () => {
@@ -100,7 +121,7 @@ export const DougEnemyOilHook = () => {
   const s = 1 + 0.05 * (toL + toR), fx = 540 - 70 * toL + 70 * toR, fy = 900;
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts />
-    <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${fy - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={t} /></AbsoluteFill>
+    <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${fy - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={t} /><BigWord t={t} /><HookDoug t={t} /></AbsoluteFill>
     <Audio src={staticFile('doug-enemy-oil-hook-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={T.rich} name="user-pop" vol={0.3} />
@@ -113,12 +134,11 @@ export const DougEnemyOilHook = () => {
 
 // =====================================================================================================
 // Full trial episode (~62 s): stage on top (user's picture pieces + props), one big word in the middle,
-// Doug at the bottom (he is the one asking the questions, voice am_liam). Timings: data/doug-enemy-oil.json.
+// Doug (explains) + a naive Puffin (asks, voice am_liam) at the bottom. Timings: data/doug-enemy-oil.json.
 // =====================================================================================================
 const P = (i: number) => EP[i].start, E = (i: number) => EP[i].end;
 export const DOUG_ENEMY_OIL_SECONDS = Math.ceil((EP[EP.length - 1].end + 0.8) * 30) / 30;
-const DOUG_LINES = [2, 8, 14, 22, 26];
-const GOLD = '#F5C518', GREEN = '#2E9E4F';
+const DOUG_LINES = [0, 2, 8, 14, 22, 26]; // lines asked by the Puffin (voice am_liam)
 const HOT = /^(ENEMIES\?|3|REASONS\.?|CHEAP\.?|40%|RUSSIA\.?|€?21\.9|18\.7|42|BILLION\.?|BANNED|DIRTY\.?|CLEAN\.?|WAR\.?|WAR|SHOCKED|ENEMY|CRAZIEST\.?|LAUNDROMAT\.?|PUMP\.?|ONE,|TWO,|THREE\?|THREE)$/;
 
 // every spoken word with its time (character-weighted inside each line)
@@ -198,10 +218,12 @@ const Glow = ({x, y, r, color = 'rgba(216,58,46,0.3)'}: {x: number; y: number; r
 // stage pieces placed anywhere (island pieces from the user's picture)
 const Isl = ({src, x, y, w, t, phase = 0, flip}: {src: string; x: number; y: number; w: number; t: number; phase?: number; flip?: boolean}) =>
   <Img src={staticFile(`enemy-oil/${src}.png`)} style={{position: 'absolute', left: x, top: y + Math.sin(t * 1.8 + phase) * 6, width: w, transform: flip ? 'scaleX(-1)' : undefined}} />;
-const PutinAt = ({x, y, h = 330, hop = 0, rot = 0}: {x: number; y: number; h?: number; hop?: number; rot?: number}) =>
-  <Img src={staticFile('enemy-oil/putin.png')} style={{position: 'absolute', left: x - h * 0.248, top: y - h - hop, height: h, transform: `rotate(${rot}deg)`, transformOrigin: '50% 100%'}} />;
-const TrumpAt = ({x, y, h = 330, hop = 0, rot = 0}: {x: number; y: number; h?: number; hop?: number; rot?: number}) =>
-  <Img src={staticFile('enemy-oil/trump.png')} style={{position: 'absolute', left: x - h * 0.4, top: y - h - hop, height: h, transform: `rotate(${rot}deg)`, transformOrigin: '40% 100%'}} />;
+const PutinAt = ({x, y, h = 330, hop = 0, rot = 0, emote, t = 0}: {x: number; y: number; h?: number; hop?: number; rot?: number; emote?: EmoteKind; t?: number}) => <>
+  <Img src={staticFile('enemy-oil/putin.png')} style={{position: 'absolute', left: x - h * 0.248, top: y - h - hop, height: h, transform: `rotate(${rot}deg)`, transformOrigin: '50% 100%'}} />
+  {emote && <Emote kind={emote} x={x + h * 0.26} y={y - h * 0.92 - hop} t={t} s={h / 360} />}</>;
+const TrumpAt = ({x, y, h = 330, hop = 0, rot = 0, emote, t = 0}: {x: number; y: number; h?: number; hop?: number; rot?: number; emote?: EmoteKind; t?: number}) => <>
+  <Img src={staticFile('enemy-oil/trump.png')} style={{position: 'absolute', left: x - h * 0.4, top: y - h - hop, height: h, transform: `rotate(${rot}deg)`, transformOrigin: '40% 100%'}} />
+  {emote && <Emote kind={emote} x={x + h * 0.15} y={y - h * 0.95 - hop} t={t} s={h / 360} />}</>;
 
 // ---------- stage sets ----------
 const ST = 800 + DY; // stage floor (just above the big word)
@@ -238,14 +260,14 @@ const PriceBoom = ({t}: {t: number}) => <>
   <Glow x={540} y={ST - 300} r={380} />
   <svg width={340} height={460} style={{position: 'absolute', left: 120, top: ST - 520, overflow: 'visible'}}>
     <path d="M170 450 L170 60 M60 170 L170 40 L280 170" fill="none" stroke={RED} strokeWidth={46} strokeLinecap="round" strokeLinejoin="round" /></svg>
-  <PutinAt x={760} y={ST} h={360} hop={Math.abs(Math.sin(t * 8)) * 10} />
+  <PutinAt x={760} y={ST} h={380} hop={Math.abs(Math.sin(t * 8)) * 14} rot={Math.sin(t * 4) * 4} emote="laugh" t={t} />
   <PriceTag x={830} y={ST - 430} price="SALE" at={P(11) + 1.2} rot={8} size={1} />
 </>;
 const Paid = ({t, ukraine}: {t: number; ukraine?: boolean}) => {
   const f = Math.min(1, Math.max(0, (t - P(12) - 0.4) / 0.7));
   return <>
     <Flag kind="eu" x={170} y={ST - 420} w={220} t={t} />
-    <PutinAt x={850} y={ST} h={460} hop={f >= 1 ? Math.abs(Math.sin(t * 7)) * 8 : 0} />
+    <PutinAt x={850} y={ST} h={460} hop={f >= 1 ? Math.abs(Math.sin(t * 7)) * 12 : 0} rot={f >= 1 ? Math.sin(t * 5) * 4 : 0} emote={f >= 1 ? 'money' : undefined} t={t} />
     <MoneySack x={lerp(220, 640, ease(f))} y={ST - 40 - Math.sin(f * Math.PI) * 160} w={300} label="€21.9B" />
     {ukraine && <><Flag kind="ua" x={170} y={ST - 160} w={160} t={t} /><MoneySack x={380} y={ST - 40} w={220} label="€18.7B" color="#3E7FCB" /></>}
   </>;
@@ -262,7 +284,7 @@ const BackDoor = ({t}: {t: number}) => {
 const ToIndia = ({t}: {t: number}) => {
   const f = fly(t, P(16) + 0.3, 0.8, 760, ST - 200, 300, ST - 120, 220);
   return <>
-    <PutinAt x={830} y={ST} h={330} />
+    <PutinAt x={830} y={ST} h={360} hop={Math.abs(Math.sin(t * 6)) * 8} rot={-3 + Math.sin(t * 3) * 3} emote="money" t={t} />
     <Flag kind="in" x={250} y={ST - 330} w={260} t={t} />
     {f ? <Barrel x={f.x} y={f.y} s={1.4} rot={f.p * -360} /> : t > P(16) + 1.1 && <Barrel x={300} y={ST - 40} s={1.4} />}
     <PriceTag x={520} y={ST - 520} price="SALE" at={P(16) + 1.0} rot={-6} size={0.9} />
@@ -295,7 +317,7 @@ const Laundry = ({t, clean}: {t: number; clean?: boolean}) => {
 };
 const America = ({t, banned}: {t: number; banned?: boolean}) => <>
   <Isl src="usa" x={80} y={180 + DY} w={480} t={t} />
-  <TrumpAt x={350} y={ST - 150} h={380} rot={banned ? Math.sin(t * 20) * 4 : 0} />
+  <TrumpAt x={350} y={ST - 150} h={380} rot={banned ? Math.sin(t * 20) * 5 : Math.sin(t * 2) * 3} hop={banned ? 0 : Math.abs(Math.sin(t * 4)) * 10} emote={banned ? 'anger' : 'question'} t={t} />
   <Barrel x={720} y={ST - 60} s={1.6} />
   {banned && <svg width={260} height={260} style={{position: 'absolute', left: 590, top: ST - 330, overflow: 'visible'}}>
     <path d="M20 20 L240 240 M240 20 L20 240" stroke={RED} strokeWidth={30} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ease((t - P(23) - 0.6) / 0.25)} /></svg>}
@@ -317,8 +339,8 @@ const Picks = ({t}: {t: number}) => {
   const tilt = Math.sin(t * 3) * 8;
   return <>
     <Img src={staticFile('enemy-oil/scale.png')} style={{position: 'absolute', left: 540 - 230, top: ST - 520, width: 460, transform: `rotate(${tilt}deg)`, transformOrigin: '50% 95%'}} />
-    <TrumpAt x={140} y={ST} h={300} rot={-4} />
-    <PutinAt x={960} y={ST} h={300} rot={4} />
+    <TrumpAt x={150} y={ST} h={320} rot={-4 + Math.sin(t * 5) * 3} emote="sweat" t={t} />
+    <PutinAt x={950} y={ST} h={320} rot={4} hop={Math.abs(Math.sin(t * 9)) * 10} emote="laugh" t={t} />
   </>;
 };
 
@@ -350,35 +372,75 @@ const SHOTS: Shot[] = [
   {at: P(29), set: (t) => <Three t={t} from={P(29)} labels={['1', '2', '3']} />, fx_: 'pop'},
 ];
 
+// ---------- the two on the bottom: Doug explains, the naive Puffin asks ----------
+type DPose = 'count' | 'explain' | 'point' | 'shrug' | 'sad' | 'angry' | 'happy' | 'shock' | 'smug';
+const DOUG_POSE: Record<number, DPose> = {1: 'count', 3: 'happy', 4: 'point', 5: 'explain', 6: 'shrug', 7: 'sad', 9: 'angry', 10: 'count', 11: 'happy', 12: 'point', 13: 'explain',
+  15: 'count', 16: 'point', 17: 'explain', 18: 'point', 19: 'shock', 20: 'smug', 21: 'happy', 23: 'angry', 24: 'explain', 25: 'point', 27: 'shrug', 28: 'smug', 29: 'happy'};
+const PUFFIN_REACT: Record<number, EmoteKind> = {1: 'question', 5: 'shock', 7: 'sweat', 12: 'shock', 13: 'shock', 19: 'shock', 21: 'question', 25: 'sweat', 27: 'sweat', 28: 'question'};
+const Duo = ({t, li}: {t: number; li: number}) => {
+  const asks = EP[li]?.voice === 'am_liam' || DOUG_LINES.includes(li);
+  const lt = li >= 0 ? t - EP[li].start : 0, kick = 1 + 0.04 * Math.exp(-lt * 8); // small punch on every new line
+  const ps: DPose = asks ? 'explain' : DOUG_POSE[li] ?? 'explain';
+  const osc = Math.sin(t * 7), dm = asks ? 0 : talk(t, [[EP[li].start, EP[li].end]]);
+  const pose = asks ? {turn: 0.5, look: [0.9, -0.1] as [number, number], flapL: 15, flapR: 25, brows: 'none' as const}
+    : ps === 'count' ? {flapR: 160, flapL: 20, look: [0, 0] as [number, number], beak: 'smile' as const}
+    : ps === 'point' ? {turn: -0.25, look: [-0.2, -0.9] as [number, number], flapL: 150 + osc * 6, flapR: 20}
+    : ps === 'shrug' ? {flapL: 105, flapR: 105, brows: 'worried' as const, lids: 0.25}
+    : ps === 'sad' ? {brows: 'worried' as const, beak: 'frown' as const, lids: 0.35, tremble: 1, flapL: 10, flapR: 10}
+    : ps === 'angry' ? {brows: 'angry' as const, angry: 1, beak: 'frown' as const, flapL: 60 + osc * 30, flapR: 60 - osc * 30, tremble: 0.4}
+    : ps === 'happy' ? {brows: 'happy' as const, beak: 'smile' as const, flapL: 120 + osc * 20, flapR: 120 - osc * 20, blush: 1}
+    : ps === 'shock' ? {brows: 'shock' as const, eyeScale: 1.3, pupil: 0.6, flapL: 130, flapR: 130}
+    : ps === 'smug' ? {lids: 0.45, beak: 'smile' as const, flapL: 40, flapR: 70, turn: 0.3}
+    : {flapL: 60 + osc * 35, flapR: 60 - osc * 35, look: [0.1, 0] as [number, number]};
+  const hop = (ps === 'happy' || ps === 'shock') && !asks ? Math.abs(Math.sin(t * 9)) * 22 : 0;
+  const dx = asks ? 0 : (li % 3 - 1) * 30;
+  // Puffin: asks with a "?" over the head, otherwise reacts to Doug
+  const pm = asks ? talk(t, [[EP[li].start, EP[li].end]]) : 0, react = !asks ? PUFFIN_REACT[li] : undefined;
+  const pHop = asks ? Math.abs(Math.sin(t * 6)) * 10 : react === 'shock' ? Math.abs(Math.sin(t * 10)) * 18 : 0;
+  return <div style={{position: 'absolute', inset: 0, transform: `scale(${kick})`, transformOrigin: '540px 1880px'}}>
+    <Penguin id="doug" x={320 + dx} y={1880 - hop} h={660} pose={{mouth: dm, ...pose}} />
+    <Puffin id="puff" x={800} y={1880 - pHop} h={560} pose={{mouth: pm, look: asks ? -0.8 : react === 'shock' ? 0 : -0.6, flap: asks ? 40 + Math.sin(t * 8) * 25 : react === 'shock' ? 70 : 8, lids: react === 'sweat' ? 0.3 : 0, smirk: false}} />
+    {(asks || react) && <Emote kind={asks ? 'question' : react!} x={890} y={1290 - pHop} t={t} s={1.3} />}
+    {asks && li > 0 && <Emote kind="question" x={180 + dx} y={1220} t={t + 1} s={0.9} />}
+  </div>;
+};
+
+// Every stage shot gets a new framing every ~1.7 s (wide / left / right / centre push) so nothing sits still.
+const FRAMES = [{s: 1, x: 540}, {s: 1.15, x: 450}, {s: 1.15, x: 630}, {s: 1.1, x: 540}];
+const REFRAMES: number[] = SHOTS.flatMap((sh, i) => { const end = SHOTS[i + 1]?.at ?? EP[EP.length - 1].end; const out: number[] = [];
+  for (let c = sh.at + 1.7; c < end - 0.6; c += 1.7) out.push(c); return out; });
+const KH = EP[0].end / 3.19; // the approved hook was timed to a 3.19 s line
+
 export const DougEnemyOil = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const hook = tc < P(1);
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at);
   const li = EP.findIndex((l, k) => tc >= l.start && tc < (EP[k + 1]?.start ?? 999));
-  const dougTalks = DOUG_LINES.includes(li), shock = [14, 26].includes(li), cold = li === 7;
-  // hook camera (as approved), then a slow push on every stage shot
   let s = 1, fx = 540;
-  if (hook) { const toL = tc >= T.rich && tc < T.buying + 0.3 ? ease((tc - T.rich) / 0.4) : 0, toR = tc >= T.enemies - 0.4 ? ease((tc - T.enemies + 0.4) / 0.4) : 0; s = 1 + 0.05 * (toL + toR); fx = 540 - 70 * toL + 70 * toR; }
-  else if (sh) s = 1 + 0.02 * (tc - sh.at);
-  const look: [number, number] = dougTalks ? [0, 0.1] : [0.2 * Math.sin(t * 0.8), -0.7];
+  if (hook) { const h = tc / KH, toL = h >= T.rich && h < T.buying + 0.3 ? ease((h - T.rich) / 0.4) : 0, toR = h >= T.enemies - 0.4 ? ease((h - T.enemies + 0.4) / 0.4) : 0; s = 1 + 0.05 * (toL + toR); fx = 540 - 70 * toL + 70 * toR; }
+  else if (sh) {
+    const k = REFRAMES.filter((c) => c > sh.at && c <= tc).length, fr = FRAMES[k % FRAMES.length];
+    const since = tc - Math.max(sh.at, ...REFRAMES.filter((c) => c <= tc && c > sh.at)), punch = ease(since / 0.18);
+    const prev = FRAMES[(k + FRAMES.length - 1) % FRAMES.length];
+    s = (k ? lerp(prev.s, fr.s, punch) : fr.s) * (1 + 0.015 * since); fx = k ? lerp(prev.x, fr.x, punch) : fr.x;
+  }
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts />
-    {hook ? <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${900 - 900 * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={t} /></AbsoluteFill> : <>
-      <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
-        <AbsoluteFill style={{transform: `scale(${s})`, transformOrigin: `540px ${ST - 300}px`}}>{sh!.set(t)}</AbsoluteFill>
-      </AbsoluteFill>
-      <EpWord t={tc} />
-      <Penguin id="doug" x={540} y={1880} h={780} pose={{look, mouth: dougTalks ? talk(t, [[EP[li].start, EP[li].end]]) : 0,
-        flapL: dougTalks ? 70 + Math.sin(t * 7) * 30 : 20, flapR: dougTalks ? 70 + Math.cos(t * 7) * 30 : li === 29 ? 150 : 20,
-        brows: shock ? 'shock' : dougTalks ? 'worried' : 'none', eyeScale: shock ? 1.3 : 1, pupil: shock ? 0.6 : 1, tremble: cold ? 1 : 0, sweat: li === 26}} />
-    </>}
+    {hook ? <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${900 - 900 * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={t / KH} /></AbsoluteFill>
+      : <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
+        <AbsoluteFill style={{transform: `translate(${(540 - fx) * s}px, 0px) scale(${s})`, transformOrigin: `540px ${ST - 300}px`}}>{sh!.set(t)}</AbsoluteFill>
+      </AbsoluteFill>}
+    <EpWord t={tc} />
+    <Duo t={t} li={li} />
     <Audio src={staticFile('doug-enemy-oil-voice.mp3')} />
     {/* SFX kept low under the voice */}
     <Sfx at={0} name="user-ting" vol={0.3} />
-    <Sfx at={T.buying} name="user-whoosh" vol={0.2} />
-    <Sfx at={T.buying + 0.5} name="user-cash-register" vol={0.2} />
-    <Sfx at={T.enemies} name="user-boom" vol={0.28} />
+    <Sfx at={T.buying * KH} name="user-whoosh" vol={0.2} />
+    <Sfx at={(T.buying + 0.5) * KH} name="user-cash-register" vol={0.2} />
+    <Sfx at={T.enemies * KH} name="user-boom" vol={0.28} />
     {SHOTS.map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.13} />)}
+    {REFRAMES.map((c, i) => <Sfx key={`r${i}`} at={c - 0.04} name="user-whoosh" vol={0.07} />)}
+    {EP.map((l, i) => l.voice === 'am_liam' && <Sfx key={`q${i}`} at={l.start} name="user-pop" vol={0.12} />)}
     <Sfx at={P(1) + 0.3} name="user-pop" vol={0.2} />
     {[4, 10, 15].map((i) => <Sfx key={i} at={P(i) + 0.4} name="user-ting" vol={0.25} />)}
     <Sfx at={P(7)} name="user-aww" vol={0.22} />
