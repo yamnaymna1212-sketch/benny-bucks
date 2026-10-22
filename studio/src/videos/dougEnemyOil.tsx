@@ -22,8 +22,6 @@ const WORDS: [number, string, string?][] = [
 ];
 const T = {rich: 0.38, buying: 1.13, oil: 1.5, enemies: 2.63, three: 3.55, end: 4.16};
 
-// pop 1 -> 1.08 -> 1 at time `at`
-const pop = (t: number, at: number) => t < at ? 1 : 1 + 0.08 * Math.sin(cl((t - at) / 0.35) * Math.PI);
 
 const Piece = ({src, x, y, w, t, phase, s = 1, rot = 0, shake = 0}: {src: string; x: number; y: number; w: number; t: number; phase: number; s?: number; rot?: number; shake?: number}) =>
   <Img src={staticFile(`enemy-oil/${src}.png`)} style={{position: 'absolute', left: x + shake, top: y + DY + Math.sin(t * 1.8 + phase) * 6, width: w,
@@ -37,49 +35,54 @@ const BigWord = ({t}: {t: number}) => {
     fontSize: Math.min(190, 1150 / text.length), lineHeight: 1, letterSpacing: -4, color, transform: `scale(${s}) skewX(-6deg)`}}>{text}</div>;
 };
 
-// Doug's own flag: blue with a white fish (the channel's money).
-const DougFlag = ({x, y, t}: {x: number; y: number; t: number}) => {
-  const w = Math.sin(t * 5) * 4;
-  return <svg width={260} height={760} viewBox="0 0 260 760" style={{position: 'absolute', left: x, top: y - 760, overflow: 'visible'}}>
-    <line x1={8} y1={10} x2={8} y2={760} stroke={INK} strokeWidth={10} /><circle cx={8} cy={10} r={12} fill="#F5C518" stroke={INK} strokeWidth={4} />
-    <g transform={`translate(14 ${24 + w}) skewY(${w})`}>
-      <rect width={230} height={150} fill="#2F7FD8" stroke={INK} strokeWidth={6} />
-      <path d="M60 75 C 90 40, 150 40, 175 75 C 150 110, 90 110, 60 75 Z M60 75 L30 50 L30 100 Z" fill="#fff" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
-      <circle cx={150} cy={68} r={6} fill={INK} />
-    </g>
-  </svg>;
-};
-
-const OilBarrel = ({x, y, s = 1}: {x: number; y: number; s?: number}) => <svg width={70 * s} height={90 * s} viewBox="0 0 70 90" style={{position: 'absolute', left: x - 35 * s, top: y - 45 * s, overflow: 'visible'}}>
-  <rect x={3} y={3} width={64} height={84} rx={10} fill="#262626" stroke={INK} strokeWidth={5} />
-  <line x1={3} y1={30} x2={67} y2={30} stroke="#666" strokeWidth={5} /><line x1={3} y1={60} x2={67} y2={60} stroke="#666" strokeWidth={5} />
-  <path d="M35 36 C 28 46, 28 52, 35 54 C 42 52, 42 46, 35 36 Z" fill="#fff" />
-</svg>;
-
 // object flying on an arc between (x1,y1) and (x2,y2) from time a, for d seconds
 const fly = (t: number, a: number, d: number, x1: number, y1: number, x2: number, y2: number, arc = 180) => {
   const p = (t - a) / d; if (p < 0 || p > 1) return null;
   return {x: lerp(x1, x2, p), y: lerp(y1, y2, p) - Math.sin(p * Math.PI) * arc, p};
 };
+const F = 1080 / 941; // user's picture -> video scale
+const bobOf = (t: number, phase: number) => Math.sin(t * 1.8 + phase) * 6;
+
+// A cut-out character from the user's picture. (fx, fy) = feet point; motion = hop / lean around the feet.
+const Actor = ({src, left, top, w, fx, fy, hop = 0, rot = 0, dx = 0}: {src: string; left: number; top: number; w: number; fx: number; fy: number; hop?: number; rot?: number; dx?: number}) =>
+  <Img src={staticFile(`enemy-oil/${src}.png`)} style={{position: 'absolute', left: left + dx, top: top - hop, width: w,
+    transform: `rotate(${rot}deg)`, transformOrigin: `${fx - left}px ${fy - top}px`}} />;
+
+// The real barrel from the picture (copies get shipped to America).
+const BW = 82 * F, BH = 126 * F;
+const Barrel = ({x, y, s = 1, rot = 0}: {x: number; y: number; s?: number; rot?: number}) =>
+  <Img src={staticFile('enemy-oil/barrel.png')} style={{position: 'absolute', left: x - BW * s / 2, top: y - BH * s, width: BW * s, transform: `rotate(${rot}deg)`, transformOrigin: '50% 100%'}} />;
+
+// barrels shipped Russia -> America: [start, landing x, landing y (bottom)]
+const SHIP: [number, number, number][] = [[1.5, 200, 552], [1.95, 295, 556], [2.75, 105, 546]];
+const FROM = {x: 819 * F, y: 474 * F};
 
 const Hook = ({t}: {t: number}) => {
-  const usaS = pop(t, T.rich), ruS = pop(t, T.enemies);
+  const usaB = bobOf(t, 0), ruB = bobOf(t, 2);
   const tilt = t < T.buying ? 0 : Math.sin((t - T.buying) * 7) * 6 * Math.exp(-(t - T.buying) * 1.2);
   const enemy = t >= T.enemies;
   const side = t < T.buying ? -1 : t < T.enemies - 0.4 ? 0 : t < 3.24 ? 1 : 0;
+  // Trump: hop on "rich", leans + swings the bag on "buying", angry jabbing at Putin on "enemies"
+  const hopP = cl((t - T.rich) / 0.35), tHop = t >= T.rich && hopP < 1 ? Math.sin(hopP * Math.PI) * 34 : 0;
+  const tLean = t >= T.buying && t < T.enemies ? 6 * Math.sin(cl((t - T.buying) / 0.3) * Math.PI / 2) * (1 + 0.3 * Math.sin(t * 9)) : 0;
+  const tJab = enemy && t < 3.3 ? 7 + Math.sin(t * 22) * 5 : 0;
+  const tShake = enemy && t < 3.3 ? Math.sin(t * 60) * 3 : 0;
+  // Putin: catches the money (bounce), then leans back smug and laughs on "enemies"
+  const catchP = cl((t - T.buying - 0.55) / 0.3), pBounce = catchP > 0 && catchP < 1 ? Math.sin(catchP * Math.PI) * 22 : 0;
+  const pLean = enemy ? -5 : 0, pLaugh = enemy && t < 3.4 ? Math.abs(Math.sin(t * 16)) * 8 : 0;
   return <>
-    {/* red danger glow behind Russia on "enemies" */}
     {enemy && <div style={{position: 'absolute', left: 640, top: 200 + DY, width: 520, height: 560, borderRadius: '50%', background: 'radial-gradient(circle, rgba(216,58,46,0.35), rgba(216,58,46,0))',
       opacity: 0.6 + 0.4 * Math.sin((t - T.enemies) * 10)}} />}
-    <Piece src="usa" x={0} y={195} w={383} t={t} phase={0} s={usaS} shake={enemy && t < T.enemies + 0.5 ? Math.sin(t * 60) * 4 : 0} />
-    <Piece src="russia" x={718} y={124} w={362} t={t} phase={2} s={ruS} />
+    <Piece src="usa" x={0} y={195} w={383} t={t} phase={0} />
+    <Piece src="russia" x={718} y={124} w={362} t={t} phase={2} />
     <Piece src="scale" x={383} y={247} w={335} t={t} phase={4} rot={tilt} />
-    {/* money flies USA -> Russia, oil flies Russia -> USA */}
-    {[0, 1, 2].map((i) => { const f = fly(t, T.buying + i * 0.13, 0.6, 170, 480 + DY, 930, 520 + DY); return f && <Bill key={i} x={f.x} y={f.y} w={130} rot={f.p * 360} />; })}
-    {(() => { const f = fly(t, T.oil, 0.6, 930, 520 + DY, 200, 520 + DY, 140); return f && <OilBarrel x={f.x} y={f.y} s={1.1} />; })()}
+    <Actor src="putin" left={650 * F} top={180 * F + DY + ruB} w={140 * F} fx={720 * F} fy={455 * F + DY + ruB} hop={pBounce + pLaugh} rot={pLean} />
+    {SHIP.map(([a, x, y], i) => t >= a + 0.6 && <Barrel key={i} x={x} y={y + DY + usaB} s={0.9} />)}
+    <Actor src="trump" left={100 * F} top={165 * F + DY + usaB} w={234 * F} fx={215 * F} fy={430 * F + DY + usaB} hop={tHop} rot={tLean + tJab} dx={tShake} />
+    {[0, 1, 2].map((i) => { const f = fly(t, T.buying + i * 0.13, 0.55, 165, 460 + DY, 820, 380 + DY); return f && <Bill key={i} x={f.x} y={f.y} w={120} rot={f.p * 360} />; })}
+    {SHIP.map(([a, x, y], i) => { const f = fly(t, a, 0.6, FROM.x, FROM.y + DY, x, y + DY, 230); return f && <Barrel key={i} x={f.x} y={f.y} s={lerp(1.1, 0.9, f.p)} rot={f.p * -360} />; })}
     <BigWord t={t} />
-    <DougFlag x={800} y={1880} t={t} />
-    <Penguin id="doug" x={480} y={1880} h={780} pose={{turn: side * 0.45, look: [side * 0.8, side ? -0.6 : 0], mouth: talk(t, [[0, T.end]]),
+    <Penguin id="doug" x={540} y={1880} h={780} pose={{turn: side * 0.45, look: [side * 0.8, side ? -0.6 : 0], mouth: talk(t, [[0, T.end]]),
       flapL: side < 0 ? 140 + Math.sin(t * 9) * 6 : 25, flapR: side > 0 ? 140 + Math.sin(t * 9) * 6 : t >= T.three ? 150 : 25,
       brows: enemy && t < 3.24 ? 'angry' : 'worried', eyeScale: t >= T.three ? 1.15 : 1}} />
   </>;
