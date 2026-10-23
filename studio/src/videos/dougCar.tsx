@@ -15,7 +15,7 @@ const ROAD = 1230; // top of the road
 
 // ---------- props ----------
 // Real car photos (cut out of the user's image): Tesla hovers on jets, sedan rolls in.
-const TeslaPhoto = ({x, y, w = 470, t, fly}: {x: number; y: number; w?: number; t: number; fly: number}) => {
+export const TeslaPhoto = ({x, y, w = 470, t, fly}: {x: number; y: number; w?: number; t: number; fly: number}) => {
   const h = w * 249 / 414, flame = 0.8 + 0.2 * Math.sin(t * 40);
   return <div style={{position: 'absolute', left: x - w / 2, top: y - h, width: w, height: h}}>
     {fly > 0.02 && [0.27, 0.73].map((k) => <svg key={k} width={90} height={260} viewBox="0 0 90 260" style={{position: 'absolute', left: w * k - 45, top: h * 0.86, overflow: 'visible', opacity: fly}}>
@@ -24,15 +24,15 @@ const TeslaPhoto = ({x, y, w = 470, t, fly}: {x: number; y: number; w?: number; 
     <Img src={staticFile('car/tesla.png')} style={{position: 'absolute', left: 0, top: 0, width: w, height: h}} />
   </div>;
 };
-const SedanPhoto = ({x, y, w = 450}: {x: number; y: number; w?: number}) =>
+export const SedanPhoto = ({x, y, w = 450}: {x: number; y: number; w?: number}) =>
   <Img src={staticFile('car/sedan.png')} style={{position: 'absolute', left: x - w / 2, top: y - w * 244 / 438, width: w, height: w * 244 / 438}} />;
 
-const Smoke = ({x, y, t, at}: {x: number; y: number; t: number; at: number}) => <>
+export const Smoke = ({x, y, t, at}: {x: number; y: number; t: number; at: number}) => <>
   {Array.from({length: 9}, (_, i) => { const ph = ((t - at) * 1.6 + i / 9) % 1, side = i % 2 ? 1 : -1, r = 40 + ph * 70;
     return <div key={i} style={{position: 'absolute', left: x + side * (70 + ph * 80) - r, top: y - ph * 40 - r, width: r * 2, height: r * 2, borderRadius: '50%', background: '#fff', border: `4px solid #D9E2E8`, boxSizing: 'border-box', opacity: (1 - ph) * 0.9}} />; })}
 </>;
 
-const Bill = ({x, y, rot = 0, w = 110}: {x: number; y: number; rot?: number; w?: number}) =>
+export const Bill = ({x, y, rot = 0, w = 110}: {x: number; y: number; rot?: number; w?: number}) =>
   <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.22, width: w, height: w * 0.44, background: '#8FD18F', border: `4px solid ${INK}`, borderRadius: 6, boxSizing: 'border-box', transform: `rotate(${rot}deg)`,
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: w * 0.3, color: '#1E5A2A'}}>$</div>;
 
@@ -50,14 +50,14 @@ const Price = ({text, x, y, color, at, t}: {text: string; x: number; y: number; 
 };
 
 // ---------- hook ----------
-const Hook = ({t}: {t: number}) => {
+export const Hook = ({t}: {t: number}) => {
   const tt = back(t / 0.35);
   // POOR car: lifts off at 0.5 s, then hovers and bobs; Doug's cash flies out toward it.
   const lift = ease((t - 0.8) / 0.9), carY = lerp(ROAD + 30, 1060, lift) + Math.sin(t * 5) * 10 * lift, carX = 270 + Math.sin(t * 3) * 8 * lift;
   // RICH sedan: rolls in from the right edge and parks calmly.
   const roll = ease((t - 0.2) / 1.0), sedX = lerp(980, 810, roll), sedY = ROAD + 40 + Math.sin(t * 22) * (1 - roll) * 2;
   const dashOff = (t * 420) % 120;
-  const cash = [1.2, 1.45, 1.7, 1.95, 2.2];
+  const cash = Array.from({length: 30}, (_, i) => 1.2 + i * 0.25);
   return <>
     <div style={{position: 'absolute', left: 0, right: 0, top: 40, height: 330, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 300, lineHeight: '320px', color: INK, letterSpacing: -6,
       transform: `scale(${0.6 + 0.4 * tt})`, opacity: cl(tt), transformOrigin: '50% 60%'}}>how<span style={{color: RED}}>?</span></div>
