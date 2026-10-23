@@ -34,7 +34,7 @@ const POLY: Record<string, Pt[]> = {
 };
 const center = (k: string) => { const p = POLY[k]; const xs = p.map((q) => q[0]), ys = p.map((q) => Math.min(q[1], 1090)); return [(Math.min(...xs) + Math.max(...xs)) / 2 * K, IY + (Math.min(...ys) + Math.max(...ys)) / 2 * K]; };
 
-const Layer = ({k, dx = 0, dy = 0, s = 1, rot = 0, children}: {k: string; dx?: number; dy?: number; s?: number; rot?: number; children?: React.ReactNode}) => {
+export const Layer = ({k, dx = 0, dy = 0, s = 1, rot = 0, children}: {k: string; dx?: number; dy?: number; s?: number; rot?: number; children?: React.ReactNode}) => {
   const [cx, cy] = center(k);
   return <div style={{position: 'absolute', left: 0, top: IY, width: 1080, height: IH * K, clipPath: `polygon(${POLY[k].map(([x, y]) => `${x * K}px ${y * K}px`).join(',')})`,
     transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${s})`, transformOrigin: `${cx}px ${cy - IY}px`, mixBlendMode: 'multiply'}}>
@@ -44,7 +44,7 @@ const Layer = ({k, dx = 0, dy = 0, s = 1, rot = 0, children}: {k: string; dx?: n
 };
 
 // Light sweep across a car body (glossy "showroom" pass) between a and a+0.6 s.
-const Shine = ({t, a}: {t: number; a: number}) => {
+export const Shine = ({t, a}: {t: number; a: number}) => {
   const p = (t - a) / 0.6; if (p < 0 || p > 1) return null;
   return <div style={{position: 'absolute', inset: 0, mixBlendMode: 'screen', background: `linear-gradient(105deg, transparent ${p * 140 - 24}%, rgba(255,255,255,0.5) ${p * 140 - 20}%, transparent ${p * 140 - 16}%)`}} />;
 };
@@ -74,7 +74,7 @@ const Hook = ({t}: {t: number}) => {
 };
 
 // Tug-of-war rope from Trump's pointing hand to Xi's folded arms, red knot in the middle, comic bursts on each yank.
-const Rope = ({t, pull}: {t: number; pull: number}) => {
+export const Rope = ({t, pull}: {t: number; pull: number}) => {
   const ax = 212 + pull - 10, ay = 899, bx = 856 + pull + 10, by = 950, mx = (ax + bx) / 2, sag = 40 + Math.sin(t * 9) * 6;
   const yank = Math.floor(t * 5.5 / Math.PI) % 2 === 0 ? 'TUG!' : 'PULL!', side = Math.cos(t * 5.5) > 0 ? 1 : -1;
   return <>
@@ -108,14 +108,14 @@ const DougHome = ({t}: {t: number}) => {
 const P = (i: number) => TIM[i].start;
 const RED = '#D83A2E', GREEN = '#2E9E4F', G = 1300;
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
-const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 800, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />;
+export const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 800, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />;
 
 // Crop of the user's picture (source px box), bottom-centre at (x, y), width w. White paper vanishes with multiply.
 const PARTS: Record<string, [number, number, number, number]> = {
   trump: [28, 628, 208, 905], elon: [182, 640, 330, 882], duo: [25, 628, 332, 905], xi: [665, 640, 852, 862],
   tesla: [8, 842, 482, 1068], hilux: [488, 828, 935, 1092], usflag: [60, 500, 262, 700], cnflag: [700, 515, 918, 700],
 };
-const Cut = ({part, x, y, w, flip, rot = 0, s = 1}: {part: string; x: number; y: number; w: number; flip?: boolean; rot?: number; s?: number}) => {
+export const Cut = ({part, x, y, w, flip, rot = 0, s = 1}: {part: string; x: number; y: number; w: number; flip?: boolean; rot?: number; s?: number}) => {
   const [x0, y0, x1, y1] = PARTS[part], k = w / (x1 - x0), h = (y1 - y0) * k;
   return <div style={{position: 'absolute', left: x - w / 2, top: y - h, width: w, height: h, overflow: 'hidden', mixBlendMode: 'multiply',
     transform: `${flip ? 'scaleX(-1) ' : ''}rotate(${rot}deg) scale(${s})`, transformOrigin: '50% 100%'}}>
@@ -123,13 +123,13 @@ const Cut = ({part, x, y, w, flip, rot = 0, s = 1}: {part: string; x: number; y:
   </div>;
 };
 const pop = (t: number, at: number) => back((t - at) / 0.3);
-const Big = ({text, x, y, at, t, size = 140, color = INK, rot = -3}: {text: string; x: number; y: number; at: number; t: number; size?: number; color?: string; rot?: number}) => {
+export const Big = ({text, x, y, at, t, size = 140, color = INK, rot = -3}: {text: string; x: number; y: number; at: number; t: number; size?: number; color?: string; rot?: number}) => {
   if (t < at) return null;
   return <div style={{position: 'absolute', left: x - 500, width: 1000, top: y - size * 0.6, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, color, lineHeight: 1.1,
     WebkitTextStroke: color === INK ? undefined : `8px ${INK}`, paintOrder: 'stroke', transform: `rotate(${rot}deg) scale(${pop(t, at)})`}}>{text}</div>;
 };
 
-const Chicken = ({x, y, h = 300, t, peace, mad}: {x: number; y: number; h?: number; t: number; peace?: boolean; mad?: boolean}) => {
+export const Chicken = ({x, y, h = 300, t, peace, mad}: {x: number; y: number; h?: number; t: number; peace?: boolean; mad?: boolean}) => {
   const bob = Math.abs(Math.sin(t * 7)) * -8;
   return <svg width={h} height={h} viewBox="0 0 300 300" style={{position: 'absolute', left: x - h / 2, top: y - h + bob, overflow: 'visible'}}>
     <path d="M120 240 L110 296 M170 240 L180 296 M95 296 L125 296 M165 296 L195 296" stroke="#E8A20C" strokeWidth={9} strokeLinecap="round" />
@@ -145,11 +145,11 @@ const Chicken = ({x, y, h = 300, t, peace, mad}: {x: number; y: number; h?: numb
       <path d="M60 20 L0 30 L10 70 L66 60 Z" fill="#fff" stroke={INK} strokeWidth={5} /></g>}
   </svg>;
 };
-const EuFlag = ({x, y, w = 200}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.63} viewBox="0 0 190 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}>
+export const EuFlag = ({x, y, w = 200}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.63} viewBox="0 0 190 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}>
   <rect width={190} height={120} fill="#1F3FA8" stroke={INK} strokeWidth={5} />
   {Array.from({length: 12}, (_, i) => { const a = i / 12 * Math.PI * 2; return <circle key={i} cx={95 + Math.cos(a) * 38} cy={60 + Math.sin(a) * 38} r={6} fill="#FFDE00" />; })}
 </svg>;
-const Factory = ({x, y, w = 600, t, closed}: {x: number; y: number; w?: number; t: number; closed?: boolean}) => <>
+export const Factory = ({x, y, w = 600, t, closed}: {x: number; y: number; w?: number; t: number; closed?: boolean}) => <>
   <svg width={w} height={w * 0.7} viewBox="0 0 600 420" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.7, overflow: 'visible'}}>
     <rect x={460} y={40} width={60} height={200} fill="#B9C3CC" stroke={INK} strokeWidth={7} />
     {!closed && [0, 1, 2].map((i) => { const p = (t * 0.6 + i / 3) % 1; return <circle key={i} cx={490 + p * 60} cy={30 - p * 160} r={22 + p * 30} fill="#E4E8EC" stroke={INK} strokeWidth={4} opacity={1 - p} />; })}
@@ -162,7 +162,7 @@ const Factory = ({x, y, w = 600, t, closed}: {x: number; y: number; w?: number; 
         <text x={300} y={300} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={46} fill="#fff">CLOSED</text></g></>}
   </svg>
 </>;
-const Tank = ({x, y, w = 520, t}: {x: number; y: number; w?: number; t: number}) => <svg width={w} height={w * 0.5} viewBox="0 0 520 260" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.5, overflow: 'visible'}}>
+export const Tank = ({x, y, w = 520, t}: {x: number; y: number; w?: number; t: number}) => <svg width={w} height={w * 0.5} viewBox="0 0 520 260" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.5, overflow: 'visible'}}>
   <rect x={300} y={74} width={210} height={24} rx={8} fill="#6E7B3E" stroke={INK} strokeWidth={6} />
   <path d="M150 120 L180 60 L330 60 L350 120 Z" fill="#7D8A47" stroke={INK} strokeWidth={7} strokeLinejoin="round" />
   <path d="M30 130 L470 130 L440 180 L60 180 Z" fill="#7D8A47" stroke={INK} strokeWidth={7} strokeLinejoin="round" />
@@ -170,7 +170,7 @@ const Tank = ({x, y, w = 520, t}: {x: number; y: number; w?: number; t: number})
   {[90, 160, 230, 300, 370, 420].map((cx) => <circle key={cx} cx={cx} cy={215} r={22} fill="#777" stroke={INK} strokeWidth={5} transform={`rotate(${t * 200} ${cx} 215)`} />)}
   <path d="M230 80 l10 20 l22 2 l-17 14 l6 22 l-21 -12 l-21 12 l6 -22 l-17 -14 l22 -2 Z" fill="#fff" transform="translate(0 -14) scale(0.9) translate(25 10)" />
 </svg>;
-const Gate = ({x, y, open, t}: {x: number; y: number; open: number; t: number}) => <svg width={700} height={420} viewBox="0 0 700 420" style={{position: 'absolute', left: x - 120, top: y - 420, overflow: 'visible'}}>
+export const Gate = ({x, y, open, t}: {x: number; y: number; open: number; t: number}) => <svg width={700} height={420} viewBox="0 0 700 420" style={{position: 'absolute', left: x - 120, top: y - 420, overflow: 'visible'}}>
   <rect x={60} y={120} width={110} height={300} fill="#F4F4F2" stroke={INK} strokeWidth={7} />
   <g transform={`rotate(${-open * 80} 130 170)`}>
     {Array.from({length: 7}, (_, i) => <rect key={i} x={170 + i * 70} y={150} width={70} height={40} fill={i % 2 ? '#fff' : RED} stroke={INK} strokeWidth={5} />)}
@@ -178,17 +178,17 @@ const Gate = ({x, y, open, t}: {x: number; y: number; open: number; t: number}) 
   <rect x={40} y={20} width={150} height={90} rx={10} fill={RED} stroke={INK} strokeWidth={6} />
   <text x={115} y={82} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={46} fill="#fff">TAX</text>
 </svg>;
-const Shield = ({x, y, w = 360, flag, t}: {x: number; y: number; w?: number; flag: 'us' | 'cn'; t: number}) => <svg width={w} height={w * 1.2} viewBox="0 0 300 360" style={{position: 'absolute', left: x - w / 2, top: y - w * 1.2 + Math.sin(t * 4) * 6, overflow: 'visible'}}>
+export const Shield = ({x, y, w = 360, flag, t}: {x: number; y: number; w?: number; flag: 'us' | 'cn'; t: number}) => <svg width={w} height={w * 1.2} viewBox="0 0 300 360" style={{position: 'absolute', left: x - w / 2, top: y - w * 1.2 + Math.sin(t * 4) * 6, overflow: 'visible'}}>
   <path d="M150 10 L290 60 Q 290 260 150 350 Q 10 260 10 60 Z" fill="#DCEBF5" stroke={INK} strokeWidth={9} strokeLinejoin="round" opacity={0.92} />
   <g transform="translate(60 120) scale(0.95)">{flag === 'us' ? <UsFlag /> : <CnFlag />}</g>
 </svg>;
-const UsFlagMini = ({x, y, w = 200}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.63} viewBox="0 0 190 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}><UsFlag /></svg>;
-const CnFlag = () => <g>
+export const UsFlagMini = ({x, y, w = 200}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.63} viewBox="0 0 190 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}><UsFlag /></svg>;
+export const CnFlag = () => <g>
   <rect width={190} height={120} fill="#DE2910" stroke={INK} strokeWidth={5} />
   <path d="M38 22 L44 40 L63 40 L48 51 L54 69 L38 58 L22 69 L28 51 L13 40 L32 40 Z" fill="#FFDE00" />
   {[[78, 14], [92, 30], [92, 52], [78, 66]].map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={6} fill="#FFDE00" />)}
 </g>;
-const Tears = ({x, y, t}: {x: number; y: number; t: number}) => <>{[0, 1].map((i) => { const p = (t * 1.6 + i * 0.5) % 1;
+export const Tears = ({x, y, t}: {x: number; y: number; t: number}) => <>{[0, 1].map((i) => { const p = (t * 1.6 + i * 0.5) % 1;
   return <div key={i} style={{position: 'absolute', left: x + (i ? 70 : -70), top: y + p * 120, width: 22, height: 30, borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', background: '#7CC4EC', border: `3px solid ${INK}`, opacity: 1 - p}} />; })}</>;
 
 // ---------- scenes ----------
@@ -435,7 +435,7 @@ const TruckPrice = ({t}: {t: number}) => <>
   <PriceTag x={320} y={600} price="$40,000" at={P(18)} size={1.3} color={GREEN} />
   <PriceTag x={740} y={760} price="+$10,000 TAX" at={P(18) + 1.2} size={1.1} rot={6} />
 </>;
-const TexasFlag = ({x, y, w = 260}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.66} viewBox="0 0 180 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}>
+export const TexasFlag = ({x, y, w = 260}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.66} viewBox="0 0 180 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}>
   <rect width={60} height={120} fill="#1F3FA8" /><rect x={60} width={120} height={60} fill="#fff" /><rect x={60} y={60} width={120} height={60} fill={RED} />
   <path d="M30 38 L36 56 L55 56 L40 67 L46 85 L30 74 L14 85 L20 67 L5 56 L24 56 Z" fill="#fff" />
   <rect width={180} height={120} fill="none" stroke={INK} strokeWidth={5} />

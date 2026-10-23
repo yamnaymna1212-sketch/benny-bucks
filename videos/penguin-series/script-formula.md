@@ -48,3 +48,13 @@ why? title + self-drawing red arrow that swings A -> B, expensive price RED / ch
   ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
   wrong / aww / shock / fahh / fahh-long = bad news & the "Doug <state>." gag; boom = big reveal; slap = hits; wow / yeah = good news;
   notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
+
+## Voice + length (user rule, 2026-10-23 — EP7)
+- Narrator = FAST: Kokoro am_puck 1.15, no pauses between lines. Short video? ADD lines (one idea = one shot), never slow down.
+- EP7 added lines that worked: product brag ("Hilux climb mountain. / Hilux cross desert. / Hilux never die."), money math
+  ("Truck cost $40,000. Tax cost $10,000."), a twist ("So Toyota build truck factory in Texas. Made in America. No chicken tax."),
+  a relatable comparison for the real number ("Almost like whole city of Miami."), a one-word punch ("Car factory is power.").
+
+## User-image versus hook (user rule, 2026-10-23 — EP7)
+- The user's own picture, both sides visible from frame 0, animated (layers + the sides fight / tug-of-war), Doug in the middle,
+  then a hard cut to Doug's own scene on "This is Doug.". Same picture characters reused through the video.

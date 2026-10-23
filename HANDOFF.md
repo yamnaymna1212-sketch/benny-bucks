@@ -1,30 +1,20 @@
-# HANDOFF — continue the "Doug the Penguin" channel in a new session
+# HANDOFF — "Doug the Penguin" channel (updated 2026-10-23, after EP7)
 
-Read this first, then PROJECT_LOG.md (decisions) and videos/penguin-series/script-formula.md (series rules).
-Talk to the user in Arabic. Video text/voice in English.
+Read: CLAUDE.md -> .claude/skills/doug-episode/SKILL.md -> last 20 lines of PROJECT_LOG.md -> videos/penguin-series/script-formula.md.
+Talk to the user in Arabic. Video text/voice in English. One episode = one session.
 
-## 1. Get the project
-- Repo: github.com/yamnaymna1212-sketch/benny-bucks — branch `claude/benny-tiktok-factory-design-lex9ua` (also merged into `main`).
-- `cd studio && npm install`
+## Setup in a fresh container
+- `cd studio && npm ci`
+- SFX (gitignored): `python3 tools/import_user_sfx.py && python3 tools/sfx_animals.py`
+- Voice engine (Kokoro, free): see SKILL.md §2 (venv in /opt/tts + 2 model files from github.com/thewh1teagle/kokoro-onnx).
+- Render with `--browser-executable=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell --concurrency=4`.
+- Episode voices in studio/public/*-voice.mp3 are gitignored: copy from videos/<slug>/vo/voice.mp3.
 
-## 2. Rebuild the git-ignored assets (needed to render)
-- Fonts are tracked (studio/public/fonts).
-- SFX: `pip install numpy soundfile && python3 tools/sfx.py && python3 tools/sfx_animals.py`
-  then `python3 tools/import_user_sfx.py` (user's labelled sounds -> studio/public/sfx/user-*.wav).
-- Voices: `cp videos/doug-rent/../penguin-rent/vo/voice.mp3 studio/public/doug-rent-voice.mp3` and
-  `cp videos/doug-gas/vo/voice.mp3 studio/public/doug-gas-voice.mp3`.
+## Current rules that changed recently
+- Voice: FAST Kokoro am_puck 1.15, no pauses; short script -> add lines (user, 2026-10-23).
+- Hook from the user's own picture: both sides from frame 0, animated layers, sides interact (tug-of-war), Doug in the middle, cut to Doug's scene on "This is Doug." (EP7).
+- Talk in Arabic, blunt feedback; warn before expensive renders; batch fixes.
 
-## 3. Where things are
-- Cast/world code: studio/src/penguin/{rig,cast,world,acting,edit}.tsx (Doug, Larry walrus, Big Seal, Puffin, Tax Gull, seal; captions/beat/SFX in edit.tsx).
-- EP1 (published): studio/src/videos/dougRent.tsx -> videos/doug-rent/.
-- EP2 Gas: DONE (videos/doug-gas/doug-gas.mp4). Next episode: pick a topic with the user.
-  User VO (ElevenLabs) tightened + sped x1.2 to 61.5 s: videos/doug-gas/vo/voice.mp3; speech segments (start/end in the final file,
-  52 segments, seg 36 = "Doug.") in videos/doug-gas/vo/voice.segments.json. NEXT: map segments -> script lines (by order/length,
-  like EP1), save as studio/src/data/doug-gas.json, build all shots after the hook, render, compress (<30 MB).
-- Voice tightening tool: tools/tighten_vo.py (cut pauses to ~0.07 s; keep ~0.35–0.75 s after "Doug.").
-
-## 4. Rules that matter (see PROJECT_LOG for all)
-- No music. Captions = hand-written, one ink colour, small. Deep zooms on named subjects; fast rhythm; user SFX (ting at 0 s of every hook).
-- Only Doug (+ family) are penguins; banker = Arctic fox (not built yet). Larry (walrus) owns everything (running gag).
-- Hook: blue title "<Topic> Explained by Doug", spoken hook starts with "Why ..." / "If Doug ...", contrast + real US numbers.
-- Videos 61–65 s. Show the hook before the full render. Never re-render a finished episode unless asked.
+## Episodes
+EP1 rent, EP2 gas, EP3 USA vs Venezuela gas, EP6 money laundering, EP7 Chicken Tax (studio/src/videos/dougTariff.tsx -> videos/doug-tariff/doug-tariff.mp4).
+Template for the next versus episode with a user picture: copy dougTariff.tsx (Hook + Layer/POLY + Cut/PARTS).
