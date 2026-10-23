@@ -1,0 +1,34 @@
+Why do rich countries fight wars over cars?|0.31
+This is Doug.|0.23
+Doug want truck.|0.28
+Toyota make tough truck.|0.23
+Name: Hilux.|0.28
+Whole world drive Hilux.|0.28
+But in America, Doug can't buy Hilux.|0.28
+Why?|0.23
+Chicken.|0.31
+In nineteen sixty-four, Europe put tax on American chicken.|0.28
+America angry.|0.23
+America put tax on foreign trucks.|0.28
+Twenty-five percent tax.|0.31
+This is called Chicken Tax.|0.36
+Doug confused.|0.51
+Chicken war is over. Tax is not.|0.28
+Sixty years later, tax still here.|0.31
+Why?|0.23
+Because car is not car.|0.23
+Car is jobs.|0.31
+One car factory. Thousand workers.|0.28
+Thousand workers buy fish, igloo, snow cone.|0.28
+Factory close, whole town cry.|0.36
+In real life, Toyota alone has almost four hundred thousand workers.|0.36
+And car is also war.|0.28
+In World War Two, American car factories built tanks and bombers.|0.28
+No car factory, no tanks.|0.36
+So rich countries fight.|0.28
+America protect Tesla.|0.23
+Everyone protect their own car.|0.36
+Doug understand now.|0.31
+Doug still want Hilux.|0.23
+Hilux still not here.|0.36
+Would you pay twenty-five percent more for a Hilux?|0.26

@@ -4,7 +4,9 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
-import {Penguin, onTwos} from '../penguin/rig';
+import {INK, Penguin, onTwos} from '../penguin/rig';
+import {Igloo, Thought} from '../penguin/world';
+import {Snowfall} from './dougGas';
 import {cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import {Arrow, Puzzled, Why} from './dougVenezuela';
@@ -54,33 +56,65 @@ const Hook = ({t}: {t: number}) => {
   const idle = (ph: number) => Math.sin(t * 38 + ph) * 1.4; // engine running
   const vsS = (t < VS ? 1 + 0.04 * Math.sin(t * 7) : 1 + 0.35 * Math.exp(-(t - VS) * 8)) * punch;
   const lookR = t >= CN, shock = t >= VS;
+  const tug = Math.sin(t * 5.5) * 0.7 + Math.sin(t * 2.1) * 0.3, pull = tug * 26; // rope position: + = China wins, - = USA wins
   return <>
-    <Layer k="usTop" s={punch * breathe(0) * pulse(US)} />
+    <Layer k="usTop" s={punch * breathe(0) * pulse(US)} dx={pull - 10} rot={-3 + tug * 3} />
     <Layer k="usCar" s={punch * pulse(US)} dy={idle(0)}><Shine t={t} a={US + 0.2} /><Shine t={t} a={3.2} /></Layer>
-    <Layer k="cnTop" s={punch * breathe(1.5) * pulse(CN)} />
+    <Layer k="cnTop" s={punch * breathe(1.5) * pulse(CN)} dx={pull + 10} rot={3 + tug * 3} />
     <Layer k="cnCar" s={punch * pulse(CN)} dy={idle(2)}><Shine t={t} a={CN + 0.2} /><Shine t={t} a={3.6} /></Layer>
     <Layer k="vs" s={vsS} rot={Math.sin(t * 4) * 2} />
+    <Rope t={t} pull={pull} />
     <Why t={t} />
     <Arrow x={540} y={500} t={t} swingAt={CN} />
-    <Penguin id="doug" x={540} y={1480} h={290} pose={{turn: lookR ? 0.5 : -0.5, look: [lookR ? 0.8 : -0.8, -0.4], brows: shock ? 'shock' : lookR ? 'worried' : 'happy',
+    <Penguin id="doug" x={540} y={1480} h={290} pose={{turn: tug * 0.6, look: [tug, -0.6], brows: shock ? 'shock' : lookR ? 'worried' : 'happy',
       eyeScale: shock ? 1.3 : 1.05, pupil: shock ? 0.5 : 1, beak: shock ? 'frown' : 'smile', flapR: shock ? 70 : 35, flapL: shock ? 70 : 35, sweat: shock, hop: shock && t - VS < 0.3 ? 1 : 0}} />
     {shock && <Puzzled x={630} y={1170} t={t} />}
+  </>;
+};
+
+// Tug-of-war rope from Trump's pointing hand to Xi's folded arms, red knot in the middle, comic bursts on each yank.
+const Rope = ({t, pull}: {t: number; pull: number}) => {
+  const ax = 212 + pull - 10, ay = 899, bx = 856 + pull + 10, by = 950, mx = (ax + bx) / 2, sag = 40 + Math.sin(t * 9) * 6;
+  const yank = Math.floor(t * 5.5 / Math.PI) % 2 === 0 ? 'TUG!' : 'PULL!', side = Math.cos(t * 5.5) > 0 ? 1 : -1;
+  return <>
+    <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+      <path d={`M${ax} ${ay} Q ${mx} ${(ay + by) / 2 + sag} ${bx} ${by}`} fill="none" stroke={INK} strokeWidth={17} strokeLinecap="round" />
+      <path d={`M${ax} ${ay} Q ${mx} ${(ay + by) / 2 + sag} ${bx} ${by}`} fill="none" stroke="#C99A5B" strokeWidth={10} strokeLinecap="round" strokeDasharray="14 10" />
+      <path d={`M${mx - 18} ${(ay + by) / 2 + sag / 2 - 4} l18 -34 l18 34 Z`} fill="#D83A2E" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+    </svg>
+    <div style={{position: 'absolute', left: 540 + side * 330 - 90, top: 1130, width: 180, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 54, color: '#fff',
+      WebkitTextStroke: `10px ${INK}`, paintOrder: 'stroke', transform: `rotate(${side * 8}deg) scale(${1 + 0.15 * Math.abs(Math.sin(t * 11))})`}}>{yank}</div>
+  </>;
+};
+
+// "This is Doug." -> Doug's own place: snow, igloo, dreaming of the Hilux (the truck from the hook picture).
+const DougHome = ({t}: {t: number}) => {
+  const want = t >= TIM[2].start;
+  return <>
+    <Snowfall t={t} />
+    <div style={{position: 'absolute', left: -400, right: -400, top: 1300, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
+    <Igloo x={820} y={1300} w={420} />
+    <Penguin id="doug" x={420} y={1300} h={560} pose={{turn: want ? 0.4 : 0, look: want ? [0.6, -0.9] : [0, 0], brows: want ? 'worried' : 'happy', beak: 'smile', flapR: want ? 20 : 60 + Math.sin(t * 8) * 25, blush: want ? 0.6 : 0}} />
+    <Thought x={680} y={430} w={560} tx={470} ty={760} at={TIM[2].start}>
+      <div style={{position: 'absolute', left: 70, top: 40, width: 420, height: 250, overflow: 'hidden'}}>
+        <Img src={staticFile('tariff/hook.png')} style={{position: 'absolute', width: IW * 0.93, left: -490 * 0.93, top: -830 * 0.93}} />
+      </div>
+    </Thought>
   </>;
 };
 
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: 'cut' | 'swipe' | 'zoom' | 'iris' | 'pop'};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
+  {at: TIM[1].start, set: (t) => <DougHome t={t} />, fx_: 'swipe'},
 ];
 
 export const DougTariff = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s = 1, fx = 540, fy = 960;
-  if (sh.at === 0) { // hook: both sides stay in frame (slow drift), then dive onto Doug on "This is Doug."
-    const toDoug = ease((tc - TIM[1].start) / 0.3);
-    s = 1 + 0.05 * cl(tc / 2.5) + 0.55 * toDoug; fx = 540; fy = 960 + 380 * toDoug;
-  }
+  if (sh.at === 0) s = 1 + 0.05 * cl(tc / 2.5); // hook: both sides stay in frame, slow drift
+  else s = 1 + 0.012 * (tc - sh.at);
   s *= tc < 1.0 ? 1 : beat(tc, TIM);
   return <AbsoluteFill style={{background: '#FDFDFD', overflow: 'hidden'}}>
     <Fonts /><HandFont />
