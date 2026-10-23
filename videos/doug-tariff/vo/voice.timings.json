@@ -3,204 +3,270 @@
   "voice": "am_puck",
   "text": "Why do rich countries fight wars over cars?",
   "start": 0.0,
-  "end": 2.27
+  "end": 2.13
  },
  {
   "voice": "am_puck",
   "text": "This is Doug.",
-  "start": 2.58,
-  "end": 3.33
+  "start": 2.17,
+  "end": 2.88
  },
  {
   "voice": "am_puck",
   "text": "Doug want truck.",
-  "start": 3.56,
-  "end": 4.41
+  "start": 2.92,
+  "end": 3.71
+ },
+ {
+  "voice": "am_puck",
+  "text": "Big, strong truck.",
+  "start": 3.75,
+  "end": 4.67
  },
  {
   "voice": "am_puck",
   "text": "Toyota make tough truck.",
-  "start": 4.69,
-  "end": 5.94
+  "start": 4.71,
+  "end": 5.92
  },
  {
   "voice": "am_puck",
   "text": "Name: Hilux.",
-  "start": 6.17,
-  "end": 7.03
+  "start": 5.96,
+  "end": 6.72
  },
  {
   "voice": "am_puck",
   "text": "Whole world drive Hilux.",
-  "start": 7.31,
-  "end": 8.57
+  "start": 6.76,
+  "end": 7.84
+ },
+ {
+  "voice": "am_puck",
+  "text": "Hilux climb mountain.",
+  "start": 7.88,
+  "end": 8.93
+ },
+ {
+  "voice": "am_puck",
+  "text": "Hilux cross desert.",
+  "start": 8.97,
+  "end": 9.97
+ },
+ {
+  "voice": "am_puck",
+  "text": "Hilux never die.",
+  "start": 10.01,
+  "end": 10.9
  },
  {
   "voice": "am_puck",
   "text": "But in America, Doug can't buy Hilux.",
-  "start": 8.85,
-  "end": 10.77
+  "start": 10.94,
+  "end": 12.7
  },
  {
   "voice": "am_puck",
   "text": "Why?",
-  "start": 11.05,
-  "end": 11.51
+  "start": 12.74,
+  "end": 13.15
  },
  {
   "voice": "am_puck",
   "text": "Chicken.",
-  "start": 11.74,
-  "end": 12.36
+  "start": 13.19,
+  "end": 13.73
  },
  {
   "voice": "am_puck",
   "text": "In nineteen sixty-four, Europe put tax on American chicken.",
-  "start": 12.67,
-  "end": 15.98
+  "start": 13.77,
+  "end": 16.79
  },
  {
   "voice": "am_puck",
   "text": "America angry.",
-  "start": 16.26,
-  "end": 17.17
+  "start": 16.83,
+  "end": 17.67
+ },
+ {
+  "voice": "am_puck",
+  "text": "America want revenge.",
+  "start": 17.71,
+  "end": 18.81
  },
  {
   "voice": "am_puck",
   "text": "America put tax on foreign trucks.",
-  "start": 17.4,
-  "end": 19.18
+  "start": 18.85,
+  "end": 20.54
  },
  {
   "voice": "am_puck",
   "text": "Twenty-five percent tax.",
-  "start": 19.46,
-  "end": 20.84
+  "start": 20.58,
+  "end": 21.77
+ },
+ {
+  "voice": "am_puck",
+  "text": "Truck cost forty thousand. Tax cost ten thousand.",
+  "start": 21.81,
+  "end": 24.46
  },
  {
   "voice": "am_puck",
   "text": "This is called Chicken Tax.",
-  "start": 21.15,
-  "end": 22.56
+  "start": 24.5,
+  "end": 25.74
  },
  {
   "voice": "am_puck",
   "text": "Doug confused.",
-  "start": 22.92,
-  "end": 23.84
+  "start": 25.78,
+  "end": 26.63
  },
  {
   "voice": "am_puck",
   "text": "Chicken war is over. Tax is not.",
-  "start": 24.35,
-  "end": 26.15
+  "start": 26.67,
+  "end": 28.35
  },
  {
   "voice": "am_puck",
   "text": "Sixty years later, tax still here.",
-  "start": 26.43,
-  "end": 28.13
+  "start": 28.39,
+  "end": 29.95
+ },
+ {
+  "voice": "am_puck",
+  "text": "So Toyota build truck factory in Texas.",
+  "start": 29.99,
+  "end": 31.96
+ },
+ {
+  "voice": "am_puck",
+  "text": "Made in America.",
+  "start": 32.0,
+  "end": 32.86
+ },
+ {
+  "voice": "am_puck",
+  "text": "No chicken tax.",
+  "start": 32.9,
+  "end": 33.87
  },
  {
   "voice": "am_puck",
   "text": "Why?",
-  "start": 28.44,
-  "end": 28.91
+  "start": 33.91,
+  "end": 34.32
  },
  {
   "voice": "am_puck",
   "text": "Because car is not car.",
-  "start": 29.14,
-  "end": 30.33
+  "start": 34.36,
+  "end": 35.48
  },
  {
   "voice": "am_puck",
   "text": "Car is jobs.",
-  "start": 30.56,
-  "end": 31.49
+  "start": 35.52,
+  "end": 36.34
  },
  {
   "voice": "am_puck",
   "text": "One car factory. Thousand workers.",
-  "start": 31.8,
-  "end": 33.89
+  "start": 36.38,
+  "end": 38.29
  },
  {
   "voice": "am_puck",
   "text": "Thousand workers buy fish, igloo, snow cone.",
-  "start": 34.17,
-  "end": 36.67
+  "start": 38.33,
+  "end": 40.52
  },
  {
   "voice": "am_puck",
   "text": "Factory close, whole town cry.",
-  "start": 36.95,
-  "end": 38.63
+  "start": 40.56,
+  "end": 42.12
  },
  {
   "voice": "am_puck",
   "text": "In real life, Toyota alone has almost four hundred thousand workers.",
-  "start": 38.99,
-  "end": 43.03
+  "start": 42.16,
+  "end": 45.8
+ },
+ {
+  "voice": "am_puck",
+  "text": "Almost like whole city of Miami.",
+  "start": 45.84,
+  "end": 47.32
  },
  {
   "voice": "am_puck",
   "text": "And car is also war.",
-  "start": 43.39,
-  "end": 44.54
+  "start": 47.36,
+  "end": 48.42
  },
  {
   "voice": "am_puck",
   "text": "In World War Two, American car factories built tanks and bombers.",
-  "start": 44.82,
-  "end": 48.66
+  "start": 48.46,
+  "end": 52.04
  },
  {
   "voice": "am_puck",
   "text": "No car factory, no tanks.",
-  "start": 48.94,
-  "end": 50.4
+  "start": 52.08,
+  "end": 53.43
+ },
+ {
+  "voice": "am_puck",
+  "text": "Car factory is power.",
+  "start": 53.47,
+  "end": 54.55
  },
  {
   "voice": "am_puck",
   "text": "So rich countries fight.",
-  "start": 50.76,
-  "end": 51.96
+  "start": 54.59,
+  "end": 55.64
  },
  {
   "voice": "am_puck",
   "text": "America protect Tesla.",
-  "start": 52.24,
-  "end": 53.59
+  "start": 55.68,
+  "end": 56.86
  },
  {
   "voice": "am_puck",
   "text": "Everyone protect their own car.",
-  "start": 53.82,
-  "end": 55.23
+  "start": 56.9,
+  "end": 58.2
  },
  {
   "voice": "am_puck",
   "text": "Doug understand now.",
-  "start": 55.59,
-  "end": 56.65
+  "start": 58.24,
+  "end": 59.21
  },
  {
   "voice": "am_puck",
   "text": "Doug still want Hilux.",
-  "start": 56.96,
-  "end": 58.1
+  "start": 59.25,
+  "end": 60.24
  },
  {
   "voice": "am_puck",
   "text": "Hilux still not here.",
-  "start": 58.33,
-  "end": 59.37
+  "start": 60.28,
+  "end": 61.22
  },
  {
   "voice": "am_puck",
   "text": "Would you pay twenty-five percent more for a Hilux?",
-  "start": 59.73,
-  "end": 62.1
+  "start": 61.26,
+  "end": 63.5
  }
 ]

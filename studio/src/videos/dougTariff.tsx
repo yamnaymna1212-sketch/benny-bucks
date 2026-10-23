@@ -7,7 +7,7 @@ import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
 import {ConeStand, FishFlight, Igloo, PriceTag, Stamp, Thought, Title} from '../penguin/world';
 import {BigSeal, Puffin, Seagull, Walrus} from '../penguin/cast';
-import {Snowfall} from './dougGas';
+import {Snowfall, Sun} from './dougGas';
 import {cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import {Arrow, Puzzled, UsFlag, Why} from './dougVenezuela';
@@ -18,7 +18,7 @@ const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
 const back = (p: number) => { const q = cl(p) - 1; return 1 + 2.7 * q * q * q + 1.7 * q * q; }; // overshoot ease
 // hook beats (s): arrow points at the USA, swings to the other side, VS throbs + Doug shocked
-const US = 0.3, CN = 1.3, VS = 2.0;
+const US = 0.3, CN = 1.1, VS = 1.75;
 
 // ---------- the user's image, cut into layers ----------
 // Source 940x1672 drawn at full frame width; IY = where its top lands. Polygons (source px) partition the picture,
@@ -193,13 +193,13 @@ const Tears = ({x, y, t}: {x: number; y: number; t: number}) => <>{[0, 1].map((i
 
 // ---------- scenes ----------
 const HiluxHero = ({t}: {t: number}) => {
-  const drive = ease((t - P(3)) / 0.6);
+  const drive = ease((t - P(4)) / 0.6);
   return <>
     <Ground />
     <Cut part="xi" x={250} y={G - 250} w={330} />
     <Cut part="hilux" x={-300 + 900 * drive} y={G + 30} w={720} rot={Math.sin(t * 30) * 0.4} />
-    <Big text="TOUGH" x={540} y={420} at={P(3) + 0.6} t={t} size={150} color={GREEN} />
-    <Big text="HILUX" x={540} y={640} at={P(4)} t={t} size={180} color="#fff" rot={4} />
+    <Big text="TOUGH" x={540} y={420} at={P(4) + 0.6} t={t} size={150} color={GREEN} />
+    <Big text="HILUX" x={540} y={640} at={P(5)} t={t} size={180} color="#fff" rot={4} />
   </>;
 };
 const WholeWorld = ({t}: {t: number}) => {
@@ -210,33 +210,33 @@ const WholeWorld = ({t}: {t: number}) => {
       <g transform={`rotate(${rot / 4})`}><path d="M-160 -120 Q -60 -200 0 -120 Q 40 -60 -40 -20 Q -120 0 -160 -120 Z M40 40 Q 140 0 180 80 Q 140 180 60 150 Z M-150 60 Q -80 40 -60 120 Q -120 170 -170 120 Z" fill="#7BC67E" stroke={INK} strokeWidth={6} /></g>
     </svg>
     {[0, 1, 2, 3, 4].map((i) => { const a = (rot + i * 72) * Math.PI / 180; return <Cut key={i} part="hilux" x={540 + Math.cos(a) * 360} y={860 + Math.sin(a) * 330 + 60} w={230} flip={Math.sin(a) > 0} />; })}
-    <Big text="WHOLE WORLD" x={540} y={330} at={P(5)} t={t} size={110} />
+    <Big text="WHOLE WORLD" x={540} y={330} at={P(6)} t={t} size={110} />
   </>;
 };
 const NoHilux = ({t}: {t: number}) => <>
   <Ground />
   <UsFlagMini x={540} y={260} w={300} />
   <Cut part="hilux" x={780} y={G + 20} w={520} />
-  {t >= P(6) + 1 && <Big text="✕" x={780} y={1080} at={P(6) + 1} t={t} size={420} color={RED} rot={0} />}
+  {t >= P(10) + 1 && <Big text="✕" x={780} y={1080} at={P(10) + 1} t={t} size={420} color={RED} rot={0} />}
   <Cut part="trump" x={350} y={G - 120} w={330} />
   <Penguin id="doug" x={260} y={G + 150} h={330} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'worried', beak: 'frown', flapR: 30}} />
-  <Big text="NO HILUX" x={540} y={660} at={P(6) + 1} t={t} size={120} color={RED} />
+  <Big text="NO HILUX" x={540} y={660} at={P(10) + 1} t={t} size={120} color={RED} />
 </>;
 const WhyChicken = ({t}: {t: number}) => {
-  const fall = ease((t - P(8)) / 0.35), chick = t >= P(8);
+  const fall = ease((t - P(12)) / 0.35), chick = t >= P(12);
   return <>
     <Ground />
     <Penguin id="doug" x={300} y={G} h={480} pose={{turn: 0.4, look: chick ? [0.6, -0.8] : [0, -0.3], brows: chick ? 'shock' : 'worried', eyeScale: chick ? 1.35 : 1, pupil: chick ? 0.5 : 1, beak: 'frown', flapR: chick ? 80 : 30, flapL: chick ? 80 : 30}} />
     {!chick && <Puzzled x={450} y={560} t={t} />}
     {chick && <Chicken x={720} y={G - 900 * (1 - fall)} h={420} t={t} />}
-    <Big text="CHICKEN?!" x={540} y={420} at={P(8) + 0.3} t={t} size={140} color="#F5C518" />
+    <Big text="CHICKEN?!" x={540} y={420} at={P(12) + 0.3} t={t} size={140} color="#F5C518" />
   </>;
 };
 const Europe1964 = ({t}: {t: number}) => {
-  const stamp = P(9) + 2.3;
+  const stamp = P(13) + 2.3;
   return <>
     <Ground />
-    <div style={{position: 'absolute', left: 390, top: 230, width: 300, height: 220, background: '#fff', border: `7px solid ${INK}`, borderRadius: 16, textAlign: 'center', transform: `rotate(-4deg) scale(${pop(t, P(9))})`}}>
+    <div style={{position: 'absolute', left: 390, top: 230, width: 300, height: 220, background: '#fff', border: `7px solid ${INK}`, borderRadius: 16, textAlign: 'center', transform: `rotate(-4deg) scale(${pop(t, P(13))})`}}>
       <div style={{background: RED, height: 50, borderBottom: `6px solid ${INK}`, borderRadius: '8px 8px 0 0'}} />
       <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, color: INK}}>1964</div>
     </div>
@@ -248,30 +248,30 @@ const Europe1964 = ({t}: {t: number}) => {
   </>;
 };
 const Angry = ({t}: {t: number}) => {
-  const shake = t < P(11) ? Math.sin(t * 60) * 6 : 0, gate = t >= P(11);
+  const shake = t < P(16) ? Math.sin(t * 60) * 6 : 0, gate = t >= P(16);
   return <>
     <Ground />
     {!gate ? <>
       <UsFlagMini x={540} y={300} w={420} />
       <div style={{position: 'absolute', left: 0, top: 0, transform: `translateX(${shake}px)`}}><Cut part="trump" x={540} y={G} w={560} /></div>
-      <Big text="ANGRY" x={540} y={1180} at={P(10)} t={t} size={150} color={RED} rot={-6} />
+      <Big text={t >= P(15) ? 'REVENGE' : 'ANGRY'} x={540} y={1180} at={t >= P(15) ? P(15) : P(14)} t={t} size={150} color={RED} rot={-6} />
     </> : <>
       <Gate x={430} y={G} open={0} t={t} />
       <Cut part="trump" x={250} y={G - 60} w={300} />
-      <Cut part="hilux" x={lerp(1400, 900, ease((t - P(11)) / 0.6))} y={G + 20} w={480} />
-      <Big text="FOREIGN TRUCKS" x={540} y={460} at={P(11) + 0.5} t={t} size={96} />
+      <Cut part="hilux" x={lerp(1400, 900, ease((t - P(16)) / 0.6))} y={G + 20} w={480} />
+      <Big text="FOREIGN TRUCKS" x={540} y={460} at={P(16) + 0.5} t={t} size={96} />
     </>}
   </>;
 };
 const TwentyFive = ({t}: {t: number}) => <>
   <Ground />
   <Cut part="hilux" x={540} y={G + 20} w={640} />
-  <Big text="25%" x={540} y={620} at={P(12)} t={t} size={330} color={RED} rot={-5} />
-  <Big text="TAX" x={540} y={880} at={P(12) + 0.35} t={t} size={150} />
+  <Big text="25%" x={540} y={620} at={P(17)} t={t} size={330} color={RED} rot={-5} />
+  <Big text="TAX" x={540} y={880} at={P(17) + 0.35} t={t} size={150} />
 </>;
 const ChickenTax = ({t}: {t: number}) => <>
   <Chicken x={540} y={1300} h={440} t={t} mad />
-  <Title lines={['CHICKEN TAX']} y={560} at={P(13) + 0.5} size={130} />
+  <Title lines={['CHICKEN TAX']} y={560} at={P(19) + 0.5} size={130} />
 </>;
 const Confused = ({t}: {t: number}) => <>
   <Ground />
@@ -280,25 +280,25 @@ const Confused = ({t}: {t: number}) => <>
   <Puzzled x={240} y={480} t={t + 1} />
 </>;
 const WarOver = ({t}: {t: number}) => {
-  const later = t >= P(16), year = Math.round(lerp(1964, 2026, ease((t - P(16)) / 1.2)));
+  const later = t >= P(22), year = Math.round(lerp(1964, 2026, ease((t - P(22)) / 1.2)));
   return <>
     <Ground />
     {!later ? <>
       <Chicken x={360} y={G} h={380} t={t} peace />
-      <Big text="WAR OVER" x={540} y={420} at={P(15)} t={t} size={120} color={GREEN} />
+      <Big text="WAR OVER" x={540} y={420} at={P(21)} t={t} size={120} color={GREEN} />
       <Gate x={600} y={G} open={0} t={t} />
-      <Big text="TAX: STILL HERE" x={540} y={620} at={P(15) + 0.9} t={t} size={92} color={RED} rot={4} />
+      <Big text="TAX: STILL HERE" x={540} y={620} at={P(21) + 0.9} t={t} size={92} color={RED} rot={4} />
     </> : <>
       <div style={{position: 'absolute', left: 300, top: 300, width: 480, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 190, color: INK}}>{year}</div>
       <Gate x={430} y={G} open={0} t={t} />
-      {[0, 1, 2].map((i) => <svg key={i} width={160} height={160} viewBox="0 0 100 100" style={{position: 'absolute', left: 300 + i * 260, top: 860 + i * 30, opacity: ease((t - P(16) - 0.6) / 0.6)}}>
+      {[0, 1, 2].map((i) => <svg key={i} width={160} height={160} viewBox="0 0 100 100" style={{position: 'absolute', left: 300 + i * 260, top: 860 + i * 30, opacity: ease((t - P(22) - 0.6) / 0.6)}}>
         <path d="M0 0 L100 100 M100 0 L0 100 M50 0 L50 100 M0 50 L100 50" stroke="#888" strokeWidth={2} /><circle cx={50} cy={50} r={20} fill="none" stroke="#888" strokeWidth={2} /><circle cx={50} cy={50} r={38} fill="none" stroke="#888" strokeWidth={2} /></svg>)}
-      <Big text="60 YEARS" x={540} y={600} at={P(16) + 1.2} t={t} size={110} color={RED} />
+      <Big text="60 YEARS" x={540} y={600} at={P(22) + 1.2} t={t} size={110} color={RED} />
     </>}
   </>;
 };
 const Jobs = ({t}: {t: number}) => {
-  const jobs = t >= P(19);
+  const jobs = t >= P(28);
   return <>
     <Ground />
     <Cut part="tesla" x={540} y={G + 20} w={720} s={jobs ? 0.7 : 1} />
@@ -306,16 +306,16 @@ const Jobs = ({t}: {t: number}) => {
     {jobs && <>
       <Walrus id="w1" x={180} y={G + 40} h={360} hat={false} pose={{mouth: 0.3}} />
       <BigSeal id="s1" x={900} y={G + 40} h={340} flip />
-      <Big text="JOBS" x={540} y={560} at={P(19)} t={t} size={240} color={GREEN} rot={-4} />
+      <Big text="JOBS" x={540} y={560} at={P(28)} t={t} size={240} color={GREEN} rot={-4} />
     </>}
   </>;
 };
 const Workers = ({t}: {t: number}) => <>
   <Ground />
   <Factory x={540} y={980} w={640} t={t} />
-  {[0, 1, 2, 3, 4, 5].map((i) => { const x = lerp(-200 - i * 160, 120 + i * 168, ease((t - P(20) - 0.6 - i * 0.12) / 0.6));
+  {[0, 1, 2, 3, 4, 5].map((i) => { const x = lerp(-200 - i * 160, 120 + i * 168, ease((t - P(29) - 0.6 - i * 0.12) / 0.6));
     return i % 3 === 0 ? <Walrus key={i} id={`wk${i}`} x={x} y={G + 140} h={230} hat={false} /> : i % 3 === 1 ? <BigSeal key={i} id={`wk${i}`} x={x} y={G + 140} h={210} /> : <Puffin key={i} id={`wk${i}`} x={x} y={G + 140} h={220} />; })}
-  <Big text="1,000 WORKERS" x={540} y={250} at={P(20) + 0.9} t={t} size={100} />
+  <Big text="1,000 WORKERS" x={540} y={250} at={P(29) + 0.9} t={t} size={100} />
 </>;
 const Spend = ({t}: {t: number}) => <>
   <Ground />
@@ -323,9 +323,9 @@ const Spend = ({t}: {t: number}) => <>
   <ConeStand x={820} y={G} w={380} price="$5" />
   <Walrus id="sp1" x={420} y={G + 160} h={300} hat={false} pose={{mouth: 0.4}} />
   <Puffin id="sp2" x={640} y={G + 170} h={260} />
-  <FishFlight x1={420} y1={G - 100} x2={800} y2={G - 400} a={P(21) + 0.3} b={P(21) + 1.1} n={5} w={90} />
-  <FishFlight x1={640} y1={G - 100} x2={260} y2={G - 300} a={P(21) + 1} b={P(21) + 1.8} n={4} w={80} seed={2} />
-  <Big text="$ → TOWN" x={540} y={330} at={P(21) + 0.4} t={t} size={120} color={GREEN} />
+  <FishFlight x1={420} y1={G - 100} x2={800} y2={G - 400} a={P(30) + 0.3} b={P(30) + 1.1} n={5} w={90} />
+  <FishFlight x1={640} y1={G - 100} x2={260} y2={G - 300} a={P(30) + 1} b={P(30) + 1.8} n={4} w={80} seed={2} />
+  <Big text="$ → TOWN" x={540} y={330} at={P(30) + 0.4} t={t} size={120} color={GREEN} />
 </>;
 const Closed = ({t}: {t: number}) => <>
   <Ground />
@@ -334,38 +334,39 @@ const Closed = ({t}: {t: number}) => <>
   <Tears x={240} y={G - 130} t={t} />
   <Puffin id="c2" x={820} y={G + 150} h={270} pose={{lids: 0.8}} />
   <Tears x={800} y={G - 110} t={t} />
-  <Big text="TOWN CRY" x={540} y={260} at={P(22) + 0.3} t={t} size={120} color={RED} />
+  <Big text="TOWN CRY" x={540} y={260} at={P(31) + 0.3} t={t} size={120} color={RED} />
 </>;
 const RealLife = ({t}: {t: number}) => {
-  const n = Math.round(lerp(0, 400000, ease((t - P(23) - 0.8) / 1.6)));
+  const n = Math.round(lerp(0, 400000, ease((t - P(32) - 0.8) / 1.6)));
   return <>
     <Ground />
     <Cut part="xi" x={300} y={G - 180} w={360} />
     <Cut part="hilux" x={720} y={G + 20} w={520} />
-    <Big text="IN REAL LIFE" x={540} y={260} at={P(23)} t={t} size={80} />
+    <Big text="IN REAL LIFE" x={540} y={260} at={P(32)} t={t} size={80} />
     <div style={{position: 'absolute', left: 0, right: 0, top: 380, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 190, color: GREEN, WebkitTextStroke: `9px ${INK}`, paintOrder: 'stroke'}}>{n.toLocaleString('en-US')}</div>
-    <Big text="TOYOTA WORKERS" x={540} y={660} at={P(23) + 1.6} t={t} size={86} />
+    {t < P(33) ? <Big text="TOYOTA WORKERS" x={540} y={660} at={P(32) + 1.6} t={t} size={86} />
+      : <Big text="= MIAMI 🌴" x={540} y={680} at={P(33)} t={t} size={110} color="#E8546A" rot={4} />}
   </>;
 };
 const War = ({t}: {t: number}) => {
-  const tank = t >= P(25) + 1, none = t >= P(26);
+  const tank = t >= P(35) + 1, none = t >= P(36);
   return <>
     <Ground />
-    <Big text="CAR = WAR" x={540} y={300} at={P(24)} t={t} size={140} color={RED} />
+    <Big text="CAR = WAR" x={540} y={300} at={P(34)} t={t} size={140} color={RED} />
     {!none ? <>
-      <Big text="WORLD WAR 2" x={540} y={480} at={P(25)} t={t} size={96} />
+      <Big text="WORLD WAR 2" x={540} y={480} at={P(35)} t={t} size={96} />
       <Factory x={tank ? 300 : 540} y={1000} w={tank ? 440 : 600} t={t} />
-      {tank && <Tank x={lerp(1300, 780, ease((t - P(25) - 1) / 0.6))} y={G + 20} w={460} t={t} />}
+      {tank && <Tank x={lerp(1300, 780, ease((t - P(35) - 1) / 0.6))} y={G + 20} w={460} t={t} />}
     </> : <>
       <Factory x={300} y={1000} w={440} t={t} closed />
       <Tank x={780} y={G + 20} w={460} t={0} />
-      <Big text="✕" x={780} y={1180} at={P(26) + 0.6} t={t} size={360} color={RED} rot={0} />
-      <Big text="NO TANKS" x={540} y={480} at={P(26) + 0.6} t={t} size={110} color={RED} />
+      <Big text="✕" x={780} y={1180} at={P(36) + 0.6} t={t} size={360} color={RED} rot={0} />
+      <Big text={t >= P(37) ? 'POWER' : 'NO TANKS'} x={540} y={480} at={t >= P(37) ? P(37) : P(36) + 0.6} t={t} size={t >= P(37) ? 150 : 110} color={t >= P(37) ? GREEN : RED} />
     </>}
   </>;
 };
 const Protect = ({t}: {t: number}) => {
-  const all = t >= P(29);
+  const all = t >= P(40);
   return <>
     <Ground />
     <Cut part="tesla" x={all ? 280 : 540} y={G + 20} w={all ? 460 : 640} />
@@ -375,63 +376,116 @@ const Protect = ({t}: {t: number}) => {
       <Cut part="hilux" x={800} y={G + 20} w={460} />
       <Cut part="xi" x={800} y={G - 160} w={240} />
       <Shield x={800} y={G - 20} w={380} flag="cn" t={t + 1} />
-      <Big text="EVERYONE" x={540} y={330} at={P(29)} t={t} size={120} color={RED} />
+      <Big text="EVERYONE" x={540} y={330} at={P(40)} t={t} size={120} color={RED} />
     </>}
-    {!all && <Big text="PROTECT" x={540} y={330} at={P(28)} t={t} size={130} color={GREEN} />}
+    {!all && <Big text="PROTECT" x={540} y={330} at={P(39)} t={t} size={130} color={GREEN} />}
   </>;
 };
 const Understand = ({t}: {t: number}) => <>
   <Ground />
   <Penguin id="doug" x={540} y={G + 100} h={700} pose={{brows: 'happy', beak: 'smile', lids: 0.2, flapR: 50 + Math.sin(t * 6) * 20, flapL: 20}} />
-  <Title lines={['DOUG UNDERSTAND']} y={360} at={P(30) + 0.2} size={96} />
+  <Title lines={['DOUG UNDERSTAND']} y={360} at={P(41) + 0.2} size={96} />
 </>;
 const StillWant = ({t}: {t: number}) => {
-  const sad = t >= P(32);
+  const sad = t >= P(43);
   return <>
     <Ground />
     <Gate x={420} y={G} open={0} t={t} />
     <Cut part="hilux" x={880} y={G + 20} w={420} />
     <Penguin id="doug" x={230} y={G + 60} h={420} pose={{turn: 0.5, look: [0.8, -0.2], brows: 'worried', beak: sad ? 'frown' : 'smile', tears: sad, flapR: sad ? 10 : 40}} />
-    {!sad && <Thought x={500} y={430} w={420} tx={280} ty={820} at={P(31) + 0.2}><div style={{position: 'absolute', left: 90, top: 40, fontSize: 150, textAlign: 'center'}}>❤️</div></Thought>}
-    {sad && <Big text="NOT HERE" x={540} y={380} at={P(32)} t={t} size={120} color={RED} />}
+    {!sad && <Thought x={500} y={430} w={420} tx={280} ty={820} at={P(42) + 0.2}><div style={{position: 'absolute', left: 90, top: 40, fontSize: 150, textAlign: 'center'}}>❤️</div></Thought>}
+    {sad && <Big text="NOT HERE" x={540} y={380} at={P(43)} t={t} size={120} color={RED} />}
   </>;
 };
 const Question = ({t}: {t: number}) => <>
   <Ground />
   <Cut part="hilux" x={540} y={G + 20} w={680} />
-  <PriceTag x={760} y={540} price="+25%" at={P(33) + 0.3} size={1.3} />
+  <PriceTag x={760} y={540} price="+25%" at={P(44) + 0.3} size={1.3} />
   <Penguin id="doug" x={200} y={G + 200} h={360} pose={{look: [0.3, -0.2], brows: 'worried', beak: 'flat'}} />
-  <Big text="WOULD YOU PAY?" x={540} y={300} at={P(33)} t={t} size={100} />
+  <Big text="WOULD YOU PAY?" x={540} y={300} at={P(44)} t={t} size={100} />
 </>;
+
+const Adventure = ({t, kind}: {t: number; kind: 'mountain' | 'desert' | 'never'}) => {
+  const at = kind === 'mountain' ? P(7) : kind === 'desert' ? P(8) : P(9), d = ease((t - at) / 0.8);
+  return <>
+    {kind === 'desert' && <>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, background: '#FFF4D6'}} />
+      <Sun x={850} y={330} t={t} size={150} />
+      <svg width={1080} height={700} viewBox="0 0 1080 700" style={{position: 'absolute', left: 0, top: 1100}}><path d="M0 120 Q 270 0 540 120 Q 810 230 1080 90 L1080 700 L0 700 Z" fill="#F2C76B" stroke={INK} strokeWidth={7} /></svg>
+      <Cut part="hilux" x={lerp(-100, 640, d)} y={1290} w={620} rot={-4 + Math.sin(t * 20) * 1.5} />
+    </>}
+    {kind === 'mountain' && <>
+      <svg width={1080} height={1100} viewBox="0 0 1080 1100" style={{position: 'absolute', left: 0, top: 500}}>
+        <path d="M-50 1100 L540 120 L1130 1100 Z" fill="#B9C3CC" stroke={INK} strokeWidth={8} strokeLinejoin="round" />
+        <path d="M410 340 L540 120 L670 340 L610 300 L560 350 L500 300 Z" fill="#fff" stroke={INK} strokeWidth={6} strokeLinejoin="round" /></svg>
+      <Cut part="hilux" x={lerp(150, 420, d)} y={lerp(1500, 1050, d)} w={420} rot={-30} />
+    </>}
+    {kind === 'never' && <>
+      <Ground />
+      <Cut part="hilux" x={540} y={G + 20} w={680} rot={Math.sin(t * 25) * 1} />
+      {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: 300 + i * 200, top: 900 - ((t * 120 + i * 60) % 200), width: 60, height: 60, borderRadius: '50%', background: '#B0B0B0', opacity: 0.6}} />)}
+      <Stamp text="NEVER DIE" x={540} y={650} at={P(9) + 0.2} color={GREEN} size={110} />
+    </>}
+    {kind !== 'never' && <Big text={kind === 'mountain' ? 'MOUNTAIN' : 'DESERT'} x={540} y={300} at={at} t={t} size={140} color={kind === 'mountain' ? INK : '#E8A20C'} />}
+  </>;
+};
+const TruckPrice = ({t}: {t: number}) => <>
+  <Ground />
+  <Cut part="hilux" x={540} y={G + 20} w={640} />
+  <PriceTag x={320} y={600} price="$40,000" at={P(18)} size={1.3} color={GREEN} />
+  <PriceTag x={740} y={760} price="+$10,000 TAX" at={P(18) + 1.2} size={1.1} rot={6} />
+</>;
+const TexasFlag = ({x, y, w = 260}: {x: number; y: number; w?: number}) => <svg width={w} height={w * 0.66} viewBox="0 0 180 120" style={{position: 'absolute', left: x - w / 2, top: y, overflow: 'visible'}}>
+  <rect width={60} height={120} fill="#1F3FA8" /><rect x={60} width={120} height={60} fill="#fff" /><rect x={60} y={60} width={120} height={60} fill={RED} />
+  <path d="M30 38 L36 56 L55 56 L40 67 L46 85 L30 74 L14 85 L20 67 L5 56 L24 56 Z" fill="#fff" />
+  <rect width={180} height={120} fill="none" stroke={INK} strokeWidth={5} />
+</svg>;
+const Texas = ({t}: {t: number}) => {
+  const out = ease((t - P(24)) / 0.7);
+  return <>
+    <Ground />
+    <TexasFlag x={540} y={170} w={280} />
+    <Big text="TEXAS" x={540} y={470} at={P(23) + 0.3} t={t} size={110} />
+    <Factory x={330} y={1000} w={520} t={t} />
+    <Cut part="hilux" x={lerp(330, 790, out)} y={G + 20} w={440} />
+    {t >= P(24) && <Big text="MADE IN USA" x={540} y={1150} at={P(24)} t={t} size={96} color={GREEN} rot={-4} />}
+    {t >= P(25) && <><Chicken x={880} y={900} h={220} t={t} /><Stamp text="NO TAX" x={880} y={820} at={P(25) + 0.2} color={GREEN} size={80} /></>}
+  </>;
+};
 
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: 'cut' | 'swipe' | 'zoom' | 'iris' | 'pop'};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
   {at: P(1), set: (t) => <DougHome t={t} />, fx_: 'swipe'},
-  {at: P(3), set: (t) => <HiluxHero t={t} />, fx_: 'zoom'},
-  {at: P(5), set: (t) => <WholeWorld t={t} />, fx_: 'iris'},
-  {at: P(6), set: (t) => <NoHilux t={t} />, fx_: 'swipe'},
-  {at: P(7), set: (t) => <WhyChicken t={t} />, fx_: 'pop'},
-  {at: P(9), set: (t) => <Europe1964 t={t} />, fx_: 'swipe'},
-  {at: P(10), set: (t) => <Angry t={t} />, fx_: 'zoom'},
-  {at: P(12), set: (t) => <TwentyFive t={t} />, fx_: 'pop'},
-  {at: P(13), set: (t) => <ChickenTax t={t} />, fx_: 'iris'},
-  {at: P(14), set: (t) => <Confused t={t} />, fx_: 'zoom'},
-  {at: P(15), set: (t) => <WarOver t={t} />, fx_: 'swipe'},
-  {at: P(17), set: (t) => <Jobs t={t} />, fx_: 'pop'},
-  {at: P(20), set: (t) => <Workers t={t} />, fx_: 'swipe'},
-  {at: P(21), set: (t) => <Spend t={t} />, fx_: 'iris'},
-  {at: P(22), set: (t) => <Closed t={t} />, fx_: 'zoom'},
-  {at: P(23), set: (t) => <RealLife t={t} />, fx_: 'swipe'},
-  {at: P(24), set: (t) => <War t={t} />, fx_: 'pop'},
-  {at: P(27), set: (t) => <Hook t={t + 3} />, fx_: 'zoom'},
-  {at: P(28), set: (t) => <Protect t={t} />, fx_: 'swipe'},
-  {at: P(30), set: (t) => <Understand t={t} />, fx_: 'iris'},
-  {at: P(31), set: (t) => <StillWant t={t} />, fx_: 'swipe'},
-  {at: P(33), set: (t) => <Question t={t} />, fx_: 'pop'},
+  {at: P(4), set: (t) => <HiluxHero t={t} />, fx_: 'zoom'},
+  {at: P(6), set: (t) => <WholeWorld t={t} />, fx_: 'iris'},
+  {at: P(7), set: (t) => <Adventure t={t} kind="mountain" />, fx_: 'swipe'},
+  {at: P(8), set: (t) => <Adventure t={t} kind="desert" />, fx_: 'zoom'},
+  {at: P(9), set: (t) => <Adventure t={t} kind="never" />, fx_: 'pop'},
+  {at: P(10), set: (t) => <NoHilux t={t} />, fx_: 'swipe'},
+  {at: P(11), set: (t) => <WhyChicken t={t} />, fx_: 'pop'},
+  {at: P(13), set: (t) => <Europe1964 t={t} />, fx_: 'swipe'},
+  {at: P(14), set: (t) => <Angry t={t} />, fx_: 'zoom'},
+  {at: P(17), set: (t) => <TwentyFive t={t} />, fx_: 'pop'},
+  {at: P(18), set: (t) => <TruckPrice t={t} />, fx_: 'swipe'},
+  {at: P(19), set: (t) => <ChickenTax t={t} />, fx_: 'iris'},
+  {at: P(20), set: (t) => <Confused t={t} />, fx_: 'zoom'},
+  {at: P(21), set: (t) => <WarOver t={t} />, fx_: 'swipe'},
+  {at: P(23), set: (t) => <Texas t={t} />, fx_: 'iris'},
+  {at: P(26), set: (t) => <Jobs t={t} />, fx_: 'pop'},
+  {at: P(29), set: (t) => <Workers t={t} />, fx_: 'swipe'},
+  {at: P(30), set: (t) => <Spend t={t} />, fx_: 'iris'},
+  {at: P(31), set: (t) => <Closed t={t} />, fx_: 'zoom'},
+  {at: P(32), set: (t) => <RealLife t={t} />, fx_: 'swipe'},
+  {at: P(34), set: (t) => <War t={t} />, fx_: 'pop'},
+  {at: P(38), set: (t) => <Hook t={t + 3} />, fx_: 'zoom'},
+  {at: P(39), set: (t) => <Protect t={t} />, fx_: 'swipe'},
+  {at: P(41), set: (t) => <Understand t={t} />, fx_: 'iris'},
+  {at: P(42), set: (t) => <StillWant t={t} />, fx_: 'swipe'},
+  {at: P(44), set: (t) => <Question t={t} />, fx_: 'pop'},
 ];
 // deep zooms [phrase, x, y, scale]: the camera dives onto the face/object named, released on the next phrase
-const DEEP: [number, number, number, number][] = [[4, 540, 640, 1.4], [8, 640, 860, 1.25], [12, 540, 700, 1.4], [14, 540, 900, 1.6], [19, 540, 600, 1.4], [26, 780, 1150, 1.5], [32, 230, 1100, 1.7]];
+const DEEP: [number, number, number, number][] = [[5, 540, 640, 1.4], [12, 640, 860, 1.25], [17, 540, 700, 1.4], [20, 540, 900, 1.6], [28, 540, 600, 1.4], [36, 780, 1150, 1.5], [43, 230, 1100, 1.7]];
 
 export const DougTariff = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
@@ -456,35 +510,45 @@ export const DougTariff = () => {
     <Sfx at={VS} name="user-boom" vol={0.45} />
     <Sfx at={P(1)} name="penguin-squawk" vol={0.35} />
     <Sfx at={P(2)} name="user-pop" vol={0.3} />
-    <Sfx at={P(3)} name="swoosh-fast" vol={0.35} />
-    <Sfx at={P(4)} name="user-ting" vol={0.35} />
-    <Sfx at={P(5)} name="user-wow" vol={0.35} />
-    <Sfx at={P(6) + 1} name="user-wrong" vol={0.4} />
-    <Sfx at={P(8)} name="user-boom" vol={0.45} />
-    <Sfx at={P(9) + 2.3} name="user-slap" vol={0.4} />
-    <Sfx at={P(10)} name="user-shock" vol={0.4} />
-    <Sfx at={P(11)} name="swoosh-fast" vol={0.35} />
-    <Sfx at={P(12)} name="user-cash-register" vol={0.4} />
-    <Sfx at={P(12) + 0.35} name="user-ting" vol={0.35} />
-    <Sfx at={P(13) + 0.5} name="user-ting" vol={0.35} />
-    <Sfx at={P(14)} name="user-fahh" vol={0.45} />
-    <Sfx at={P(15)} name="user-yeah" vol={0.35} />
-    <Sfx at={P(15) + 0.9} name="user-wrong" vol={0.35} />
-    <Sfx at={P(16)} name="user-timer" vol={0.3} />
-    <Sfx at={P(19)} name="user-boom" vol={0.4} />
-    <Sfx at={P(20) + 0.9} name="user-pop" vol={0.35} />
-    <Sfx at={P(21) + 0.3} name="user-money" vol={0.35} />
-    <Sfx at={P(22)} name="user-aww" vol={0.4} />
-    <Sfx at={P(23) + 0.8} name="user-money-transfer" vol={0.3} />
-    <Sfx at={P(23) + 2.4} name="user-wow" vol={0.35} />
-    <Sfx at={P(24)} name="user-boom" vol={0.4} />
-    <Sfx at={P(25) + 1} name="swoosh-fast" vol={0.35} />
-    <Sfx at={P(26) + 0.6} name="user-slap" vol={0.4} />
-    <Sfx at={P(27)} name="user-boom" vol={0.35} />
-    <Sfx at={P(28)} name="user-yeah" vol={0.35} />
-    <Sfx at={P(29)} name="user-pop" vol={0.35} />
-    <Sfx at={P(30) + 0.2} name="user-ting" vol={0.35} />
-    <Sfx at={P(32)} name="user-aww" vol={0.4} />
-    <Sfx at={P(33) + 0.3} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(4)} name="swoosh-fast" vol={0.35} />
+    <Sfx at={P(5)} name="user-ting" vol={0.35} />
+    <Sfx at={P(6)} name="user-wow" vol={0.35} />
+    <Sfx at={P(10) + 1} name="user-wrong" vol={0.4} />
+    <Sfx at={P(12)} name="user-boom" vol={0.45} />
+    <Sfx at={P(13) + 2.3} name="user-slap" vol={0.4} />
+    <Sfx at={P(14)} name="user-shock" vol={0.4} />
+    <Sfx at={P(16)} name="swoosh-fast" vol={0.35} />
+    <Sfx at={P(17)} name="user-cash-register" vol={0.4} />
+    <Sfx at={P(17) + 0.35} name="user-ting" vol={0.35} />
+    <Sfx at={P(19) + 0.5} name="user-ting" vol={0.35} />
+    <Sfx at={P(20)} name="user-fahh" vol={0.45} />
+    <Sfx at={P(21)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(21) + 0.9} name="user-wrong" vol={0.35} />
+    <Sfx at={P(22)} name="user-timer" vol={0.3} />
+    <Sfx at={P(23) + 0.3} name="user-pop" vol={0.35} />
+    <Sfx at={P(24)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(25) + 0.2} name="user-slap" vol={0.35} />
+    <Sfx at={P(7)} name="user-wow" vol={0.3} />
+    <Sfx at={P(9) + 0.2} name="user-boom" vol={0.35} />
+    <Sfx at={P(15)} name="user-slap" vol={0.35} />
+    <Sfx at={P(18)} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(18) + 1.2} name="user-money" vol={0.35} />
+    <Sfx at={P(33)} name="user-wow" vol={0.35} />
+    <Sfx at={P(37)} name="user-boom" vol={0.35} />
+    <Sfx at={P(28)} name="user-boom" vol={0.4} />
+    <Sfx at={P(29) + 0.9} name="user-pop" vol={0.35} />
+    <Sfx at={P(30) + 0.3} name="user-money" vol={0.35} />
+    <Sfx at={P(31)} name="user-aww" vol={0.4} />
+    <Sfx at={P(32) + 0.8} name="user-money-transfer" vol={0.3} />
+    <Sfx at={P(32) + 2.4} name="user-wow" vol={0.35} />
+    <Sfx at={P(34)} name="user-boom" vol={0.4} />
+    <Sfx at={P(35) + 1} name="swoosh-fast" vol={0.35} />
+    <Sfx at={P(36) + 0.6} name="user-slap" vol={0.4} />
+    <Sfx at={P(38)} name="user-boom" vol={0.35} />
+    <Sfx at={P(39)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(40)} name="user-pop" vol={0.35} />
+    <Sfx at={P(41) + 0.2} name="user-ting" vol={0.35} />
+    <Sfx at={P(43)} name="user-aww" vol={0.4} />
+    <Sfx at={P(44) + 0.3} name="user-cash-register" vol={0.35} />
   </AbsoluteFill>;
 };
