@@ -20,7 +20,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
 // ---------- props ----------
-const UsFlag = () => <g>
+export const UsFlag = () => <g>
   <rect width={190} height={120} fill="#fff" stroke={INK} strokeWidth={5} />
   {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 17.4} width={190} height={8.7} fill="#B22234" />)}
   <rect width={84} height={64} fill="#3C3B6E" />
@@ -64,7 +64,7 @@ const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: numbe
 };
 
 // Big hand-written "why?" with the red question mark and a red arrow toward the US pump (as in the original).
-const Why = ({t}: {t: number}) => {
+export const Why = ({t}: {t: number}) => {
   const p = ease(t / 0.25);
   return <div style={{position: 'absolute', left: 0, right: 0, top: 230, height: 330, transform: `scale(${0.6 + 0.4 * p})`, opacity: p, transformOrigin: '50% 60%'}}>
     <div style={{position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 290, lineHeight: '300px', color: INK, letterSpacing: -6}}>
@@ -72,10 +72,10 @@ const Why = ({t}: {t: number}) => {
     </div>
   </div>;
 };
-const Puzzled = ({x, y, t}: {x: number; y: number; t: number}) =>
+export const Puzzled = ({x, y, t}: {x: number; y: number; t: number}) =>
   <div style={{position: 'absolute', left: x, top: y + Math.sin(t * 6) * 8, fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 120, color: INK, transform: 'rotate(14deg)'}}>?</div>;
 // Red hand-drawn arrow: draws itself on, points at America, then swings over to point at Venezuela.
-const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: number}) => {
+export const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: number}) => {
   const draw = ease((t - 0.15) / 0.4), sw = t < swingAt ? 0 : cl((t - swingAt) / 0.35);
   const over = sw < 1 ? Math.sin(sw * Math.PI) * 12 : 0; // little overshoot while swinging
   const ang = 148 + (32 - 148) * ease(sw) - over;
@@ -86,7 +86,7 @@ const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: nu
     </g>
   </svg>;
 };
-const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
+export const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
   const p = ease((t - at) / 0.25);
   return <div style={{position: 'absolute', left: x - 260, width: 520, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: text.length > 5 ? 64 : 80, color: INK, opacity: p, transform: `scale(${0.5 + 0.5 * p})`}}>{text}</div>;
 };
@@ -97,7 +97,7 @@ const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
 
 
 // ---------- Boss Bear (polar bear = the government that pays for the gas) ----------
-const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
+export const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
   const t = useCurrentFrame() / FPS, bob = Math.sin(t * 3) * 3;
   return <svg width={h * 0.8} height={h} viewBox="0 0 320 400" style={{position: 'absolute', left: x - h * 0.4, top: y - h + bob, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
     <ellipse cx={160} cy={395} rx={120} ry={10} fill="#E3E8EC" />
