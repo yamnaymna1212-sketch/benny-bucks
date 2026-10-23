@@ -431,7 +431,7 @@ const SHOTS: Shot[] = [
   {at: P(33), set: (t) => <Question t={t} />, fx_: 'pop'},
 ];
 // deep zooms [phrase, x, y, scale]: the camera dives onto the face/object named, released on the next phrase
-const DEEP: [number, number, number, number][] = [[4, 540, 640, 1.4], [8, 720, 1000, 1.5], [12, 540, 700, 1.4], [14, 540, 900, 1.6], [19, 540, 600, 1.4], [26, 780, 1150, 1.5], [32, 230, 1100, 1.7]];
+const DEEP: [number, number, number, number][] = [[4, 540, 640, 1.4], [8, 640, 860, 1.25], [12, 540, 700, 1.4], [14, 540, 900, 1.6], [19, 540, 600, 1.4], [26, 780, 1150, 1.5], [32, 230, 1100, 1.7]];
 
 export const DougTariff = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
