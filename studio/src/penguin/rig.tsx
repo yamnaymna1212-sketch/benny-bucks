@@ -69,7 +69,7 @@ export type PenguinPose = {
   eyeScale?: number; pupil?: number; walk?: number | null; lean?: number; squash?: number; tremble?: number; holding?: boolean;
   side?: boolean; beak?: Beak; lids?: number; tears?: boolean; sweat?: boolean; angry?: number; blush?: number; hop?: number; lie?: number; sit?: number; run?: boolean;
 };
-export type Outfit = 'none' | 'rich' | 'tophat' | 'banker' | 'burglar' | 'worker';
+export type Outfit = 'none' | 'rich' | 'tophat' | 'banker' | 'burglar' | 'worker' | 'usa' | 'french';
 const BELLY = '#FFF8EA', BODY = '#1F1F1F', SHADE = '#3A3A3A', CREAM_SHADE = '#EDE3CF';
 const BUILD: Record<Build, {bx: number; eye: number}> = {normal: {bx: 1, eye: 1}, fat: {bx: 1.3, eye: 0.9}, thin: {bx: 0.8, eye: 1}, baby: {bx: 1.05, eye: 1.3}};
 
@@ -132,7 +132,7 @@ export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit =
         <path d="M232 90 C 296 128, 312 220, 310 310 C 306 410, 272 470, 210 472 C 192 420, 186 330, 192 250 C 198 170, 212 120, 232 90 Z" fill={BELLY} stroke={INK} strokeWidth={LW - 1} />
         <path d="M110 170 C 96 250, 96 340, 112 430 C 104 340, 108 250, 124 176 Z" fill={SHADE} />
       </g>
-      {outfit !== 'rich' && outfit !== 'worker' && <path d={`M214 44 C 206 16, 190 6, 180 12 M220 44 C 222 12, 238 0, 250 6`} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" transform={`rotate(${Math.sin(t * 3.1) * 6} 216 44)`} />}
+      {outfit !== 'rich' && outfit !== 'worker' && outfit !== 'usa' && outfit !== 'french' && <path d={`M214 44 C 206 16, 190 6, 180 12 M220 44 C 222 12, 238 0, 250 6`} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" transform={`rotate(${Math.sin(t * 3.1) * 6} 216 44)`} />}
       <g transform={`translate(262 178) scale(1 ${blink})`}><ellipse rx={er * 0.9} ry={er} fill="#fff" stroke={INK} strokeWidth={LW} /><circle cx={6 + look[0] * 8} cy={look[1] * 10} r={pr} fill={INK} /></g>
       {lidShape(262, 178, er * 0.9, er, `${id}Ls`)}
       {brows !== 'none' && <path d={brows === 'worried' ? 'M236 138 L288 128' : brows === 'angry' ? 'M236 126 L288 144' : brows === 'shock' ? 'M234 120 Q262 100 292 118' : 'M236 134 Q262 118 290 132'} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" />}
@@ -180,7 +180,7 @@ export const Penguin = ({x, y, h = 520, id = 'pg', seed = 0, pose = {}, outfit =
       </g>
     </g>
     {outfit === 'burglar' && <path d={`M${96 + dx} 150 Q200 136 ${304 + dx} 150 L${306 + dx} 226 Q200 212 ${94 + dx} 226 Z`} fill="#111" />}
-    {outfit !== 'rich' && outfit !== 'worker' && <g transform={`rotate(${Math.sin(t * 3.1) * 6 + rot * 1.5} ${200 + dx * 0.5} 44)`}>
+    {outfit !== 'rich' && outfit !== 'worker' && outfit !== 'usa' && outfit !== 'french' && <g transform={`rotate(${Math.sin(t * 3.1) * 6 + rot * 1.5} ${200 + dx * 0.5} 44)`}>
       <path d={`M${196 + dx * 0.5} 44 C ${188 + dx * 0.5} 16, 172 6, 162 12 M${200 + dx * 0.5} 44 C ${200 + dx * 0.5} 12, 214 -2, 226 4 M${204 + dx * 0.5} 44 C ${218 + dx * 0.5} 24, 240 24, 246 34`} fill="none" stroke={INK} strokeWidth={LW + 1} strokeLinecap="round" />
     </g>}
     {angry > 0 && <ellipse cx={200 + dx} cy={200} rx={110} ry={70} fill="#E0443A" opacity={angry * 0.3} />}
@@ -226,6 +226,26 @@ const OutfitLayer = ({outfit, dx, t, sideView}: {outfit: Outfit; dx: number; t: 
   if (outfit === 'worker') return <g transform={`rotate(${wob} ${hx} 60)`}>
     <path d={`M${hx - 100} 70 Q${hx} 40 ${hx + 100} 70 Q${hx + 70} -20 ${hx} -22 Q${hx - 70} -20 ${hx - 100} 70 Z`} fill="#F2C230" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
     <path d={`M${hx - 16} -20 L${hx - 10} 52 M${hx + 16} -20 L${hx + 10} 52`} stroke="#C9971A" strokeWidth={6} />
+  </g>;
+  // American penguin: red cap + blue star bandana. French penguin: black beret + striped shirt + red scarf.
+  if (outfit === 'usa') return <g>
+    <path d={`M${cx - 60} 300 Q${cx} 340 ${cx + 60} 300 L${cx + 40} 330 Q${cx} 356 ${cx - 40} 330 Z`} fill="#2F4FA8" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d={`M${cx} 312 l5 10 l11 1 l-8 7 l3 11 l-11 -6 l-11 6 l3 -11 l-8 -7 l11 -1 Z`} fill="#fff" />
+    <g transform={`rotate(${wob} ${hx} 60)`}>
+      <path d={`M${hx - 84} 70 Q${hx - 80} -18 ${hx} -20 Q${hx + 80} -18 ${hx + 84} 70 Z`} fill="#D83A2E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <path d={`M${hx + 40} 66 Q${hx + 120} 58 ${hx + 150} 78 Q${hx + 110} 92 ${hx + 40} 80 Z`} fill="#B42A20" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+      <path d={`M${hx} 0 l7 14 l15 2 l-11 10 l3 15 l-14 -7 l-14 7 l3 -15 l-11 -10 l15 -2 Z`} fill="#fff" stroke={INK} strokeWidth={2} />
+    </g>
+  </g>;
+  if (outfit === 'french') return <g>
+    <clipPath id={`fr${dx}`}><ellipse cx={cx} cy={400} rx={104} ry={112} /></clipPath>
+    <g clipPath={`url(#fr${dx})`}>{[0, 1, 2, 3, 4].map((i) => <rect key={i} x={cx - 120} y={318 + i * 40} width={240} height={18} fill="#2A4A9A" />)}</g>
+    <path d={`M${cx - 58} 296 Q${cx} 330 ${cx + 58} 296 L${cx + 50} 318 Q${cx} 346 ${cx - 50} 318 Z`} fill="#D83A2E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <path d={`M${cx + 30} 322 L${cx + 52} 390 L${cx + 22} 384 Z`} fill="#D83A2E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
+    <g transform={`rotate(${-12 + wob} ${hx} 50)`}>
+      <ellipse cx={hx + 8} cy={44} rx={96} ry={34} fill="#1B1B1B" stroke={INK} strokeWidth={LW} />
+      <path d={`M${hx + 4} 12 L${hx + 10} -8`} stroke="#1B1B1B" strokeWidth={9} strokeLinecap="round" />
+    </g>
   </g>;
   return null;
 };

@@ -1,7 +1,8 @@
 """Kokoro TTS (free, Apache-2.0) -> tight voiceover with controlled pauses.
 Usage: /opt/tts/venv/bin/python tools/tts.py <lines.txt> <out_prefix> [voice] [speed] [max_gap]
 max_gap: silences inside a clip longer than this (s) are shortened to it (default 0.12) — removes dead air.
-lines.txt: one line per clip, "text|pause_after_seconds" or "voice|text|pause" to override the voice.
+lines.txt: one line per clip, "text|pause_after_seconds" or "voice|text|pause" to override the voice,
+or "voice|text|pause|speed" to also override the speed (use a slower speed for the hook: names + prices must be clear).
 Writes <out_prefix>.wav, .mp3 (-14 LUFS) and .timings.json.
 """
 import json, subprocess, sys
@@ -36,8 +37,9 @@ parts, timings, t = [], [], 0.0
 for line in open(src):
     if not line.strip(): continue
     f = line.rstrip("\n").split("|")
-    v, text, pause = (f[0], f[1], f[2]) if len(f) == 3 else (voice, f[0], f[1])
-    a, sr = k.create(text, voice=v, speed=speed, lang="en-us")
+    v, text, pause = (f[0], f[1], f[2]) if len(f) >= 3 else (voice, f[0], f[1])
+    sp = float(f[3]) if len(f) == 4 else speed
+    a, sr = k.create(text, voice=v, speed=sp, lang="en-us")
     a = squeeze(trim(a, sr), sr)
     timings.append({"voice": v, "text": text, "start": round(t, 2), "end": round(t + len(a) / sr, 2)})
     parts += [a, np.zeros(int(float(pause) * sr), dtype=a.dtype)]

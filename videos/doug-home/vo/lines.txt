@@ -1,6 +1,8 @@
-Why? Same house!|0.03
-America: one million dollars!|0.05
-France: thirty-five thousand dollars!|0.08
+am_puck|Why? Same house!|0.15|1.0
+am_puck|America!|0.12|1.0
+am_puck|One million dollars!|0.25|0.95
+am_puck|France!|0.12|1.0
+am_puck|Thirty-five thousand dollars!|0.3|0.95
 This is Doug! Doug want house!|0.03
 In California, house cost one million dollars!|0.03
 That is one hundred thousand fish!|0.03

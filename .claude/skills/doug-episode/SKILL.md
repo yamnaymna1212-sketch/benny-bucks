@@ -30,5 +30,8 @@ Talk to the user in Arabic; video text/voice in English. FIRST apply the VOICE R
 - Side labels coloured (USA blue, other side its flag colour) with a white outline, never touching the flags.
 - Real photos / logos / politicians only when the user explicitly asks — always warn: TikTok may limit reach.
 
+## Hook rules v2 (user, EP11 2026-10-24)
+See CLAUDE.md HOOK RULES v2: clear slow hook voice (per-line speed), pure white bg, country-dressed penguin per side, identical object + price ABOVE it, penguins react/move, cut to a new shot right after the hook.
+
 ## Never
 - Re-render a finished episode unless asked. Use real photos/brand logos. Copy Monkey/Primate Economics wording ("explained with bananas", "monkey understand now").
