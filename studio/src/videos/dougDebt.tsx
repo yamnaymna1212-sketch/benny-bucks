@@ -184,7 +184,7 @@ const Shop = ({t}: {t: number}) => {
 
 const Bill = ({t}: {t: number}) => <>
   <Ground />
-  <Paper x={540} y={680} w={460} title="CARD BILL" amount="$8,200" at={P(6)} rot={-4} id="bill" />
+  <Paper x={540} y={680} w={460} title="CARD BILL" at={P(6)} rot={-4} id="bill" />
   <Penguin id="doug" x={540} y={G + 120} h={520} pose={{brows: 'shock', eyeScale: 1.35, pupil: 0.45, beak: 'frown', flapL: 70, flapR: 70, tremble: 1, look: [0, -0.7]}} />
   <BigWord text="$8,200" x={540} y={330} at={P(6) + 0.9} size={160} color={RED} />
 </>;
@@ -210,7 +210,7 @@ const Rate = ({t}: {t: number}) => <>
   <Fox x={760} y={G} h={600} sly={1} pen mouth={0.3} />
   <Card x={290} y={760} w={360} rot={-8} />
   <BigWord text="22%" x={300} y={480} at={P(9) + 0.6} size={230} color={RED} />
-  <Note text="interest" x={300} y={1010} at={P(9) + 1.2} t={t} size={80} color={RED} />
+  <Note text="interest" x={300} y={960} at={P(9) + 1.2} t={t} size={80} color={RED} />
 </>;
 
 const Grow = ({t}: {t: number}) => {
@@ -265,7 +265,7 @@ const Spend = ({t}: {t: number}) => {
     <Tile icon="⛽" label="gas" x={540} y={520} at={a + 0.9} t={t} />
     <Tile icon="✈️" label="travel" x={860} y={560} at={a + 1.3} t={t} />
     <Penguin id="rich" x={540} y={G} h={380} outfit="rich" pose={{beak: 'smile', brows: 'happy', flapR: 90}} />
-    <BigWord text="$150,000 / year" x={540} y={1340} at={a + 2.2} size={110} />
+    <BigWord text="$150,000 / year" x={540} y={260} at={a + 2.2} size={110} />
   </>;
 };
 
@@ -331,8 +331,8 @@ const Twist = ({t}: {t: number}) => {
     <FishFlight x1={200} y1={G - 300} x2={520} y2={G - 300} a={a + 1} b={a + 1.8} n={3} w={70} arc={250} />
     <FishFlight x1={560} y1={G - 300} x2={900} y2={G - 300} a={a + 2.2} b={a + 3} n={2} w={70} arc={250} seed={2} />
     <BigWord text="same card" x={540} y={380} at={a} size={120} />
-    <Amount text="-$1,800" x={190} y={G + 170} color={RED} t={t} at={a + 1} size={90} />
-    <Amount text="+$3,000" x={900} y={G + 170} color={GREEN} t={t} at={a + 2.2} size={90} />
+    <Amount text="-$1,800" x={250} y={G + 170} color={RED} t={t} at={a + 1} size={80} />
+    <Amount text="+$3,000" x={830} y={G + 170} color={GREEN} t={t} at={a + 2.2} size={80} />
   </>;
 };
 
@@ -375,7 +375,7 @@ const SHOTS: Shot[] = [
   {at: P(26), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[6, 540, 700, 1.4], [8, 560, 600, 1.4], [9, 300, 600, 1.5], [11, 700, 900, 1.3], [16, 540, 1200, 1.3], [18, 330, 700, 1.4], [20, 540, 600, 1.3], [24, 540, 800, 1.3], [25, 540, 900, 1.2]];
+const DEEP: [number, number, number, number][] = [[6, 540, 700, 1.4], [8, 560, 600, 1.4], [9, 330, 700, 1.4], [11, 540, 950, 1.2], [16, 540, 800, 1.2], [18, 330, 700, 1.4], [24, 540, 850, 1.3]];
 
 export const DougDebt = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
