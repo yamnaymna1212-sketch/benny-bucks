@@ -69,7 +69,7 @@ export type PenguinPose = {
   eyeScale?: number; pupil?: number; walk?: number | null; lean?: number; squash?: number; tremble?: number; holding?: boolean;
   side?: boolean; beak?: Beak; lids?: number; tears?: boolean; sweat?: boolean; angry?: number; blush?: number; hop?: number; lie?: number; sit?: number; run?: boolean;
 };
-export type Outfit = 'none' | 'rich' | 'banker' | 'burglar' | 'worker';
+export type Outfit = 'none' | 'rich' | 'tophat' | 'banker' | 'burglar' | 'worker';
 const BELLY = '#FFF8EA', BODY = '#1F1F1F', SHADE = '#3A3A3A', CREAM_SHADE = '#EDE3CF';
 const BUILD: Record<Build, {bx: number; eye: number}> = {normal: {bx: 1, eye: 1}, fat: {bx: 1.3, eye: 0.9}, thin: {bx: 0.8, eye: 1}, baby: {bx: 1.05, eye: 1.3}};
 
@@ -211,10 +211,10 @@ const OutfitLayer = ({outfit, dx, t, sideView}: {outfit: Outfit; dx: number; t: 
     <path d={`M${hx - 62} 60 L${hx - 56} -66 Q${hx} -76 ${hx + 56} -66 L${hx + 62} 60 Z`} fill="#111" stroke={INK} strokeWidth={LW} />
     <path d={`M${hx - 60} 30 L${hx + 60} 30 L${hx + 61} 50 L${hx - 61} 50 Z`} fill="#D83A2E" />
   </g>;
-  if (outfit === 'rich') { const m = eyes[eyes.length - 1]; return <g>
+  if (outfit === 'rich' || outfit === 'tophat') { const m = eyes[eyes.length - 1]; return <g>
     {hat}
-    <circle cx={m} cy={ey} r={44} fill="none" stroke="#E2B13C" strokeWidth={6} />
-    <path d={`M${m + 42} ${ey + 14} Q ${m + 64} ${ey + 90} ${m + 44} ${ey + 140}`} fill="none" stroke="#E2B13C" strokeWidth={3} />
+    {outfit === 'rich' && <><circle cx={m} cy={ey} r={44} fill="none" stroke="#E2B13C" strokeWidth={6} />
+    <path d={`M${m + 42} ${ey + 14} Q ${m + 64} ${ey + 90} ${m + 44} ${ey + 140}`} fill="none" stroke="#E2B13C" strokeWidth={3} /></>}
     <path d={`M${cx} 300 L${cx - 50} 276 L${cx - 50} 326 Z M${cx} 300 L${cx + 50} 276 L${cx + 50} 326 Z`} fill="#D83A2E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
     <circle cx={cx} cy={300} r={11} fill="#B42A20" stroke={INK} strokeWidth={LW} />
   </g>; }

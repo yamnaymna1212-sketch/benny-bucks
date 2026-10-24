@@ -1,6 +1,11 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, voice = free Kokoro TTS made by Claude (tools/tts.py, LOCKED am_fenrir speed 1.2 = young, powerful, fast — user 2026-10-24, same voice every episode; never ask about ElevenLabs/credits), NO music, hand-written one-colour captions WITHOUT background box, auto-placed in empty space (tools/place_captions.py; never over a drawing, character or number; TikTok safe area) and HIDDEN when the same words are already written on screen (<slug>.onscreen.json) — user 2026-10-24, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+# VOICE RULE (user, 2026-10-24 — check this FIRST, every episode)
+Voice = YOUNG, ENERGETIC, HYPE American male: fast pace, almost no pauses, excited delivery. NEVER a slow / older / calm narrator (Kokoro am_michael is BANNED).
+"Same voice as last video" = the newest episode across ALL branches (`git log --all`). Newest = EP10 debt: Kokoro am_puck speed ~1.2–1.25 (EP8/EP9 used am_fenrir x1.2), pauses 0.03 s (0.2 s only after "Doug <state>."), lines end with "!" for energy. Free Kokoro TTS made by Claude (tools/tts.py); never ask about ElevenLabs/credits. ElevenLabs only if the user sends their own mp3 (connector: generations_count=1 ONLY).
+Hook rule (user, 2026-10-24): the spoken hook and the on-screen hook text say the SAME words; no captions during the hook.
+
+Doug rules: 61–65 s, voice per VOICE RULE above, NO music, hand-written one-colour captions WITHOUT background box, auto-placed in empty space (tools/place_captions.py; never over a drawing, character or number; TikTok safe area) and HIDDEN when the same words are already written on screen (<slug>.onscreen.json) — user 2026-10-24, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 

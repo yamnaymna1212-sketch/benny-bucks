@@ -11,6 +11,7 @@ import {DougIranHook, IRAN_HOOK_SECONDS} from './videos/dougIran';
 import {DougIran, DOUG_IRAN_SECONDS} from './videos/dougIranEp';
 import {DougLibya, DOUG_LIBYA_SECONDS} from './videos/dougLibyaEp';
 import {DougLaundering, DOUG_LAUNDERING_SECONDS} from './videos/dougLaundering';
+import {DougDebt, DOUG_DEBT_SECONDS} from './videos/dougDebt';
 export const Root = () => (
   <>
     <Composition id="doug-rent" component={DougRent} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_RENT_SECONDS * 30)} />
@@ -23,6 +24,7 @@ export const Root = () => (
     <Composition id="doug-iran-hook" component={DougIranHook} width={1080} height={1920} fps={30} durationInFrames={Math.round(IRAN_HOOK_SECONDS * 30)} />
     <Composition id="doug-iran" component={DougIran} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_IRAN_SECONDS * 30)} />
     <Composition id="doug-libya" component={DougLibya} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_LIBYA_SECONDS * 30)} />
+    <Composition id="doug-debt" component={DougDebt} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_DEBT_SECONDS * 30)} />
     <Composition id="penguin-cast2" component={PenguinCast2} width={1080} height={1920} fps={30} durationInFrames={60} />
     <Composition id="penguin-world" component={PenguinWorld} width={1080} height={1920} fps={30} durationInFrames={60} />
   </>
