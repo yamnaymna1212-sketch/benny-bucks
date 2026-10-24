@@ -27,11 +27,12 @@ export function chunks(phrases: Phrase[]) {
 
 // Hand-written caption: one ink colour, small, slightly crooked, like a note scribbled under the drawing.
 // place[i] (per chunk, from tools/place_captions.py) puts a chunk in an empty spot; bare = no background box, white outline only.
-export type CapPlace = {x: number; y: number; size: number};
+export type CapPlace = {x: number; y: number; size: number; hide?: boolean};
 export const Captions = ({t, phrases, y = 1530, size: maxSize = 66, place, bare}: {t: number; phrases: Phrase[]; y?: number; size?: number; place?: CapPlace[]; bare?: boolean}) => {
   const cs = chunks(phrases);
   const i = cs.findIndex((c, k) => t >= c.start && t < (cs[k + 1]?.start ?? c.end + 0.3));
   if (i < 0) return null;
+  if (place?.[i]?.hide) return null; // the same words are already written on screen
   const c = cs[i], pl = place?.[i], size = pl ? pl.size : Math.min(maxSize, 1300 / Math.max(8, c.words.join(' ').length)), d = t - c.start;
   const s = d < 0.08 ? 1.08 - 0.08 * (d / 0.08) : 1, rot = ((i * 37) % 7) - 3;
   const box: React.CSSProperties = bare ? {WebkitTextStroke: `${Math.round(size * 0.16)}px #fff`, paintOrder: 'stroke fill'} : {background: 'rgba(255,255,255,0.85)', padding: '2px 18px', borderRadius: 10};

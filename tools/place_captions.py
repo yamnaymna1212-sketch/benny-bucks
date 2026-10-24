@@ -3,6 +3,9 @@ Renders caption-free stills (scale 0.25) across each chunk's screen time, finds 
 previous caption (then to the centre), writes [{x, y, size}] per chunk for <Captions place={...} bare />.
 Usage (repo root): CH=/path/to/chrome python3 tools/place_captions.py <slug> <compId>
   reads studio/src/data/<slug>.json, writes studio/src/data/<slug>.captions.json
+No-repeat rule (user, 2026-10-24): if studio/src/data/<slug>.onscreen.json exists ([{"text", "from", "to"}] = big words /
+titles / labels written on screen, times in s), a chunk is hidden when half or more of its content words are already
+on screen at that moment — the viewer should not read the same words twice.
 """
 import json, os, re, subprocess, sys
 import numpy as np
@@ -75,5 +78,12 @@ for c in cs:
         best = min(sc); print('no free spot:', c['text'])
     out.append({'x': round(best[1]), 'y': round(best[2]), 'size': round(best[3], 1)})
     prev = (best[1], best[2])
+STOP = {'the', 'a', 'an', 'and', 'in', 'on', 'of', 'to', 'is', 'it', 'for', 'at', 'this', 'that', 'but', 'so', 'not', 'doug'}
+ons = json.load(open(f'studio/src/data/{slug}.onscreen.json')) if os.path.exists(f'studio/src/data/{slug}.onscreen.json') else []
+norm = lambda w: re.sub(r'[^a-z0-9$%¢.]', '', w.lower()).strip('.')
+for c, o in zip(cs, out):
+    words = [norm(w) for w in c['text'].split()]; words = [w for w in words if w and w not in STOP]
+    seen = {norm(w) for e in ons if e['from'] < c['show'] and e['to'] > c['start'] for w in e['text'].split()}
+    if words and sum(w in seen for w in words) * 2 >= len(words): o['hide'] = True; print('hidden (on screen):', c['text'])
 json.dump(out, open(f'studio/src/data/{slug}.captions.json', 'w'))
 print(len(out), 'chunks placed')
