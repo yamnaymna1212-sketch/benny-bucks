@@ -101,7 +101,7 @@ export const Can = ({x, y, fill, t}: {x: number; y: number; fill: number; t: num
     <path d="M100 40 L120 10 L136 18" fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" />
   </svg>;
 };
-export const SameGas = ({t, at}: {t: number; at: number}) => {
+export const SameGas = ({t, at, left = <UsFlag />, right = <LyFlag />, priceL = '$5.00', priceR = '$0.09', colorL = RED, colorR = GREEN}: {t: number; at: number; left?: React.ReactNode; right?: React.ReactNode; priceL?: string; priceR?: string; colorL?: string; colorR?: string}) => {
   const d = t - at, fill = ease((d - 0.3) / 0.9), wave = Math.sin(t * 5) * 3;
   const pour = (x2: number) => <path d={`M540 ${560} Q ${(540 + x2) / 2} 520, ${x2} 900`} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ease(d / 0.35)} fill="none" stroke="#F2B705" strokeWidth={18} strokeLinecap="round" />;
   return <>
@@ -113,12 +113,12 @@ export const SameGas = ({t, at}: {t: number; at: number}) => {
     </div>
     <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>{pour(260)}{pour(820)}</svg>
     {/* two identical cans, each with its flag waving */}
-    <div style={{position: 'absolute', left: 175, top: 760, transform: `skewY(${wave}deg)`}}><UsFlag /></div>
-    <div style={{position: 'absolute', left: 735, top: 760, transform: `skewY(${-wave}deg)`}}><LyFlag /></div>
+    <div style={{position: 'absolute', left: 175, top: 760, transform: `skewY(${wave}deg)`}}>{left}</div>
+    <div style={{position: 'absolute', left: 735, top: 760, transform: `skewY(${-wave}deg)`}}>{right}</div>
     <Can x={260} y={1270} fill={fill} t={t} /><Can x={820} y={1270} fill={fill} t={t} />
     <div style={{position: 'absolute', left: 0, right: 0, top: 840, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 200, color: INK, transform: `scale(${back((d - 0.5) / 0.3)})`}}>=</div>
-    <div style={{position: 'absolute', left: 260 - 200, width: 400, top: 1290, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: RED}}>$5.00</div>
-    <div style={{position: 'absolute', left: 820 - 200, width: 400, top: 1290, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: GREEN}}>$0.09</div>
+    <div style={{position: 'absolute', left: 260 - 200, width: 400, top: 1290, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: colorL}}>{priceL}</div>
+    <div style={{position: 'absolute', left: 820 - 200, width: 400, top: 1290, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: colorR}}>{priceR}</div>
     <div style={{position: 'absolute', left: -400, right: -400, top: 1400, height: 40, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
     <Penguin id="doug2" x={540} y={1400} h={330} pose={{brows: 'shock', eyeScale: 1.2, flapL: 110 + Math.sin(t * 10) * 10, flapR: 110 - Math.sin(t * 10) * 10}} />
   </>;
