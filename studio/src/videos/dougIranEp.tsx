@@ -340,7 +340,7 @@ const Cta = ({t}: {t: number}) => <>
   <BigWord text="gas" x={250} y={720} at={P(33) + 0.2} size={110} color={GREEN} />
   <BigWord text="paycheck" x={830} y={720} at={P(33) + 0.9} size={100} color={RED} />
   <Penguin id="doug" x={540} y={G + 40} h={480} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [Math.sin(t * 2), 0.4]}} />
-  <BigWord text="👇" x={540} y={1020} at={P(33) + 1.6} size={120} />
+  <BigWord text="👇" x={800} y={1000} at={P(33) + 1.6} size={120} />
 </>;
 
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
