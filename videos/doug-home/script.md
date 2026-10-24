@@ -1,4 +1,4 @@
-# EP11 "Same House: $1,000,000 USA vs $35,000 France" (~62 s) — user hook 2026-10-24
+# EP11 "Same House: $1,000,000 USA vs $35,000 France" (~61 s) — final voice lines = videos/doug-home/vo/lines.txt (approved $35,000 + "village")
 
 HOOK (on-screen text = spoken words, no captions in hook): white bg, "Why?" on top.
 Left: USA flag, 3-bed house, big RED price "$1,000,000" (California). Right: FRANCE flag, SAME house drawing (old stone version), big GREEN price "$35,000" (village).
