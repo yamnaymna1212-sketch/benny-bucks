@@ -54,9 +54,9 @@ const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: nu
   </svg>;
 };
 const Txt = ({text, x, y, size, color, at, t, hit = 0, w = 520, sub}: {text: string; x: number; y: number; size: number; color: string; at: number; t: number; hit?: number; w?: number; sub?: string}) => {
-  if (t < at) return null;
+  const pop = t < at ? 1 : back((t - at) / 0.3);
   return <div style={{position: 'absolute', left: x - w / 2, width: w, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: size, lineHeight: 1, color,
-    WebkitTextStroke: `${Math.round(size * 0.12)}px #fff`, paintOrder: 'stroke fill', transform: `scale(${back((t - at) / 0.3) * (1 + 0.18 * hit)})`}}>
+    WebkitTextStroke: `${Math.round(size * 0.12)}px #fff`, paintOrder: 'stroke fill', transform: `scale(${pop * (1 + 0.18 * hit)})`}}>
     {text}{sub && <div style={{fontSize: size * 0.36, color: INK, marginTop: 6}}>{sub}</div>}
   </div>;
 };
@@ -82,19 +82,19 @@ export const IranVersus = ({t}: {t: number}) => {
     {/* busts */}
     <Group cuts={[[0, 150, 280, 420], [0, 420, 318, 574]]} ox={150} oy={574} {...person(0, irHit, 1)} />
     <Group cuts={[[730, 222, 1024, 300], [700, 245, 730, 300], [640, 300, 1024, 574]]} ox={830} oy={574} {...person(2, usHit, -1)} />
-    <Txt text="IRAN" x={165} y={170} size={78} color={GREEN} at={0.1} t={t} hit={irHit} w={300} />
-    <Txt text="USA" x={978} y={225} size={78} color={BLUE} at={swing - 0.1} t={t} hit={usHit} w={240} />
+    <Txt text="IRAN" x={165} y={170} size={78} color={GREEN} at={-1} t={t} hit={irHit} w={300} />
+    <Txt text="USA" x={978} y={225} size={78} color={BLUE} at={-1} t={t} hit={usHit} w={240} />
     {/* prices (corrected: per gallon) */}
-    <div style={{position: 'absolute', left: 0, top: shake(0.6, 1.3)}}><Txt text="$0.11" sub="/ GALLON" x={X(250)} y={Y(578)} size={108} color={GREEN} at={0.35} t={t} hit={irHit} w={480} /></div>
-    <div style={{position: 'absolute', left: shake(swing + 0.15, swing + 0.9), top: 0}}><Txt text="$4.41" sub="/ GALLON" x={X(800)} y={Y(578)} size={108} color={RED} at={swing} t={t} hit={usHit} w={480} /></div>
+    <div style={{position: 'absolute', left: 0, top: shake(0.6, 1.3)}}><Txt text="$0.11" sub="/ GALLON" x={X(250)} y={Y(578)} size={108} color={GREEN} at={-1} t={t} hit={irHit} w={480} /></div>
+    <div style={{position: 'absolute', left: shake(swing + 0.15, swing + 0.9), top: 0}}><Txt text="$4.41" sub="/ GALLON" x={X(800)} y={Y(578)} size={108} color={RED} at={-1} t={t} hit={usHit} w={480} /></div>
     {/* waving flags */}
     <Cut r={[150, 726, 365, 866]} filter="waveA" />
     <Cut r={[680, 726, 890, 866]} filter="waveB" />
     {/* jerry cans fill while each side is spoken */}
     <Group cuts={[[68, 866, 428, 1400]]} ox={250} oy={1400} rot={Math.sin(t * 5) * 0.8} />
     <Group cuts={[[592, 866, 958, 1400]]} ox={775} oy={1400} rot={Math.sin(t * 5 + 1) * 0.8} />
-    <CanFill x0={95} x1={400} fill={ease((t - 0.3) / 1.0)} t={t} />
-    <CanFill x0={620} x1={930} fill={ease((t - swing) / 0.6)} t={t} />
+    <CanFill x0={95} x1={400} fill={0.25 + 0.75 * ease((t - 0.3) / 1.0)} t={t} />
+    <CanFill x0={620} x1={930} fill={0.25 + 0.75 * ease((t - swing) / 0.6)} t={t} />
     <Group cuts={[[430, 1005, 598, 1165]]} ox={514} oy={1085} rot={Math.sin(t * 4) * 4} sx={cl(back((t - 0.4) / 0.3))} sy={cl(back((t - 0.4) / 0.3))} />
     {/* Doug in the middle, under VS */}
     <Penguin id="doug" x={540} y={1720} h={300} pose={{brows: 'worried', eyeScale: 1.1, look: [t < swing ? -0.6 : 0.6, 0], sweat: t > swing, tremble: usHit * 0.8}} />
