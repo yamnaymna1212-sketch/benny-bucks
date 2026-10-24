@@ -2,7 +2,8 @@
 // Hook v2 (user, 2026-10-24): PURE WHITE background, the SAME luxury American house on both sides (identical),
 // price ABOVE each house, American Doug (red cap) vs French Doug (beret + striped shirt + baguette), both penguins
 // react and move, slow clear voice on the side names + prices, then a cut to a different shot right after the hook.
-// Real photo: drop the user's house photo at studio/public/home/house.jpg and set HOUSE_PHOTO = true.
+// Real photo (user, 2026-10-24): studio/public/home/house.png = the user's house photo, cropped, sky/trees/watermark removed (rembg isnet),
+// drawn with an ink outline so the white house reads on the white page. HOUSE_PHOTO = false falls back to the drawn LuxHouse.
 // Spoken hook = on-screen words: "Why? Same house! America! One million dollars! France! Thirty-five thousand dollars!"
 // Line timings: studio/src/data/doug-home.json.
 import React from 'react';
@@ -15,7 +16,7 @@ import {Sfx} from '../penguin/edit';
 import {UsFlag} from './dougLibya';
 import TIM from '../data/doug-home.json';
 
-const HOUSE_PHOTO = false;
+const HOUSE_PHOTO = true;
 const P = (i: number) => TIM[i].start;
 export const DOUG_HOME_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -31,8 +32,9 @@ export const FrFlag = ({w = 170}: {w?: number}) => <svg width={w} height={w * 0.
 
 // Luxury American house (2 floors, white columns, double garage, hedges). Drawn identical on both sides.
 export const LuxHouse = ({x, y, w = 480}: {x: number; y: number; w?: number}) => {
-  if (HOUSE_PHOTO) return <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.66, width: w, height: w * 0.66, border: `7px solid ${INK}`, borderRadius: 18, overflow: 'hidden', background: '#fff'}}>
-    <Img src={staticFile('home/house.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} /></div>;
+  if (HOUSE_PHOTO) return <div style={{position: 'absolute', left: x - w / 2, top: y - w * 0.541, width: w, height: w * 0.541}}>
+    <Img src={staticFile('home/house.png')} style={{width: '100%', height: '100%', filter: `drop-shadow(3px 0 0 ${INK}) drop-shadow(-3px 0 0 ${INK}) drop-shadow(0 3px 0 ${INK}) drop-shadow(0 -3px 0 ${INK})`}} />
+    <div style={{position: 'absolute', left: -14, right: -14, bottom: -4, height: 6, background: INK, borderRadius: 3}} /></div>;
   return <svg width={w} height={w * 0.7} viewBox="0 0 500 350" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.7, overflow: 'visible'}}>
     <rect x={20} y={130} width={330} height={210} fill="#F4EEE4" stroke={INK} strokeWidth={6} />
     <rect x={350} y={200} width={135} height={140} fill="#E9E1D3" stroke={INK} strokeWidth={6} />
@@ -98,8 +100,8 @@ const Hook = ({t}: {t: number}) => {
     <Price text="$1,000,000" x={270} y={800} color={RED} t={t} at={US_PRICE} size={96} />
     <Price text="$35,000" x={810} y={800} color={GREEN} t={t} at={FR_PRICE} size={118} />
     <div style={{position: 'absolute', left: 537, top: 600, width: 7, height: 980, background: INK, borderRadius: 4}} />
-    <LuxHouse x={275} y={HB} w={480} />
-    <LuxHouse x={805} y={HB} w={480} />
+    <LuxHouse x={272} y={HB} w={520} />
+    <LuxHouse x={808} y={HB} w={520} />
     <Penguin id="usdoug" x={275} y={HB + 330} h={290} outfit="usa"
       pose={{turn: 0.3, brows: 'worried', eyeScale: usShock ? 1.35 : usHot ? 1.15 : 1.05, pupil: usShock ? 0.55 : 1, beak: usShock ? 'frown' : 'flat', tremble: usShock ? 1 : 0, sweat: usShock,
         hop: usHop, flapL: usShock ? 140 : 25 + sway, flapR: usShock ? 140 : 25 - sway, look: usHot ? [0.5, -0.4] : [0, 0]}} />
