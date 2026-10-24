@@ -1,8 +1,8 @@
 // EP8 "Gas: America vs Libya" — full episode. Hook = Versus + SameGas from dougLibya.tsx (approved).
-// Voice: Kokoro am_fenrir x1.2 (user pick). Timings: studio/src/data/doug-libya.json. Captions in the middle band (y 1100).
+// Voice: Kokoro am_fenrir x1.2 (user pick). Timings: studio/src/data/doug-libya.json. Captions: bare, placed per chunk in empty space (tools/place_captions.py -> doug-libya.captions.json).
 // Facts: Libya ~$0.023/L = ~$0.09/gal (GlobalPetrolPrices, Oct 2026); US avg ~$4.41 (AAA, early Oct 2026); CA over $6.
 import React from 'react';
-import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, getInputProps, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, back, onTwos} from '../penguin/rig';
 import {BigSeal, Seagull} from '../penguin/cast';
@@ -13,6 +13,7 @@ import {MoneyBag, OilGush, Pump, Refinery, Snowfall, Snowmobile} from './dougGas
 import {BossBear} from './dougVenezuela';
 import {LyFlag, SameGas, UsFlag, Versus} from './dougLibya';
 import TIM from '../data/doug-libya.json';
+import CAP from '../data/doug-libya.captions.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
 export const DOUG_LIBYA_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 1.2) * 30) / 30;
@@ -305,7 +306,7 @@ export const DougLibya = () => {
     <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
       <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.at >= P(3) ? <div style={{position: 'absolute', inset: 0, transform: `translateY(${LOW}px)`}}>{sh.set(t)}</div> : sh.set(t)}</AbsoluteFill>
     </AbsoluteFill>
-    <Captions t={tc} phrases={TIM} y={1100} size={70} />
+    {!getInputProps().noCaptions && <Captions t={tc} phrases={TIM} place={CAP} bare />}
     <Audio src={staticFile('doug-libya-voice.mp3')} />
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
