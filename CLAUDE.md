@@ -1,6 +1,11 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+# VOICE RULE (user, 2026-10-24 — check this FIRST, every episode)
+Voice = YOUNG, ENERGETIC, HYPE American male: fast pace, almost no pauses, excited delivery. NEVER a slow / older / calm narrator (Kokoro am_michael is BANNED).
+Kokoro default: am_puck, speed ~1.25, pauses 0.03 s (0.2 s only after "Doug <state>."), lines end with "!" for energy. ElevenLabs only if the user sends their own mp3 (connector: generations_count=1 ONLY).
+Hook rule (user, 2026-10-24): the spoken hook and the on-screen hook text say the SAME words; no captions during the hook.
+
+Doug rules: 61–65 s, voice per VOICE RULE above, NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 

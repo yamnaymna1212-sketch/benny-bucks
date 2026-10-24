@@ -4,7 +4,7 @@ description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — s
 ---
 # Doug episode workflow (proven on EP1 Rent, EP2 Gas)
 
-Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
+Talk to the user in Arabic; video text/voice in English. FIRST apply the VOICE RULE in CLAUDE.md (young, energetic, fast American voice; never slow/old; spoken hook = on-screen hook text). Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
 
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).

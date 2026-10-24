@@ -1,27 +1,33 @@
-Why poor Doug lose 1,800 dollars a year,|0.05
-but rich Doug get paid 3,000?|0.12
-Same card. Same Doug.|0.1
-This is Doug. Doug have one credit card.|0.07
-Card is magic. Doug buy now. Doug pay later.|0.07
-Poor Doug buy TV. Buy sled. Buy everything.|0.07
-Bill come. 8,200 dollars.|0.07
-Doug pay only minimum. 200 dollars.|0.07
-Fox the banker smile.|0.07
-Card charge 22 percent interest.|0.07
-If Doug not pay all, debt grow.|0.07
-Doug pay, pay, pay. Debt still there.|0.07
-Every year, 1,800 dollars go to Fox. For nothing.|0.07
-This is called interest.|0.1
-Doug poor.|0.4
-Now rich Doug. Same card.|0.07
-Rich Doug buy food, gas, travel. 150,000 dollars a year.|0.07
-But rich Doug pay full bill. Every month.|0.07
-Zero interest.|0.07
-Card pay Doug back. 2 percent.|0.07
-3,000 dollars. Free.|0.1
-This is called cash back.|0.1
-Doug happy.|0.4
-In real life, Americans owe 6,610 dollars on credit cards, on average.|0.07
-Average card rate: about 22 percent.|0.07
-Same card. Poor Doug pay Fox. Fox pay rich Doug.|0.1
-Would you pay full bill, or minimum? Comment below.|0.3
+Why? Poor Doug: minus 1,800 dollars!|0.03
+Rich Doug: plus 3,000 dollars!|0.08
+Both use credit cards!|0.03
+This is Doug. Doug have one credit card!|0.03
+Card is magic! Doug buy now. Doug pay later!|0.03
+Poor Doug buy TV! Buy sled! Buy everything!|0.03
+Doug feel rich!|0.03
+Then bill come. 8,200 dollars!|0.03
+Doug pay only minimum. 200 dollars.|0.03
+Minimum look small. Minimum is trap!|0.03
+Fox the banker smile.|0.03
+Because card charge 22 percent interest!|0.03
+If Doug not pay all, debt grow!|0.03
+Doug pay, pay, pay! Debt still there!|0.03
+Every year, 1,800 dollars go to Fox. For nothing!|0.03
+That is 180 fish! Gone!|0.03
+This is called interest!|0.03
+Doug poor.|0.2
+Now rich Doug! Gold card!|0.03
+Rich Doug buy food, gas, travel. 150,000 dollars a year!|0.03
+But rich Doug pay full bill. Every single month!|0.03
+Zero interest! Fox get nothing!|0.03
+And card pay Doug back. 2 percent!|0.03
+3,000 dollars! Free!|0.03
+That is 300 fish! For shopping!|0.03
+This is called cash back!|0.03
+Doug happy.|0.2
+In real life, Americans owe 6,610 dollars on credit cards, on average!|0.03
+Average card rate? About 22 percent!|0.03
+So poor Doug pay Fox. And Fox pay rich Doug!|0.03
+Same Fox. Different Doug!|0.03
+Card is not the problem. Minimum is the problem!|0.03
+Would you pay full bill, or minimum? Comment below!|0.3
