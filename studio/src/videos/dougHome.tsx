@@ -427,7 +427,7 @@ const SHOTS: Shot[] = [
   {at: P(35), set: (t) => <Cta t={t} />, fx_: 'swipe'},
 ];
 // deep zooms [segment, focusX, focusY, scale] — dive onto the named subject, released on the next phrase
-const DEEP: [number, number, number, number][] = [[7, 540, 1000, 1.35], [9, 280, 1000, 1.4], [15, 780, 860, 1.4], [18, 540, 500, 1.5], [23, 540, 1350, 1.4], [25, 540, 1000, 1.7], [27, 540, 800, 1.3], [31, 540, 500, 1.3], [33, 800, 1000, 1.35]];
+const DEEP: [number, number, number, number][] = [[7, 540, 1000, 1.35], [15, 780, 860, 1.4], [18, 540, 500, 1.5], [23, 540, 1350, 1.4], [25, 540, 1000, 1.7], [27, 540, 800, 1.3], [31, 540, 500, 1.3]];
 
 export const DougHome = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
