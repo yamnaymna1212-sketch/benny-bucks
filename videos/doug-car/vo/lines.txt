@@ -1,0 +1,35 @@
+How poor Doug buy car?|0.12
+Two hundred fifty thousand dollars.|0.2
+How rich Doug buy car?|0.12
+Five thousand dollars.|0.2
+Same Doug.|0.4
+This is Doug.|0.07
+Doug want shiny car.|0.1
+Poor Doug go to Larry car shop.|0.07
+Car cost two hundred fifty thousand.|0.07
+Doug have nothing.|0.1
+Fox the banker say, "Fox lend."|0.07
+Doug say, "Yes."|0.1
+If Doug borrow, Doug pay extra.|0.07
+Extra called interest.|0.1
+Every month, Doug pay over four thousand dollars.|0.1
+Then car leave the shop.|0.07
+Car lose value.|0.07
+Down. Down. Down.|0.1
+This called depreciation.|0.1
+Doug poor.|0.4
+Rich Doug go to old car lot.|0.07
+Car cost five thousand.|0.07
+Doug pay cash.|0.07
+No Fox. No interest.|0.1
+Old car already lose value.|0.07
+Old car lose very little.|0.1
+In real life, new car lose about sixty percent in five years.|0.1
+Poor Doug lose one hundred fifty thousand,|0.07
+plus fifty thousand interest.|0.1
+Rich Doug lose almost nothing.|0.07
+Rich Doug happy.|0.1
+Then Doug drive to work.|0.07
+Both car arrive at the same time.|0.1
+Would you buy new car or old car?|0.07
+Tell Doug in the comments.|0.1

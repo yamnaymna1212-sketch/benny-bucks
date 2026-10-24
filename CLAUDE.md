@@ -1,6 +1,6 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+Doug rules: 61–65 s, voice = free Kokoro TTS made by Claude (tools/tts.py, LOCKED am_fenrir speed 1.2 = young, powerful, fast — user 2026-10-24, same voice every episode; never ask about ElevenLabs/credits), NO music, hand-written one-colour captions WITHOUT background box, auto-placed in empty space (tools/place_captions.py; never over a drawing, character or number; TikTok safe area) and HIDDEN when the same words are already written on screen (<slug>.onscreen.json) — user 2026-10-24, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 

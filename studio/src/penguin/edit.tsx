@@ -26,15 +26,18 @@ export function chunks(phrases: Phrase[]) {
 }
 
 // Hand-written caption: one ink colour, small, slightly crooked, like a note scribbled under the drawing.
-export const Captions = ({t, phrases, y = 1530, size: maxSize = 66}: {t: number; phrases: Phrase[]; y?: number; size?: number}) => {
+// place[i] (per chunk, from tools/place_captions.py) puts a chunk in an empty spot; bare = no background box, white outline only.
+export type CapPlace = {x: number; y: number; size: number; hide?: boolean};
+export const Captions = ({t, phrases, y = 1530, size: maxSize = 66, place, bare}: {t: number; phrases: Phrase[]; y?: number; size?: number; place?: CapPlace[]; bare?: boolean}) => {
   const cs = chunks(phrases);
   const i = cs.findIndex((c, k) => t >= c.start && t < (cs[k + 1]?.start ?? c.end + 0.3));
   if (i < 0) return null;
-  const c = cs[i], size = Math.min(maxSize, 1300 / Math.max(8, c.words.join(' ').length)), d = t - c.start;
+  if (place?.[i]?.hide) return null; // the same words are already written on screen
+  const c = cs[i], pl = place?.[i], size = pl ? pl.size : Math.min(maxSize, 1300 / Math.max(8, c.words.join(' ').length)), d = t - c.start;
   const s = d < 0.08 ? 1.08 - 0.08 * (d / 0.08) : 1, rot = ((i * 37) % 7) - 3;
-  return <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', transform: `scale(${s}) rotate(${rot * 0.5}deg)`}}>
-    <div style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.1, textAlign: 'center', maxWidth: 900, color: '#1A1A1A',
-      background: 'rgba(255,255,255,0.85)', padding: '2px 18px', borderRadius: 10}}>{c.words.join(' ').toLowerCase()}</div>
+  const box: React.CSSProperties = bare ? {WebkitTextStroke: `${Math.round(size * 0.16)}px #fff`, paintOrder: 'stroke fill'} : {background: 'rgba(255,255,255,0.85)', padding: '2px 18px', borderRadius: 10};
+  return <div style={{position: 'absolute', left: pl ? pl.x - 540 : 0, width: 1080, top: pl ? pl.y : y, display: 'flex', justifyContent: 'center', transform: `scale(${s}) rotate(${rot * 0.5}deg)`}}>
+    <div style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: size, lineHeight: 1.1, textAlign: 'center', maxWidth: 900, whiteSpace: pl ? 'nowrap' : undefined, color: '#1A1A1A', ...box}}>{c.words.join(' ').toLowerCase()}</div>
   </div>;
 };
 
