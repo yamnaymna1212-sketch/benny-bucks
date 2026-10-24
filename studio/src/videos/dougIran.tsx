@@ -12,7 +12,7 @@ import TIM from '../data/doug-iran.json';
 import CAP from '../data/doug-iran.captions.json';
 
 const P = (i: number) => TIM[i].start;
-export const IRAN_HOOK_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 1.2) * 30) / 30;
+export const IRAN_HOOK_SECONDS = Math.ceil((TIM[2].end + 1.2) * 30) / 30;
 const RED = '#D83A2E', GREEN = '#239E46', BLUE = '#1F4BA8', CREAM = '#fff';
 const K = 1.15, OX = -49, OY = 70; // image px -> canvas px
 const X = (x: number) => x * K + OX, Y = (y: number) => y * K + OY;
