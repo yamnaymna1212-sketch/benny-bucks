@@ -1,7 +1,7 @@
 """Hook preview: user's USA-vs-Iran image, cut-out puppet animation by warping the flat image.
 Tug-of-war on the bag, waving flags, breathing, eye-pop expressions, ground cracks on "rich",
 real $100 bills, USA counter -> $1T vs IRAN $0 (on screen from frame 0), big WHY?.
-Usage (repo root): python3 tools/hook_iran.py <image.png> <voice.wav|-> <out.mp4>
+Usage (repo root): python3 tools/hook_iran.py <image.png> <voice.wav|-> <out.mp4> [nosfx]
 """
 import math, os, random, shutil, subprocess, sys, wave
 import numpy as np
@@ -187,13 +187,14 @@ for i in range(N):
 
 S = 'studio/public/sfx/user-'
 fx = [('ting', 0.0, 1.0), ('shock', T_RICH, 0.9), ('whoosh', T_RICH, 0.6), ('cash-register', T_RICH + 0.1, 0.7), ('boom', T_ZERO, 1.0)]
+if 'nosfx' in sys.argv[4:]: fx = []  # user: voice only
 cmd = ['ffmpeg', '-v', 'error', '-y', '-framerate', str(FPS), '-i', f'{frames}/%04d.png']
 if voice != '-': cmd += ['-i', voice]
 for n, _, _ in fx: cmd += ['-i', f'{S}{n}.wav']
 base = 2 if voice != '-' else 1
 parts = [f'[{base + k}:a]adelay={int(t0 * 1000)}:all=1,volume={v}[s{k}]' for k, (_, t0, v) in enumerate(fx)]
 mix = ''.join(f'[s{k}]' for k in range(len(fx))) + ('[1:a]' if voice != '-' else '')
-fc = ';'.join(parts) + f';{mix}amix=inputs={len(fx) + (voice != "-")}:normalize=0,atrim=0:{dur:.2f}[a]'
+fc = ''.join(p + ';' for p in parts) + f'{mix}amix=inputs={len(fx) + (voice != "-")}:normalize=0,atrim=0:{dur:.2f}[a]'
 cmd += ['-filter_complex', fc, '-map', '0:v', '-map', '[a]', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '20', '-c:a', 'aac', '-b:a', '192k', out]
 subprocess.run(cmd, check=True)
 shutil.rmtree(frames)
