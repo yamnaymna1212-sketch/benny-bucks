@@ -1,15 +1,16 @@
 # EP7 "Gas Debt Explained by Doug" (~62 s) — DRAFT, waiting for user approval
 Topic (user, 2026-10-25): why poor countries give their gas/oil to rich countries — to pay back loans (resource-backed loans).
 
-VERSUS HOOK (dougVenezuela.tsx Hook): big hand-written "why" + red "?".
-Left: "2014" — ONE gas ship, GREEN "$100 = 1 SHIP". Right: "2016" — THREE gas ships, RED "$100 = 3 SHIPS".
-Middle: Doug holding an IOU note "OWE LARRY $100". Arrow draws on to 1 ship, swings to 3 ships. Ships fill up with gas.
-SFX: ting 0 s, boom on "three", "SAME DEBT" stamp.
+VERSUS HOOK v2 (user-approved line, 2026-10-25) — dougVenezuela.tsx Hook: big hand-written "why" + red "?".
+Left: POOR COUNTRY (Doug island, ragged flag) — gas ships leaving, big RED "$0 PAID".
+Right: RICH COUNTRY (Larry, gold flag) — gas tanks filling, big GREEN "FREE GAS".
+Arrow draws on to Doug, swings to Larry on "rich country". Stamp on line 2: "PAY BACK WITH GAS" + IOU note "OWE LARRY".
+SFX: ting 0 s, whoosh on ship, boom on "for free", cash on stamp.
 
 | # | Spoken line | Shot | SFX |
 |---|---|---|---|
-| 1 | Why Doug pay one debt... with one ship of gas, then three ships of gas? | versus hook | ting, boom |
-| 2 | Same debt. Same Doug. | "SAME DEBT" stamp, zoom out | whoosh |
+| 1 | Why poor country give gas to rich country... for free? | versus hook v2 | ting, boom |
+| 2 | Because poor country must pay back. | "PAY BACK WITH GAS" stamp, IOU, zoom out | cash-register |
 | 3 | This is Doug. Doug island poor. Doug island have gas. | Doug on ice island, gas glow under ice | penguin-squawk |
 | 4 | Doug want roads. Doug want hospital. Doug have no fish. | Doug's thought bubble: road, hospital; empty wallet | aww |
 | 5 | Larry island rich. Larry have many fish. | Larry on a fish mountain | walrus-laugh |
