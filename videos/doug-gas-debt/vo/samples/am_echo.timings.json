@@ -1,0 +1,26 @@
+[
+ {
+  "voice": "am_echo",
+  "text": "Why poor country give its oil to rich country...",
+  "start": 0.0,
+  "end": 2.37
+ },
+ {
+  "voice": "am_echo",
+  "text": "for free?",
+  "start": 2.42,
+  "end": 3.2
+ },
+ {
+  "voice": "am_echo",
+  "text": "America gas: four thirty-three.",
+  "start": 3.4,
+  "end": 5.26
+ },
+ {
+  "voice": "am_echo",
+  "text": "Venezuela gas: thirteen cents.",
+  "start": 5.32,
+  "end": 7.31
+ }
+]

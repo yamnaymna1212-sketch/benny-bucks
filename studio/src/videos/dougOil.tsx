@@ -196,25 +196,6 @@ const Hook = ({t}: {t: number}) => {
   </>;
 };
 
-// Scene 2: "Poor country: Venezuela. Rich country: America." — two big flags, Doug points.
-const Names = ({t}: {t: number}) => {
-  const a = ease((t - VE) / 0.35), b = ease((t - US) / 0.35), wave = (k: number) => Math.sin(t * 5 + k) * 3;
-  const Card = ({x, y, p, flag, name, tag, color}: {x: number; y: number; p: number; flag: 'us' | 've'; name: string; tag: string; color: string}) =>
-    <div style={{position: 'absolute', left: x - 230, top: y, width: 460, opacity: p, transform: `translateY(${(1 - p) * 300}px) rotate(${(1 - p) * 10}deg)`}}>
-      <div style={{textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: name.length > 5 ? 66 : 84, color: INK}}>{name}</div>
-      <svg width={460} height={300} viewBox="0 0 200 130" style={{overflow: 'visible'}}><g transform={`translate(5 5) skewY(${wave(x)})`}>{flag === 'us' ? <UsFlag /> : <VeFlag />}</g></svg>
-      <div style={{margin: '14px auto 0', width: 260, textAlign: 'center', border: `8px solid ${color}`, borderRadius: 16, color, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 70, transform: 'rotate(-8deg)'}}>{tag}</div>
-    </div>;
-  const right = t >= US;
-  return <>
-    <div style={{position: 'absolute', left: -400, right: -400, top: 1300, height: 60, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
-    <Card x={280} y={330} p={a} flag="ve" name="VENEZUELA" tag="POOR" color={RED} />
-    {t >= US && <Card x={800} y={330} p={b} flag="us" name="USA" tag="RICH" color={GREEN} />}
-    <Penguin id="doug" x={540} y={1300} h={420} pose={{turn: right ? 0.5 : -0.5, look: [right ? 0.8 : -0.8, -0.4], flapL: right ? 30 : 130, flapR: right ? 130 : 30, beak: 'smile', brows: 'happy'}} />
-    <RaggedShirt x={540} y={1314} h={420} t={t} />
-  </>;
-};
-
 // Scene 3: prices (line 4-5), real pumps with flags.
 const Prices = ({t}: {t: number}) => <>
   <FlagPump x={270} y={1300} price="$4.33" flag="us" top={RED} t={t} color={RED} fill={ease((t - P(4)) / 1.6)} />
@@ -226,7 +207,6 @@ const Prices = ({t}: {t: number}) => <>
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
-  {at: VE, set: (t) => <Names t={t} />, fx_: 'swipe'},
   {at: P(4), set: (t) => <Prices t={t} />, fx_: 'zoom'},
 ];
 const DEEP: [number, number, number, number][] = [];
@@ -255,8 +235,6 @@ export const DougOil = () => {
     <Sfx at={RICH} name="user-cash-register" vol={0.3} />
     <Sfx at={FREE} name="user-boom" vol={0.45} />
     <Sfx at={FREE + 0.1} name="user-slap" vol={0.35} />
-    <Sfx at={VE + 0.3} name="user-pop" vol={0.35} />
-    <Sfx at={US + 0.3} name="user-pop" vol={0.35} />
     <Sfx at={P(4) + 0.4} name="user-cash-register" vol={0.3} />
     <Sfx at={P(5) + 0.4} name="user-ting" vol={0.35} />
   </AbsoluteFill>;
