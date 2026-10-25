@@ -1,7 +1,7 @@
 """Hook preview: user's USA-vs-Iran image, cut-out puppet animation by warping the flat image.
 Tug-of-war on the bag, waving flags, breathing, eye-pop expressions, ground cracks on "rich",
 real $100 bills, USA counter -> $1T vs IRAN $0 (on screen from frame 0), big WHY?.
-Usage (repo root): python3 tools/hook_iran.py <image.png> <voice.wav|-> <out.mp4> [nosfx]
+Usage (repo root): python3 tools/hook_iran.py <image.png> <voice.wav|-> <out.mp4> [nosfx] [doug=<png sequence dir from comp doug-hook-iran>]
 """
 import math, os, random, shutil, subprocess, sys, wave
 import numpy as np
@@ -143,6 +143,16 @@ def money(t):
     p = ease((t - T_RICH) / (T_ZERO - T_RICH - 0.15)); v = 1000 * p ** 2.2
     return '$1T' if p >= 1 else f'${int(v)}B'
 
+# voice-synced beats (syllable share of the VO): rich=2, trillions=8, never=17 of 22
+T_TRIL = 8 / 22 * (dur - 0.4)
+BEATS = (0.0, T_RICH, T_TRIL, T_ZERO); FLASH = (T_RICH, T_TRIL, T_ZERO)
+CAPS = [(T_RICH, 'rich countries'), (6 / 22 * (dur - 0.4), 'keep lending TRILLIONS'), (10 / 22 * (dur - 0.4), 'to broke countries'), (T_ZERO, 'NEVER pay it back')]
+def font_hand(sz): return ImageFont.truetype('studio/public/fonts/ArchitectsDaughter.ttf', sz)
+DOUG = next((o[5:] for o in sys.argv[4:] if o.startswith('doug=')), None)
+_r = np.hypot((XX[:1, :] * 0 + np.arange(W)[None, :] - W / 2) / (W / 2), (np.arange(H)[:, None] - H / 2) / (H / 2))
+VIG = np.zeros((H, W, 4), np.float32); VIG[..., 0] = 230; VIG[..., 1] = 20; VIG[..., 2] = 20
+VIG[..., 3] = 150 * np.clip((_r - 0.9) / 0.4, 0, 1) ** 1.5
+
 frames = f'{out}.frames'; os.makedirs(frames, exist_ok=True)
 for i in range(N):
     t = i / FPS
@@ -156,7 +166,7 @@ for i in range(N):
             seg = c[:max(2, int(len(c) * g))]
             pd.line([(x + 2, y + 3) for x, y in seg], fill=(150, 110, 70), width=12, joint='curve')
             pd.line(seg, fill=(30, 18, 10), width=10, joint='curve')
-    img = Image.new('RGBA', (W, H), (255, 255, 255, 255))
+    img = Image.new('RGBA', (W, H), (0, 0, 0, 0))  # scene layer (gets the voice-synced mini zoom)
     sh = 0.0  # screen shake on "rich" and on the $0 boom
     for t0, a in ((T_RICH, 16), (T_ZERO, 12)):
         if t0 <= t < t0 + 0.45: sh = a * (1 - (t - t0) / 0.45)
@@ -177,9 +187,21 @@ for i in range(N):
         for key in ('ro', 'me'):
             ex, ey = EYES[key]
             text(img, ox + ex + (-75 if key == 'ro' else 70), oy + ART_Y + ey - 40, '!!', font(70), RED, pop(t, T_ZERO + 0.05, 0.2), -10, 3)
-    text(img, W / 2, 175, 'WHY?', font(230), INK, pop(t, 0.0, 0.3) * (1 + 0.03 * math.sin(t * 6)), 3 * math.sin(t * 3))
+    zm = 1 + sum(0.045 * math.exp(-max(0.0, t - t0) * 2.2) for t0 in BEATS if t >= t0)
+    cy0 = ART_Y + 330
+    img = img.resize((int(W * zm), int(H * zm)), Image.BILINEAR).crop((int((W * zm - W) / 2), int(cy0 * zm - cy0), int((W * zm - W) / 2) + W, int(cy0 * zm - cy0) + H))
+    bg = Image.new('RGBA', (W, H), (255, 255, 255, 255)); bg.alpha_composite(img); img = bg
+    if DOUG:  # Doug reacts, bottom centre between the two numbers
+        dg = Image.open(f'{DOUG}/element-{min(i, len(os.listdir(DOUG)) - 1):03d}.png').convert('RGBA')
+        dg = dg.resize((int(dg.width * 0.78), int(dg.height * 0.78)), Image.LANCZOS)
+        img.alpha_composite(dg, (int(W / 2 - dg.width / 2), LABEL_Y + 90))
+    cap = [c for c in CAPS if t >= c[0]]
+    if cap: text(img, W / 2, 285, cap[-1][1], font_hand(78), INK, pop(t, cap[-1][0], 0.15))
+    for t0 in FLASH:  # red edge flash on the key words
+        if t0 <= t < t0 + 0.3: img.alpha_composite(Image.fromarray((VIG * (1 - (t - t0) / 0.3)).astype(np.uint8), 'RGBA'))
+    text(img, W / 2, 125, 'WHY?', font(180), INK, pop(t, 0.0, 0.3) * (1 + 0.03 * math.sin(t * 6)), 3 * math.sin(t * 3))
     if t >= T_RICH:
-        text(img, RIGHT_X, LABEL_Y, money(t), font(130), GREEN, 1.0 + (0.1 * math.sin(t * 40) if t < T_ZERO - 0.15 else 0))
+        text(img, RIGHT_X, LABEL_Y, money(t), font(115), GREEN, 1.0 + (0.1 * math.sin(t * 40) if t < T_ZERO - 0.15 else 0))
     zs = 1 + 0.6 * (1 - ease((t - T_ZERO) / 0.2)) if t >= T_ZERO else 1.0
     zr = 6 * math.sin((t - T_ZERO) * 40) * math.exp(-(t - T_ZERO) * 5) if t >= T_ZERO else 0
     text(img, LEFT_X, LABEL_Y, '$0', font(160), RED, pop(t, 0.0, 0.3) * zs, zr)
