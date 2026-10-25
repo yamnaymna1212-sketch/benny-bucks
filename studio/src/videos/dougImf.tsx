@@ -88,9 +88,9 @@ const Lend = ({t}: {t: number}) => {
     <Penguin id="doug" x={850} y={G - 6} h={380} pose={owe ? {brows: 'shock', eyeScale: 1.3, beak: 'frown', look: [-0.6, 0]} : {beak: 'smile', brows: 'happy', look: [-0.8, -0.3], flapL: 100}} />
     <FishFlight x1={260} y1={G - 300} x2={850} y2={G - 380} a={P(7) + 0.2} b={P(7) + 1.2} n={5} w={95} />
     {t >= P(7) + 1.2 && <FishPile x={930} y={G - 6} n={5} w={95} />}
-    <BigWord text="lend 100" x={540} y={420} at={P(7)} until={P(8)} size={140} color={GREEN} />
+    <BigWord text="lend 100" x={540} y={300} at={P(7)} until={P(8)} size={140} color={GREEN} />
     <Paper x={540} y={620} w={300} title="DOUG OWE" amount={owe ? '110 fish' : '100 fish'} at={P(7) + 0.6} id="iou" />
-    <BigWord text="+10 fish" x={540} y={360} at={P(9)} size={150} color={RED} />
+    <BigWord text="+10 fish" x={540} y={300} at={P(9)} size={150} color={RED} />
   </>;
 };
 
@@ -120,7 +120,7 @@ const Roll = ({t}: {t: number}) => {
     <Arrow x1={800} y1={900} x2={300} y2={900} p={ease((t - P(14)) / 0.5)} color={RED} />
     {t >= P(15) && <div style={{position: 'absolute', left: 0, right: 0, top: 380, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 150, color: RED, transform: `scale(${1 + 0.04 * Math.sin(t * 30)})`}}>DEBT {debt}</div>}
     <BigWord text="same fish" x={540} y={400} at={P(14)} until={P(15)} size={120} />
-    <BigWord text="never end" x={540} y={560} at={P(16)} size={120} color={RED} />
+    <BigWord text="never end" x={540} y={650} at={P(16)} size={120} color={RED} />
   </>;
 };
 
@@ -145,7 +145,7 @@ const Reason1 = ({t}: {t: number}) => {
       <FishPile x={930} y={G - 6} n={5} w={90} />
     </div>
     <div style={{position: 'absolute', left: -400, right: -400, top: SEA + 40, height: 900, background: '#8FD3F4', opacity: 0.85}} />
-    <BigWord text="1" x={140} y={360} at={P(20)} size={220} />
+    <BigWord text="1" x={190} y={360} at={P(20)} size={220} />
     <BigWord text="sink = lose all fish" x={600} y={420} at={P(20) + 1.2} size={92} color={RED} />
   </>;
 };
@@ -156,16 +156,16 @@ const Reason2 = ({t}: {t: number}) => <>
   <Walrus x={890} y={G} h={360} pose={{mouth: 0.5, lids: 0.4, look: -0.5}} flip />
   <Penguin id="doug" x={250} y={G} h={420} pose={{turn: 0.6, look: [0.8, 0], beak: 'smile', flapR: 90}} />
   <FishFlight x1={300} y1={G - 330} x2={880} y2={G - 380} a={P(22)} b={P(22) + 0.9} n={6} w={95} />
-  <BigWord text="2" x={140} y={360} at={P(21)} size={220} />
+  <BigWord text="2" x={190} y={360} at={P(21)} size={220} />
   <BigWord text="fish come back" x={600} y={360} at={P(22)} size={100} color={GREEN} />
 </>;
 
 const Reason3 = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 900, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
-  <Walrus x={700} y={G} h={620} pose={{look: -0.7, lids: 0.6, mouth: t >= P(24) ? 0.6 : 0, flap: t >= P(24) ? 1 : 0}} flip />
+  <Walrus x={680} y={G} h={560} pose={{look: -0.7, lids: 0.6, mouth: t >= P(24) ? 0.6 : 0, flap: t >= P(24) ? 1 : 0}} flip />
   <Penguin id="doug" x={260} y={G} h={380} pose={t >= P(24) ? {lean: 25, brows: 'worried', beak: 'frown', look: [0.6, 0.6]} : {brows: 'worried', look: [0.8, -0.6]}} />
   <Paper x={420} y={620} w={240} title="DOUG OWE" amount="1,000 fish" at={P(23) + 0.3} id="iou3" />
-  <BigWord text="3" x={140} y={360} at={P(23)} size={220} />
+  <BigWord text="3" x={190} y={360} at={P(23)} size={220} />
   <BigWord text="yes boss" x={300} y={820} at={P(24) + 0.6} size={90} />
 </>;
 
@@ -242,7 +242,7 @@ const SHOTS: Shot[] = [
   {at: P(37), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // mini zooms on the subject named in the line [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[3, 700, 1000, 1.08], [6, 760, 880, 1.08], [8, 560, 650, 1.08], [12, 540, 700, 1.08], [15, 540, 450, 1.08], [20, 830, 1000, 1.08], [24, 300, 1000, 1.08], [26, 540, 700, 1.08], [28, 540, 900, 1.08], [32, 540, 600, 1.08], [36, 900, 1000, 1.08]];
+const DEEP: [number, number, number, number][] = [[3, 700, 1000, 1.08], [6, 760, 880, 1.08], [8, 560, 650, 1.08], [12, 540, 700, 1.08], [15, 540, 450, 1.08], [20, 540, 960, 1.08], [24, 300, 1000, 1.08], [26, 540, 700, 1.08], [28, 540, 900, 1.08], [32, 540, 600, 1.08], [36, 900, 1000, 1.08]];
 
 export const DougImf = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
