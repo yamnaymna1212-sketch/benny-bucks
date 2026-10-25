@@ -25,6 +25,17 @@ const Sea = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', left: -400, right: -400, top: SEA, height: 1000, background: '#8FD3F4', borderTop: `5px solid ${INK}`}} />
   {[0, 1, 2, 3, 4, 5].map((i) => <div key={i} style={{position: 'absolute', left: ((i * 233 + t * 40) % 1300) - 150, top: SEA + 60 + (i % 3) * 90, width: 90, height: 14, borderRadius: 7, background: '#fff', opacity: 0.8}} />)}
 </>;
+// Sky + far snowy mountains behind every set (no plain white "paper" backgrounds).
+const Sky = ({t}: {t: number}) => <>
+  <div style={{position: 'absolute', left: -400, right: -400, top: -400, height: G + 440, background: 'linear-gradient(#7CC7F2, #CBEBFC 70%, #EEF9FF)'}} />
+  <div style={{position: 'absolute', left: -400, right: -400, top: G + 40, height: 1100, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
+  <svg width={1880} height={420} viewBox="0 0 1880 420" style={{position: 'absolute', left: -400, top: G - 380}}>
+    <path d="M0 420 L180 170 L300 260 L470 90 L640 280 L780 150 L960 330 L1120 120 L1290 270 L1450 140 L1640 300 L1880 180 L1880 420 Z" fill="#F4FBFF" stroke="#9CC8E2" strokeWidth={5} strokeLinejoin="round" />
+    <path d="M430 150 L470 90 L515 150 L490 140 L470 160 L450 140 Z M1080 180 L1120 120 L1165 185 L1140 172 L1120 190 L1100 172 Z" fill="#fff" />
+  </svg>
+  {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: ((i * 430 + t * 18) % 1500) - 300, top: 120 + i * 110, width: 260, height: 70, borderRadius: 40, background: '#fff', opacity: 0.85, boxShadow: '60px -20px 0 -6px #fff, -50px 10px 0 -10px #fff'}} />)}
+  <div style={{position: 'absolute', left: 860 + Math.sin(t) * 6, top: 110, width: 130, height: 130, borderRadius: '50%', background: '#FFE27A', boxShadow: '0 0 50px #FFE27A'}} />
+</>;
 // Floating ice island: flat top at y, `cracks` for the broke one, `sink` 0..1 tilts it under water.
 const Island = ({x, y, w, cracks, sink = 0}: {x: number; y: number; w: number; cracks?: boolean; sink?: number}) =>
   <svg width={w} height={w * 0.5} viewBox="0 0 200 100" style={{position: 'absolute', left: x - w / 2, top: y + sink * w * 0.45, transform: `rotate(${sink * 18}deg)`, overflow: 'visible'}}>
@@ -157,7 +168,7 @@ const Reason2 = ({t}: {t: number}) => <>
   <Penguin id="doug" x={250} y={G} h={420} pose={{turn: 0.6, look: [0.8, 0], beak: 'smile', flapR: 90}} />
   <FishFlight x1={300} y1={G - 330} x2={880} y2={G - 380} a={P(22)} b={P(22) + 0.9} n={6} w={95} />
   <BigWord text="2" x={190} y={360} at={P(21)} size={220} />
-  <BigWord text="fish come back" x={600} y={360} at={P(22)} size={100} color={GREEN} />
+  <BigWord text="fish come back" x={640} y={360} at={P(22)} size={100} color={GREEN} />
 </>;
 
 const Reason3 = ({t}: {t: number}) => <>
@@ -177,11 +188,11 @@ const Owned = ({t}: {t: number}) => t < P(26) ? <Title lines={['POWER']} y={880}
 
 const RealLife = ({t}: {t: number}) => <>
   <BigWord text="real life" x={540} y={300} at={P(27)} size={120} />
-  {t >= P(28) && <Argentina x={540} y={560} />}
-  <BigWord text="IMF 2018" x={540} y={820} at={P(28) + 0.3} size={110} rot={0} />
-  <BigWord text="$44,000,000,000" x={540} y={980} at={P(28) + 1.4} size={112} color={RED} rot={0} />
-  {t >= P(29) && <Stamp text="BIGGEST LOAN EVER" x={540} y={1180} at={P(29) + 0.2} color={RED} size={70} />}
-  {t >= P(30) && <><BigWord text="2025:" x={330} y={1350} at={P(30) + 0.4} size={100} rot={0} /><BigWord text="+$20B" x={700} y={1350} at={P(30) + 0.9} size={110} color={RED} rot={0} /></>}
+  {t >= P(28) && <Argentina x={540} y={520} />}
+  <BigWord text="IMF 2018" x={540} y={740} at={P(28) + 0.3} size={110} rot={0} />
+  <BigWord text="$44,000,000,000" x={540} y={890} at={P(28) + 1.4} size={92} color={RED} rot={0} />
+  {t >= P(29) && <Stamp text="BIGGEST LOAN EVER" x={540} y={1030} at={P(29) + 0.2} color={RED} size={70} />}
+  {t >= P(30) && <><BigWord text="2025:" x={330} y={1165} at={P(30) + 0.4} size={100} rot={0} /><BigWord text="+$20B" x={700} y={1165} at={P(30) + 0.9} size={110} color={RED} rot={0} /></>}
   <div style={{position: 'absolute', left: 0, right: 0, top: 1680, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 30, color: '#888'}}>IMF: 2018 Stand-By Arrangement, 2025 Extended Fund Facility</div>
 </>;
 
@@ -207,7 +218,7 @@ const Ending = ({t}: {t: number}) => {
     {bad && <Walrus x={lerp(880, 1600, pull)} y={G} h={480} pose={{laugh: 1, lids: 0.5, look: -0.6}} />}
     {t >= P(36) && <Stamp text="WALRUS" x={lerp(540, 1500, pull)} y={G - 110} at={P(36) + 0.1} color={RED} size={70} />}
     <BigWord text="life is good" x={540} y={380} at={P(34)} until={P(35)} size={130} color={GREEN} />
-    <BigWord text="life is NOT good" x={540} y={380} at={P(35)} size={120} color={RED} />
+    <BigWord text="life is NOT good" x={540} y={380} at={P(35)} size={100} color={RED} />
   </>;
 };
 
@@ -247,8 +258,12 @@ const DEEP: [number, number, number, number][] = [[3, 700, 1000, 1.08], [6, 760,
 export const DougImf = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
-  const s0 = 1 + 0.01 * (tc - sh.at);
-  let fx = 540, fy = 960;
+  // a new camera angle on every line inside a set (wide <-> cut-in), so no picture stays the same for long
+  const li = TIM.findIndex((p, k) => tc >= p.start && (k === TIM.length - 1 || tc < TIM[k + 1].start));
+  const setStart = TIM.findIndex((p) => p.start >= sh.at - 0.01);
+  const close = li > setStart && (li - setStart) % 2 === 1;
+  const s0 = (close ? 1.08 : 1) * (1 + 0.01 * (tc - sh.at));
+  let fx = 540, fy = close ? 860 : 960;
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.3) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
   if (dz) { fx += (dz[1] - fx) * dp * 0.35; fy += (dz[2] - fy) * dp * 0.35; } // mini zoom: lean toward the subject, never crop the cast
@@ -258,7 +273,7 @@ export const DougImf = () => {
     <Sequence durationInFrames={hookF}><OffthreadVideo src={staticFile('doug-imf-hook.mp4')} volume={1.6} /></Sequence>
     {tc >= P(1) && <>
       <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
-        <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
+        <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}><Sky t={t} />{sh.set(t)}</AbsoluteFill>
       </AbsoluteFill>
       <Captions t={tc} phrases={TIM.slice(1)} />
     </>}

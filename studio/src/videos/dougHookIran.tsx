@@ -3,9 +3,11 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS} from '../base';
 import {Penguin} from '../penguin/rig';
+import TIM from '../data/doug-imf.json';
 
-export const DOUG_HOOK_IRAN_SECONDS = 5.11;
-const RICH = 2 / 22 * 4.71, ZERO = 17 / 22 * 4.71; // am_puck 1.0 VO (doug-imf line 1)
+const HOOK = TIM[0].end; // hook line length (doug-imf VO)
+export const DOUG_HOOK_IRAN_SECONDS = HOOK + 0.4;
+const RICH = 2 / 22 * HOOK, ZERO = 17 / 22 * HOOK;
 
 export const DougHookIran = () => {
   const t = useCurrentFrame() / FPS;

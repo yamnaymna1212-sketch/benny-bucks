@@ -208,7 +208,7 @@ for i in range(N):
     img.convert('RGB').save(f'{frames}/{i:04d}.png')
 
 S = 'studio/public/sfx/user-'
-fx = [('ting', 0.0, 1.0), ('shock', T_RICH, 0.9), ('whoosh', T_RICH, 0.6), ('cash-register', T_RICH + 0.1, 0.7), ('boom', T_ZERO, 1.0)]
+fx = [('ting', 0.0, 0.8), ('whoosh', T_RICH, 0.5), ('boom', T_ZERO, 0.8)]  # user: no noisy shock/cash-register
 if 'nosfx' in sys.argv[4:]: fx = []  # user: voice only
 cmd = ['ffmpeg', '-v', 'error', '-y', '-framerate', str(FPS), '-i', f'{frames}/%04d.png']
 if voice != '-': cmd += ['-i', voice]
