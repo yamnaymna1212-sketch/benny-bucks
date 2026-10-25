@@ -1,11 +1,11 @@
-// Doug layer for the USA-vs-Iran hook (tools/hook_iran.py composites it). Transparent 560x480, timings match the am_puck VO.
+// Doug layer for the USA-vs-Iran hook (tools/hook_iran.py composites it). Transparent 560x480, timings match the doug-imf VO.
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS} from '../base';
 import {Penguin} from '../penguin/rig';
 
-export const DOUG_HOOK_IRAN_SECONDS = 4.58;
-const RICH = 0.38, ZERO = 3.23;
+export const DOUG_HOOK_IRAN_SECONDS = 5.11;
+const RICH = 2 / 22 * 4.71, ZERO = 17 / 22 * 4.71; // am_puck 1.0 VO (doug-imf line 1)
 
 export const DougHookIran = () => {
   const t = useCurrentFrame() / FPS;

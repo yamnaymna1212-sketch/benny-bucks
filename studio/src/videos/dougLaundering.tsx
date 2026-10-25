@@ -108,7 +108,7 @@ const Stinky = ({x, y, t}: {x: number; y: number; t: number}) => <>
     <path d="M20 115 C 0 90, 40 70, 20 45 C 0 20, 40 10, 20 0" fill="none" stroke="#6B8E23" strokeWidth={7} strokeLinecap="round" /></svg>)}
   {[0, 1].map((i) => <div key={`f${i}`} style={{position: 'absolute', left: x - 30 + Math.sin(t * 9 + i * 2) * 90, top: y - 120 + Math.cos(t * 7 + i) * 40, width: 14, height: 14, borderRadius: '50%', background: INK}} />)}
 </>;
-const Sparkles = ({x, y, t}: {x: number; y: number; t: number}) => <>
+export const Sparkles = ({x, y, t}: {x: number; y: number; t: number}) => <>
   {[0, 1, 2, 3].map((i) => <div key={i} style={{position: 'absolute', left: x - 120 + i * 75, top: y - 150 - (i % 2) * 70, fontSize: 60, transform: `scale(${0.6 + 0.4 * Math.abs(Math.sin(t * 5 + i))})`}}>✨</div>)}
 </>;
 
@@ -195,7 +195,7 @@ const Bubble = ({text, x, y, at, t, w = 520, tailX = 0, size = 58}: {text: strin
   </div>;
 };
 // Plain sled (stolen ones are red/blue, Doug's is gold).
-const Sled = ({x, y, w = 260, color = '#3D8BD8'}: {x: number; y: number; w?: number; color?: string}) =>
+export const Sled = ({x, y, w = 260, color = '#3D8BD8'}: {x: number; y: number; w?: number; color?: string}) =>
   <svg width={w} height={w * 0.45} viewBox="0 0 260 117" style={{position: 'absolute', left: x - w / 2, top: y - w * 0.45, overflow: 'visible'}}>
     <path d="M10 105 L230 105 Q258 105 250 80" fill="none" stroke={INK} strokeWidth={9} strokeLinecap="round" />
     <path d="M40 105 L40 80 M200 105 L200 80" stroke={INK} strokeWidth={8} />

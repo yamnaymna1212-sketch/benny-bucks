@@ -1,0 +1,38 @@
+Why do rich countries keep lending trillions to broke countries that will never pay it back?|0.25
+This is Doug.|0.07
+Doug live on Broke Island.|0.1
+Broke Island have zero fish.|0.1
+Rich Island have mountain of fish.|0.1
+Doug want one sled.|0.07
+Sled cost 100 fish.|0.1
+So Walrus lend Doug 100 fish.|0.1
+But Doug must pay back 110 fish.|0.1
+Extra 10 fish.|0.07
+This is called interest.|0.15
+Doug cannot pay.|0.07
+Doug poor.|0.35
+So Walrus lend Doug 110 more fish.|0.1
+Doug pay Walrus with Walrus fish.|0.1
+Debt never end.|0.07
+Interest never end.|0.1
+This is called rollover.|0.15
+So why Walrus keep lending?|0.07
+Three reasons.|0.15
+One. If Broke Island sink, Walrus lose all fish.|0.12
+Two. Doug buy nets and boats from Walrus.|0.07
+Fish come back.|0.12
+Three. Doug owe Walrus.|0.07
+So Doug listen to Walrus.|0.1
+This is called power.|0.1
+Doug owned.|0.35
+Real life.|0.07
+In 2018, the IMF lent Argentina 44 billion dollars.|0.1
+Biggest loan in IMF history.|0.1
+In 2025, Argentina borrow again.|0.12
+Rich countries do not lose money.|0.07
+Rich countries win control.|0.15
+Doug finally get sled.|0.07
+Life is good.|0.25
+Life is not good.|0.07
+Sled belong to Walrus.|0.2
+Would you lend money to a friend who never pays back?|0.4
