@@ -11,7 +11,7 @@ Red arrow draws on to Venezuela, swings to USA. SFX: ting 0 s, glug/whoosh on pi
 
 | # | t (s) | Spoken line | Shot | SFX | Funny |
 |---|---|---|---|---|---|
-| 1 | 0 | Why poor country give its oil to rich country? | hook (user layout), labels POOR COUNTRY / RICH COUNTRY | ting, boom | |
+| 1 | 0 | Why poor country give its oil to rich country... for free? | hook (user layout), labels POOR COUNTRY / RICH COUNTRY | ting, boom | |
 | 2 | 3 | Poor country: Venezuela. Rich country: America. | labels flip to VENEZUELA / USA, flags wave | whoosh, pop | |
 | 2b | 5 | America gas: four thirty-three. Venezuela gas: thirteen cents. | two gas pumps, gallon icons, flags | cash, ding | |
 | 3 | 7 | This is Doug. Doug live in Venezuela. | Doug, Venezuela flag | squawk | |
