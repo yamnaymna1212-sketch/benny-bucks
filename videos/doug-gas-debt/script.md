@@ -1,38 +1,43 @@
-# EP7 "Gas Debt Explained by Doug" (~62 s) — DRAFT, waiting for user approval
-Topic (user, 2026-10-25): why poor countries give their gas/oil to rich countries — to pay back loans (resource-backed loans).
+# EP7 "Venezuela Oil Explained by Doug" (~62 s) — DRAFT v3, waiting for user approval
+User brief (2026-10-25): hook = "Why poor country give its gas to rich country?" — do NOT answer it at the start;
+reveal "because must pay back" only at the END (open loop). Prices in the script, a funny moment every ~10 s,
+realistic icons (gas gallon, country flags), USA vs VENEZUELA labels, "WHY?" on top.
+HOOK LAYOUT = user image videos/doug-gas-debt/hook-ref.webp (two floating islands, pipe between them, oil flows left->right).
 
-VERSUS HOOK v2 (user-approved line, 2026-10-25) — dougVenezuela.tsx Hook: big hand-written "why" + red "?".
-Left: POOR COUNTRY (Doug island, ragged flag) — gas ships leaving, big RED "$0 PAID".
-Right: RICH COUNTRY (Larry, gold flag) — gas tanks filling, big GREEN "FREE GAS".
-Arrow draws on to Doug, swings to Larry on "rich country". Stamp on line 2: "PAY BACK WITH GAS" + IOU note "OWE LARRY".
-SFX: ting 0 s, whoosh on ship, boom on "for free", cash on stamp.
+HOOK (0–3 s): big hand-written "WHY" + red "?". Left island: VENEZUELA flag + label, poor guy (ragged Venezuela shirt)
+pushes a black oil barrel into the pipe. Right island: USA flag + label, man in navy suit with open arms, big car.
+Oil flows through the pipe (animated arrow). Price tags: VENEZUELA "13¢ / GALLON" (green), USA "$4.33 / GALLON" (red).
+Red arrow draws on to Venezuela, swings to USA. SFX: ting 0 s, glug/whoosh on pipe, boom on "rich".
 
-| # | Spoken line | Shot | SFX |
-|---|---|---|---|
-| 1 | Why poor country give gas to rich country... for free? | versus hook v2 | ting, boom |
-| 2 | Because poor country must pay back. | "PAY BACK WITH GAS" stamp, IOU, zoom out | cash-register |
-| 3 | This is Doug. Doug island poor. Doug island have gas. | Doug on ice island, gas glow under ice | penguin-squawk |
-| 4 | Doug want roads. Doug want hospital. Doug have no fish. | Doug's thought bubble: road, hospital; empty wallet | aww |
-| 5 | Larry island rich. Larry have many fish. | Larry on a fish mountain | walrus-laugh |
-| 6 | Larry say: "Larry give fish now. Doug pay back with gas." | Larry hands fish bag, contract | money |
-| 7 | Doug sign. Doug build road. Doug happy. | road appears, Doug on snowmobile | yeah |
-| 8 | Every month, Doug send gas ship to Larry. | ships loop, calendar flips | timer, whoosh |
-| 9 | Then gas price fall. | price arrow crashes | wrong |
-| 10 | Gas cheap. Debt not cheap. | gas can shrinks, IOU stays big | slap |
-| 11 | Now Doug need more ships. Same debt. | 1 ship -> 3 ships | boom |
-| 12 | Doug island cold. Gas go to Larry. | Doug shivering, ships leaving | aww |
-| 13 | This is called oil-backed loan. | sparkle title card | pop |
-| 14 | Doug cold. | gag stare, 1 s silence | shock |
-| 15 | In real life, Angola borrow billions from China. Pay back with oil. | map pins, oil tanker | ding |
-| 16 | Twenty years later, Angola still owe almost eight billion dollars. | "$7.7 BILLION" big | boom, fahh |
-| 17 | Doug finish paying. Life is good. | Doug relaxes | yeah |
-| 18 | Then Doug need refinery. Doug call Larry. | phone ring, Larry grins | notif, walrus-laugh |
-| 19 | Would you take Larry's deal? Tell Doug. | Doug points down | pop |
+| # | t (s) | Spoken line | Shot | SFX | Funny |
+|---|---|---|---|---|---|
+| 1 | 0 | Why poor Venezuela give its oil to rich America? | hook (user layout) | ting, boom | |
+| 2 | 3 | America gas: four thirty-three. Venezuela gas: thirteen cents. | two gas pumps, gallon icons, flags | cash, ding | |
+| 3 | 7 | This is Doug. Doug live in Venezuela. | Doug, Venezuela flag | squawk | |
+| 4 | 9 | Venezuela have the most oil in the world. More than Saudi. More than America. | world bar race, VEN bar breaks the frame | whoosh, wow | ★ bar smashes the ceiling |
+| 5 | 13 | Doug have oil. Doug have no money. | Doug turns pocket out, moth flies out | aww | ★ moth |
+| 6 | 17 | Oil come out. Oil go in pipe. Pipe go to America. | pipe follows across the map | whoosh | |
+| 7 | 21 | America man say: "Thank you, Doug." | suit man hugs the barrel | | ★ Doug: "...you're welcome?" (on-screen) |
+| 8 | 24 | America sell the oil. Money go to American bank account. | barrel -> $ -> bank with US flag | cash-register | |
+| 9 | 28 | Doug ask: "Where my money?" | Doug at bank window | notif | |
+| 10 | 30 | Bank say: "Later." | window slams, sign "LATER" | slap, timer | ★ window slam |
+| 11 | 33 | In real life, Venezuela sold eighteen billion dollars of oil last year. | big "$18.2 BILLION" | ding | |
+| 12 | 37 | This year, Venezuela got back five hundred million. | tiny "$500M" falls out | wrong | |
+| 13 | 40 | Doug do math. | calculator smokes, explodes | boom | ★ calculator explodes |
+| 14 | 43 | Doug poor. | gag stare, 1 s silence | shock | ★ gag |
+| 15 | 45 | America man fill big truck. Thirty gallons. One hundred thirty dollars. | pickup gulps, pump counter spins | cash | |
+| 16 | 49 | Doug fill tiny scooter. Four cents. | tiny scooter, 1 drop | pop | ★ scooter |
+| 17 | 52 | So why Venezuela give oil? | "WHY?" from the hook comes back | whoosh | |
+| 18 | 54 | Venezuela owe one hundred fifty billion dollars. To China. To banks. To everyone. | line of lenders, IOU stack | fahh | ★ lender line never ends |
+| 19 | 58 | And America hold the wallet. | suit man pockets a wallet | money | |
+| 20 | 60 | Doug must pay back. Is this fair? Tell Doug. | Doug pushes barrel again (hook loop), points down | pop | |
 
-~165 words.
+~170 words.
 
-Facts (small on-screen notes):
-- Angola oil-backed debt to China: $10.15B end-2024 -> $7.73B end-2025 (Angola finance ministry via Reuters/Hellenic Shipping). China-Angola oil-for-loans started 2004.
-- Oil price ~$110 (mid-2014) -> ~$30 (early 2016): same dollar debt needs ~3x the oil -> "1 ship -> 3 ships" (simplified).
-- Feb 2026: Sonangol seeks a $4.8B Chinese loan for a refinery (Hydrocarbon Processing) -> loop ending.
-- Venezuela: also repays China with oil; ~$10–20B still owed (Reuters factbox, Jan 2026) — backup example.
+Facts:
+- US regular avg $4.33 (AAA, mid-Oct 2026 — same source as EP2). Venezuela 13¢/gal subsidised (EP3, GlobalPetrolPrices).
+- Venezuela = largest proven oil reserves (~303B barrels, OPEC).
+- Since Jan 2026 the US controls Venezuelan oil sales; proceeds go to US-controlled accounts, released "for the benefit of the American and Venezuelan people at US discretion" (BA Times, Jan 16 2026). $500M transferred to Caracas by July 2026 (Energy Sec. Wright, oilandgas360).
+- Venezuela oil exports $18.2B in 2025 (Central Bank, cited by CounterPunch/International Viewpoint).
+- Total external debt $150–200B, China $10–15B (S&P Global, Jun 2026).
+- 30 gal x $4.33 = $130. Scooter 0.3 gal x 13¢ ≈ 4¢.
