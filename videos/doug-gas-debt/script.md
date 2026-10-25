@@ -4,15 +4,16 @@ reveal "because must pay back" only at the END (open loop). Prices in the script
 realistic icons (gas gallon, country flags), USA vs VENEZUELA labels, "WHY?" on top.
 HOOK LAYOUT = user image videos/doug-gas-debt/hook-ref.webp (two floating islands, pipe between them, oil flows left->right).
 
-HOOK (0–3 s): big hand-written "WHY" + red "?". Left island: VENEZUELA flag + label, poor guy (ragged Venezuela shirt)
+HOOK (0–3 s) — spoken line must NOT name Venezuela/USA (user 2026-10-25); on-screen labels POOR COUNTRY / RICH COUNTRY, they flip to VENEZUELA / USA on line 2. Big hand-written "WHY" + red "?". Left island: VENEZUELA flag + label, poor guy (ragged Venezuela shirt)
 pushes a black oil barrel into the pipe. Right island: USA flag + label, man in navy suit with open arms, big car.
 Oil flows through the pipe (animated arrow). Price tags: VENEZUELA "13¢ / GALLON" (green), USA "$4.33 / GALLON" (red).
 Red arrow draws on to Venezuela, swings to USA. SFX: ting 0 s, glug/whoosh on pipe, boom on "rich".
 
 | # | t (s) | Spoken line | Shot | SFX | Funny |
 |---|---|---|---|---|---|
-| 1 | 0 | Why poor Venezuela give its oil to rich America? | hook (user layout) | ting, boom | |
-| 2 | 3 | America gas: four thirty-three. Venezuela gas: thirteen cents. | two gas pumps, gallon icons, flags | cash, ding | |
+| 1 | 0 | Why poor country give its oil to rich country? | hook (user layout), labels POOR COUNTRY / RICH COUNTRY | ting, boom | |
+| 2 | 3 | Poor country: Venezuela. Rich country: America. | labels flip to VENEZUELA / USA, flags wave | whoosh, pop | |
+| 2b | 5 | America gas: four thirty-three. Venezuela gas: thirteen cents. | two gas pumps, gallon icons, flags | cash, ding | |
 | 3 | 7 | This is Doug. Doug live in Venezuela. | Doug, Venezuela flag | squawk | |
 | 4 | 9 | Venezuela have the most oil in the world. More than Saudi. More than America. | world bar race, VEN bar breaks the frame | whoosh, wow | ★ bar smashes the ceiling |
 | 5 | 13 | Doug have oil. Doug have no money. | Doug turns pocket out, moth flies out | aww | ★ moth |
@@ -27,7 +28,7 @@ Red arrow draws on to Venezuela, swings to USA. SFX: ting 0 s, glug/whoosh on pi
 | 14 | 43 | Doug poor. | gag stare, 1 s silence | shock | ★ gag |
 | 15 | 45 | America man fill big truck. Thirty gallons. One hundred thirty dollars. | pickup gulps, pump counter spins | cash | |
 | 16 | 49 | Doug fill tiny scooter. Four cents. | tiny scooter, 1 drop | pop | ★ scooter |
-| 17 | 52 | So why Venezuela give oil? | "WHY?" from the hook comes back | whoosh | |
+| 17 | 52 | So why poor country give oil? | "WHY?" from the hook comes back | whoosh | |
 | 18 | 54 | Venezuela owe one hundred fifty billion dollars. To China. To banks. To everyone. | line of lenders, IOU stack | fahh | ★ lender line never ends |
 | 19 | 58 | And America hold the wallet. | suit man pockets a wallet | money | |
 | 20 | 60 | Doug must pay back. Is this fair? Tell Doug. | Doug pushes barrel again (hook loop), points down | pop | |
