@@ -34,7 +34,7 @@ export const VeFlag = () => <g>
 </g>;
 
 // Gas pump with a flag on a pole and a big "$x / GALLON" window, jerry can in front (as in the user's original thumbnail).
-const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: number; price: string; flag: 'us' | 've'; top: string; t: number; color: string; fill: number}) => {
+export const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: number; price: string; flag: 'us' | 've'; top: string; t: number; color: string; fill: number}) => {
   const wave = Math.sin(t * 5) * 3;
   return <svg width={420} height={760} viewBox="0 0 420 760" style={{position: 'absolute', left: x - 210, top: y - 760, overflow: 'visible'}}>
     <line x1={60} y1={40} x2={60} y2={300} stroke={INK} strokeWidth={8} />

@@ -9,7 +9,7 @@ import {Walrus} from '../penguin/cast';
 import {Stamp} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
-import {Arrow, Puzzled, UsFlag, VeFlag, Why} from './dougVenezuela';
+import {Arrow, FlagPump, Puzzled, UsFlag, VeFlag, Why} from './dougVenezuela';
 import TIM from '../data/doug-oil.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
@@ -128,39 +128,106 @@ const Side = ({text, x, at, t}: {text: string; x: number; at: number; t: number}
   return <div style={{position: 'absolute', left: x - 270, width: 540, top: 600, textAlign: 'center', whiteSpace: 'nowrap', fontFamily: 'Montserrat', fontWeight: 900, fontSize: text.length > 9 ? 58 : 76, color: INK, opacity: p, transform: `scale(${0.5 + 0.5 * p})`}}>{text}</div>;
 };
 
-// ---------- hook ----------
+// ---------- hook = the user's image (studio/public/ep7-hook.webp, 1536x1024), animated ----------
 const RICH = 1.55; // "rich country" in line 0
 const FREE = P(1), VE = P(2), US = P(3);
-const Hook = ({t}: {t: number}) => {
-  const lookR = t >= RICH && t < VE || t >= US;
-  const push = Math.sin(t * 7) * 6;
+const IMG = staticFile('ep7-hook.webp'), IW = 1536, IH = 1024, K = 1080 / IW, IMG_TOP = 790;
+const ix = (x: number) => x * K, iy = (y: number) => IMG_TOP + y * K;
+
+// Waving flag: the flag area of the image is redrawn as vertical strips that ripple (still at the pole).
+const WaveFlag = ({x0, y0, x1, y1, t, ph}: {x0: number; y0: number; x1: number; y1: number; t: number; ph: number}) => {
+  const n = 14, w = (x1 - x0) / n;
   return <>
-    <Why t={t} />
-    <Arrow x={540} y={505} t={t} swingAt={RICH} />
-    {/* labels: generic in the hook, real names after */}
-    {t < VE ? <Side text="POOR COUNTRY" x={270} at={0.3} t={t} /> : <Side text="VENEZUELA" x={270} at={VE} t={t} />}
-    {t < US ? <Side text="RICH COUNTRY" x={810} at={RICH} t={t} /> : <Side text="USA" x={810} at={US} t={t} />}
-    <CanPrice x={270} y={700} price="13¢" color={GREEN} at={0.5} t={t} />
-    <CanPrice x={810} y={700} price="$4.33" color={RED} at={RICH + 0.1} t={t} />
-    <PoleFlag x={30} y={TOP + 10} flag="ve" t={t} h={430} />
-    <PoleFlag x={1040} y={TOP + 10} flag="us" t={t} h={470} />
-    <Island cx={270} seed={1} /><Island cx={810} seed={4} />
-    <Pipe x1={450} x2={680} top={TOP + 10} bottom={1450} t={t} />
-    <Pickup x={930} y={TOP + 26} w={360} t={t} />
-    <Walrus id="larry" x={720} y={TOP + 26} h={400} flip hat={false} pose={{laugh: t > RICH ? 0.6 : 0, lids: 0.3, look: -0.8, mouth: t > RICH ? 0.3 : 0}} />
-    <Suit x={720} y={TOP + 26} h={400} t={t} open={ease((t - RICH) / 0.4)} />
-    <Penguin id="doug" x={230 + push * 0.4} y={TOP + 26} h={400} pose={{side: true, turn: 1, lean: 14, brows: t > FREE ? 'worried' : 'none', sweat: t > FREE, beak: t > FREE ? 'frown' : undefined}} />
-    <RaggedShirt x={262 + push * 0.4} y={TOP + 40} h={400} t={t} />
-    <OilBarrel x={420 + push} y={TOP + 28} w={160} rot={push * 0.5} />
-    {t > FREE && t < VE + 0.6 && <Puzzled x={300} y={840} t={t} />}
-    {t >= FREE && t < VE && <Stamp text="FREE?" x={560} y={1330} at={FREE} color={RED} size={100} />}
+    <div style={{position: 'absolute', left: ix(x0), top: iy(y0) - 6, width: ix(x1 - x0) + 4, height: (y1 - y0) * K + 12, background: '#fff'}} />
+    {Array.from({length: n}, (_, i) => {
+      const amp = (i / n) * 7, dy = Math.sin(t * 6 - i * 0.55 + ph) * amp;
+      return <div key={i} style={{position: 'absolute', left: ix(x0 + i * w), top: iy(y0) + dy, width: ix(w) + 1, height: (y1 - y0) * K, overflow: 'hidden'}}>
+        <img src={IMG} style={{position: 'absolute', left: -ix(x0 + i * w), top: -y0 * K, width: 1080, height: IH * K}} />
+      </div>;
+    })}
   </>;
 };
+
+// Oil glints + arrow running through the horizontal pipe.
+const OilFlow = ({t, fast}: {t: number; fast: number}) => {
+  const xa = ix(650), xb = ix(990), y = iy(832), sp = 160 + 260 * fast;
+  return <svg width={10} height={10} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+    <path d={`M${xa} ${y} L${xb} ${y}`} stroke="#FFE27A" strokeWidth={5} strokeDasharray="18 34" strokeDashoffset={-t * sp} strokeLinecap="round" opacity={0.9} />
+    {[0, 0.5].map((o) => { const x = xa + (((t * sp / (xb - xa)) + o) % 1) * (xb - xa); return <path key={o} d={`M${x - 20} ${y - 7} L${x} ${y - 7} L${x} ${y - 15} L${x + 18} ${y} L${x} ${y + 15} L${x} ${y + 7} L${x - 20} ${y + 7} Z`} fill="#F7D21E" stroke={INK} strokeWidth={3} />; })}
+  </svg>;
+};
+
+// Spotlight on the hidden pipe: everything else goes dark -> the "secret" way the oil leaves.
+const Secret = ({t}: {t: number}) => {
+  const p = ease((t - FREE) / 0.25);
+  if (p <= 0) return null;
+  return <div style={{position: 'absolute', inset: -400, opacity: p * 0.78,
+    background: `radial-gradient(ellipse 430px 190px at ${ix(820) + 400}px ${iy(810) + 400}px, transparent 55%, #0B0B14 100%)`}} />;
+};
+
+const SideTag = ({text, x, y, at, t, color = INK}: {text: string; x: number; y: number; at: number; t: number; color?: string}) => {
+  const p = ease((t - at) / 0.25);
+  return <div style={{position: 'absolute', left: x - 250, width: 500, top: y, textAlign: 'center', whiteSpace: 'nowrap', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 52, color, opacity: p, transform: `scale(${0.5 + 0.5 * p}) rotate(${-2 + Math.sin(t * 3) * 1}deg)`}}>{text}</div>;
+};
+
+const Hook = ({t}: {t: number}) => {
+  const enter = ease(t / 0.3), bob = Math.sin(t * 2.2) * 6;
+  const look = t < 0.3 ? 0 : t < RICH ? -0.9 : t < FREE ? 0.9 : 0;
+  const shock = t >= FREE;
+  return <>
+    <Why t={t} />
+    {/* the user's picture, floating */}
+    <div style={{position: 'absolute', left: 0, top: bob, width: 1080, height: 1920, transform: `scale(${0.92 + 0.08 * enter})`, transformOrigin: '540px 1150px', opacity: enter}}>
+      <img src={IMG} style={{position: 'absolute', left: 0, top: IMG_TOP, width: 1080, height: IH * K}} />
+      <WaveFlag x0={146} y0={150} x1={342} y1={338} t={t} ph={0} />
+      <WaveFlag x0={1108} y0={160} x1={1330} y1={360} t={t} ph={1.3} />
+      <OilFlow t={t} fast={shock ? 1 : 0} />
+      <Secret t={t} />
+      {shock && <Stamp text="TOP SECRET" x={ix(820)} y={iy(930)} at={FREE + 0.1} color={RED} size={70} rot={-8} />}
+    </div>
+    <SideTag text="POOR COUNTRY" x={235} y={828} at={0.35} t={t} color={shock ? '#fff' : INK} />
+    <SideTag text="RICH COUNTRY" x={865} y={828} at={RICH} t={t} color={shock ? '#fff' : INK} />
+    {/* Doug in the middle, reacting */}
+    <div style={{position: 'absolute', left: 430, top: 778 + Math.sin(t * 2.6) * 5, width: 220, height: 40, background: '#E4F4FC', border: `5px solid ${INK}`, borderRadius: '50%'}} />
+    <Penguin id="doug" x={540} y={800 + Math.sin(t * 2.6) * 5} h={240} shadow={false}
+      pose={{turn: look * 0.5, look: [look, shock ? -0.4 : -0.1], brows: shock ? 'shock' : look ? 'worried' : 'none', eyeScale: shock ? 1.35 : 1.05, pupil: shock ? 0.5 : 1, beak: shock ? 'frown' : undefined, flapL: shock ? 120 : 30, flapR: shock ? 120 : 30, sweat: shock}} />
+    {shock && <Puzzled x={660} y={610} t={t} />}
+    <Arrow x={540} y={470} t={t} swingAt={RICH} />
+  </>;
+};
+
+// Scene 2: "Poor country: Venezuela. Rich country: America." — two big flags, Doug points.
+const Names = ({t}: {t: number}) => {
+  const a = ease((t - VE) / 0.35), b = ease((t - US) / 0.35), wave = (k: number) => Math.sin(t * 5 + k) * 3;
+  const Card = ({x, y, p, flag, name, tag, color}: {x: number; y: number; p: number; flag: 'us' | 've'; name: string; tag: string; color: string}) =>
+    <div style={{position: 'absolute', left: x - 230, top: y, width: 460, opacity: p, transform: `translateY(${(1 - p) * 300}px) rotate(${(1 - p) * 10}deg)`}}>
+      <div style={{textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: name.length > 5 ? 66 : 84, color: INK}}>{name}</div>
+      <svg width={460} height={300} viewBox="0 0 200 130" style={{overflow: 'visible'}}><g transform={`translate(5 5) skewY(${wave(x)})`}>{flag === 'us' ? <UsFlag /> : <VeFlag />}</g></svg>
+      <div style={{margin: '14px auto 0', width: 260, textAlign: 'center', border: `8px solid ${color}`, borderRadius: 16, color, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 70, transform: 'rotate(-8deg)'}}>{tag}</div>
+    </div>;
+  const right = t >= US;
+  return <>
+    <div style={{position: 'absolute', left: -400, right: -400, top: 1300, height: 60, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
+    <Card x={280} y={330} p={a} flag="ve" name="VENEZUELA" tag="POOR" color={RED} />
+    {t >= US && <Card x={800} y={330} p={b} flag="us" name="USA" tag="RICH" color={GREEN} />}
+    <Penguin id="doug" x={540} y={1300} h={420} pose={{turn: right ? 0.5 : -0.5, look: [right ? 0.8 : -0.8, -0.4], flapL: right ? 30 : 130, flapR: right ? 130 : 30, beak: 'smile', brows: 'happy'}} />
+    <RaggedShirt x={540} y={1314} h={420} t={t} />
+  </>;
+};
+
+// Scene 3: prices (line 4-5), real pumps with flags.
+const Prices = ({t}: {t: number}) => <>
+  <FlagPump x={270} y={1300} price="$4.33" flag="us" top={RED} t={t} color={RED} fill={ease((t - P(4)) / 1.6)} />
+  {t >= P(5) && <FlagPump x={810} y={1300} price="$0.13" flag="ve" top="#F5C518" t={t} color={GREEN} fill={ease((t - P(5)) / 1.4)} />}
+  <div style={{position: 'absolute', left: 0, right: 0, top: 1420, textAlign: 'center', fontFamily: 'Architects Daughter', fontSize: 30, color: '#888'}}>AAA Oct 2026 · GlobalPetrolPrices</div>
+</>;
 
 // ---------- shots ----------
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
+  {at: VE, set: (t) => <Names t={t} />, fx_: 'swipe'},
+  {at: P(4), set: (t) => <Prices t={t} />, fx_: 'zoom'},
 ];
 const DEEP: [number, number, number, number][] = [];
 
@@ -168,10 +235,9 @@ export const DougOil = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
-  if (sh.at === 0) { // hook: push to the side being spoken; wide on "for free?"
-    const L = ease((tc - 0.9) / 0.5) * (tc < RICH ? 1 : 0) + ease((tc - VE) / 0.4) * (tc >= VE && tc < US ? 1 : 0);
-    const R = ease((tc - RICH) / 0.4) * (tc < FREE ? 1 : 0) + ease((tc - US) / 0.4) * (tc >= US ? 1 : 0);
-    s0 = 1 + 0.26 * (L + R); fx = 540 - 270 * L + 270 * R; fy = 960 + 140 * (L + R);
+  if (sh.at === 0) { // hook: push to the poor island, swing to the rich one, pull back to the pipe on "for free?"
+    const L = ease((tc - 0.6) / 0.45) * (tc < RICH ? 1 : 0), R = ease((tc - RICH) / 0.4) * (tc < FREE ? 1 : 0), F = ease((tc - FREE) / 0.3);
+    s0 = 1 + 0.2 * (L + R) + 0.12 * F; fx = 540 - 250 * L + 250 * R + (ix(800) - 540) * F; fy = 960 + 160 * (L + R) + (iy(800) - 960) * F * 0.6;
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
   const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (tc < 1.0 ? 1 : beat(tc, TIM));
@@ -188,8 +254,10 @@ export const DougOil = () => {
     <Sfx at={0.5} name="user-whoosh" vol={0.25} />
     <Sfx at={RICH} name="user-cash-register" vol={0.3} />
     <Sfx at={FREE} name="user-boom" vol={0.45} />
-    <Sfx at={VE} name="user-pop" vol={0.35} />
-    <Sfx at={US} name="user-pop" vol={0.35} />
-    <Sfx at={US + 0.5} name="walrus-laugh" vol={0.35} />
+    <Sfx at={FREE + 0.1} name="user-slap" vol={0.35} />
+    <Sfx at={VE + 0.3} name="user-pop" vol={0.35} />
+    <Sfx at={US + 0.3} name="user-pop" vol={0.35} />
+    <Sfx at={P(4) + 0.4} name="user-cash-register" vol={0.3} />
+    <Sfx at={P(5) + 0.4} name="user-ting" vol={0.35} />
   </AbsoluteFill>;
 };
