@@ -1,194 +1,200 @@
 [
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Why poor country give its oil to rich country...",
   "start": 0.0,
-  "end": 2.62
+  "end": 2.38
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "for free?",
-  "start": 2.67,
-  "end": 3.4
+  "start": 2.43,
+  "end": 3.21
  },
  {
-  "voice": "am_michael",
-  "text": "Poor country: Venezuela.",
-  "start": 3.65,
-  "end": 5.35
- },
- {
-  "voice": "am_michael",
-  "text": "Rich country: America.",
-  "start": 5.42,
-  "end": 7.03
- },
- {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "America gas: four thirty-three.",
-  "start": 7.15,
-  "end": 9.18
+  "start": 3.41,
+  "end": 5.16
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Venezuela gas: thirteen cents.",
-  "start": 9.25,
-  "end": 11.38
+  "start": 5.22,
+  "end": 7.08
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "This is Doug.",
-  "start": 11.5,
-  "end": 12.41
+  "start": 7.18,
+  "end": 8.22
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug live in Venezuela.",
-  "start": 12.48,
-  "end": 14.02
+  "start": 8.28,
+  "end": 9.8
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Venezuela have the most oil in the world.",
-  "start": 14.12,
-  "end": 16.44
+  "start": 9.88,
+  "end": 11.98
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "More than Saudi. More than America.",
-  "start": 16.51,
-  "end": 18.47
+  "start": 12.04,
+  "end": 13.77
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug have oil.",
-  "start": 18.59,
-  "end": 19.53
+  "start": 13.87,
+  "end": 14.94
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug have no money.",
-  "start": 19.6,
+  "start": 15.0,
+  "end": 16.17
+ },
+ {
+  "voice": "am_liam",
+  "text": "Doug sell ice. Nobody buy. Everyone have ice.",
+  "start": 16.27,
+  "end": 18.86
+ },
+ {
+  "voice": "am_liam",
+  "text": "Oil come out. Oil go in pipe.",
+  "start": 19.01,
   "end": 20.7
  },
  {
-  "voice": "am_michael",
-  "text": "Oil come out. Oil go in pipe.",
-  "start": 20.85,
-  "end": 22.65
+  "voice": "am_liam",
+  "text": "Pipe go to America.",
+  "start": 20.76,
+  "end": 22.09
  },
  {
-  "voice": "am_michael",
-  "text": "Pipe go to America.",
-  "start": 22.72,
+  "voice": "am_liam",
+  "text": "America man say: \"Thank you, Doug.\"",
+  "start": 22.17,
   "end": 23.98
  },
  {
-  "voice": "am_michael",
-  "text": "America man say: \"Thank you, Doug.\"",
-  "start": 24.08,
-  "end": 26.12
- },
- {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "America sell the oil.",
-  "start": 26.42,
-  "end": 27.75
+  "start": 24.23,
+  "end": 25.62
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Money go to American bank account.",
-  "start": 27.82,
-  "end": 29.84
+  "start": 25.68,
+  "end": 27.64
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug ask: \"Where my money?\"",
-  "start": 29.96,
-  "end": 31.53
+  "start": 27.74,
+  "end": 29.14
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Bank say: \"Later.\"",
-  "start": 31.65,
-  "end": 32.82
+  "start": 29.24,
+  "end": 30.4
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
+  "text": "Doug wait one month. Two months. Doug still waiting.",
+  "start": 30.6,
+  "end": 33.07
+ },
+ {
+  "voice": "am_liam",
   "text": "In real life, Venezuela sold eighteen billion dollars of oil last year.",
-  "start": 33.07,
-  "end": 37.61
+  "start": 33.22,
+  "end": 36.95
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "This year, Venezuela got back five hundred million.",
-  "start": 37.71,
-  "end": 40.71
+  "start": 37.03,
+  "end": 39.58
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug do math.",
-  "start": 40.86,
-  "end": 41.83
+  "start": 39.7,
+  "end": 40.73
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug poor.",
-  "start": 42.13,
-  "end": 42.88
+  "start": 40.98,
+  "end": 41.79
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "America man fill big truck.",
-  "start": 43.33,
-  "end": 45.12
+  "start": 42.19,
+  "end": 43.91
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Thirty gallons. One hundred thirty dollars.",
-  "start": 45.19,
-  "end": 47.71
+  "start": 43.97,
+  "end": 46.12
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Doug fill tiny scooter. Four cents.",
-  "start": 47.83,
-  "end": 49.96
+  "start": 46.22,
+  "end": 48.19
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "So why poor country give oil?",
-  "start": 50.21,
-  "end": 51.9
+  "start": 48.39,
+  "end": 50.05
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Venezuela owe one hundred fifty billion dollars.",
-  "start": 52.05,
-  "end": 55.2
+  "start": 50.17,
+  "end": 52.76
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "To China. To banks. To everyone.",
-  "start": 55.27,
-  "end": 57.32
+  "start": 52.82,
+  "end": 54.67
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "And America hold the wallet.",
-  "start": 57.47,
-  "end": 59.08
+  "start": 54.79,
+  "end": 56.33
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
+  "text": "Big wallet. Doug wallet empty.",
+  "start": 56.41,
+  "end": 58.15
+ },
+ {
+  "voice": "am_liam",
   "text": "Doug must pay back.",
-  "start": 59.23,
-  "end": 60.41
+  "start": 58.27,
+  "end": 59.5
  },
  {
-  "voice": "am_michael",
+  "voice": "am_liam",
   "text": "Is this fair? Tell Doug.",
-  "start": 60.53,
-  "end": 61.96
+  "start": 59.6,
+  "end": 61.03
  }
 ]

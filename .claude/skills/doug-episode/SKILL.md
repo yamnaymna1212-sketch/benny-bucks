@@ -11,7 +11,7 @@ Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD 
 - Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
 - Give the user the clean script to paste in ElevenLabs (voice "A Top Narrator", same every episode).
 
-## 2. Voice (user's ElevenLabs mp3)
+## 2. Voice — Kokoro am_liam every episode (user rule 2026-10-25): `/opt/tts/venv/bin/python tools/tts.py vo/lines.txt vo/voice am_liam 1.12 0.08`, tune speed to 61–62 s. (Old ElevenLabs flow below only if the user sends an mp3.)
 - Save to videos/<slug>/vo/raw.mp3. Detect speech with `silencedetect=n=-38dB:d=0.12`, write segments.json (all gaps 0.07 s, ~0.35 s after the "Doug <state>." gag), run `python3 tools/tighten_vo.py raw.wav segments.json tight`.
 - If still > 62 s, speed with `ffmpeg -af atempo=<x>` (EP2 used 1.2) and divide segment times by x -> voice.segments.json. Target 61–62 s.
 - Map segments to script phrases IN ORDER by length (sentence fragments; "Doug <state>." ~0.7 s is the anchor) -> studio/src/data/<slug>.json [{start,end,text}].
