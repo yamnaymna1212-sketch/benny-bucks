@@ -5,8 +5,10 @@ import {DougGas, DOUG_GAS_SECONDS} from './videos/dougGas';
 import {DougRent, DOUG_RENT_SECONDS} from './videos/dougRent';
 import {DougVenezuela, DOUG_VENEZUELA_SECONDS} from './videos/dougVenezuela';
 import {DougLaundering, DOUG_LAUNDERING_SECONDS} from './videos/dougLaundering';
+import {DougStyle} from './videos/dougStyle';
 export const Root = () => (
   <>
+    <Composition id="doug-style" component={DougStyle} width={1080} height={1920} fps={30} durationInFrames={180} />
     <Composition id="doug-rent" component={DougRent} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_RENT_SECONDS * 30)} />
     <Composition id="doug-gas" component={DougGas} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_GAS_SECONDS * 30)} />
     <Composition id="doug-venezuela" component={DougVenezuela} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_VENEZUELA_SECONDS * 30)} />
