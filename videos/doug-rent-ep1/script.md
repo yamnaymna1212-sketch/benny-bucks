@@ -1,42 +1,43 @@
-# DOUG PAYS · EP. 1 — Rent (voice generated: Kokoro am_puck, speed 1.0 -> 62.1 s)
-Hook = split: Doug $200 (left, green) vs house RENT $1,600 (right, red). One line = one idea = one shot.
-Sources on screen: Zillow Rental Market Report (typical US asking rent $1,962, Jul 2026); Harvard JCHS "America's Rental Housing 2026" (2024 data: 22.7M renter households = 49% pay >30% of income on rent; 12.1M pay >50%).
-Story figures (NOT stats): Doug's pay $3,200, $200 left on day 20. Arithmetic: $1,600x12 = $19,200; $1,962x12 = $23,544; $3,200x0.3 = $960.
+# DOUG PAYS · EP. 1 — Rent (NEW story, v2 draft 2026-10-26) — waiting for user approval before voice
+Old story saved in script-old.md. One line = one idea = one shot. Target 61–65 s.
+Hook visual (dougPaysHook.tsx v7): top "IF YOU DON'T PAY RENT..." / Doug $200 (green) vs house + flag + ANGRY Larry, RENT $1,600 (red).
 
-1. Rent is $1,600.
-2. Doug has $200.
-3. Sound like you?
-4. This is Doug.
-5. Doug live in igloo.
-6. Igloo not Doug's.
-7. Igloo is Larry's.
-8. Larry is landlord. Larry own ten igloos.
-9. Every month, Doug pay Larry.
-10. One year. Nineteen thousand, two hundred dollars.
-11. Larry buy new hat.
-12. Doug make $3,200 a month.
-13. Rent is $1,600.
-14. That is half of Doug's money.
-15. Doug pay Larry. Then food. Then gas.
-16. Day 20. Doug have $200.
-17. Payday is in 10 days.
-18. Doug ask Larry: wait one week?
-19. Larry say: no.
-20. Doug look for cheaper igloo.
-21. Cheaper igloo is far away. Gas cost more.
-22. Doug eat snow.
-23. Doug poor.
-24. In real life, typical American rent is $1,962.
-25. That is $23,544 a year.
-26. Experts say: rent should be 30% of pay. Not 50%.
-27. About half of American renters pay more than 30%.
-28. That is 22.7 million families.
-29. And 12 million pay more than half.
-30. Doug rule: Take your pay. Multiply by 0.3.
-31. That is your max rent. For Doug, that is $960.
-32. Too high? Get a roommate. Two penguins, one igloo, half the rent.
-33. Save this.
-34. Comment your rent.
-35. Next time: Why Doug can't buy igloo?
+## Spoken lines
+1. If you don't pay rent... this happens.
+2. Rent is $1,600. Doug has $200.
+3. This is Doug.
+4. Car repair. Groceries. One night out. Paycheck gone.
+5. Ring ring. Larry the landlord.
+6. "Rent. $1,600. Now."
+7. Doug think about baby son. Daughter in school. Wife.
+8. Doug try bank loan. Bank say: no steady job. No.
+9. Doug call friends. Friends more broke than Doug.
+10. Doug sell his stuff? Doug own nothing. Doug rent everything.
+11. Doug cry.
+12. Ring ring. Larry again. "Tonight. No money, I bring police."
+13. Doug want to be duck. Duck no pay rent.
+14. Doug scared.
+15. Doug find payday loan. Borrow $500.
+16. Two weeks later, pay back $575.
+17. That is almost 400% a year. Doug say no.
+18. One hour left.
+19. Doug call 211.
+20. 211 find rent help. Charity say yes.
+21. But money come in two weeks. Larry want money tonight.
+22. So Doug do math for Larry.
+23. Police can't kick Doug out tonight. Larry need a judge.
+24. Court take weeks. Larry pay. Larry get zero fish.
+25. Doug say: $200 now. Rest in two weeks. In writing.
+26. Larry sign.
+27. Doug happy.
+28. In real life, a landlord can't throw you out without a court order.
+29. One eviction costs a landlord $2,500 to $8,000.
+30. Behind on rent? Call 211. Ask for a payment plan. In writing.
+31. Next episode: Larry raise rent 20%. Can Larry do that?
 
-Reward = 0.3 rule + "$960" + roommate tip + "Save this". Strongest fact (12 million pay more than half) near the end. Phrase map: studio/src/data/doug-rent-ep1.json. Hook preview: videos/doug-rent-ep1/hook-preview.mp4.
+## Sources (cards)
+- Self-help eviction (lockout, removing tenant without court) illegal: Nolo "Consequences of Illegal Evictions" (all states); FindLaw (nearly every state).
+- 211 for emergency rent help: USA.gov "Get emergency rent assistance" (call 211; state rules vary).
+- $2,500–$8,000 per eviction for landlords: Legal Services Corporation brief "Beyond Eviction" (Apr 2025), via States Newsroom/NC Newsline.
+- Payday loan $15 per $100 for two weeks ≈ 400% APR: CFPB. $500 = common state cap (story uses $500 -> $575).
+- Story figures (not stats): rent $1,600, Doug $200.

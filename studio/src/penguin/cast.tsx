@@ -6,11 +6,11 @@ import {Boil, INK, Shadow, useT2} from './rig';
 
 const LW = 4.5;
 
-export type WalrusPose = {mouth?: number; lids?: number; laugh?: number; flap?: number; look?: number};
+export type WalrusPose = {mouth?: number; lids?: number; laugh?: number; flap?: number; look?: number; angry?: boolean};
 // Sits facing left by default (flip = faces right). (x, y) = ground point. hat = top hat + monocle (rich).
 export const Walrus = ({x, y, h = 560, id = 'walrus', flip, hat = true, pose = {}}: {x: number; y: number; h?: number; id?: string; flip?: boolean; hat?: boolean; pose?: WalrusPose}) => {
   const t = useT2() + 0.9;
-  const {mouth = 0, lids = 0.45, laugh = 0, flap = 0, look = -0.3} = pose;
+  const {mouth = 0, lids = 0.45, laugh = 0, flap = 0, look = -0.3, angry = false} = pose;
   const k = h / 520, w = 520 * k;
   const br = 1 + 0.016 * Math.sin(t * 2) + laugh * 0.03 * Math.sin(t * 40);
   const blink = (t % 4.4) < 0.12 ? 0.1 : 1, tw = Math.sin(t * 5) * 2;
@@ -30,12 +30,21 @@ export const Walrus = ({x, y, h = 560, id = 'walrus', flip, hat = true, pose = {
         <g transform={`rotate(${-flap} 140 380)`}><path d="M140 380 C 100 420, 70 480, 110 500 C 150 510, 180 460, 180 400 Z" fill="#A87459" stroke={INK} strokeWidth={LW} strokeLinejoin="round" /></g>
         <path d="M70 200 C 60 110, 140 60, 220 80 C 300 100, 320 190, 290 250 C 260 300, 110 300, 80 260 C 72 242, 70 222, 70 200 Z" fill="#B98468" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
         {eye(140)}{eye(220)}
+        {angry && <>
+          <path d="M108 112 L170 136 M252 112 L190 136" stroke={INK} strokeWidth={13} strokeLinecap="round" />
+          <ellipse cx={100} cy={196} rx={22} ry={13} fill="#E8546A" opacity={0.55} />
+          <ellipse cx={262} cy={196} rx={22} ry={13} fill="#E8546A" opacity={0.55} />
+          {[0, 1].map((i) => { const k2 = (t * 1.6 + i * 0.5) % 1; return <g key={i} opacity={1 - k2}>
+            <circle cx={i ? 300 + k2 * 30 : 60 - k2 * 30} cy={90 - k2 * 90} r={14 + k2 * 18} fill="#fff" stroke={INK} strokeWidth={3} />
+          </g>; })}
+        </>}
         {mouth > 0.02 && <ellipse cx={180} cy={262 + mouth * 10} rx={34} ry={mouth * 22} fill="#7A1F1F" stroke={INK} strokeWidth={LW - 1} />}
         <path d={`M150 236 L146 ${330 + tw} L162 ${330 + tw} L170 240 Z M200 240 L208 ${330 - tw} L222 ${330 - tw} L214 236 Z`} fill="#FFFDF3" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
         <ellipse cx={150} cy={226} rx={44} ry={32} fill="#D9B49A" stroke={INK} strokeWidth={LW} />
         <ellipse cx={214} cy={226} rx={44} ry={32} fill="#D9B49A" stroke={INK} strokeWidth={LW} />
         {[[130, 220], [150, 236], [170, 218], [196, 220], [214, 236], [234, 218]].map(([a, b], i) => <circle key={i} cx={a} cy={b} r={3.5} fill={INK} />)}
         <ellipse cx={182} cy={200} rx={18} ry={11} fill="#5A3A2A" />
+        {angry && mouth > 0.02 && <ellipse cx={182} cy={268 + mouth * 6} rx={26} ry={8 + mouth * 20} fill="#7A1F1F" stroke={INK} strokeWidth={LW} />}
         {hat && <g transform={`rotate(${Math.sin(t * 2.2) * 2} 180 84)`}>
           <ellipse cx={180} cy={86} rx={92} ry={15} fill="#111" stroke={INK} strokeWidth={LW} />
           <path d="M120 84 L126 -30 Q180 -40 234 -30 L240 84 Z" fill="#111" stroke={INK} strokeWidth={LW} />
