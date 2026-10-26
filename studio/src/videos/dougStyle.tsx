@@ -27,7 +27,7 @@ const Scene = () => <>
     <Ring x={200} y={210} pct={0.8} at={3} size={250} />
     <div style={{position: 'absolute', left: 380, top: 130, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 60, color: '#fff', lineHeight: 1.15}}>OF DOUG'S<br />FISH GO TO<br /><span style={{color: N_RED}}>LARRY</span></div>
   </GlassCard>
-  <Penguin id="doug2" x={330} y={G + 40} h={470} pose={{turn: 0.5, look: [0.8, -0.1], brows: 'sad', eyeScale: 1.1, beak: 'frown', flapR: 15, flapL: 15}} />
+  <Penguin id="doug2" x={330} y={G + 40} h={470} pose={{turn: 0.5, look: [0.8, -0.1], brows: 'worried', eyeScale: 1.1, beak: 'frown', flapR: 15, flapL: 15}} />
   <Walrus id="larry" x={790} y={G + 60} h={560} flip />
   <PriceTag x={560} y={760} price="$48" fish="5 fish" rot={-8} />
 </>;
