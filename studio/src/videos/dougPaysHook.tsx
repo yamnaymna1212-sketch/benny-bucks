@@ -2,14 +2,17 @@
 // Here: American house + US flag, white rent notice "$1,600" (big, red) vs a TINY green "$200" card Doug holds. Nothing else.
 // ~$1,600 = typical US rent (Zillow typical asking rent Jul 2026 = $1,962; verify + cite). "$200" = story figure, not a stat.
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin} from '../penguin/rig';
-import {Captions} from '../penguin/edit';
+import {Captions, Sfx} from '../penguin/edit';
+import TIM from '../data/doug-rent-ep1.json';
 import {NightBg, N_GREEN} from '../penguin/night';
 
 const G = 1290;
-const CAP = [{start: 0, end: 1.2, text: 'Rent is $1,600.'}, {start: 1.2, end: 3.0, text: 'Doug has $200.'}];
+const P = (i: number) => TIM[i].start;
+const CAP = TIM.slice(0, 3);
+export const DOUG_PAYS_HOOK_FRAMES = Math.ceil((TIM[2].end + 0.6) * FPS);
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
@@ -46,7 +49,7 @@ const House = ({x, base, t, sc = 1, fx = 610}: {x: number; base: number; t: numb
 };
 
 const Hook = ({t}: {t: number}) => {
-  const L = pop(t, 0.15), R = pop(t, 1.0), shock = t >= 1.0, base = 900;
+  const L = pop(t, 0.15), R = pop(t, P(1)), shock = t >= P(1) + 0.1, base = 900;
   return <>
     {/* thin divider: two sides of the same problem */}
     <div style={{position: 'absolute', left: 538, top: 560, width: 4, height: 760, borderRadius: 2, background: 'linear-gradient(180deg, transparent, rgba(190,210,255,0.8), transparent)'}} />
@@ -79,5 +82,11 @@ export const DougPaysHook = () => {
     <NightBg />
     <AbsoluteFill style={{transform: `translate(${540 - 540 * s}px, ${960 - 960 * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={tc} /></AbsoluteFill>
     <Captions t={tc} phrases={CAP} />
+    <Audio src={staticFile('doug-rent-ep1-voice.mp3')} />
+    <Sfx at={0} name="user-ting" vol={0.5} />
+    <Sfx at={0.15} name="user-cash-register" vol={0.3} />
+    <Sfx at={P(1)} name="user-whoosh" vol={0.25} />
+    <Sfx at={P(1) + 0.4} name="user-boom" vol={0.45} />
+    <Sfx at={P(2)} name="user-wrong" vol={0.3} />
   </AbsoluteFill>;
 };

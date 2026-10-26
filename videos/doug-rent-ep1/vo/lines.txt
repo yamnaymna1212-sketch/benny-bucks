@@ -1,31 +1,35 @@
-Rent is $1,600.|0.12
-Doug has $200.|0.15
-Sound like you?|0.35
-This is Doug.|0.1
-Doug live in igloo.|0.3
-Igloo not Doug's.|0.1
-Igloo is Larry's.|0.1
-Larry is landlord.|0.3
-Every month, Doug pay Larry.|0.25
-One year. Nineteen thousand, two hundred dollars.|0.3
-Doug make $3,200 a month.|0.3
-Rent is $1,600.|0.1
-That is half of Doug's money.|0.3
-Doug pay Larry. Then food. Then gas.|0.3
-Day 20. Doug have $200.|0.3
-Doug need to wait 10 days for payday.|0.3
-Doug eat snow.|0.15
-Doug poor.|0.5
-In real life, typical American rent is $1,962.|0.15
-That is $23,544 a year.|0.3
-Experts say: rent should be 30% of pay.|0.15
-Not 50%.|0.3
-In real life, about half of American renters pay more than 30%.|0.15
-That is 22.7 million families.|0.3
-And 12 million pay more than half.|0.4
-Doug rule: Take your pay. Multiply by 0.3.|0.15
-That is your max rent.|0.2
-For Doug, that is $960.|0.3
-Save this.|0.4
-Comment your rent.|0.15
+Rent is $1,600.|0.05
+Doug has $200.|0.05
+Sound like you?|0.2
+This is Doug.|0.05
+Doug live in igloo.|0.07
+Igloo not Doug's.|0.05
+Igloo is Larry's.|0.05
+Larry is landlord. Larry own ten igloos.|0.07
+Every month, Doug pay Larry.|0.05
+One year. Nineteen thousand, two hundred dollars.|0.07
+Larry buy new hat.|0.1
+Doug make $3,200 a month.|0.05
+Rent is $1,600.|0.05
+That is half of Doug's money.|0.07
+Doug pay Larry. Then food. Then gas.|0.05
+Day 20. Doug have $200.|0.07
+Payday is in 10 days.|0.05
+Doug ask Larry: wait one week?|0.05
+Larry say: no.|0.1
+Doug look for cheaper igloo.|0.05
+Cheaper igloo is far away. Gas cost more.|0.07
+Doug eat snow.|0.05
+Doug poor.|0.35
+In real life, typical American rent is $1,962.|0.05
+That is $23,544 a year.|0.07
+Experts say: rent should be 30% of pay. Not 50%.|0.07
+About half of American renters pay more than 30%.|0.05
+That is 22.7 million families.|0.07
+And 12 million pay more than half.|0.2
+Doug rule: Take your pay. Multiply by 0.3.|0.05
+That is your max rent. For Doug, that is $960.|0.07
+Too high? Get a roommate. Two penguins, one igloo, half the rent.|0.15
+Save this.|0.15
+Comment your rent.|0.05
 Next time: Why Doug can't buy igloo?|0.1
