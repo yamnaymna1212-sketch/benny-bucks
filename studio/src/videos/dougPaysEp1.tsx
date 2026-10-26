@@ -24,17 +24,17 @@ const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d 
 const SANS = 'Montserrat';
 
 // Big bold word (white on the night sky, dark outline). One per idea.
-const Word = ({text, x, y, at, t, size = 120, color = '#fff', until, rot = -2}: {text: string; x: number; y: number; at: number; t: number; size?: number; color?: string; until?: number; rot?: number}) => {
+export const Word = ({text, x, y, at, t, size = 120, color = '#fff', until, rot = -2}: {text: string; x: number; y: number; at: number; t: number; size?: number; color?: string; until?: number; rot?: number}) => {
   const p = pop(t, at); if (p <= 0 || (until !== undefined && t >= until)) return null;
   return <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) rotate(${rot}deg) scale(${p})`, fontFamily: SANS, fontWeight: 900, fontSize: size, lineHeight: 1, color, whiteSpace: 'nowrap',
     WebkitTextStroke: `${Math.max(3, size * 0.04)}px ${INK}`, paintOrder: 'stroke fill', textShadow: '0 8px 0 rgba(0,0,0,0.35)'}}>{text}</div>;
 };
-const PopIn = ({at, t, x, y, children, origin = '50% 50%'}: {at: number; t: number; x: number; y: number; children: React.ReactNode; origin?: string}) => {
+export const PopIn = ({at, t, x, y, children, origin = '50% 50%'}: {at: number; t: number; x: number; y: number; children: React.ReactNode; origin?: string}) => {
   const p = pop(t, at); if (p <= 0) return null;
   return <div style={{position: 'absolute', left: x, top: y, transform: `scale(${p})`, transformOrigin: origin}}>{children}</div>;
 };
 // Glass number card with a custom value size (long ranges fit).
-const Card = ({x, y, w, value, label, source, at, t, color = N_GREEN, size = 140}: {x: number; y: number; w: number; value: string; label: string; source?: string; at: number; t: number; color?: string; size?: number}) => {
+export const Card = ({x, y, w, value, label, source, at, t, color = N_GREEN, size = 140}: {x: number; y: number; w: number; value: string; label: string; source?: string; at: number; t: number; color?: string; size?: number}) => {
   const p = pop(t, at); if (p <= 0) return null;
   const h = size + (source ? 200 : 150);
   return <div style={{position: 'absolute', left: x - w / 2, top: y, width: w, height: h, transform: `scale(${p})`, transformOrigin: '50% 0'}}>
@@ -47,7 +47,7 @@ const Card = ({x, y, w, value, label, source, at, t, color = N_GREEN, size = 140
 };
 
 // ---------- props ----------
-const Phone = ({x, y, w = 150, t, ring = -99, screen = '', rot = 0}: {x: number; y: number; w?: number; t: number; ring?: number; screen?: string; rot?: number}) => {
+export const Phone = ({x, y, w = 150, t, ring = -99, screen = '', rot = 0}: {x: number; y: number; w?: number; t: number; ring?: number; screen?: string; rot?: number}) => {
   const shake = t >= ring && t < ring + 1.2 ? Math.sin(t * 60) * 7 : 0;
   return <div style={{position: 'absolute', left: x - w / 2, top: y - w * 1.9, width: w, height: w * 1.9, transform: `rotate(${rot + shake}deg)`}}>
     <div style={{position: 'absolute', inset: 0, borderRadius: w * 0.18, background: '#20242E', border: `6px solid ${INK}`, boxSizing: 'border-box'}} />
@@ -57,7 +57,7 @@ const Phone = ({x, y, w = 150, t, ring = -99, screen = '', rot = 0}: {x: number;
   </div>;
 };
 
-const PoliceBear = ({x, y, h = 560, t}: {x: number; y: number; h?: number; t: number}) => {
+export const PoliceBear = ({x, y, h = 560, t}: {x: number; y: number; h?: number; t: number}) => {
   const flash = Math.floor(t * 6) % 2;
   return <>
     <div style={{position: 'absolute', left: x - h * 0.6, top: y - h * 1.05, width: h * 1.2, height: h * 1.2, borderRadius: '50%', background: `radial-gradient(circle, ${flash ? 'rgba(255,60,60,0.45)' : 'rgba(60,120,255,0.45)'} 0%, transparent 65%)`}} />

@@ -21,7 +21,7 @@ const cl01 = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
-const Flag = ({x, y, t}: {x: number; y: number; t: number}) => {
+export const Flag = ({x, y, t}: {x: number; y: number; t: number}) => {
   const w = 150, h = 96, wave = Math.sin(t * 5) * 3;
   return <g transform={`translate(${x} ${y})`}>
     <rect x={-4} y={0} width={8} height={170} fill="#C9CED6" stroke={INK} strokeWidth={4} />
