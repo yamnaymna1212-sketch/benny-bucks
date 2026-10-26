@@ -1,4 +1,4 @@
-# DOUG PAYS · EP. 1 — Rent (NEW story, v2, approved 2026-10-26) — voice: Kokoro am_puck 1.26 -> 64.5 s (vo/lines.txt)
+# DOUG PAYS · EP. 1 — Rent (NEW story, v2, approved 2026-10-26) — voice: Kokoro am_fenrir 1.3, one continuous take per paragraph (vo/paras.txt) -> 65.1 s. Trimmed vs. draft: "Ring ring" (2nd), "So Doug do math for Larry", "Larry pay", "In writing" (line 25), "211 find rent help".
 Old story saved in script-old.md. One line = one idea = one shot. Target 61–65 s.
 Hook visual (dougPaysHook.tsx v7): top "IF YOU DON'T PAY RENT..." / Doug $200 (green) vs house + flag + ANGRY Larry, RENT $1,600 (red).
 

@@ -1,308 +1,292 @@
 [
  {
-  "voice": "am_puck",
-  "text": "If you don't pay rent...",
-  "start": 0.0,
-  "end": 0.96
+  "start": 0,
+  "end": 0.94,
+  "text": "If you don't pay rent..."
  },
  {
-  "voice": "am_puck",
-  "text": "this happens.",
-  "start": 1.02,
-  "end": 1.66
+  "start": 0.97,
+  "end": 1.63,
+  "text": "this happens."
  },
  {
-  "voice": "am_puck",
-  "text": "Rent is $1,600.",
-  "start": 1.78,
-  "end": 3.5
+  "start": 1.77,
+  "end": 3.39,
+  "text": "Rent is $1,600."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug has $200.",
-  "start": 3.56,
-  "end": 4.68
+  "start": 3.79,
+  "end": 4.8,
+  "text": "Doug has $200."
  },
  {
-  "voice": "am_puck",
-  "text": "This is Doug.",
-  "start": 4.8,
-  "end": 5.47
+  "start": 5.2,
+  "end": 5.76,
+  "text": "This is Doug."
  },
  {
-  "voice": "am_puck",
-  "text": "Car repair. Groceries. One night out.",
-  "start": 5.53,
-  "end": 7.05
+  "start": 5.76,
+  "end": 6.27,
+  "text": "Car repair."
  },
  {
-  "voice": "am_puck",
-  "text": "Paycheck gone.",
-  "start": 7.11,
-  "end": 7.81
+  "start": 6.27,
+  "end": 6.76,
+  "text": "Groceries."
  },
  {
-  "voice": "am_puck",
-  "text": "Ring ring.",
-  "start": 7.91,
-  "end": 8.48
+  "start": 6.76,
+  "end": 7.6,
+  "text": "One night out."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry the landlord.",
-  "start": 8.53,
-  "end": 9.35
+  "start": 7.61,
+  "end": 8.34,
+  "text": "Paycheck gone."
  },
  {
-  "voice": "am_puck",
-  "text": "Rent. $1,600. Now.",
-  "start": 9.41,
-  "end": 11.45
+  "start": 8.47,
+  "end": 8.8,
+  "text": "Ring ring."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug think about baby son.",
-  "start": 11.55,
-  "end": 12.67
+  "start": 8.8,
+  "end": 9.81,
+  "text": "Larry the landlord."
  },
  {
-  "voice": "am_puck",
-  "text": "Daughter in school. Wife.",
-  "start": 12.72,
-  "end": 13.75
+  "start": 9.95,
+  "end": 10.21,
+  "text": "Rent."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug try bank loan.",
-  "start": 13.85,
-  "end": 14.73
+  "start": 10.31,
+  "end": 11.37,
+  "text": "$1,600."
  },
  {
-  "voice": "am_puck",
-  "text": "Bank say: no steady job. No.",
-  "start": 14.78,
-  "end": 16.13
+  "start": 11.37,
+  "end": 11.93,
+  "text": "Now."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug call friends.",
-  "start": 16.21,
-  "end": 17.02
+  "start": 12.1,
+  "end": 13.23,
+  "text": "Doug think about baby son."
  },
  {
-  "voice": "am_puck",
-  "text": "Friends more broke than Doug.",
-  "start": 17.07,
-  "end": 18.11
+  "start": 13.36,
+  "end": 13.9,
+  "text": "Daughter in school."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug sell his stuff?",
+  "start": 13.9,
+  "end": 14.32,
+  "text": "Wife."
+ },
+ {
+  "start": 14.51,
+  "end": 15.54,
+  "text": "Doug try bank loan."
+ },
+ {
+  "start": 15.66,
+  "end": 17.06,
+  "text": "Bank say: no steady job."
+ },
+ {
+  "start": 17.14,
+  "end": 17.41,
+  "text": "No."
+ },
+ {
+  "start": 17.47,
+  "end": 18.19,
+  "text": "Doug call friends."
+ },
+ {
   "start": 18.19,
-  "end": 19.03
+  "end": 19.47,
+  "text": "Friends more broke than Doug."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug own nothing. Doug rent everything.",
-  "start": 19.08,
-  "end": 20.51
+  "start": 19.5,
+  "end": 20.44,
+  "text": "Doug sell his stuff?"
  },
  {
-  "voice": "am_puck",
-  "text": "Doug cry.",
-  "start": 20.58,
-  "end": 21.21
+  "start": 20.46,
+  "end": 21.22,
+  "text": "Doug own nothing."
  },
  {
-  "voice": "am_puck",
-  "text": "Ring ring. Larry again.",
   "start": 21.33,
-  "end": 22.31
+  "end": 22.14,
+  "text": "Doug rent everything."
  },
  {
-  "voice": "am_puck",
-  "text": "Tonight. No money, I bring police.",
-  "start": 22.37,
-  "end": 23.71
+  "start": 22.27,
+  "end": 22.81,
+  "text": "Doug cry."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug want to be duck.",
-  "start": 23.81,
-  "end": 24.7
+  "start": 22.93,
+  "end": 23.36,
+  "text": "Larry again."
  },
  {
-  "voice": "am_puck",
-  "text": "Duck no pay rent.",
-  "start": 24.75,
-  "end": 25.59
+  "start": 23.36,
+  "end": 23.82,
+  "text": "Tonight."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug scared.",
-  "start": 25.71,
-  "end": 26.35
+  "start": 23.82,
+  "end": 24.8,
+  "text": "No money, I bring police."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug find payday loan.",
-  "start": 26.7,
-  "end": 27.76
+  "start": 24.99,
+  "end": 25.83,
+  "text": "Doug want to be duck."
  },
  {
-  "voice": "am_puck",
-  "text": "Borrow $500.",
-  "start": 27.81,
-  "end": 28.97
+  "start": 25.83,
+  "end": 26.69,
+  "text": "Duck no pay rent."
  },
  {
-  "voice": "am_puck",
-  "text": "Two weeks later, pay back $575.",
-  "start": 29.03,
-  "end": 31.6
+  "start": 26.71,
+  "end": 27.25,
+  "text": "Doug scared."
  },
  {
-  "voice": "am_puck",
-  "text": "That is almost 400% a year.",
-  "start": 31.66,
-  "end": 33.28
+  "start": 27.48,
+  "end": 28.77,
+  "text": "Doug find payday loan."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug say no.",
-  "start": 33.33,
-  "end": 33.98
+  "start": 28.98,
+  "end": 29.81,
+  "text": "Borrow $500."
  },
  {
-  "voice": "am_puck",
-  "text": "One hour left.",
-  "start": 34.1,
-  "end": 34.78
+  "start": 29.98,
+  "end": 32.28,
+  "text": "Two weeks later, pay back $575."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug call two one one.",
-  "start": 34.88,
-  "end": 35.86
+  "start": 32.97,
+  "end": 34.91,
+  "text": "That is almost 400% a year."
  },
  {
-  "voice": "am_puck",
-  "text": "Two one one find rent help.",
-  "start": 35.92,
-  "end": 37.14
+  "start": 35.05,
+  "end": 35.77,
+  "text": "Doug say no."
  },
  {
-  "voice": "am_puck",
-  "text": "Charity say yes.",
-  "start": 37.19,
-  "end": 37.99
+  "start": 35.9,
+  "end": 36.65,
+  "text": "One hour left."
  },
  {
-  "voice": "am_puck",
-  "text": "But money come in two weeks.",
-  "start": 38.07,
-  "end": 39.14
+  "start": 36.7,
+  "end": 37.19,
+  "text": "Doug call two one one."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry want money tonight.",
-  "start": 39.19,
-  "end": 40.16
+  "start": 37.97,
+  "end": 38.72,
+  "text": "Charity say yes."
  },
  {
-  "voice": "am_puck",
-  "text": "So Doug do math for Larry.",
-  "start": 40.26,
-  "end": 41.34
+  "start": 38.72,
+  "end": 40.05,
+  "text": "But money come in two weeks."
  },
  {
-  "voice": "am_puck",
-  "text": "Police can't kick Doug out tonight.",
-  "start": 41.41,
-  "end": 42.76
+  "start": 40.42,
+  "end": 41.36,
+  "text": "Larry want money tonight."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry need a judge.",
-  "start": 42.81,
-  "end": 43.68
+  "start": 41.52,
+  "end": 42.92,
+  "text": "Police can't kick Doug out tonight."
  },
  {
-  "voice": "am_puck",
-  "text": "Court take weeks.",
-  "start": 43.75,
-  "end": 44.51
+  "start": 43.0,
+  "end": 43.86,
+  "text": "Larry need a judge."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry pay.",
-  "start": 44.56,
-  "end": 45.13
+  "start": 44.08,
+  "end": 44.77,
+  "text": "Court take weeks."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry get zero fish.",
-  "start": 45.18,
-  "end": 46.15
+  "start": 44.97,
+  "end": 46.04,
+  "text": "Larry get zero fish."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug say: $200 now.",
-  "start": 46.25,
-  "end": 47.55
+  "start": 46.27,
+  "end": 47.61,
+  "text": "Doug say: two hundred dollars now."
  },
  {
-  "voice": "am_puck",
-  "text": "Rest in two weeks. In writing.",
-  "start": 47.6,
-  "end": 49.02
+  "start": 47.69,
+  "end": 48.63,
+  "text": "Rest in two weeks."
  },
  {
-  "voice": "am_puck",
-  "text": "Larry sign.",
-  "start": 49.1,
-  "end": 49.72
+  "start": 48.77,
+  "end": 49.19,
+  "text": "Larry sign."
  },
  {
-  "voice": "am_puck",
-  "text": "Doug happy.",
-  "start": 49.84,
-  "end": 50.49
+  "start": 49.19,
+  "end": 49.91,
+  "text": "Doug happy."
  },
  {
-  "voice": "am_puck",
-  "text": "In real life, a landlord can't throw you out without a court order.",
-  "start": 50.84,
-  "end": 53.75
+  "start": 50.11,
+  "end": 53.35,
+  "text": "In real life, a landlord can't throw you out without a court order."
  },
  {
-  "voice": "am_puck",
-  "text": "One eviction costs a landlord $2,500 to $8,000.",
-  "start": 53.83,
-  "end": 57.93
+  "start": 53.52,
+  "end": 57.83,
+  "text": "One eviction costs a landlord $2,500 to $8,000."
  },
  {
-  "voice": "am_puck",
-  "text": "Behind on rent? Call two one one.",
-  "start": 58.03,
-  "end": 59.74
+  "start": 57.83,
+  "end": 58.66,
+  "text": "Behind on rent?"
  },
  {
-  "voice": "am_puck",
-  "text": "Ask for a payment plan. In writing.",
-  "start": 59.79,
-  "end": 61.28
+  "start": 58.66,
+  "end": 59.08,
+  "text": "Call two one one."
  },
  {
-  "voice": "am_puck",
-  "text": "Next episode: Larry raise rent 20%.",
-  "start": 61.38,
-  "end": 63.33
+  "start": 59.98,
+  "end": 61.05,
+  "text": "Ask for a payment plan."
  },
  {
-  "voice": "am_puck",
-  "text": "Can Larry do that?",
-  "start": 63.39,
-  "end": 64.19
+  "start": 61.05,
+  "end": 61.76,
+  "text": "In writing."
+ },
+ {
+  "start": 62.02,
+  "end": 63.85,
+  "text": "Next episode: Larry raise rent 20%."
+ },
+ {
+  "start": 64.06,
+  "end": 65.06,
+  "text": "Can Larry do that?"
  }
 ]
