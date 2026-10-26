@@ -6,10 +6,10 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin} from '../penguin/rig';
 import {Captions} from '../penguin/edit';
-import {NightBg, NightGround, N_GREEN} from '../penguin/night';
+import {NightBg, N_GREEN} from '../penguin/night';
 
 const G = 1290;
-const CAP = [{start: 0, end: 1.4, text: 'Rent is $1,600.'}, {start: 1.4, end: 3.0, text: 'Doug has $200.'}];
+const CAP = [{start: 0, end: 1.2, text: 'Rent is $1,600.'}, {start: 1.2, end: 3.0, text: 'Doug has $200.'}];
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
@@ -28,9 +28,9 @@ const Flag = ({x, y, t}: {x: number; y: number; t: number}) => {
 };
 
 // Plain American suburban house (siding, brick chimney, blue door, porch light) with a US flag on a pole
-const House = ({x, base, t}: {x: number; base: number; t: number}) => {
+const House = ({x, base, t, sc = 1}: {x: number; base: number; t: number; sc?: number}) => {
   const W = 470, H = 330;
-  return <svg width={W + 220} height={H + 230} style={{position: 'absolute', left: x - (W + 220) / 2, top: base - H - 200, overflow: 'visible'}} viewBox={`0 0 ${W + 220} ${H + 230}`}>
+  return <svg width={(W + 220) * sc} height={(H + 230) * sc} style={{position: 'absolute', left: x - (W + 220) * sc / 2, top: base - (H + 200) * sc, overflow: 'visible'}} viewBox={`0 0 ${W + 220} ${H + 230}`}>
     <g transform="translate(110 200)">
       <rect x={330} y={-10} width={50} height={110} fill="#B5533C" stroke={INK} strokeWidth={6} />
       <rect x={0} y={90} width={W} height={H - 90} fill="#F1E7D3" stroke={INK} strokeWidth={6} />
@@ -46,23 +46,27 @@ const House = ({x, base, t}: {x: number; base: number; t: number}) => {
 };
 
 const Hook = ({t}: {t: number}) => {
-  const card = pop(t, 0.15), small = pop(t, 1.4), shock = t >= 1.4;
+  const L = pop(t, 0.15), R = pop(t, 1.0), shock = t >= 1.0, base = 900;
   return <>
-    <House x={540} base={560} t={t} />
-    {/* ONE white card, ONE word, ONE big red number (like the reference's 350 €) */}
-    <div style={{position: 'absolute', left: 190, top: 590, width: 700, transform: `scale(${card})`, transformOrigin: '50% 0'}}>
-      <div style={{background: '#FDFDFD', borderRadius: 24, padding: '14px 34px 22px', textAlign: 'center', boxShadow: '0 12px 30px rgba(0,0,0,0.35)', border: `4px solid ${INK}`}}>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 44, letterSpacing: 8, color: '#5B6470'}}>RENT</div>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 184, lineHeight: 1.02, color: '#E8362E'}}>$1,600</div>
+    {/* thin divider: two sides of the same problem */}
+    <div style={{position: 'absolute', left: 538, top: 560, width: 4, height: 760, borderRadius: 2, background: 'linear-gradient(180deg, transparent, rgba(190,210,255,0.8), transparent)'}} />
+    {/* LEFT = the debt: house + big red rent */}
+    <House x={255} base={base} t={t} sc={0.68} />
+    <div style={{position: 'absolute', left: 45, top: base + 40, width: 470, transform: `scale(${L})`, transformOrigin: '50% 0'}}>
+      <div style={{background: '#FDFDFD', borderRadius: 24, padding: '12px 10px 18px', textAlign: 'center', boxShadow: '0 12px 30px rgba(0,0,0,0.35)', border: `4px solid ${INK}`}}>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 40, letterSpacing: 8, color: '#5B6470'}}>RENT</div>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: 1.04, color: '#E8362E'}}>$1,600</div>
       </div>
     </div>
-    <NightGround y={G} />
-    <Penguin id="doug" x={360} y={G + 40} h={380} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
-    {/* small green tag under Doug = the contrast */}
-    <div style={{position: 'absolute', left: 620, top: 1090, width: 300, transform: `scale(${small})`, transformOrigin: '50% 50%'}}>
-      <div style={{textAlign: 'center', background: 'rgba(20,28,82,0.92)', border: `3px solid ${N_GREEN}`, borderRadius: 22, boxShadow: `0 0 26px ${N_GREEN}77`, padding: '6px 0 12px'}}>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 28, letterSpacing: 5, color: '#fff'}}>DOUG</div>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 100, lineHeight: 1.02, color: N_GREEN}}>$200</div>
+    {/* RIGHT = Doug with only $200 */}
+    <div style={{transform: `scale(${R > 0 ? 1 : 0})`, transformOrigin: "800px 1000px"}}>
+      <div style={{position: 'absolute', left: 680, top: base - 8, width: 240, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.25)'}} />
+      <Penguin id="doug" x={800} y={base + 6} h={380} shadow={false} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
+    </div>
+    <div style={{position: 'absolute', left: 565, top: base + 40, width: 470, transform: `scale(${R})`, transformOrigin: '50% 0'}}>
+      <div style={{textAlign: 'center', background: 'rgba(20,28,82,0.94)', border: `4px solid ${N_GREEN}`, borderRadius: 24, boxShadow: `0 0 30px ${N_GREEN}77`, padding: '12px 10px 18px'}}>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 40, letterSpacing: 8, color: '#fff'}}>DOUG</div>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: 1.04, color: N_GREEN, textShadow: `0 0 22px ${N_GREEN}88`}}>$200</div>
       </div>
     </div>
   </>;
