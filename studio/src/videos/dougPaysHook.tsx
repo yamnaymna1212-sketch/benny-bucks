@@ -6,10 +6,10 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin} from '../penguin/rig';
 import {Captions} from '../penguin/edit';
-import {NightBg, NightGround, N_GREEN, N_RED, SeriesBadge} from '../penguin/night';
+import {NightBg, NightGround, N_GREEN} from '../penguin/night';
 
 const G = 1290;
-const CAP = [{start: 0, end: 1.2, text: 'Rent is $1,600.'}, {start: 1.2, end: 2.2, text: 'Doug has $200.'}, {start: 2.2, end: 3.2, text: 'Due Friday.'}];
+const CAP = [{start: 0, end: 1.4, text: 'Rent is $1,600.'}, {start: 1.4, end: 3.0, text: 'Doug has $200.'}];
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
@@ -41,29 +41,28 @@ const House = ({x, base, t}: {x: number; base: number; t: number}) => {
       <circle cx={256} cy={265} r={6} fill="#E8B04A" stroke={INK} strokeWidth={3} />
       <rect x={165} y={170} width={140} height={14} fill="#fff" stroke={INK} strokeWidth={5} />
     </g>
-    <Flag x={640} y={30} t={t} />
+    <Flag x={610} y={30} t={t} />
   </svg>;
 };
 
 const Hook = ({t}: {t: number}) => {
-  const card = pop(t, 0.2), small = pop(t, 1.0), shock = t >= 1.0;
+  const card = pop(t, 0.15), small = pop(t, 1.4), shock = t >= 1.4;
   return <>
-    <House x={500} base={585} t={t} />
-    {/* white rent notice: THE big red price (like the reference's 350 €) */}
-    <div style={{position: 'absolute', left: 190, top: 610, width: 700, transform: `scale(${card})`, transformOrigin: '50% 0'}}>
-      <div style={{background: '#FDFDFD', borderRadius: 22, padding: '20px 34px 26px', boxShadow: '0 12px 30px rgba(0,0,0,0.35)', border: `4px solid ${INK}`}}>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 30, letterSpacing: 4, color: '#5B6470', borderBottom: '3px solid #D5D9E0', paddingBottom: 10}}>LANDLORD · NOTICE</div>
-        <div style={{fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: 50, color: '#1E2430', marginTop: 12}}>Monthly rent · due Friday</div>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 190, lineHeight: 1.05, color: '#E8362E'}}>$1,600</div>
+    <House x={540} base={560} t={t} />
+    {/* ONE white card, ONE word, ONE big red number (like the reference's 350 €) */}
+    <div style={{position: 'absolute', left: 190, top: 590, width: 700, transform: `scale(${card})`, transformOrigin: '50% 0'}}>
+      <div style={{background: '#FDFDFD', borderRadius: 24, padding: '14px 34px 22px', textAlign: 'center', boxShadow: '0 12px 30px rgba(0,0,0,0.35)', border: `4px solid ${INK}`}}>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 44, letterSpacing: 8, color: '#5B6470'}}>RENT</div>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 184, lineHeight: 1.02, color: '#E8362E'}}>$1,600</div>
       </div>
     </div>
     <NightGround y={G} />
-    <Penguin id="doug" x={330} y={G + 40} h={370} pose={{turn: 0.45, look: [0.8, -0.15], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
-    {/* TINY green wallet card = the contrast */}
-    <div style={{position: 'absolute', left: 640, top: 1110, width: 260, transform: `scale(${small}) rotate(4deg)`, transformOrigin: '50% 50%'}}>
-      <div style={{background: 'linear-gradient(160deg, rgba(44,52,128,0.95), rgba(20,28,82,0.95))', border: `3px solid ${N_GREEN}`, borderRadius: 22, boxShadow: `0 0 28px ${N_GREEN}88`, textAlign: 'center', padding: '10px 0 14px'}}>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 28, color: '#fff', letterSpacing: 2}}>DOUG HAS</div>
-        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 96, lineHeight: 1.05, color: N_GREEN, textShadow: `0 0 22px ${N_GREEN}88`}}>$200</div>
+    <Penguin id="doug" x={360} y={G + 40} h={380} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
+    {/* small green tag under Doug = the contrast */}
+    <div style={{position: 'absolute', left: 620, top: 1090, width: 300, transform: `scale(${small})`, transformOrigin: '50% 50%'}}>
+      <div style={{textAlign: 'center', background: 'rgba(20,28,82,0.92)', border: `3px solid ${N_GREEN}`, borderRadius: 22, boxShadow: `0 0 26px ${N_GREEN}77`, padding: '6px 0 12px'}}>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 28, letterSpacing: 5, color: '#fff'}}>DOUG</div>
+        <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 100, lineHeight: 1.02, color: N_GREEN}}>$200</div>
       </div>
     </div>
   </>;
@@ -75,7 +74,6 @@ export const DougPaysHook = () => {
     <Fonts /><HandFont />
     <NightBg />
     <AbsoluteFill style={{transform: `translate(${540 - 540 * s}px, ${960 - 960 * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={tc} /></AbsoluteFill>
-    <SeriesBadge ep={1} />
     <Captions t={tc} phrases={CAP} />
   </AbsoluteFill>;
 };
