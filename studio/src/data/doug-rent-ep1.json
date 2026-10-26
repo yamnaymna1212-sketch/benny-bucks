@@ -1,177 +1,257 @@
 [
  {
   "start": 0.0,
-  "end": 1.91,
+  "end": 0.96,
+  "text": "If you don't pay rent..."
+ },
+ {
+  "start": 1.02,
+  "end": 1.66,
+  "text": "this happens."
+ },
+ {
+  "start": 1.78,
+  "end": 3.5,
   "text": "Rent is $1,600."
  },
  {
-  "start": 1.96,
-  "end": 3.21,
+  "start": 3.56,
+  "end": 4.68,
   "text": "Doug has $200."
  },
  {
-  "start": 3.26,
-  "end": 4.05,
-  "text": "Sound like you?"
- },
- {
-  "start": 4.25,
-  "end": 4.98,
+  "start": 4.8,
+  "end": 5.47,
   "text": "This is Doug."
  },
  {
-  "start": 5.03,
-  "end": 5.94,
-  "text": "Doug live in igloo."
+  "start": 5.53,
+  "end": 7.05,
+  "text": "Car repair. Groceries. One night out."
  },
  {
-  "start": 6.01,
-  "end": 6.89,
-  "text": "Igloo not Doug's."
+  "start": 7.11,
+  "end": 7.81,
+  "text": "Paycheck gone."
  },
  {
-  "start": 6.94,
-  "end": 7.8,
-  "text": "Igloo is Larry's."
+  "start": 7.91,
+  "end": 8.48,
+  "text": "Ring ring."
  },
  {
-  "start": 7.85,
-  "end": 10.1,
-  "text": "Larry is landlord. Larry own ten igloos."
+  "start": 8.53,
+  "end": 9.35,
+  "text": "Larry the landlord."
  },
  {
-  "start": 10.17,
-  "end": 11.34,
-  "text": "Every month, Doug pay Larry."
+  "start": 9.41,
+  "end": 11.45,
+  "text": "Rent. $1,600. Now."
  },
  {
-  "start": 11.39,
-  "end": 13.65,
-  "text": "One year. Nineteen thousand, two hundred dollars."
+  "start": 11.55,
+  "end": 12.67,
+  "text": "Doug think about baby son."
  },
  {
-  "start": 13.72,
-  "end": 14.63,
-  "text": "Larry buy new hat."
+  "start": 12.72,
+  "end": 13.75,
+  "text": "Daughter in school. Wife."
  },
  {
-  "start": 14.73,
-  "end": 17.17,
-  "text": "Doug make $3,200 a month."
+  "start": 13.85,
+  "end": 14.73,
+  "text": "Doug try bank loan."
  },
  {
-  "start": 17.22,
-  "end": 19.13,
-  "text": "Rent is $1,600."
+  "start": 14.78,
+  "end": 16.13,
+  "text": "Bank say: no steady job. No."
  },
  {
-  "start": 19.18,
-  "end": 20.31,
-  "text": "That is half of Doug's money."
+  "start": 16.21,
+  "end": 17.02,
+  "text": "Doug call friends."
  },
  {
-  "start": 20.38,
-  "end": 22.2,
-  "text": "Doug pay Larry. Then food. Then gas."
+  "start": 17.07,
+  "end": 18.11,
+  "text": "Friends more broke than Doug."
  },
  {
-  "start": 22.25,
-  "end": 24.16,
-  "text": "Day 20. Doug have $200."
+  "start": 18.19,
+  "end": 19.03,
+  "text": "Doug sell his stuff?"
  },
  {
-  "start": 24.23,
-  "end": 25.4,
-  "text": "Payday is in 10 days."
+  "start": 19.08,
+  "end": 20.51,
+  "text": "Doug own nothing. Doug rent everything."
  },
  {
-  "start": 25.45,
-  "end": 26.81,
-  "text": "Doug ask Larry: wait one week?"
+  "start": 20.58,
+  "end": 21.21,
+  "text": "Doug cry."
  },
  {
-  "start": 26.86,
-  "end": 27.64,
-  "text": "Larry say: no."
+  "start": 21.33,
+  "end": 22.31,
+  "text": "Ring ring. Larry again."
  },
  {
-  "start": 27.74,
-  "end": 28.99,
-  "text": "Doug look for cheaper igloo."
+  "start": 22.37,
+  "end": 23.71,
+  "text": "Tonight. No money, I bring police."
  },
  {
-  "start": 29.04,
-  "end": 31.28,
-  "text": "Cheaper igloo is far away. Gas cost more."
+  "start": 23.81,
+  "end": 24.7,
+  "text": "Doug want to be duck."
  },
  {
-  "start": 31.35,
-  "end": 32.08,
-  "text": "Doug eat snow."
+  "start": 24.75,
+  "end": 25.59,
+  "text": "Duck no pay rent."
  },
  {
-  "start": 32.13,
-  "end": 32.74,
-  "text": "Doug poor."
+  "start": 25.71,
+  "end": 26.35,
+  "text": "Doug scared."
  },
  {
-  "start": 33.09,
-  "end": 37.62,
-  "text": "In real life, typical American rent is $1,962."
+  "start": 26.7,
+  "end": 27.76,
+  "text": "Doug find payday loan."
  },
  {
-  "start": 37.67,
-  "end": 41.04,
-  "text": "That is $23,544 a year."
+  "start": 27.81,
+  "end": 28.97,
+  "text": "Borrow $500."
  },
  {
-  "start": 41.11,
-  "end": 44.57,
-  "text": "Experts say: rent should be 30% of pay. Not 50%."
+  "start": 29.03,
+  "end": 31.6,
+  "text": "Two weeks later, pay back $575."
  },
  {
-  "start": 44.64,
-  "end": 47.52,
-  "text": "About half of American renters pay more than 30%."
+  "start": 31.66,
+  "end": 33.28,
+  "text": "That is almost 400% a year."
  },
  {
-  "start": 47.57,
-  "end": 49.63,
-  "text": "That is 22.7 million families."
+  "start": 33.33,
+  "end": 33.98,
+  "text": "Doug say no."
  },
  {
-  "start": 49.7,
-  "end": 51.19,
-  "text": "And 12 million pay more than half."
+  "start": 34.1,
+  "end": 34.78,
+  "text": "One hour left."
  },
  {
-  "start": 51.39,
-  "end": 54.03,
-  "text": "Doug rule: Take your pay. Multiply by 0.3."
+  "start": 34.88,
+  "end": 35.86,
+  "text": "Doug call two one one."
  },
  {
-  "start": 54.08,
-  "end": 57.11,
-  "text": "That is your max rent. For Doug, that is $960."
+  "start": 35.92,
+  "end": 37.14,
+  "text": "Two one one find rent help."
  },
  {
-  "start": 57.18,
-  "end": 60.06,
-  "text": "Too high? Get a roommate. Two penguins, one igloo, half the rent."
+  "start": 37.19,
+  "end": 37.99,
+  "text": "Charity say yes."
  },
  {
-  "start": 60.21,
-  "end": 60.84,
-  "text": "Save this."
+  "start": 38.07,
+  "end": 39.14,
+  "text": "But money come in two weeks."
  },
  {
-  "start": 60.99,
-  "end": 61.81,
-  "text": "Comment your rent."
+  "start": 39.19,
+  "end": 40.16,
+  "text": "Larry want money tonight."
  },
  {
-  "start": 61.86,
-  "end": 63.54,
-  "text": "Next time: Why Doug can't buy igloo?"
+  "start": 40.26,
+  "end": 41.34,
+  "text": "So Doug do math for Larry."
+ },
+ {
+  "start": 41.41,
+  "end": 42.76,
+  "text": "Police can't kick Doug out tonight."
+ },
+ {
+  "start": 42.81,
+  "end": 43.68,
+  "text": "Larry need a judge."
+ },
+ {
+  "start": 43.75,
+  "end": 44.51,
+  "text": "Court take weeks."
+ },
+ {
+  "start": 44.56,
+  "end": 45.13,
+  "text": "Larry pay."
+ },
+ {
+  "start": 45.18,
+  "end": 46.15,
+  "text": "Larry get zero fish."
+ },
+ {
+  "start": 46.25,
+  "end": 47.55,
+  "text": "Doug say: $200 now."
+ },
+ {
+  "start": 47.6,
+  "end": 49.02,
+  "text": "Rest in two weeks. In writing."
+ },
+ {
+  "start": 49.1,
+  "end": 49.72,
+  "text": "Larry sign."
+ },
+ {
+  "start": 49.84,
+  "end": 50.49,
+  "text": "Doug happy."
+ },
+ {
+  "start": 50.84,
+  "end": 53.75,
+  "text": "In real life, a landlord can't throw you out without a court order."
+ },
+ {
+  "start": 53.83,
+  "end": 57.93,
+  "text": "One eviction costs a landlord $2,500 to $8,000."
+ },
+ {
+  "start": 58.03,
+  "end": 59.74,
+  "text": "Behind on rent? Call two one one."
+ },
+ {
+  "start": 59.79,
+  "end": 61.28,
+  "text": "Ask for a payment plan. In writing."
+ },
+ {
+  "start": 61.38,
+  "end": 63.33,
+  "text": "Next episode: Larry raise rent 20%."
+ },
+ {
+  "start": 63.39,
+  "end": 64.19,
+  "text": "Can Larry do that?"
  }
 ]

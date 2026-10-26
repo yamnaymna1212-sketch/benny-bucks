@@ -1,4 +1,4 @@
-# DOUG PAYS · EP. 1 — Rent (NEW story, v2 draft 2026-10-26) — waiting for user approval before voice
+# DOUG PAYS · EP. 1 — Rent (NEW story, v2, approved 2026-10-26) — voice: Kokoro am_puck 1.26 -> 64.5 s (vo/lines.txt)
 Old story saved in script-old.md. One line = one idea = one shot. Target 61–65 s.
 Hook visual (dougPaysHook.tsx v7): top "IF YOU DON'T PAY RENT..." / Doug $200 (green) vs house + flag + ANGRY Larry, RENT $1,600 (red).
 

@@ -1,35 +1,51 @@
-Rent is $1,600.|0.05
-Doug has $200.|0.05
-Sound like you?|0.2
-This is Doug.|0.05
-Doug live in igloo.|0.07
-Igloo not Doug's.|0.05
-Igloo is Larry's.|0.05
-Larry is landlord. Larry own ten igloos.|0.07
-Every month, Doug pay Larry.|0.05
-One year. Nineteen thousand, two hundred dollars.|0.07
-Larry buy new hat.|0.1
-Doug make $3,200 a month.|0.05
-Rent is $1,600.|0.05
-That is half of Doug's money.|0.07
-Doug pay Larry. Then food. Then gas.|0.05
-Day 20. Doug have $200.|0.07
-Payday is in 10 days.|0.05
-Doug ask Larry: wait one week?|0.05
-Larry say: no.|0.1
-Doug look for cheaper igloo.|0.05
-Cheaper igloo is far away. Gas cost more.|0.07
-Doug eat snow.|0.05
-Doug poor.|0.35
-In real life, typical American rent is $1,962.|0.05
-That is $23,544 a year.|0.07
-Experts say: rent should be 30% of pay. Not 50%.|0.07
-About half of American renters pay more than 30%.|0.05
-That is 22.7 million families.|0.07
-And 12 million pay more than half.|0.2
-Doug rule: Take your pay. Multiply by 0.3.|0.05
-That is your max rent. For Doug, that is $960.|0.07
-Too high? Get a roommate. Two penguins, one igloo, half the rent.|0.15
-Save this.|0.15
-Comment your rent.|0.05
-Next time: Why Doug can't buy igloo?|0.1
+If you don't pay rent...|0.06
+this happens.|0.12
+Rent is $1,600.|0.06
+Doug has $200.|0.12
+This is Doug.|0.06
+Car repair. Groceries. One night out.|0.06
+Paycheck gone.|0.1
+Ring ring.|0.05
+Larry the landlord.|0.06
+Rent. $1,600. Now.|0.1
+Doug think about baby son.|0.05
+Daughter in school. Wife.|0.1
+Doug try bank loan.|0.05
+Bank say: no steady job. No.|0.08
+Doug call friends.|0.05
+Friends more broke than Doug.|0.08
+Doug sell his stuff?|0.05
+Doug own nothing. Doug rent everything.|0.07
+Doug cry.|0.12
+Ring ring. Larry again.|0.06
+Tonight. No money, I bring police.|0.1
+Doug want to be duck.|0.05
+Duck no pay rent.|0.12
+Doug scared.|0.35
+Doug find payday loan.|0.05
+Borrow $500.|0.06
+Two weeks later, pay back $575.|0.06
+That is almost 400% a year.|0.05
+Doug say no.|0.12
+One hour left.|0.1
+Doug call two one one.|0.06
+Two one one find rent help.|0.05
+Charity say yes.|0.08
+But money come in two weeks.|0.05
+Larry want money tonight.|0.1
+So Doug do math for Larry.|0.07
+Police can't kick Doug out tonight.|0.05
+Larry need a judge.|0.07
+Court take weeks.|0.05
+Larry pay.|0.05
+Larry get zero fish.|0.1
+Doug say: $200 now.|0.05
+Rest in two weeks. In writing.|0.08
+Larry sign.|0.12
+Doug happy.|0.35
+In real life, a landlord can't throw you out without a court order.|0.08
+One eviction costs a landlord $2,500 to $8,000.|0.1
+Behind on rent? Call two one one.|0.05
+Ask for a payment plan. In writing.|0.1
+Next episode: Larry raise rent 20%.|0.06
+Can Larry do that?|0.3

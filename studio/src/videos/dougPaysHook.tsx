@@ -4,18 +4,19 @@
 // Here: American house + US flag, white rent notice "$1,600" (big, red) vs a TINY green "$200" card Doug holds. Nothing else.
 // ~$1,600 = typical US rent (Zillow typical asking rent Jul 2026 = $1,962; verify + cite). "$200" = story figure, not a stat.
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin} from '../penguin/rig';
 import {Walrus} from '../penguin/cast';
-import {Sfx} from '../penguin/edit';
+import {Captions, Sfx} from '../penguin/edit';
+import TIM from '../data/doug-rent-ep1.json';
 import {NightBg, N_GREEN} from '../penguin/night';
 
 const G = 1290;
-// beat times (s): 0 top line, 1 = Doug $200, 2 = Larry + $1,600. Re-key to the new VO (studio/src/data/doug-rent-ep1.json) once it exists.
-const BEAT = [0, 0.15, 1.3];
-const P = (i: number) => BEAT[i];
-export const DOUG_PAYS_HOOK_FRAMES = Math.ceil(3.6 * FPS);
+// VO phrases: 0 "If you don't pay rent..." 1 "this happens." 2 "Rent is $1,600." 3 "Doug has $200."
+const P = (i: number) => TIM[i].start;
+const CAP = TIM.slice(2, 4); // the top line already shows phrases 0–1
+export const DOUG_PAYS_HOOK_FRAMES = Math.ceil((TIM[3].end + 0.35) * FPS);
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
@@ -61,15 +62,18 @@ const TopLine = ({t}: {t: number}) => {
 };
 
 const Hook = ({t}: {t: number}) => {
-  const D = pop(t, P(1)), R = pop(t, P(2)), shock = t >= P(2) + 0.1, base = 960, yell = t >= P(2) ? 0.6 + 0.4 * Math.abs(Math.sin(t * 9)) : 0.2;
+  const D = pop(t, 0.15), L = pop(t, P(1)), R = pop(t, P(2)), base = 960, shock = t >= P(1) + 0.1;
+  const yell = t >= P(1) ? 0.6 + 0.4 * Math.abs(Math.sin(t * 9)) : 0.2;
+  const punch = 1 + 0.12 * Math.max(0, 1 - Math.abs(t - P(3) - 0.15) / 0.2); // Doug's $200 card pulses on "Doug has $200"
+  const D2 = D * punch;
   return <>
     {/* thin divider: two sides of the same problem */}
     <div style={{position: 'absolute', left: 538, top: 560, width: 4, height: 760, borderRadius: 2, background: 'linear-gradient(180deg, transparent, rgba(190,210,255,0.8), transparent)'}} />
     {/* RIGHT = the debt: house + big red rent */}
-    <div style={{opacity: R > 0 ? 1 : 0}}>
+    <div style={{opacity: L > 0 ? 1 : 0}}>
       <House x={735} base={base} t={t} sc={0.58} fx={40} />
       {/* angry landlord Larry next to the house, yelling at Doug */}
-      <div style={{position: 'absolute', inset: 0, transform: `scale(${R > 0 ? R : 0})`, transformOrigin: '942px 960px'}}>
+      <div style={{position: 'absolute', inset: 0, transform: `scale(${L})`, transformOrigin: '942px 960px'}}>
         <Walrus x={942} y={base + 14} h={295} id="larry-hook" pose={{angry: true, mouth: yell, lids: 0, look: -0.9, flap: 18 + 14 * Math.sin(t * 8)}} />
       </div>
     </div>
@@ -84,7 +88,7 @@ const Hook = ({t}: {t: number}) => {
       <div style={{position: 'absolute', left: 160, top: base - 8, width: 240, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.25)'}} />
       <Penguin id="doug" x={280} y={base + 6} h={380} shadow={false} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
     </div>
-    <div style={{position: 'absolute', left: 45, top: base + 60, width: 470, transform: `scale(${D})`, transformOrigin: '50% 0'}}>
+    <div style={{position: 'absolute', left: 45, top: base + 60, width: 470, transform: `scale(${D2})`, transformOrigin: '50% 0'}}>
       <div style={{textAlign: 'center', background: 'rgba(20,28,82,0.94)', border: `4px solid ${N_GREEN}`, borderRadius: 24, boxShadow: `0 0 30px ${N_GREEN}77`, padding: '12px 10px 18px'}}>
         <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 40, letterSpacing: 8, color: '#fff'}}>DOUG</div>
         <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: 1.04, color: N_GREEN, textShadow: `0 0 22px ${N_GREEN}88`}}>$200</div>
@@ -100,11 +104,12 @@ export const DougPaysHook = () => {
     <NightBg />
     <AbsoluteFill style={{transform: `translate(${540 - 540 * s}px, ${960 - 960 * s}px) scale(${s})`, transformOrigin: '0 0'}}><Hook t={tc} /></AbsoluteFill>
     <TopLine t={tc} />
-    {/* new VO + Captions go here after the script is approved */}
+    <Captions t={tc} phrases={CAP} />
+    <Audio src={staticFile('doug-rent-ep1-voice.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={0.15} name="user-cash-register" vol={0.3} />
-    <Sfx at={P(1)} name="user-whoosh" vol={0.25} />
-    <Sfx at={P(1) + 0.4} name="user-boom" vol={0.45} />
-    <Sfx at={P(2) + 0.6} name="user-wrong" vol={0.3} />
+    <Sfx at={0.15} name="user-whoosh" vol={0.25} />
+    <Sfx at={P(1)} name="user-boom" vol={0.45} />
+    <Sfx at={P(2) + 0.35} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(3) + 0.5} name="user-wrong" vol={0.3} />
   </AbsoluteFill>;
 };
