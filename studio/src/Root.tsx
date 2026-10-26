@@ -9,11 +9,13 @@ import {DougStyle} from './videos/dougStyle';
 import {DougPaysHook, DOUG_PAYS_HOOK_FRAMES} from './videos/dougPaysHook';
 import {DougPaysEp1, DOUG_PAYS_EP1_SECONDS} from './videos/dougPaysEp1';
 import {DougPays2Hook, DOUG_PAYS2_HOOK_FRAMES} from './videos/dougPays2Hook';
+import {DougPaysEp2, DOUG_PAYS_EP2_SECONDS} from './videos/dougPaysEp2';
 export const Root = () => (
   <>
     <Composition id="doug-pays-hook" component={DougPaysHook} width={1080} height={1920} fps={30} durationInFrames={DOUG_PAYS_HOOK_FRAMES} />
     <Composition id="doug-pays-ep1" component={DougPaysEp1} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_PAYS_EP1_SECONDS * 30)} />
     <Composition id="doug-pays2-hook" component={DougPays2Hook} width={1080} height={1920} fps={30} durationInFrames={DOUG_PAYS2_HOOK_FRAMES} />
+    <Composition id="doug-pays-ep2" component={DougPaysEp2} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_PAYS_EP2_SECONDS * 30)} />
     <Composition id="doug-style" component={DougStyle} width={1080} height={1920} fps={30} durationInFrames={180} />
     <Composition id="doug-rent" component={DougRent} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_RENT_SECONDS * 30)} />
     <Composition id="doug-gas" component={DougGas} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_GAS_SECONDS * 30)} />
