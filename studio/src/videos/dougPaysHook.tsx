@@ -17,6 +17,7 @@ const G = 1290;
 const P = (i: number) => TIM[i].start;
 const CAP = TIM.slice(2, 4); // the top line already shows phrases 0–1
 export const DOUG_PAYS_HOOK_FRAMES = Math.ceil((TIM[3].end + 0.35) * FPS);
+const cl01 = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (x: number) => { const k = Math.max(0, Math.min(1, x)); return 1 - (1 - k) ** 3; };
 const pop = (t: number, at: number) => { const d = t - at; return d < 0 ? 0 : d < 0.2 ? 1.12 * (d / 0.2) : 1.12 - 0.12 * Math.min(1, (d - 0.2) / 0.12); };
 
@@ -53,18 +54,21 @@ const House = ({x, base, t, sc = 1, fx = 610}: {x: number; base: number; t: numb
 };
 
 // Big top line, slides down on frame 0 (motion + ting on the first frame)
-const TopLine = ({t}: {t: number}) => {
-  const k = ease(t / 0.35);
-  return <div style={{position: 'absolute', left: 40, right: 40, top: 250 - 60 * (1 - k), opacity: k, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, lineHeight: 1.05, color: '#fff', letterSpacing: 1,
+export const TopLine = ({t}: {t: number}) => {
+  const k = ease(t / 0.3); // visible on frame 0, settles down 30 px
+  return <div style={{position: 'absolute', left: 40, right: 40, top: 250 - 30 * (1 - k), transform: `scale(${1.06 - 0.06 * k})`, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 104, lineHeight: 1.05, color: '#fff', letterSpacing: 1,
     WebkitTextStroke: `4px ${INK}`, paintOrder: 'stroke fill', textShadow: '0 8px 0 rgba(0,0,0,0.35)'}}>
     IF YOU DON'T<br />PAY <span style={{color: '#FF5A4E'}}>RENT</span>...
   </div>;
 };
 
-const Hook = ({t}: {t: number}) => {
-  const D = pop(t, 0.15), L = pop(t, P(1)), R = pop(t, P(2)), base = 960, shock = t >= P(1) + 0.1;
+export const Hook = ({t}: {t: number}) => {
+  // frame 0 = the WHOLE contrast already on screen (user rule: no empty first frame); punches mark each spoken number
+  const in0 = 1.08 - 0.08 * ease(t / 0.22), bump = (at: number) => 1 + 0.12 * Math.max(0, 1 - Math.abs(t - at) / 0.2);
+  const D = in0, L = in0, R = in0 * bump(P(2) + 0.35), base = 960, shock = t >= P(1) + 0.1;
+  const hop = -40 * Math.max(0, Math.sin(cl01((t - P(1)) / 0.3) * Math.PI));
   const yell = t >= P(1) ? 0.6 + 0.4 * Math.abs(Math.sin(t * 9)) : 0.2;
-  const punch = 1 + 0.12 * Math.max(0, 1 - Math.abs(t - P(3) - 0.15) / 0.2); // Doug's $200 card pulses on "Doug has $200"
+  const punch = bump(P(3) + 0.3); // Doug's $200 card pulses on "Doug has $200"
   const D2 = D * punch;
   return <>
     {/* thin divider: two sides of the same problem */}
@@ -74,7 +78,7 @@ const Hook = ({t}: {t: number}) => {
       <House x={735} base={base} t={t} sc={0.58} fx={40} />
       {/* angry landlord Larry next to the house, yelling at Doug */}
       <div style={{position: 'absolute', inset: 0, transform: `scale(${L})`, transformOrigin: '942px 960px'}}>
-        <Walrus x={942} y={base + 14} h={295} id="larry-hook" pose={{angry: true, mouth: yell, lids: 0, look: -0.9, flap: 18 + 14 * Math.sin(t * 8)}} />
+        <Walrus x={942} y={base + 14 + hop} h={295} id="larry-hook" pose={{angry: true, mouth: yell, lids: 0, look: -0.9, flap: 18 + 14 * Math.sin(t * 8)}} />
       </div>
     </div>
     <div style={{position: 'absolute', left: 565, top: base + 60, width: 470, transform: `scale(${R})`, transformOrigin: '50% 0'}}>
