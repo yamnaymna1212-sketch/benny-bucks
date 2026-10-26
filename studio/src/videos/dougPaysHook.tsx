@@ -28,7 +28,7 @@ const Flag = ({x, y, t}: {x: number; y: number; t: number}) => {
 };
 
 // Plain American suburban house (siding, brick chimney, blue door, porch light) with a US flag on a pole
-const House = ({x, base, t, sc = 1}: {x: number; base: number; t: number; sc?: number}) => {
+const House = ({x, base, t, sc = 1, fx = 610}: {x: number; base: number; t: number; sc?: number; fx?: number}) => {
   const W = 470, H = 330;
   return <svg width={(W + 220) * sc} height={(H + 230) * sc} style={{position: 'absolute', left: x - (W + 220) * sc / 2, top: base - (H + 200) * sc, overflow: 'visible'}} viewBox={`0 0 ${W + 220} ${H + 230}`}>
     <g transform="translate(110 200)">
@@ -41,7 +41,7 @@ const House = ({x, base, t, sc = 1}: {x: number; base: number; t: number; sc?: n
       <circle cx={256} cy={265} r={6} fill="#E8B04A" stroke={INK} strokeWidth={3} />
       <rect x={165} y={170} width={140} height={14} fill="#fff" stroke={INK} strokeWidth={5} />
     </g>
-    <Flag x={610} y={30} t={t} />
+    <Flag x={fx} y={30} t={t} />
   </svg>;
 };
 
@@ -50,20 +50,20 @@ const Hook = ({t}: {t: number}) => {
   return <>
     {/* thin divider: two sides of the same problem */}
     <div style={{position: 'absolute', left: 538, top: 560, width: 4, height: 760, borderRadius: 2, background: 'linear-gradient(180deg, transparent, rgba(190,210,255,0.8), transparent)'}} />
-    {/* LEFT = the debt: house + big red rent */}
-    <House x={255} base={base} t={t} sc={0.68} />
-    <div style={{position: 'absolute', left: 45, top: base + 40, width: 470, transform: `scale(${L})`, transformOrigin: '50% 0'}}>
+    {/* RIGHT = the debt: house + big red rent */}
+    <House x={825} base={base} t={t} sc={0.68} fx={40} />
+    <div style={{position: 'absolute', left: 565, top: base + 40, width: 470, transform: `scale(${L})`, transformOrigin: '50% 0'}}>
       <div style={{background: '#FDFDFD', borderRadius: 24, padding: '12px 10px 18px', textAlign: 'center', boxShadow: '0 12px 30px rgba(0,0,0,0.35)', border: `4px solid ${INK}`}}>
         <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 40, letterSpacing: 8, color: '#5B6470'}}>RENT</div>
         <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: 1.04, color: '#E8362E'}}>$1,600</div>
       </div>
     </div>
-    {/* RIGHT = Doug with only $200 */}
-    <div style={{transform: `scale(${R > 0 ? 1 : 0})`, transformOrigin: "800px 1000px"}}>
-      <div style={{position: 'absolute', left: 680, top: base - 8, width: 240, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.25)'}} />
-      <Penguin id="doug" x={800} y={base + 6} h={380} shadow={false} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
+    {/* LEFT = Doug with only $200 */}
+    <div style={{transform: `scale(${R > 0 ? 1 : 0})`, transformOrigin: "280px 1000px"}}>
+      <div style={{position: 'absolute', left: 160, top: base - 8, width: 240, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.25)'}} />
+      <Penguin id="doug" x={280} y={base + 6} h={380} shadow={false} pose={{turn: 0, look: [0, 0.3], brows: shock ? 'shock' : 'worried', eyeScale: shock ? 1.35 : 1.05, pupil: 0.6, beak: 'frown', flapR: shock ? 50 : 30, flapL: shock ? 50 : 30, sweat: shock}} />
     </div>
-    <div style={{position: 'absolute', left: 565, top: base + 40, width: 470, transform: `scale(${R})`, transformOrigin: '50% 0'}}>
+    <div style={{position: 'absolute', left: 45, top: base + 40, width: 470, transform: `scale(${R})`, transformOrigin: '50% 0'}}>
       <div style={{textAlign: 'center', background: 'rgba(20,28,82,0.94)', border: `4px solid ${N_GREEN}`, borderRadius: 24, boxShadow: `0 0 30px ${N_GREEN}77`, padding: '12px 10px 18px'}}>
         <div style={{fontFamily: 'Montserrat', fontWeight: 800, fontSize: 40, letterSpacing: 8, color: '#fff'}}>DOUG</div>
         <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 118, lineHeight: 1.04, color: N_GREEN, textShadow: `0 0 22px ${N_GREEN}88`}}>$200</div>
