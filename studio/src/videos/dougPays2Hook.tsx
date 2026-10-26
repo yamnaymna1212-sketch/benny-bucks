@@ -68,7 +68,7 @@ export const Atm = ({x, base, t, goneAt, w = 400, balance}: {x: number; base: nu
 
 // Realistic American bank (v2, user: "more clear and real"): stone steps, 4 fluted columns, BANK engraved in the frieze,
 // pediment with a $ seal, US flag on the roof corner, a walk-up ATM built into the wall (balance flips to $0.00 on "Gone.").
-export const RealBank = ({x, base, w = 500, t, goneAt}: {x: number; base: number; w?: number; t: number; goneAt: number}) => {
+export const RealBank = ({x, base, w = 500, t, goneAt, balance}: {x: number; base: number; w?: number; t: number; goneAt: number; balance?: string}) => {
   const k = w / 500, h = 560 * k, gone = t >= goneAt, flash = gone && t < goneAt + 0.5 && Math.floor(t * 12) % 2 === 0;
   const col = (cx: number) => <g key={cx}>
     <rect x={cx - 22} y={238} width={44} height={14} fill="#DDD6C6" stroke={INK} strokeWidth={4} />
@@ -112,7 +112,7 @@ export const RealBank = ({x, base, w = 500, t, goneAt}: {x: number; base: number
     <div style={{position: 'absolute', left: 30 * k, top: 290 * k, width: 250 * k, height: 110 * k, borderRadius: 12 * k, background: flash ? '#5A1010' : '#0F2A1E', border: `${5 * k}px solid ${INK}`, boxSizing: 'border-box', boxShadow: `0 0 26px ${gone ? N_RED : N_GREEN}66`,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, color: gone ? N_RED : N_GREEN}}>
       <div style={{fontSize: 18 * k, letterSpacing: 3, color: '#BFE6FA'}}>BALANCE</div>
-      <div style={{fontSize: 48 * k, lineHeight: 1, textShadow: `0 0 14px ${gone ? N_RED : N_GREEN}`}}>{gone ? '$0.00' : '$10,000'}</div>
+      <div style={{fontSize: 48 * k, lineHeight: 1, textShadow: `0 0 14px ${gone ? N_RED : N_GREEN}`}}>{balance ?? (gone ? '$0.00' : '$10,000')}</div>
     </div>
   </div>;
 };
@@ -146,7 +146,7 @@ export const Hook2 = ({t}: {t: number}) => {
 };
 
 export const DougPays2Hook = () => {
-  const tc = useCurrentFrame() / FPS, s = 1 + 0.02 * tc;
+  const tc = useCurrentFrame() / FPS, s = 1 + 0.006 * tc;
   return <AbsoluteFill style={{overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <NightBg />

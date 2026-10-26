@@ -14,7 +14,7 @@ import {Captions, Sfx, beat} from '../penguin/edit';
 import {GlassCard, NightBg, NightGround, N_GREEN, N_RED, Pill, SeriesBadge} from '../penguin/night';
 import {Fox} from './dougLaundering';
 import {Card, Phone, PoliceBear, PopIn, Word} from './dougPaysEp1';
-import {Atm, BankHall, Hook2, TopLine2} from './dougPays2Hook';
+import {Atm, Hook2, RealBank, TopLine2} from './dougPays2Hook';
 import TIM from '../data/doug-card-ep2.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
@@ -115,19 +115,18 @@ const Find = ({t}: {t: number}) => <>
   <Word text="PIN ON IT!" x={540} y={300} at={P(13) + 0.2} t={t} size={110} color={N_RED} />
 </>;
 const Drain = ({t}: {t: number}) => {
-  const bal = t < P(17) ? 10000 : t < P(19) ? 9000 : t < P(20) ? 8000 : t < P(22) ? Math.max(0, Math.round(8000 - 8000 * cl((t - P(20)) / (P(22) - P(20))) / 1000) * 1000) : 0;
+  const bal = t < P(17) ? 10000 : t < P(19) ? 9000 : t < P(20) ? 8000 : t < P(22) ? Math.max(0, Math.round((8000 - 8000 * cl((t - P(20)) / (P(22) - P(20)))) / 1000) * 1000) : 0;
   const day = t < P(18) ? 1 : t < P(20) ? 2 : t < P(22) ? Math.min(10, 2 + Math.floor(8 * cl((t - P(20)) / (P(22) - P(20))) + 0.5)) : 10;
   return <>
     <NightGround y={G} />
-    <BankHall x={600} base={G} w={760} t={t} />
-    <Atm x={600} base={G} t={t} goneAt={999} w={380} balance={`$${bal.toLocaleString('en-US')}`} />
-    <Weasel x={930} y={G} h={240} t={t} flip happy />
-    {[0, 1, 2].map((i) => { const ph = ((t * 1.6 + i * 0.33) % 1); return t >= P(17) && t < P(22) ? <Bill key={i} x={600 + ph * 320} y={G - 120 - Math.sin(ph * Math.PI) * 200} rot={ph * 200} /> : null; })}
+    <RealBank x={600} base={G} w={760} t={t} goneAt={999} balance={`$${bal.toLocaleString('en-US')}`} />
+    <Weasel x={880} y={G + 40} h={240} t={t} happy />
+    {[0, 1, 2].map((i) => { const ph = ((t * 1.6 + i * 0.33) % 1); return t >= P(17) && t < P(22) ? <Bill key={i} x={330 + ph * 500} y={G - 300 - Math.sin(ph * Math.PI) * 220} rot={ph * 200} /> : null; })}
     <PopIn at={P(15)} t={t} x={60} y={200}><Pill x={0} y={0} text={`DAY ${day}`} color={N_RED} /></PopIn>
-    <Word text="-$1,000" x={300} y={420} at={P(17)} until={P(18)} t={t} size={120} color={N_RED} />
-    <Word text="-$1,000" x={300} y={420} at={P(19)} until={P(20)} t={t} size={120} color={N_RED} />
-    <Word text="EVERY DAY" x={300} y={420} at={P(20)} until={P(22)} t={t} size={100} />
-    <Stamp text="$0" x={600} y={560} at={P(22)} color={N_RED} size={140} />
+    <Word text="-$1,000" x={540} y={300} at={P(17)} until={P(18)} t={t} size={120} color={N_RED} />
+    <Word text="-$1,000" x={540} y={300} at={P(19)} until={P(20)} t={t} size={120} color={N_RED} />
+    <Word text="EVERY DAY" x={540} y={300} at={P(20)} until={P(22)} t={t} size={110} />
+    <Word text="ACCOUNT: $0" x={540} y={300} at={P(22)} t={t} size={110} color={N_RED} />
   </>;
 };
 const Why = ({t}: {t: number}) => <>
@@ -144,8 +143,8 @@ const Sleep = ({t}: {t: number}) => {
     <NightGround y={G} />
     <Atm x={860} base={G} t={t} goneAt={999} w={280} balance="$$$" />
     <Penguin id="doug" x={x} y={G} h={420} pose={{turn: 0.6, lids: 1, beak: 'flat', flapL: 85, flapR: 85, walk: t}} />
-    <div style={{position: 'absolute', left: x - 260, top: G - 560, width: 250, height: 110, background: '#3C78FF', border: `6px solid ${INK}`, borderRadius: '50% 50% 10px 10px', transform: 'rotate(-14deg)'}} />
-    {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: x - 120 - i * 50, top: G - 600 - i * 70 - ((t * 40) % 30), fontFamily: SANS, fontWeight: 900, fontSize: 60 + i * 16, color: '#fff'}}>Z</div>)}
+    <div style={{position: 'absolute', left: x - 95, top: G - 455, width: 190, height: 80, background: '#3C78FF', border: `6px solid ${INK}`, borderRadius: '50% 50% 10px 10px', transform: 'rotate(-10deg)'}} />
+    {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: x + 110 + i * 50, top: G - 520 - i * 70 - ((t * 40) % 30), fontFamily: SANS, fontWeight: 900, fontSize: 60 + i * 16, color: '#fff'}}>Z</div>)}
     <Word text="IN HIS SLEEP?" x={540} y={300} at={P(25) + 0.3} t={t} size={110} />
   </>;
 };
@@ -226,7 +225,7 @@ const FishMath = ({t}: {t: number}) => {
     {cut > 0 && <div style={{position: 'absolute', left: 0, top: 0, transform: `translate(${cut * 120}px, ${t >= P(43) ? -40 : 0}px)`}}>
       <div style={{position: 'absolute', left: 300, top: 640, width: 6, height: 170, background: N_RED, transform: 'rotate(8deg)'}} /></div>}
     <Penguin id="doug" x={760} y={G} h={400} pose={{turn: -0.5, look: [-0.8, -0.5], brows: 'happy', beak: t >= P(43) ? 'smile' : 'flat', mouth: t >= P(43) ? 0.6 * Math.abs(Math.sin(t * 10)) : 0, flapL: 60}} />
-    <Word text="FISH TAIL 😋" x={540} y={1000} at={P(43)} t={t} size={96} />
+    <Word text="FISH TAIL 😋" x={360} y={1000} at={P(43)} t={t} size={96} />
   </>;
 };
 const Law = ({t}: {t: number}) => <>
@@ -240,7 +239,7 @@ const Rules = ({t}: {t: number}) => <>
   <NightGround y={G} />
   <Card x={540} y={200} w={900} value="2 DAYS" label="REPORT → LOSE $50 MAX" source="CFPB · 12 CFR 1005.6" at={P(46)} t={t} color={N_GREEN} size={130} />
   <Card x={540} y={640} w={900} value="60+ DAYS" label="AFTER STATEMENT → LOSE IT ALL" at={P(48)} t={t} color={N_RED} size={130} />
-  {t >= P(49) && <Stamp text="ALL" x={850} y={700} at={P(49)} color={N_RED} size={90} rot={12} />}
+  {t >= P(49) && <Stamp text="LOSE IT ALL" x={540} y={1080} at={P(49)} color={N_RED} size={90} rot={-6} />}
 </>;
 const Tips = ({t}: {t: number}) => <>
   <NightGround y={G} />
@@ -254,7 +253,7 @@ const Tips = ({t}: {t: number}) => <>
 const Next = ({t}: {t: number}) => <>
   <NightGround y={G} />
   <PopIn at={P(53)} t={t} x={330} y={180}><Pill x={0} y={0} text="NEXT EPISODE" /></PopIn>
-  <Phone x={700} y={1000} w={300} t={t} ring={P(53)} screen="🏦 BANK?" rot={-6} />
+  <Phone x={700} y={1000} w={300} t={t} ring={P(53)} screen="BANK?" rot={-6} />
   <Penguin id="doug" x={250} y={G} h={420} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'worried', beak: 'flat', flapR: 40}} />
   <Word text="NOT THE BANK 👇" x={540} y={360} at={P(54)} t={t} size={100} color={N_RED} />
 </>;
@@ -290,9 +289,9 @@ const DEEP: [number, number, number, number][] = [[7, 600, 640, 1.2], [13, 560, 
 export const DougPaysEp2 = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
-  let s0 = 1 + 0.02 * (tc - sh.at), fx = 540, fy = 960;
+  let s0 = 1 + (sh.top ? 0.006 : 0.02) * (tc - sh.at), fx = 540, fy = 960;
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
-  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * beat(tc, TIM);
+  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (sh.top ? 1 : beat(tc, TIM)); // no punch in the hook (cards near the edges)
   if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
   return <AbsoluteFill style={{overflow: 'hidden'}}>
     <Fonts /><HandFont />

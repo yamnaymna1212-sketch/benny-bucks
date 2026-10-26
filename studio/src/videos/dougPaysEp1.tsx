@@ -52,7 +52,7 @@ export const Phone = ({x, y, w = 150, t, ring = -99, screen = '', rot = 0}: {x: 
   return <div style={{position: 'absolute', left: x - w / 2, top: y - w * 1.9, width: w, height: w * 1.9, transform: `rotate(${rot + shake}deg)`}}>
     <div style={{position: 'absolute', inset: 0, borderRadius: w * 0.18, background: '#20242E', border: `6px solid ${INK}`, boxSizing: 'border-box'}} />
     <div style={{position: 'absolute', left: w * 0.1, top: w * 0.18, right: w * 0.1, bottom: w * 0.22, borderRadius: w * 0.08, background: '#BFE6FA', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: SANS, fontWeight: 900, fontSize: w * 0.3, color: INK, textAlign: 'center', lineHeight: 1.1}}>{screen}</div>
+      fontFamily: SANS, fontWeight: 900, fontSize: w * 0.3 * Math.min(1, 3 / Math.max(1, screen.length)), color: INK, textAlign: 'center', lineHeight: 1.1}}>{screen}</div>
     {t >= ring && t < ring + 1.2 && [0, 1].map((i) => <div key={i} style={{position: 'absolute', left: i ? w + 10 : -40, top: w * 0.4, width: 30, height: 60, borderRight: i ? 'none' : `6px solid #fff`, borderLeft: i ? `6px solid #fff` : 'none', borderRadius: '50%'}} />)}
   </div>;
 };
