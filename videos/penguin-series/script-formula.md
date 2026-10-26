@@ -48,3 +48,17 @@ why? title + self-drawing red arrow that swings A -> B, expensive price RED / ch
   ting = frame 0 of every hook; money / cash-register / money-transfer = fish payments; whoosh = cuts; pop = big words;
   wrong / aww / shock / fahh / fahh-long = bad news & the "Doug <state>." gag; boom = big reveal; slap = hits; wow / yeah = good news;
   notif / notif2 = bills & messages; timer = "every month" / deadlines; horn = silly fail.
+
+## v3 — Night look + analytics fixes (user, 2026-10-26) — OVERRIDES older rules above where they clash
+Style: change ONLY the backdrop. Keep the old base: rig/cast, montage rhythm, cutFX, deep zooms, beat punches, hand-written captions, user SFX.
+- Backdrop = `NightBg` (indigo gradient + grid + stars, outside the camera) + `NightGround` (glowing ice floor). Code: studio/src/penguin/night.tsx.
+- Numbers go on glass cards: `NumberCard` (ONE big number + label + source), `GlassCard`, `Pill`, `Ring` (glowing %). `SeriesBadge` top-left every frame.
+- Every scene = ONE piece of information. No busy frames, no props that don't serve the line.
+Analytics (64K views: most drop at 0:01, avg watch 30–35 %, 6–9 % finish, 31 followers) -> fixes:
+1. Frame 1 = motion + sound (ting). First spoken line has a number AND talks to the viewer ("You paid $60 for gas..."). No politician faces in the first 5 s.
+2. Don't show the whole idea in second 1: show ONE number first, then new info every 5–8 s, strongest fact near the END. If the story can't fill 60 s, make it shorter.
+3. Numbered series "DOUG PAYS · EP. X". Last line = a question that sets up the next episode; Part 2 from top comments.
+4. Identity: Doug always the hero, centered, same look, same world. One topic family: prices an American feels in his wallet.
+5. Credibility: verified numbers only, with source on the card; fair comparisons; no exaggerated figures.
+6. Reach first: go past 60 s only when the story really fills it.
+Targets: avg watch > 45 %, finish > 15 %, returning viewers > 0, > 30 followers per 10K views.

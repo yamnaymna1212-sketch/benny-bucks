@@ -1,6 +1,6 @@
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula.md.
-Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
+Doug rules (v3 2026-10-26, see script-formula.md): Night look backdrop (studio/src/penguin/night.tsx), series "DOUG PAYS · EP. X", length = what the story fills (≤65 s, reach first), the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), first line = a number + talks to the viewer ("You paid $60 for gas...", a "Why" question is fine), one idea per scene, strongest fact near the end, hook preview before the full render.
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 

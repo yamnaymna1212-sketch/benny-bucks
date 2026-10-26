@@ -4,6 +4,10 @@ description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — s
 ---
 # Doug episode workflow (proven on EP1 Rent, EP2 Gas)
 
+## v3 (user, 2026-10-26) — read first, overrides the hook/length rules below
+- Backdrop only: `NightBg` + `NightGround` + glass `NumberCard`/`Ring`/`Pill` + `SeriesBadge` from studio/src/penguin/night.tsx (style test: studio/src/videos/dougStyle.tsx). Everything else (rig, montage, zooms, captions, SFX) unchanged.
+- Script/hook/edit must follow the analytics fixes in videos/penguin-series/script-formula.md (v3): number + "you" in line 1, ONE number first, new info every 5–8 s, strongest fact near the end, one idea per scene, verified numbers with source, end question that sets up the next episode.
+
 Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
 
 ## 1. Topic + script
