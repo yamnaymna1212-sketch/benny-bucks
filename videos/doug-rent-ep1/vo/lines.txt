@@ -1,0 +1,31 @@
+Rent is $1,600.|0.12
+Doug has $200.|0.15
+Sound like you?|0.35
+This is Doug.|0.1
+Doug live in igloo.|0.3
+Igloo not Doug's.|0.1
+Igloo is Larry's.|0.1
+Larry is landlord.|0.3
+Every month, Doug pay Larry.|0.25
+One year. Nineteen thousand, two hundred dollars.|0.3
+Doug make $3,200 a month.|0.3
+Rent is $1,600.|0.1
+That is half of Doug's money.|0.3
+Doug pay Larry. Then food. Then gas.|0.3
+Day 20. Doug have $200.|0.3
+Doug need to wait 10 days for payday.|0.3
+Doug eat snow.|0.15
+Doug poor.|0.5
+In real life, typical American rent is $1,962.|0.15
+That is $23,544 a year.|0.3
+Experts say: rent should be 30% of pay.|0.15
+Not 50%.|0.3
+In real life, about half of American renters pay more than 30%.|0.15
+That is 22.7 million families.|0.3
+And 12 million pay more than half.|0.4
+Doug rule: Take your pay. Multiply by 0.3.|0.15
+That is your max rent.|0.2
+For Doug, that is $960.|0.3
+Save this.|0.4
+Comment your rent.|0.15
+Next time: Why Doug can't buy igloo?|0.1
