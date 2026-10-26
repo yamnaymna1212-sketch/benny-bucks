@@ -19,3 +19,5 @@ Target 61–65 s, ~165 words. Hook card: ONE number ($20 now / $80 groceries). S
 
 Facts to cite on screen: "~25% of BNPL users used it for groceries, up from ~14% a year earlier" (LendingTree, Apr 2025, 980 BNPL users); "41% paid a BNPL bill late in the past year, up from 34%" (LendingTree, Apr 2025 — base = respondents, say "about 4 in 10"; the 2026 report says 47% of users).
 Reward for viewer = line 13 (rule) + line 14 (save). Gag = "Doug poor." (line 10).
+
+NOTE 2026-10-26: Ep. 1 switched to RENT (user choice) — see videos/doug-rent-ep1/hook.md. BNPL kept for a later episode.
