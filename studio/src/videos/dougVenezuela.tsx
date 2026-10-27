@@ -97,7 +97,7 @@ export const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
 
 
 // ---------- Boss Bear (polar bear = the government that pays for the gas) ----------
-const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
+export const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
   const t = useCurrentFrame() / FPS, bob = Math.sin(t * 3) * 3;
   return <svg width={h * 0.8} height={h} viewBox="0 0 320 400" style={{position: 'absolute', left: x - h * 0.4, top: y - h + bob, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
     <ellipse cx={160} cy={395} rx={120} ry={10} fill="#E3E8EC" />
@@ -117,7 +117,7 @@ const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: n
 };
 
 // Pile of oil barrels with a flag (bigger pile = more oil).
-const BarrelPile = ({x, y, rows, w = 70, flag}: {x: number; y: number; rows: number; w?: number; flag: 'us' | 've'}) => {
+export const BarrelPile = ({x, y, rows, w = 70, flag}: {x: number; y: number; rows: number; w?: number; flag: 'us' | 've'}) => {
   const out: React.ReactNode[] = [];
   for (let r = 0; r < rows; r++) for (let i = 0; i < rows - r; i++) {
     const bx = x + (i - (rows - r - 1) / 2) * w, by = y - r * w * 1.2;
@@ -129,13 +129,13 @@ const BarrelPile = ({x, y, rows, w = 70, flag}: {x: number; y: number; rows: num
 };
 
 // One small animal of the gas line (never penguin-like: gull, walrus, seal).
-const LineAnimal = ({i, x, y, h}: {i: number; x: number; y: number; h: number}) => {
+export const LineAnimal = ({i, x, y, h}: {i: number; x: number; y: number; h: number}) => {
   const k = i % 3 + 1;
   return k === 1 ? <Seagull id={`la${i}`} x={x} y={y} h={h} flip pose={{angry: false}} />
     : k === 2 ? <Walrus id={`la${i}`} x={x} y={y} h={h * 1.1} flip hat={false} /> : <BigSeal id={`la${i}`} x={x} y={y} h={h} flip />;
 };
 
-const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 60, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />;
+export const Ground = () => <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 60, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />;
 
 const Intro = ({t}: {t: number}) => {
   const ride = t >= P(4), x = ride ? lerp(-200, 560, ease((t - P(4)) / 1)) : 540;
