@@ -4,7 +4,9 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
 import {FlagPump, Label, Vs} from './dougVenezuela';
-import {Sfx, beat} from '../penguin/edit';
+import {Phrase, Sfx, beat} from '../penguin/edit';
+import {cutFX} from '../penguin/acting';
+import HT from '../data/doug-friend-hook.json';
 
 const G = 1300;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -41,12 +43,12 @@ const Title = ({t}: {t: number}) => {
 };
 
 // phrase timings of the hook voice (videos/doug-friend/vo/hook.timings.json)
-export const HOOK_TIM = [{start: 0, end: 1.55, text: 'Doug fill tank in America.'}, {start: 1.67, end: 2.95, text: 'Sixty-six dollars.'}, {start: 3.25, end: 5.32, text: 'Doug friend fill tank in Venezuela.'}, {start: 5.44, end: 6.25, text: 'Two dollars.'}, {start: 6.55, end: 8.03, text: 'So what the real difference?'}, {start: 8.23, end: 9.23, text: 'Three reasons.'}];
+export const HOOK_TIM = HT as Phrase[];
+const H = (i: number) => HOOK_TIM[i].start;
 const VE_X = 770, US_X = 290;
 
 export const Hook = ({t}: {t: number}) => {
-  const usFill = ease(t / 1.4), veFill = ease((t - 3.25) / 1.8);
-  const p3 = ease((t - 8.23) / 0.25);
+  const usFill = ease(t / 1.2), veFill = ease((t - H(2)) / 1.5);
   return <>
     <div style={{position: 'absolute', left: 538, top: 400, width: 6, height: 1100, background: INK, opacity: 0.85}} />
     <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
@@ -58,29 +60,57 @@ export const Hook = ({t}: {t: number}) => {
     <Penguin id="doug" x={US_X} y={G + 330} h={400} pose={{turn: 0.4, look: [0.5, -0.4], brows: 'worried', eyeScale: 1.2}} />
     <Otter x={VE_X} y={G + 330} h={400} flip t={t} />
     <Vs x={540} y={980} t={t + 1} />
-    {t >= 8.23 && <div style={{position: 'absolute', left: 0, right: 0, top: 1680, textAlign: 'center', transform: `scale(${0.5 + 0.5 * p3}) rotate(-3deg)`, opacity: p3}}>
-      <span style={{display: 'inline-block', background: RED, color: '#fff', border: `7px solid ${INK}`, borderRadius: 28, padding: '10px 40px', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 96}}>3 REASONS</span>
-    </div>}
   </>;
 };
 
-export const DOUG_FRIEND_SECONDS = 9.9;
+// Face-down card with a big "?" (one per reason), pops in, floats, slight tilt.
+const MysteryCard = ({x, y, at, t, tilt}: {x: number; y: number; at: number; t: number; tilt: number}) => {
+  const p = ease((t - at) / 0.22), over = p < 1 ? Math.sin(p * Math.PI) * 0.15 : 0;
+  const fl = Math.sin(t * 3 + x) * 10;
+  return <div style={{position: 'absolute', left: x - 120, top: y - 170 + fl, width: 240, height: 340, borderRadius: 26, background: '#2F6FD6', border: `8px solid ${INK}`, boxSizing: 'border-box',
+    transform: `scale(${p + over}) rotate(${tilt}deg)`, opacity: p > 0 ? 1 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 14px 0 rgba(0,0,0,0.12)'}}>
+    <div style={{position: 'absolute', inset: 14, borderRadius: 16, border: '5px dashed rgba(255,255,255,0.55)'}} />
+    <span style={{fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 210, color: '#fff', lineHeight: 1, textShadow: `0 6px 0 ${INK}`}}>?</span>
+  </div>;
+};
+
+// "Three reasons." = new shot: Doug thinking under 3 face-down cards.
+export const Reasons = ({t, at}: {t: number; at: number}) => {
+  const tp = ease((t - at) / 0.25);
+  return <>
+    <div style={{position: 'absolute', left: -400, right: -400, top: G + 200, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
+    <div style={{position: 'absolute', left: 0, right: 0, top: 330, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 130, color: INK, transform: `scale(${0.6 + 0.4 * tp}) rotate(-2deg)`, opacity: tp}}>
+      <span style={{color: RED}}>3</span> REASONS
+    </div>
+    <MysteryCard x={250} y={960} at={at + 0.1} t={t} tilt={-10} />
+    <MysteryCard x={540} y={900} at={at + 0.25} t={t} tilt={0} />
+    <MysteryCard x={830} y={960} at={at + 0.4} t={t} tilt={10} />
+    <Penguin id="doug" x={540} y={G + 520} h={560} pose={{look: [0, -0.9], brows: 'worried', eyeScale: 1.25}} />
+  </>;
+};
+
+export const DOUG_FRIEND_SECONDS = Math.ceil((HOOK_TIM[HOOK_TIM.length - 1].end + 0.9) * 30) / 30;
 export const DougFriend = () => {
-  const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
+  const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS, R = H(5);
   // push toward the side being spoken, wide again on the question
-  const toUS = ease((tc - 0.3) / 0.5) * (tc < 3.25 ? 1 : 0), toVE = ease((tc - 3.25) / 0.5) * (tc < 6.55 ? 1 : 0);
-  const sc = (1 + 0.18 * (toUS + toVE)) * (tc < 0.3 ? 1 : beat(tc, HOOK_TIM)), fx = 540 - 200 * toUS + 200 * toVE, fy = 960;
+  const toUS = ease((tc - 0.3) / 0.5) * (tc < H(2) ? 1 : 0), toVE = ease((tc - H(2)) / 0.5) * (tc < H(4) ? 1 : 0);
+  const sc = (tc >= R ? 1 + 0.015 * (tc - R) : 1 + 0.18 * (toUS + toVE)) * (tc < 0.3 ? 1 : beat(tc, HOOK_TIM)), fx = tc >= R ? 540 : 540 - 200 * toUS + 200 * toVE, fy = 960;
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
-    <AbsoluteFill style={{transform: `translate(${540 - fx * sc}px, ${960 - fy * sc}px) scale(${sc})`, transformOrigin: '0 0'}}>
-      <Hook t={Math.max(t, 0)} />
+    <AbsoluteFill style={cutFX(tc, [{at: 0, fx: 'cut'}, {at: R, fx: 'swipe'}])}>
+      <AbsoluteFill style={{transform: `translate(${540 - fx * sc}px, ${960 - fy * sc}px) scale(${sc})`, transformOrigin: '0 0'}}>
+        {tc < R ? <Hook t={Math.max(t, 0)} /> : <Reasons t={t} at={R} />}
+      </AbsoluteFill>
     </AbsoluteFill>
     <Audio src={staticFile('doug-friend-hook.mp3')} />
     <Sfx at={0} name="user-ting" vol={0.5} />
-    <Sfx at={1.67} name="user-cash-register" vol={0.35} />
-    <Sfx at={3.2} name="user-whoosh" vol={0.22} />
-    <Sfx at={5.44} name="user-ting" vol={0.4} />
-    <Sfx at={6.5} name="user-whoosh" vol={0.22} />
-    <Sfx at={8.23} name="user-boom" vol={0.45} />
+    <Sfx at={H(1)} name="user-cash-register" vol={0.35} />
+    <Sfx at={H(2) - 0.05} name="user-whoosh" vol={0.22} />
+    <Sfx at={H(3)} name="user-ting" vol={0.4} />
+    <Sfx at={H(4) - 0.05} name="user-whoosh" vol={0.22} />
+    <Sfx at={R - 0.05} name="user-whoosh" vol={0.3} />
+    <Sfx at={R + 0.1} name="user-pop" vol={0.3} />
+    <Sfx at={R + 0.25} name="user-pop" vol={0.3} />
+    <Sfx at={R + 0.4} name="user-boom" vol={0.4} />
   </AbsoluteFill>;
 };
