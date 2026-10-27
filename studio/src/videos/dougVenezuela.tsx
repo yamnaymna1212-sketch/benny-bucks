@@ -20,21 +20,21 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
 // ---------- props ----------
-const UsFlag = () => <g>
+export const UsFlag = () => <g>
   <rect width={190} height={120} fill="#fff" stroke={INK} strokeWidth={5} />
   {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 17.4} width={190} height={8.7} fill="#B22234" />)}
   <rect width={84} height={64} fill="#3C3B6E" />
   {Array.from({length: 12}, (_, i) => <circle key={i} cx={12 + (i % 4) * 20} cy={12 + Math.floor(i / 4) * 20} r={4} fill="#fff" />)}
   <rect width={190} height={120} fill="none" stroke={INK} strokeWidth={5} />
 </g>;
-const VeFlag = () => <g>
+export const VeFlag = () => <g>
   <rect width={190} height={40} fill="#F5C518" /><rect y={40} width={190} height={40} fill="#1F4BA8" /><rect y={80} width={190} height={40} fill="#D83A2E" />
   {Array.from({length: 8}, (_, i) => { const a = Math.PI * (0.85 - i * 0.1); return <circle key={i} cx={95 + Math.cos(a) * 30} cy={78 - Math.sin(a) * 26} r={4} fill="#fff" />; })}
   <rect width={190} height={120} fill="none" stroke={INK} strokeWidth={5} />
 </g>;
 
 // Gas pump with a flag on a pole and a big "$x / GALLON" window, jerry can in front (as in the user's original thumbnail).
-const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: number; price: string; flag: 'us' | 've'; top: string; t: number; color: string; fill: number}) => {
+export const FlagPump = ({x, y, price, flag, top, t, color, fill, unit = '/ GALLON'}: {x: number; y: number; price: string; flag: 'us' | 've'; top: string; t: number; color: string; fill: number; unit?: string}) => {
   const wave = Math.sin(t * 5) * 3;
   return <svg width={420} height={760} viewBox="0 0 420 760" style={{position: 'absolute', left: x - 210, top: y - 760, overflow: 'visible'}}>
     <line x1={60} y1={40} x2={60} y2={300} stroke={INK} strokeWidth={8} />
@@ -44,7 +44,7 @@ const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: numbe
     <rect x={40} y={300} width={300} height={34} rx={14} fill={top} stroke={INK} strokeWidth={7} />
     <rect x={64} y={370} width={252} height={160} rx={12} fill="#fff" stroke={INK} strokeWidth={6} />
     <text x={190} y={460} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={price.length > 5 ? 74 : 84} fill={color}>{price}</text>
-    <text x={190} y={510} textAnchor="middle" fontFamily="Montserrat" fontWeight={800} fontSize={34} fill={INK}>/ GALLON</text>
+    <text x={190} y={510} textAnchor="middle" fontFamily="Montserrat" fontWeight={800} fontSize={34} fill={INK}>{unit}</text>
     <path d="M340 400 C 400 420, 400 560, 360 600" fill="none" stroke={INK} strokeWidth={14} strokeLinecap="round" />
     <path d="M340 400 C 400 420, 400 560, 360 600" fill="none" stroke={top} strokeWidth={6} strokeLinecap="round" />
     <rect x={20} y={730} width={340} height={22} fill={top} stroke={INK} strokeWidth={5} />
@@ -86,11 +86,11 @@ const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: nu
     </g>
   </svg>;
 };
-const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
+export const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
   const p = ease((t - at) / 0.25);
   return <div style={{position: 'absolute', left: x - 260, width: 520, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: text.length > 5 ? 64 : 80, color: INK, opacity: p, transform: `scale(${0.5 + 0.5 * p})`}}>{text}</div>;
 };
-const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
+export const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
   const p = ease((t - 0.5) / 0.3);
   return <div style={{position: 'absolute', left: x - 75, top: y - 75, width: 150, height: 150, borderRadius: '50%', background: RED, border: `7px solid ${INK}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 72, color: '#fff', transform: `scale(${p}) rotate(${-8 + Math.sin(t * 4) * 3}deg)`}}>VS</div>;
 };
