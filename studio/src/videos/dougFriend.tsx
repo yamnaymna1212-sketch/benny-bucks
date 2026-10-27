@@ -1,9 +1,10 @@
 // EP7 "Gas: Doug (USA) vs his friend (Venezuela) — 3 reasons". Hook first (approval), full episode after.
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
 import {FlagPump, Label, Vs} from './dougVenezuela';
+import {Sfx, beat} from '../penguin/edit';
 
 const G = 1300;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -39,24 +40,47 @@ const Title = ({t}: {t: number}) => {
   </div>;
 };
 
-export const Hook = ({t}: {t: number}) => <>
-  <div style={{position: 'absolute', left: 538, top: 400, width: 6, height: 1100, background: INK, opacity: 0.85}} />
-  <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
-  <Title t={t} />
-  <Label text="USA" x={270} y={400} at={0} t={t + 1} />
-  <Label text="VENEZUELA" x={810} y={400} at={0} t={t + 1} />
-  <FlagPump x={270} y={G} price="$66" unit="/ TANK" flag="us" top={RED} t={t} color={RED} fill={1} />
-  <FlagPump x={810} y={G} price="$2" unit="/ TANK" flag="ve" top="#F5C518" t={t} color={GREEN} fill={1} />
-  <Penguin id="doug" x={270} y={G + 330} h={400} pose={{turn: 0.4, look: [0.5, -0.4], brows: 'worried', eyeScale: 1.2}} />
-  <Otter x={810} y={G + 330} h={400} flip t={t} />
-  <Vs x={540} y={980} t={t + 1} />
-</>;
+// phrase timings of the hook voice (videos/doug-friend/vo/hook.timings.json)
+export const HOOK_TIM = [{start: 0, end: 1.55, text: 'Doug fill tank in America.'}, {start: 1.67, end: 2.95, text: 'Sixty-six dollars.'}, {start: 3.25, end: 5.32, text: 'Doug friend fill tank in Venezuela.'}, {start: 5.44, end: 6.25, text: 'Two dollars.'}, {start: 6.55, end: 8.03, text: 'So what the real difference?'}, {start: 8.23, end: 9.23, text: 'Three reasons.'}];
+const VE_X = 770, US_X = 290;
 
-export const DOUG_FRIEND_SECONDS = 5;
+export const Hook = ({t}: {t: number}) => {
+  const usFill = ease(t / 1.4), veFill = ease((t - 3.25) / 1.8);
+  const p3 = ease((t - 8.23) / 0.25);
+  return <>
+    <div style={{position: 'absolute', left: 538, top: 400, width: 6, height: 1100, background: INK, opacity: 0.85}} />
+    <div style={{position: 'absolute', left: -400, right: -400, top: G, height: 700, background: '#E4F4FC', borderTop: `5px solid ${INK}`}} />
+    <Title t={t} />
+    <Label text="USA" x={US_X} y={400} at={0} t={t + 1} />
+    <Label text="VENEZUELA" x={VE_X} y={400} at={0} t={t + 1} />
+    <FlagPump x={US_X} y={G} price="$66" unit="/ TANK" flag="us" top={RED} t={t} color={RED} fill={usFill} />
+    <FlagPump x={VE_X} y={G} price="$2" unit="/ TANK" flag="ve" top="#F5C518" t={t} color={GREEN} fill={veFill} />
+    <Penguin id="doug" x={US_X} y={G + 330} h={400} pose={{turn: 0.4, look: [0.5, -0.4], brows: 'worried', eyeScale: 1.2}} />
+    <Otter x={VE_X} y={G + 330} h={400} flip t={t} />
+    <Vs x={540} y={980} t={t + 1} />
+    {t >= 8.23 && <div style={{position: 'absolute', left: 0, right: 0, top: 1680, textAlign: 'center', transform: `scale(${0.5 + 0.5 * p3}) rotate(-3deg)`, opacity: p3}}>
+      <span style={{display: 'inline-block', background: RED, color: '#fff', border: `7px solid ${INK}`, borderRadius: 28, padding: '10px 40px', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 96}}>3 REASONS</span>
+    </div>}
+  </>;
+};
+
+export const DOUG_FRIEND_SECONDS = 9.9;
 export const DougFriend = () => {
-  const frame = useCurrentFrame(), t = onTwos(frame);
+  const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
+  // push toward the side being spoken, wide again on the question
+  const toUS = ease((tc - 0.3) / 0.5) * (tc < 3.25 ? 1 : 0), toVE = ease((tc - 3.25) / 0.5) * (tc < 6.55 ? 1 : 0);
+  const sc = (1 + 0.18 * (toUS + toVE)) * (tc < 0.3 ? 1 : beat(tc, HOOK_TIM)), fx = 540 - 200 * toUS + 200 * toVE, fy = 960;
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
-    <Hook t={Math.max(t, frame / FPS)} />
+    <AbsoluteFill style={{transform: `translate(${540 - fx * sc}px, ${960 - fy * sc}px) scale(${sc})`, transformOrigin: '0 0'}}>
+      <Hook t={Math.max(t, 0)} />
+    </AbsoluteFill>
+    <Audio src={staticFile('doug-friend-hook.mp3')} />
+    <Sfx at={0} name="user-ting" vol={0.5} />
+    <Sfx at={1.67} name="user-cash-register" vol={0.35} />
+    <Sfx at={3.2} name="user-whoosh" vol={0.22} />
+    <Sfx at={5.44} name="user-ting" vol={0.4} />
+    <Sfx at={6.5} name="user-whoosh" vol={0.22} />
+    <Sfx at={8.23} name="user-boom" vol={0.45} />
   </AbsoluteFill>;
 };
