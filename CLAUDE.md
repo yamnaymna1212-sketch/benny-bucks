@@ -4,6 +4,12 @@ Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_c
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 
+## Doug content + voice rules (user, 2026-10-27, permanent)
+- NO financial advice, NO "how to" / "do this" steps, NO false claims, NO misleading or unfair comparisons. Only facts with a source + clearly labelled examples ("average", "example"). Never invent numbers (e.g. exact score drops).
+- Voice: cut every boring pause (tight gaps ~0.05 s, only the "Doug <state>." gag keeps ~0.3 s) and make the voice LOUD (about -10 LUFS, limiter, no clipping).
+- Always add the usual SFX: ting at 0 s, whoosh on every cut, pop on every big word, cash on prices, ding on key numbers, boom on shocks, fail sounds on the "Doug <state>." gag.
+- Focus ONE audience: young Americans 20-30 (first job, rent, debt) so TikTok learns the channel.
+
 # TOKEN GUARD (user rule, always on)
 Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
 - Full video render / re-render (any render > 5 s) -> offer ONE still or the 5-s hook preview instead; never re-render a finished episode unless asked.

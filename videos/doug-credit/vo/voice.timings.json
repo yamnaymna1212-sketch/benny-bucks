@@ -7,182 +7,182 @@
  },
  {
   "voice": "am_puck",
-  "text": "But Doug pay forty thousand dollars more.",
-  "start": 1.5,
-  "end": 3.53
+  "text": "But Doug pay ten thousand dollars more.",
+  "start": 1.41,
+  "end": 3.29
  },
  {
   "voice": "am_puck",
   "text": "What the difference?",
-  "start": 3.73,
-  "end": 4.58
+  "start": 3.35,
+  "end": 4.2
  },
  {
   "voice": "am_puck",
   "text": "One number.",
-  "start": 4.83,
-  "end": 5.49
+  "start": 4.3,
+  "end": 4.96
  },
  {
   "voice": "am_puck",
   "text": "This is called credit score.",
-  "start": 5.79,
-  "end": 7.04
+  "start": 5.02,
+  "end": 6.27
  },
  {
   "voice": "am_puck",
   "text": "Score go from three hundred to eight fifty.",
-  "start": 7.34,
-  "end": 9.44
+  "start": 6.33,
+  "end": 8.43
  },
  {
   "voice": "am_puck",
   "text": "Higher is better.",
-  "start": 9.59,
-  "end": 10.42
+  "start": 8.49,
+  "end": 9.32
  },
  {
   "voice": "am_puck",
-  "text": "Before bank give you money, bank look at this number.",
-  "start": 10.62,
-  "end": 13.03
+  "text": "Credit score is like report card. But for money.",
+  "start": 9.38,
+  "end": 11.9
  },
  {
   "voice": "am_puck",
-  "text": "High number. Bank trust you. Small interest.",
-  "start": 13.23,
-  "end": 15.34
+  "text": "Three big companies keep this report. Equifax. Experian. TransUnion.",
+  "start": 11.96,
+  "end": 16.18
  },
  {
   "voice": "am_puck",
-  "text": "Low number. Bank scared. Big interest.",
-  "start": 15.49,
-  "end": 17.37
+  "text": "When Doug want loan, bank look at this number.",
+  "start": 16.24,
+  "end": 18.29
  },
  {
   "voice": "am_puck",
-  "text": "Friend score: seven ninety. Interest: six percent.",
-  "start": 17.67,
-  "end": 20.19
+  "text": "Bank rent you money. Interest is the rent.",
+  "start": 18.35,
+  "end": 20.31
  },
  {
   "voice": "am_puck",
-  "text": "Doug score: five fifty. Interest: nineteen percent.",
-  "start": 20.34,
-  "end": 22.9
+  "text": "High number. Bank trust you. Lower interest.",
+  "start": 20.37,
+  "end": 22.54
  },
  {
   "voice": "am_puck",
-  "text": "Car cost one hundred thousand.",
-  "start": 23.1,
-  "end": 24.6
+  "text": "Low number. Bank scared. Higher interest.",
+  "start": 22.6,
+  "end": 24.5
  },
  {
   "voice": "am_puck",
-  "text": "Friend pay one sixteen. Doug pay one fifty-seven.",
-  "start": 24.7,
-  "end": 27.48
+  "text": "Friend score: seven ninety. Average interest: six percent.",
+  "start": 24.56,
+  "end": 27.6
  },
  {
   "voice": "am_puck",
-  "text": "Forty thousand dollars. For one number.",
-  "start": 27.68,
-  "end": 29.68
+  "text": "Doug score: five fifty. Average interest: nineteen percent.",
+  "start": 27.66,
+  "end": 30.75
+ },
+ {
+  "voice": "am_puck",
+  "text": "Car cost twenty-five thousand. Five years.",
+  "start": 30.81,
+  "end": 33.08
+ },
+ {
+  "voice": "am_puck",
+  "text": "Every month, friend pay four eighty-seven. Doug pay six fifty-four.",
+  "start": 33.14,
+  "end": 36.7
+ },
+ {
+  "voice": "am_puck",
+  "text": "Friend pay four thousand in interest.",
+  "start": 36.76,
+  "end": 38.49
+ },
+ {
+  "voice": "am_puck",
+  "text": "Doug pay fourteen thousand.",
+  "start": 38.55,
+  "end": 39.9
+ },
+ {
+  "voice": "am_puck",
+  "text": "Ten thousand dollars. For one number.",
+  "start": 39.96,
+  "end": 41.89
  },
  {
   "voice": "am_puck",
   "text": "Doug poor.",
-  "start": 29.98,
-  "end": 30.6
+  "start": 41.95,
+  "end": 42.58
  },
  {
   "voice": "am_puck",
   "text": "So why Doug score so low?",
-  "start": 31.05,
-  "end": 32.3
+  "start": 42.88,
+  "end": 44.13
  },
  {
   "voice": "am_puck",
-  "text": "Doug pay bill late. Score drop.",
-  "start": 32.45,
-  "end": 34.1
+  "text": "Doug pay bill late.",
+  "start": 44.19,
+  "end": 45.2
  },
  {
   "voice": "am_puck",
-  "text": "Doug use all his credit card. Score drop.",
-  "start": 34.22,
-  "end": 36.57
+  "text": "Doug use all his credit card.",
+  "start": 45.26,
+  "end": 46.66
  },
  {
   "voice": "am_puck",
-  "text": "Doug open five cards in one month. Score drop.",
-  "start": 36.69,
-  "end": 39.3
+  "text": "Doug open five cards in one month.",
+  "start": 46.72,
+  "end": 48.5
+ },
+ {
+  "voice": "am_puck",
+  "text": "Bank see this. Bank see risk.",
+  "start": 48.56,
+  "end": 50.01
  },
  {
   "voice": "am_puck",
   "text": "Doug angry.",
-  "start": 39.5,
-  "end": 40.2
+  "start": 50.07,
+  "end": 50.77
  },
  {
   "voice": "am_puck",
-  "text": "How score go up?",
-  "start": 40.65,
-  "end": 41.55
+  "text": "In real life, average used car loan is about nineteen percent for low score.",
+  "start": 51.07,
+  "end": 55.6
  },
  {
   "voice": "am_puck",
-  "text": "Pay every bill on time. This is biggest part.",
-  "start": 41.7,
-  "end": 43.95
+  "text": "About six percent for high score.",
+  "start": 55.66,
+  "end": 57.27
  },
  {
   "voice": "am_puck",
-  "text": "Use less than thirty percent of your card.",
-  "start": 44.1,
-  "end": 46.03
- },
- {
-  "voice": "am_puck",
-  "text": "Keep old card open. Old is good.",
-  "start": 46.18,
-  "end": 47.91
- },
- {
-  "voice": "am_puck",
-  "text": "Score grow slow. Like snow pile.",
-  "start": 48.16,
-  "end": 50.0
- },
- {
-  "voice": "am_puck",
-  "text": "In real life, used car loan is nineteen percent for low score.",
-  "start": 50.25,
-  "end": 53.58
- },
- {
-  "voice": "am_puck",
-  "text": "Six percent for high score.",
-  "start": 53.68,
-  "end": 55.08
- },
- {
-  "voice": "am_puck",
-  "text": "Doug fix score. One year later: six fifty.",
-  "start": 55.38,
-  "end": 57.6
- },
- {
-  "voice": "am_puck",
-  "text": "Doug happy.",
-  "start": 57.8,
-  "end": 58.53
+  "text": "Same car. Different number. Different price.",
+  "start": 57.33,
+  "end": 59.48
  },
  {
   "voice": "am_puck",
   "text": "What is your credit score? Tell Doug.",
-  "start": 58.98,
-  "end": 60.61
+  "start": 59.58,
+  "end": 61.22
  }
 ]

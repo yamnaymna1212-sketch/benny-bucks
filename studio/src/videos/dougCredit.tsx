@@ -1,7 +1,7 @@
-// EP8 "Credit score: same $100,000 car, Doug pays $40,000 more". Whole episode on the blue background of the user's hook image
+// EP8 "Credit score: same car, Doug pays $10,000 more". Whole episode on the blue background of the user's hook image
 // (videos/doug-credit/src/hook-ref.png; car sprites cut by tools/credit_plate.py). Line timings: studio/src/data/doug-credit.json.
-// Numbers: Experian Q1 2026 used-car APR by VantageScore tier: 501-600 = 19.42%, 781-850 = 6.30%. $100,000, 60 months:
-// 19.42% -> $157,033 total ; 6.30% -> $116,837 total ; difference $40,196.
+// Facts only, no advice (user rule). Example: $25,000 used-car loan, 60 months, Experian Q1 2026 average used-car APR by
+// VantageScore tier: 501-600 = 19.42% -> $654/mo, $14,258 interest ; 781-850 = 6.30% -> $487/mo, $4,209 interest ; diff $10,049.
 import React from 'react';
 import {AbsoluteFill, Audio, Img, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
@@ -151,6 +151,27 @@ const Range = ({t}: {t: number}) => <>
   {t >= P(6) && <svg width={200} height={260} viewBox="0 0 200 260" style={{position: 'absolute', left: 820, top: 480 - ease((t - P(6)) / 0.4) * 40}}><path d="M100 250 L100 40 M30 110 L100 30 L170 110" stroke={GREEN} strokeWidth={30} fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>}
 </>;
 
+const ReportCard = ({t}: {t: number}) => <>
+  <div style={{position: 'absolute', left: 190, top: 480, width: 700, height: 760, background: '#FFFDF5', border: `8px solid ${INK}`, borderRadius: 22, transform: `rotate(-3deg) scale(${pop(t, P(7) + 0.2)})`, padding: 40, boxSizing: 'border-box'}}>
+    <div style={{fontFamily: 'Montserrat', fontWeight: 900, fontSize: 56, color: INK}}>REPORT CARD</div>
+    <div style={{fontFamily: HAND, fontWeight: 700, fontSize: 40, color: '#5A6B85', marginTop: 4}}>but for money</div>
+    {['bills', 'cards', 'loans'].map((r, i) => <div key={r} style={{display: 'flex', justifyContent: 'space-between', marginTop: 34, fontFamily: HAND, fontWeight: 700, fontSize: 54, color: INK, borderBottom: '4px dashed #C9D3E0', paddingBottom: 10}}>
+      <span>{r}</span><span>...</span></div>)}
+    <div style={{position: 'absolute', right: 40, bottom: 40, fontFamily: 'Montserrat', fontWeight: 900, fontSize: 90, color: RED, border: `7px solid ${RED}`, borderRadius: 50, padding: '0 26px', transform: 'rotate(-8deg)'}}>550</div>
+  </div>
+  <Hand t={t} x={540} y={320} size={110} text="like a report card" at={P(7)} />
+</>;
+
+const Bureaus = ({t}: {t: number}) => {
+  const names = ['EQUIFAX', 'EXPERIAN', 'TRANSUNION'], d = (E(8) - P(8)) * 0.45;
+  return <>
+    <Hand t={t} x={540} y={320} size={100} text="3 companies keep it" at={P(8)} />
+    {names.map((n, i) => { const at = P(8) + d + i * (E(8) - P(8) - d) / 3, p = pop(t, at);
+      return p > 0 && <div key={n} style={{position: 'absolute', left: 140, top: 520 + i * 260, width: 800, height: 200, borderRadius: 26, background: '#FFFDF5', border: `7px solid ${INK}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${p}) rotate(${(i - 1) * 2}deg)`,
+        fontFamily: 'Montserrat', fontWeight: 900, fontSize: 84, color: '#1B3E8C'}}>📄 {n}</div>; })}
+  </>;
+};
+
 const Bank = ({t}: {t: number}) => <>
   <Gauge x={760} y={700} r={170} v={620 + Math.sin(t * 3) * 6} />
   <Shadow x={330} y={FLOOR} w={300} />
@@ -158,28 +179,39 @@ const Bank = ({t}: {t: number}) => <>
   <Magnifier x={620} y={760} rot={-10 + Math.sin(t * 4) * 6} />
   <Shadow x={860} y={FLOOR} w={200} />
   <Penguin id="doug" x={860} y={FLOOR} h={300} shadow={false} pose={{turn: -0.5, look: [-0.6, -0.3], flapL: 100, brows: 'worried'}} />
-  <Hand t={t} x={540} y={330} size={110} text="bank checks" at={P(7) + 0.4} />
+  <Hand t={t} x={540} y={330} size={110} text="bank checks" at={P(9) + 0.4} />
 </>;
 
+const Rent = ({t}: {t: number}) => {
+  const go = ease((t - P(10) - 0.2) / 0.7), back = ease((t - P(10) - 1.3) / 0.7);
+  return <>
+    <Shadow x={260} y={FLOOR} w={300} /><Fox x={260} y={FLOOR} h={520} mouth={0.4} sly={0.6} />
+    <Shadow x={850} y={FLOOR} w={220} /><Penguin id="doug" x={850} y={FLOOR} h={340} shadow={false} pose={{turn: -0.5, look: [-0.6, 0], flapL: 60}} />
+    <Num t={t} x={lerp(330, 760, go)} y={900} size={120} text="$" color={GREEN} rot={0} />
+    {t > P(10) + 1.3 && <Num t={t} x={lerp(760, 330, back)} y={1080} size={100} text="$ + %" color={RED} rot={0} />}
+    <Hand t={t} x={540} y={330} size={110} text="interest = rent" at={P(10) + 1.3} color="#FFE45C" />
+  </>;
+};
+
 const Trust = ({t, high}: {t: number; high: boolean}) => {
-  const at = high ? P(8) : P(9), shake = high ? 0 : Math.sin(t * 40) * 6;
+  const at = high ? P(11) : P(12), shake = high ? 0 : Math.sin(t * 40) * 6;
   return <>
     <Gauge x={540} y={680} r={210} v={high ? 790 : 520} />
     <Shadow x={540 + shake} y={FLOOR} w={300} />
     <div style={{position: 'absolute', left: shake, top: 0}}><Fox x={540} y={FLOOR} h={600} mouth={high ? 0.6 : 0.2} sly={high ? 0 : 1} /></div>
     {!high && <Hand t={t} x={760} y={980} size={130} text="!" at={at + 0.4} color={RED} rot={10} />}
     <Hand t={t} x={540} y={300} size={110} text={high ? 'bank trust you' : 'bank scared'} at={at + 0.3} color={high ? GREEN : RED} />
-    <Num t={t} x={540} y={1180} size={92} text={high ? 'SMALL INTEREST' : 'BIG INTEREST'} at={at + 1.2} color={high ? GREEN : RED} />
+    <Num t={t} x={540} y={1180} size={92} text={high ? 'LOWER INTEREST' : 'HIGHER INTEREST'} at={at + 1.2} color={high ? GREEN : RED} />
   </>;
 };
 
 const Person = ({t, who}: {t: number; who: 'friend' | 'doug'}) => {
-  const f = who === 'friend', at = f ? P(10) : P(11);
+  const f = who === 'friend', at = f ? P(13) : P(14);
   return <>
     <Gauge x={540} y={640} r={190} v={sweep(t, at, at + 0.9, 575, f ? 790 : 550)} />
     <Num t={t} x={540} y={290} size={140} text={f ? '790' : '550'} at={at + 0.3} color={f ? GREEN : RED} rot={0} />
-    <Num t={t} x={f ? 800 : 280} y={1050} size={220} text={f ? '6%' : '19%'} at={at + 1.4} color={f ? GREEN : RED} rot={f ? -6 : 6} />
-    <Hand t={t} x={f ? 800 : 280} y={1200} size={60} text="interest" at={at + 1.4} />
+    <Num t={t} x={f ? 800 : 280} y={1050} size={220} text={f ? '6%' : '19%'} at={at + 1.6} color={f ? GREEN : RED} rot={f ? -6 : 6} />
+    <Hand t={t} x={f ? 800 : 280} y={1200} size={56} text="avg interest" at={at + 1.6} />
     <Shadow x={f ? 300 : 790} y={FLOOR} w={280} />
     {f ? <div style={{position: 'absolute', left: 0, top: 0, transform: `translateY(${-Math.abs(Math.sin(t * 7)) * 30}px)`}}><Otter x={300} y={FLOOR} h={460} t={t} mood="cheer" /></div>
       : <Penguin id="doug" x={790} y={FLOOR} h={460} shadow={false} pose={{brows: 'worried', beak: 'frown', tears: true, lids: 0.3, look: [-0.5, -0.4]}} />}
@@ -187,37 +219,40 @@ const Person = ({t, who}: {t: number; who: 'friend' | 'doug'}) => {
 };
 
 const Price = ({t}: {t: number}) => <>
-  <CarSprite x={540} y={620} w={820} side="r" t={t} />
-  <Num t={t} x={540} y={420} size={150} text="$100,000" at={P(12) + 0.4} rot={-2} />
+  <CarSprite x={540} y={600} w={820} side="r" t={t} />
+  <Num t={t} x={540} y={420} size={150} text="$25,000" at={P(15) + 0.5} rot={-2} />
+  <Num t={t} x={540} y={1150} size={110} text="5 YEARS" at={P(15) + 1.5} color="#FFE45C" rot={2} />
+  <Hand t={t} x={540} y={1280} size={50} text="example loan" at={P(15) + 1.5} color="#BFD7FF" rot={0} />
 </>;
 
-const Totals = ({t}: {t: number}) => <>
+// split = friend right, Doug left (same as the hook)
+const Split = ({t, l, r, at, atL, sub}: {t: number; l: string; r: string; at: number; atL: number; sub: string}) => <>
   <div style={{position: 'absolute', left: 538, top: 300, width: 5, height: 1100, background: WHITE, borderRadius: 3}} />
   <CarSprite x={270} y={420} w={440} side="l" t={t} />
   <CarSprite x={810} y={410} w={460} side="r" t={t} seed={1} />
-  <Num t={t} x={810} y={840} size={96} text="$116,837" at={P(13) + 0.1} color={GREEN} rot={0} />
-  <Num t={t} x={270} y={840} size={96} text="$157,033" at={P(13) + 1.4} color={RED} rot={0} />
+  <Num t={t} x={810} y={840} size={96} text={r} at={at} color={GREEN} rot={0} />
+  <Num t={t} x={270} y={840} size={96} text={l} at={atL} color={RED} rot={0} />
+  <Hand t={t} x={810} y={940} size={50} text={sub} at={at} rot={0} />
+  <Hand t={t} x={270} y={940} size={50} text={sub} at={atL} rot={0} />
   <Shadow x={270} y={FLOOR} w={240} /><Shadow x={810} y={FLOOR} w={240} />
-  <Penguin id="doug" x={270} y={FLOOR} h={380} shadow={false} pose={{brows: t > P(13) + 1.4 ? 'shock' : 'worried', eyeScale: t > P(13) + 1.4 ? 1.4 : 1.1, tears: t > P(13) + 1.4, look: [0.2, -0.8]}} />
+  <Penguin id="doug" x={270} y={FLOOR} h={380} shadow={false} pose={{brows: t > atL ? 'shock' : 'worried', eyeScale: t > atL ? 1.4 : 1.1, tears: t > atL, look: [0.2, -0.8]}} />
   <Otter x={810} y={FLOOR} h={380} t={t} mood="happy" flip />
 </>;
 
-const FortyK = ({t}: {t: number}) => <>
-  <Num t={t} x={540} y={600} size={150} text="+$40,000" at={P(14)} color={RED} />
-  <Hand t={t} x={540} y={830} size={110} text="for one number" at={P(14) + 1.1} />
+const TenK = ({t}: {t: number}) => <>
+  <Num t={t} x={540} y={600} size={170} text="+$10,000" at={P(19)} color={RED} />
+  <Hand t={t} x={540} y={830} size={110} text="for one number" at={P(19) + 1.1} />
   <Gauge x={540} y={1080} r={150} v={550} />
 </>;
 
-const Mood = ({t, at, kind}: {t: number; at: number; kind: 'poor' | 'angry' | 'happy'}) => {
+const Mood = ({t, at, kind}: {t: number; at: number; kind: 'poor' | 'angry'}) => {
   const pose = kind === 'poor' ? {lids: 0.35, brows: 'worried' as const, beak: 'frown' as const, tears: true}
-    : kind === 'happy' ? {beak: 'smile' as const, brows: 'happy' as const, lids: 0.3, blush: 1, flapL: 120, flapR: 120}
     : {brows: 'angry' as const, angry: 1, beak: 'frown' as const, tremble: 1};
   return <>
     {kind === 'angry' && <AbsoluteFill style={{background: 'rgba(255,60,50,0.28)'}} />}
-    {kind === 'happy' && [0, 1, 2, 3, 4].map((i) => <div key={i} style={{position: 'absolute', left: 120 + i * 200, top: 420 + (i % 2) * 120 + Math.sin(t * 6 + i) * 20, fontSize: 90}}>✨</div>)}
     {kind === 'angry' && [0, 1].map((i) => { const ph = (t * 1.5 + i / 2) % 1; return <div key={i} style={{position: 'absolute', left: 300 + i * 380, top: 560 - ph * 180, width: 90 + ph * 60, height: 90 + ph * 60, borderRadius: '50%', background: '#fff', border: `5px solid ${INK}`, opacity: 1 - ph}} />; })}
     <Penguin id="doug" x={540} y={1600} h={950} pose={pose} />
-    <Hand t={t} x={540} y={330} size={140} text={`Doug ${kind}.`} at={at} color={kind === 'happy' ? GREEN : RED} />
+    <Hand t={t} x={540} y={330} size={140} text={`Doug ${kind}.`} at={at} color={RED} />
   </>;
 };
 
@@ -225,90 +260,63 @@ const Why = ({t}: {t: number}) => <>
   <Gauge x={720} y={700} r={200} v={550} />
   <Shadow x={300} y={FLOOR} w={260} />
   <Penguin id="doug" x={300} y={FLOOR} h={460} shadow={false} pose={{turn: 0.5, look: [0.8, -0.6], brows: 'worried', eyeScale: 1.2}} />
-  <Hand t={t} x={440} y={880} size={180} text="?" at={P(16) + 0.3} color="#FFE45C" rot={12} />
-  <Hand t={t} x={540} y={300} size={110} text="why so low?" at={P(16)} />
+  <Hand t={t} x={440} y={880} size={180} text="?" at={P(21) + 0.3} color="#FFE45C" rot={12} />
+  <Hand t={t} x={540} y={300} size={110} text="why so low?" at={P(21)} />
 </>;
 
+// small gauge in the corner: the needle dips (no invented point values)
 const MiniGauge = ({t, a, b, at}: {t: number; a: number; b: number; at: number}) => <>
   <Gauge x={820} y={360} r={110} v={sweep(t, at, at + 0.6, a, b)} />
-  {t >= at && <Num t={t} x={820} y={540} size={80} text={`↓ ${Math.round(Math.max(b, lerp(a, b, ease((t - at) / 0.6))))}`} at={at} color={RED} rot={0} />}
+  {t >= at && <Num t={t} x={820} y={540} size={90} text="↓" at={at} color={RED} rot={0} />}
 </>;
 
 const Late = ({t}: {t: number}) => <>
-  <Bill x={400} y={850} t={t} at={P(17) + 0.5} />
-  <MiniGauge t={t} a={640} b={600} at={E(17) - 0.8} />
+  <Bill x={400} y={850} t={t} at={P(22) + 0.4} />
+  <MiniGauge t={t} a={620} b={590} at={P(22) + 0.6} />
 </>;
 
 const MaxedCard = ({t}: {t: number}) => <>
   <CreditCard x={540} y={640} w={560} rot={-4} label="CREDIT" />
-  <Bar x={540} y={1000} fill={ease((t - P(18) - 0.3) / 1.0)} color={RED} />
-  <MiniGauge t={t} a={600} b={575} at={E(18) - 0.8} />
+  <Bar x={540} y={1000} fill={ease((t - P(23) - 0.2) / 0.9)} color={RED} />
+  <MiniGauge t={t} a={590} b={570} at={P(23) + 1} />
 </>;
 
 const FiveCards = ({t}: {t: number}) => {
   const cols = ['#1E1E1E', '#2F6FD6', '#C8352B', '#2EA84A', '#8A4FD6'];
   return <>
-    {cols.map((c, i) => { const at = P(19) + 0.2 + i * 0.3, p = pop(t, at); return p > 0 && <CreditCard key={i} x={540 + (i - 2) * 70} y={820 - Math.abs(i - 2) * 20} w={380} color={c} rot={(i - 2) * 12} s={p} />; })}
-    <Num t={t} x={540} y={1230} size={110} text="5 IN 1 MONTH" at={P(19) + 1.2} color={RED} rot={-3} />
-    <MiniGauge t={t} a={575} b={550} at={E(19) - 0.8} />
+    {cols.map((c, i) => { const at = P(24) + 0.2 + i * 0.25, p = pop(t, at); return p > 0 && <CreditCard key={i} x={540 + (i - 2) * 70} y={820 - Math.abs(i - 2) * 20} w={380} color={c} rot={(i - 2) * 12} s={p} />; })}
+    <Num t={t} x={540} y={1230} size={110} text="5 IN 1 MONTH" at={P(24) + 1.1} color={RED} rot={-3} />
+    <MiniGauge t={t} a={570} b={550} at={P(24) + 1.3} />
   </>;
 };
 
-const Up = ({t}: {t: number}) => <>
-  <Gauge x={540} y={760} r={260} v={550 + Math.sin(t * 4) * 20} label={false} />
-  <svg width={240} height={300} viewBox="0 0 200 260" style={{position: 'absolute', left: 820, top: 520 - Math.abs(Math.sin(t * 4)) * 30}}><path d="M100 250 L100 40 M30 110 L100 30 L170 110" stroke={GREEN} strokeWidth={30} fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
-  <Hand t={t} x={540} y={300} size={130} text="how to go up?" at={P(21)} color={GREEN} />
+const Risk = ({t}: {t: number}) => <>
+  <Shadow x={400} y={FLOOR} w={300} />
+  <Fox x={400} y={FLOOR} h={600} sly={1} mouth={0.2} />
+  <Magnifier x={700} y={820} rot={-14 + Math.sin(t * 4) * 6} />
+  {t >= P(25) + 0.8 && <div style={{position: 'absolute', left: 560, top: 520, transform: `rotate(-12deg) scale(${pop(t, P(25) + 0.8)})`, border: `10px solid ${RED}`, borderRadius: 18, padding: '4px 30px', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 120, color: RED, background: 'rgba(255,255,255,0.92)'}}>RISK</div>}
 </>;
-
-const OnTime = ({t}: {t: number}) => <>
-  <div style={{position: 'absolute', left: 160, top: 420, width: 760, height: 560, background: '#FFFDF5', border: `7px solid ${INK}`, borderRadius: 24}}>
-    <div style={{height: 90, background: RED, borderRadius: '16px 16px 0 0', borderBottom: `6px solid ${INK}`}} />
-    {Array.from({length: 12}, (_, i) => { const p = pop(t, P(22) + 0.2 + i * 0.1);
-      return <div key={i} style={{position: 'absolute', left: 30 + (i % 4) * 180, top: 120 + Math.floor(i / 4) * 140, width: 150, height: 110, borderRadius: 14, background: '#E9EEF5', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        {p > 0 && <span style={{fontSize: 80, color: '#2EA84A', fontWeight: 900, transform: `scale(${p})`, fontFamily: 'Montserrat'}}>✓</span>}</div>; })}
-  </div>
-  <Num t={t} x={540} y={1150} size={100} text="#1 BIGGEST PART" at={E(22) - 1.2} color="#FFE45C" rot={-3} />
-  <Hand t={t} x={540} y={300} size={110} text="pay on time" at={P(22)} color={GREEN} />
-</>;
-
-const Under30 = ({t}: {t: number}) => <>
-  <CreditCard x={540} y={600} w={520} rot={3} color="#2F6FD6" label="CREDIT" />
-  <Bar x={540} y={950} fill={0.25 * ease((t - P(23) - 0.3) / 1)} color={GREEN} mark={0.3} />
-  <Num t={t} x={540} y={300} size={130} text="UNDER 30%" at={P(23) + 0.6} color={GREEN} rot={-2} />
-</>;
-
-const OldCard = ({t}: {t: number}) => <>
-  <CreditCard x={540} y={700} w={600} color="#5C4632" rot={-3} label="SINCE 2012" />
-  {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: 300 + i * 220, top: 500 + Math.sin(t * 2 + i) * 12, width: 70, height: 4, background: 'rgba(255,255,255,0.6)', transform: 'rotate(-30deg)'}} />)}
-  <div style={{position: 'absolute', left: 230, top: 1000, transform: `rotate(-10deg) scale(${pop(t, P(24) + 1)})`, border: `9px solid ${GREEN}`, borderRadius: 16, padding: '4px 30px', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 96, color: GREEN, background: 'rgba(0,30,90,0.6)', opacity: t > P(24) + 1 ? 1 : 0}}>OLD = GOOD</div>
-</>;
-
-const Slow = ({t}: {t: number}) => {
-  const g = ease((t - P(25)) / 1.8);
-  return <>
-    <svg width={700} height={420} viewBox="0 0 700 420" style={{position: 'absolute', left: 190, top: FLOOR - 420}}>
-      <path d={`M0 420 Q 350 ${420 - 380 * g} 700 420 Z`} fill="#F4F9FF" stroke={INK} strokeWidth={7} />
-    </svg>
-    <Gauge x={540} y={560} r={200} v={550 + 60 * g} />
-    <Hand t={t} x={540} y={250} size={110} text="slow..." at={P(25)} />
-  </>;
-};
 
 const RealLife = ({t}: {t: number}) => <>
-  <Hand t={t} x={540} y={300} size={110} text="real life" at={P(26)} />
-  <Num t={t} x={290} y={700} size={190} text="19%" at={P(26) + 1.2} color={RED} rot={0} />
-  <Hand t={t} x={290} y={860} size={60} text="low score" at={P(26) + 1.4} />
-  <Num t={t} x={800} y={700} size={190} text="6%" at={P(27)} color={GREEN} rot={0} />
-  <Hand t={t} x={800} y={860} size={60} text="high score" at={P(27) + 0.2} />
-  <Hand t={t} x={540} y={1050} size={56} text="used car loan · Experian 2026" at={P(26) + 0.3} color="#BFD7FF" rot={0} />
+  <Hand t={t} x={540} y={300} size={110} text="real life" at={P(27)} />
+  <Num t={t} x={290} y={700} size={190} text="19%" at={P(27) + 2.6} color={RED} rot={0} />
+  <Hand t={t} x={290} y={860} size={60} text="low score" at={P(27) + 2.8} />
+  <Num t={t} x={800} y={700} size={190} text="6%" at={P(28) + 0.3} color={GREEN} rot={0} />
+  <Hand t={t} x={800} y={860} size={60} text="high score" at={P(28) + 0.5} />
+  <Hand t={t} x={540} y={1050} size={40} text={<>average used-car loan APR<br />Experian, Q1 2026</>} at={P(27) + 0.4} color="#BFD7FF" rot={0} />
 </>;
 
-const YearLater = ({t}: {t: number}) => <>
-  <Hand t={t} x={540} y={300} size={110} text="1 year later" at={P(28) + 0.8} color="#FFE45C" />
-  <Gauge x={540} y={740} r={260} v={sweep(t, P(28) + 1.2, P(28) + 2.2, 550, 650)} label={false} />
-  {t >= P(28) + 1.4 && <Num t={t} x={540} y={980} size={130} text={`${Math.round(lerp(550, 650, ease((t - P(28) - 1.2) / 1)))}`} at={P(28) + 1.4} color={GREEN} rot={0} />}
-  <Shadow x={540} y={FLOOR} w={240} />
-  <Penguin id="doug" x={540} y={FLOOR} h={300} shadow={false} pose={{beak: 'smile', brows: 'happy', look: [0, -0.8]}} />
+const SameDiff = ({t}: {t: number}) => <>
+  <div style={{position: 'absolute', left: 538, top: 250, width: 5, height: 1150, background: WHITE, borderRadius: 3}} />
+  <CarSprite x={260} y={330} w={470} side="l" t={t} />
+  <CarSprite x={811} y={311} w={502} side="r" t={t} seed={1.3} />
+  <Hand t={t} x={540} y={200} size={90} text="same car" at={P(29)} color={WHITE} rot={0} />
+  <Gauge x={264} y={760} r={110} v={550} /><Gauge x={803} y={760} r={110} v={790} />
+  <Num t={t} x={264} y={1000} size={90} text="$654/mo" at={P(29) + 1.4} color={RED} rot={0} />
+  <Num t={t} x={803} y={1000} size={90} text="$487/mo" at={P(29) + 1.4} color={GREEN} rot={0} />
+  <Shadow x={264} y={FLOOR} w={240} /><Shadow x={803} y={FLOOR} w={240} />
+  <Penguin id="doug" x={264} y={FLOOR} h={340} shadow={false} pose={{brows: 'worried', tears: true, look: [0.2, -0.8]}} />
+  <Otter x={803} y={FLOOR} h={340} t={t} mood="cheer" />
 </>;
 
 const Cta = ({t}: {t: number}) => <>
@@ -316,7 +324,7 @@ const Cta = ({t}: {t: number}) => <>
   <Hand t={t} x={540} y={330} size={120} text="what's YOUR score?" at={P(30)} color="#FFE45C" />
   <Shadow x={360} y={FLOOR} w={240} />
   <Penguin id="doug" x={360} y={FLOOR} h={380} shadow={false} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0.3, 0.6]}} />
-  <Hand t={t} x={700} y={1250} size={150} text="👇" at={P(30) + 1} rot={0} />
+  <Hand t={t} x={700} y={1250} size={150} text="👇" at={P(30) + 0.8} rot={0} />
 </>;
 
 // ---------- shots ----------
@@ -326,32 +334,34 @@ const SHOTS: Shot[] = [
   {at: P(3), set: (t) => <OneNumber t={t} />, fx_: 'zoom'},
   {at: P(4), set: (t) => <Named t={t} />, fx_: 'pop'},
   {at: P(5), set: (t) => <Range t={t} />, fx_: 'swipe'},
-  {at: P(7), set: (t) => <Bank t={t} />, fx_: 'swipeL'},
-  {at: P(8), set: (t) => <Trust t={t} high />, fx_: 'iris'},
-  {at: P(9), set: (t) => <Trust t={t} high={false} />, fx_: 'swipe'},
-  {at: P(10), set: (t) => <Person t={t} who="friend" />, fx_: 'swipeL'},
-  {at: P(11), set: (t) => <Person t={t} who="doug" />, fx_: 'swipe'},
-  {at: P(12), set: (t) => <Price t={t} />, fx_: 'zoom'},
-  {at: P(13), set: (t) => <Totals t={t} />, fx_: 'swipeL'},
-  {at: P(14), set: (t) => <FortyK t={t} />, fx_: 'pop'},
-  {at: P(15), set: (t) => <Mood t={t} at={P(15)} kind="poor" />, fx_: 'zoom'},
-  {at: P(16), set: (t) => <Why t={t} />, fx_: 'swipe'},
-  {at: P(17), set: (t) => <Late t={t} />, fx_: 'pop'},
-  {at: P(18), set: (t) => <MaxedCard t={t} />, fx_: 'swipeL'},
-  {at: P(19), set: (t) => <FiveCards t={t} />, fx_: 'swipe'},
-  {at: P(20), set: (t) => <Mood t={t} at={P(20)} kind="angry" />, fx_: 'zoom'},
-  {at: P(21), set: (t) => <Up t={t} />, fx_: 'iris'},
-  {at: P(22), set: (t) => <OnTime t={t} />, fx_: 'swipe'},
-  {at: P(23), set: (t) => <Under30 t={t} />, fx_: 'swipeL'},
-  {at: P(24), set: (t) => <OldCard t={t} />, fx_: 'pop'},
-  {at: P(25), set: (t) => <Slow t={t} />, fx_: 'swipe'},
-  {at: P(26), set: (t) => <RealLife t={t} />, fx_: 'iris'},
-  {at: P(28), set: (t) => <YearLater t={t} />, fx_: 'swipeL'},
-  {at: P(29), set: (t) => <Mood t={t} at={P(29)} kind="happy" />, fx_: 'zoom'},
+  {at: P(7), set: (t) => <ReportCard t={t} />, fx_: 'swipeL'},
+  {at: P(8), set: (t) => <Bureaus t={t} />, fx_: 'swipe'},
+  {at: P(9), set: (t) => <Bank t={t} />, fx_: 'iris'},
+  {at: P(10), set: (t) => <Rent t={t} />, fx_: 'swipeL'},
+  {at: P(11), set: (t) => <Trust t={t} high />, fx_: 'pop'},
+  {at: P(12), set: (t) => <Trust t={t} high={false} />, fx_: 'swipe'},
+  {at: P(13), set: (t) => <Person t={t} who="friend" />, fx_: 'swipeL'},
+  {at: P(14), set: (t) => <Person t={t} who="doug" />, fx_: 'swipe'},
+  {at: P(15), set: (t) => <Price t={t} />, fx_: 'zoom'},
+  {at: P(16), set: (t) => <Split t={t} r="$487/mo" l="$654/mo" sub="every month" at={P(16) + 0.9} atL={P(16) + 2.4} />, fx_: 'swipeL'},
+  {at: P(17), set: (t) => <Split t={t} r="$4,209" l="$14,258" sub="interest" at={P(17) + 0.3} atL={P(18) + 0.2} />, fx_: 'pop'},
+  {at: P(19), set: (t) => <TenK t={t} />, fx_: 'zoom'},
+  {at: P(20), set: (t) => <Mood t={t} at={P(20)} kind="poor" />, fx_: 'zoom'},
+  {at: P(21), set: (t) => <Why t={t} />, fx_: 'swipe'},
+  {at: P(22), set: (t) => <Late t={t} />, fx_: 'pop'},
+  {at: P(23), set: (t) => <MaxedCard t={t} />, fx_: 'swipeL'},
+  {at: P(24), set: (t) => <FiveCards t={t} />, fx_: 'swipe'},
+  {at: P(25), set: (t) => <Risk t={t} />, fx_: 'iris'},
+  {at: P(26), set: (t) => <Mood t={t} at={P(26)} kind="angry" />, fx_: 'zoom'},
+  {at: P(27), set: (t) => <RealLife t={t} />, fx_: 'swipe'},
+  {at: P(29), set: (t) => <SameDiff t={t} />, fx_: 'swipeL'},
   {at: P(30), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[11, 540, 900, 1.2], [14, 540, 640, 1.15]];
+const DEEP: [number, number, number, number][] = [[19, 540, 640, 1.15]];
+// pop on every big word (usual SFX)
+const POPS = [P(3), P(4) + 0.4, P(5) + 0.4, P(5) + 1.5, P(6), P(7), P(8), P(9) + 0.4, P(10) + 1.3, P(11) + 0.3, P(12) + 0.3, P(13) + 0.3, P(14) + 0.3, P(16) + 0.9, P(16) + 2.4,
+  P(19) + 1.1, P(21), P(24) + 1.1, P(27), P(28) + 0.3, P(29), P(29) + 1.4, P(30)];
 
 export const DougCredit = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
@@ -374,36 +384,38 @@ export const DougCredit = () => {
     <Audio src={staticFile('doug-credit-voice.mp3')} />
     {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
     <Sfx at={0} name="user-ting" vol={0.5} />
+    {POPS.map((at, i) => <Sfx key={`p${i}`} at={at} name="user-pop" vol={0.28} />)}
     <Sfx at={P(1) + 0.3} name="user-wrong" vol={0.4} />
     <Sfx at={P(1) + 1.2} name="user-cash-register" vol={0.35} />
     <Sfx at={P(2)} name="user-boom" vol={0.4} />
     <Sfx at={P(4) + 0.4} name="user-ting" vol={0.4} />
-    <Sfx at={P(5) + 1.5} name="user-pop" vol={0.35} />
     <Sfx at={P(6)} name="user-yeah" vol={0.3} />
-    <Sfx at={P(8) + 1.2} name="user-wow" vol={0.35} />
-    <Sfx at={P(9) + 0.4} name="user-shock" vol={0.35} />
-    <Sfx at={P(10) + 1.4} name="user-ting" vol={0.4} />
-    <Sfx at={P(11) + 1.4} name="user-boom" vol={0.4} />
-    <Sfx at={P(12) + 0.4} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(13) + 0.1} name="user-money" vol={0.3} />
-    <Sfx at={P(13) + 1.4} name="user-money-transfer" vol={0.35} />
-    <Sfx at={P(14)} name="user-boom" vol={0.45} />
-    <Sfx at={P(15)} name="user-aww" vol={0.4} />
-    <Sfx at={P(17)} name="user-notif" vol={0.35} />
-    <Sfx at={P(17) + 0.5} name="user-slap" vol={0.4} />
-    <Sfx at={E(17) - 0.8} name="user-wrong" vol={0.3} />
-    <Sfx at={E(18) - 0.8} name="user-wrong" vol={0.3} />
-    {[0, 1, 2, 3, 4].map((i) => <Sfx key={`c${i}`} at={P(19) + 0.2 + i * 0.3} name="user-pop" vol={0.25} />)}
-    <Sfx at={E(19) - 0.8} name="user-fahh" vol={0.4} />
-    <Sfx at={P(20)} name="user-shock" vol={0.4} />
-    <Sfx at={P(22) + 0.2} name="user-timer" vol={0.25} />
-    <Sfx at={E(22) - 1.2} name="user-ting" vol={0.4} />
-    <Sfx at={P(23) + 0.6} name="user-pop" vol={0.35} />
-    <Sfx at={P(24) + 1} name="user-slap" vol={0.35} />
-    <Sfx at={P(26) + 1.2} name="user-boom" vol={0.35} />
-    <Sfx at={P(27)} name="user-ting" vol={0.4} />
-    <Sfx at={P(28) + 1.2} name="user-yeah" vol={0.35} />
-    <Sfx at={P(29)} name="user-wow" vol={0.35} />
-    <Sfx at={P(30)} name="user-pop" vol={0.35} />
+    {[0, 1, 2].map((i) => <Sfx key={`b${i}`} at={P(8) + (E(8) - P(8)) * 0.45 + i * (E(8) - P(8)) * 0.55 / 3} name="user-slap" vol={0.25} />)}
+    <Sfx at={P(10) + 0.2} name="user-money-transfer" vol={0.35} />
+    <Sfx at={P(10) + 1.3} name="user-cash-register" vol={0.3} />
+    <Sfx at={P(11) + 1.2} name="user-wow" vol={0.35} />
+    <Sfx at={P(12) + 0.4} name="user-shock" vol={0.35} />
+    <Sfx at={P(13) + 1.6} name="user-ting" vol={0.4} />
+    <Sfx at={P(14) + 1.6} name="user-boom" vol={0.4} />
+    <Sfx at={P(15) + 0.5} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(15) + 1.5} name="user-timer" vol={0.3} />
+    <Sfx at={P(16) + 0.9} name="user-money" vol={0.3} />
+    <Sfx at={P(16) + 2.4} name="user-money" vol={0.3} />
+    <Sfx at={P(17) + 0.3} name="user-ting" vol={0.35} />
+    <Sfx at={P(18) + 0.2} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(19)} name="user-boom" vol={0.45} />
+    <Sfx at={P(20)} name="user-aww" vol={0.45} />
+    <Sfx at={P(20) + 0.2} name="user-fahh" vol={0.35} />
+    <Sfx at={P(22)} name="user-notif" vol={0.35} />
+    <Sfx at={P(22) + 0.4} name="user-slap" vol={0.4} />
+    <Sfx at={P(22) + 0.6} name="user-wrong" vol={0.3} />
+    <Sfx at={P(23) + 1} name="user-wrong" vol={0.3} />
+    {[0, 1, 2, 3, 4].map((i) => <Sfx key={`c${i}`} at={P(24) + 0.2 + i * 0.25} name="user-pop" vol={0.25} />)}
+    <Sfx at={P(24) + 1.3} name="user-wrong" vol={0.3} />
+    <Sfx at={P(25) + 0.8} name="user-slap" vol={0.4} />
+    <Sfx at={P(26)} name="user-shock" vol={0.45} />
+    <Sfx at={P(27) + 2.6} name="user-boom" vol={0.35} />
+    <Sfx at={P(28) + 0.3} name="user-ting" vol={0.4} />
+    <Sfx at={P(29) + 1.4} name="user-cash-register" vol={0.3} />
   </AbsoluteFill>;
 };
