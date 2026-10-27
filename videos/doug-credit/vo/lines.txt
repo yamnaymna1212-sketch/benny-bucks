@@ -1,0 +1,31 @@
+Same car. Same price.|0.15
+But Doug pay forty thousand dollars more.|0.2
+What the difference?|0.25
+One number.|0.3
+This is called credit score.|0.3
+Score go from three hundred to eight fifty.|0.15
+Higher is better.|0.2
+Before bank give you money, bank look at this number.|0.2
+High number. Bank trust you. Small interest.|0.15
+Low number. Bank scared. Big interest.|0.3
+Friend score: seven ninety. Interest: six percent.|0.15
+Doug score: five fifty. Interest: nineteen percent.|0.2
+Car cost one hundred thousand.|0.1
+Friend pay one sixteen. Doug pay one fifty-seven.|0.2
+Forty thousand dollars. For one number.|0.3
+Doug poor.|0.45
+So why Doug score so low?|0.15
+Doug pay bill late. Score drop.|0.12
+Doug use all his credit card. Score drop.|0.12
+Doug open five cards in one month. Score drop.|0.2
+Doug angry.|0.45
+How score go up?|0.15
+Pay every bill on time. This is biggest part.|0.15
+Use less than thirty percent of your card.|0.15
+Keep old card open. Old is good.|0.25
+Score grow slow. Like snow pile.|0.25
+In real life, used car loan is nineteen percent for low score.|0.1
+Six percent for high score.|0.3
+Doug fix score. One year later: six fifty.|0.2
+Doug happy.|0.45
+What is your credit score? Tell Doug.|0.5

@@ -21,27 +21,33 @@ const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 const RED = '#D83A2E', GREEN = '#2E9E4F';
 
 // ---------- Doug's friend in Venezuela: a sea otter (only Doug + family are penguins). Name never shown. ----------
-export const Otter = ({x, y, h = 360, flip, t, mood = 'happy'}: {x: number; y: number; h?: number; flip?: boolean; t: number; mood?: 'happy' | 'angry' | 'shock'}) => {
+export const Otter = ({x, y, h = 360, flip, t, mood = 'happy'}: {x: number; y: number; h?: number; flip?: boolean; t: number; mood?: 'happy' | 'angry' | 'shock' | 'cheer'}) => {
   const bob = Math.sin(t * 3) * 3, shake = mood === 'angry' ? Math.sin(t * 50) * 3 : 0;
   return <svg width={h * 0.8} height={h} viewBox="0 0 320 400" style={{position: 'absolute', left: x - h * 0.4 + shake, top: y - h + bob, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
     <ellipse cx={160} cy={395} rx={110} ry={10} fill="#E3E8EC" />
     <path d="M250 360 C 320 350, 330 290, 300 250" fill="none" stroke={INK} strokeWidth={34} strokeLinecap="round" />
     <path d="M250 360 C 320 350, 330 290, 300 250" fill="none" stroke="#8A5A3B" strokeWidth={22} strokeLinecap="round" />
+    {mood === 'cheer' && [[-1, 96], [1, 224]].map(([d, sx]) => { const wv = Math.sin(t * 12 + d) * 6;
+      return <g key={d}><path d={`M${sx} 230 Q ${sx + d * 40} 170 ${sx + d * 70 + wv} 110`} fill="none" stroke={INK} strokeWidth={34} strokeLinecap="round" />
+        <path d={`M${sx} 230 Q ${sx + d * 40} 170 ${sx + d * 70 + wv} 110`} fill="none" stroke="#8A5A3B" strokeWidth={22} strokeLinecap="round" /></g>; })}
+    {mood === 'cheer' && [[-1, 40, 60], [-1, 20, 120], [1, 280, 60], [1, 300, 120]].map(([d, x, y], i) =>
+      <line key={i} x1={x} y1={y} x2={x + d * 34} y2={y - 22 + (i % 2) * 30} stroke="#7EE04A" strokeWidth={9} strokeLinecap="round" opacity={0.6 + 0.4 * Math.sin(t * 10 + i)} />)}
     <path d="M80 390 C 60 280, 90 190, 160 190 C 230 190, 260 280, 240 390 Z" fill="#8A5A3B" stroke={INK} strokeWidth={7} strokeLinejoin="round" />
     <path d="M115 390 C 105 300, 125 240, 160 240 C 195 240, 215 300, 205 390 Z" fill="#E9D3B4" />
     <circle cx={92} cy={80} r={22} fill="#8A5A3B" stroke={INK} strokeWidth={6} /><circle cx={228} cy={80} r={22} fill="#8A5A3B" stroke={INK} strokeWidth={6} />
     <ellipse cx={160} cy={130} rx={88} ry={78} fill="#8A5A3B" stroke={INK} strokeWidth={7} />
     <ellipse cx={160} cy={150} rx={62} ry={48} fill="#E9D3B4" />
     <ellipse cx={160} cy={132} rx={15} ry={10} fill={INK} />
-    <circle cx={125} cy={108} r={mood === 'shock' ? 15 : 11} fill={INK} /><circle cx={195} cy={108} r={mood === 'shock' ? 15 : 11} fill={INK} />
-    <circle cx={128} cy={104} r={3.5} fill="#fff" /><circle cx={198} cy={104} r={3.5} fill="#fff" />
+    {mood === 'cheer' ? <path d="M110 112 Q125 96 140 112 M180 112 Q195 96 210 112" fill="none" stroke={INK} strokeWidth={7} strokeLinecap="round" /> : <>
+      <circle cx={125} cy={108} r={mood === 'shock' ? 15 : 11} fill={INK} /><circle cx={195} cy={108} r={mood === 'shock' ? 15 : 11} fill={INK} />
+      <circle cx={128} cy={104} r={3.5} fill="#fff" /><circle cx={198} cy={104} r={3.5} fill="#fff" /></>}
     {mood === 'angry' && <path d="M100 82 L145 96 M220 82 L175 96" stroke={INK} strokeWidth={8} strokeLinecap="round" />}
-    {mood === 'happy' ? <path d="M140 156 Q160 176 180 156" fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
+    {mood === 'happy' || mood === 'cheer' ? <path d="M140 156 Q160 176 180 156" fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
       : mood === 'angry' ? <path d="M138 172 Q160 152 182 172" fill="none" stroke={INK} strokeWidth={6} strokeLinecap="round" />
       : <ellipse cx={160} cy={166} rx={12} ry={14} fill={INK} />}
     <path d="M118 140 L80 132 M118 148 L78 152 M202 140 L240 132 M202 148 L242 152" stroke={INK} strokeWidth={3} strokeLinecap="round" />
-    <ellipse cx={128} cy={285} rx={22} ry={16} fill="#8A5A3B" stroke={INK} strokeWidth={6} />
-    <ellipse cx={192} cy={285} rx={22} ry={16} fill="#8A5A3B" stroke={INK} strokeWidth={6} />
+    {mood !== 'cheer' && <><ellipse cx={128} cy={285} rx={22} ry={16} fill="#8A5A3B" stroke={INK} strokeWidth={6} />
+    <ellipse cx={192} cy={285} rx={22} ry={16} fill="#8A5A3B" stroke={INK} strokeWidth={6} /></>}
   </svg>;
 };
 
