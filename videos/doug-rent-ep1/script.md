@@ -1,3 +1,10 @@
+# v2 STORY ONLY (2026-10-27) — TikTok restricted v1 (financial advice / misleading info). Changes:
+# removed "That is almost 400% a year.", the "In real life ... court order" + "$2,500 to $8,000" lines, and the advice ending
+# ("Behind on rent? Call 211. Ask for a payment plan. In writing."). New ending (pure story, no tips to the viewer):
+# "Two weeks later. Charity money come. Doug pay Larry. One hundred sixty fish. Larry count every fish. Larry happy. Larry buy new hat. Doug family sleep warm.
+#  Next month. Ring ring. Larry: Rent. Now. Doug has two hundred dollars. Again. What Doug do next?"
+# Voice: vo/paras.txt (61.0 s). Video: doug-pays-ep1-rent-v2.mp4 (61.8 s).
+
 # DOUG PAYS · EP. 1 — Rent (NEW story, v2, approved 2026-10-26) — voice: Kokoro am_fenrir 1.3, one continuous take per paragraph (vo/paras.txt) -> 65.1 s. Trimmed vs. draft: "Ring ring" (2nd), "So Doug do math for Larry", "Larry pay", "In writing" (line 25), "211 find rent help".
 Old story saved in script-old.md. One line = one idea = one shot. Target 61–65 s.
 Hook visual (dougPaysHook.tsx v7): top "IF YOU DON'T PAY RENT..." / Doug $200 (green) vs house + flag + ANGRY Larry, RENT $1,600 (red).

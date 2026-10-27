@@ -36,7 +36,7 @@ export const Flag = ({x, y, t}: {x: number; y: number; t: number}) => {
 };
 
 // Plain American suburban house (siding, brick chimney, blue door, porch light) with a US flag on a pole
-const House = ({x, base, t, sc = 1, fx = 610}: {x: number; base: number; t: number; sc?: number; fx?: number}) => {
+export const House = ({x, base, t, sc = 1, fx = 610}: {x: number; base: number; t: number; sc?: number; fx?: number}) => {
   const W = 470, H = 330;
   return <svg width={(W + 220) * sc} height={(H + 230) * sc} style={{position: 'absolute', left: x - (W + 220) * sc / 2, top: base - (H + 200) * sc, overflow: 'visible'}} viewBox={`0 0 ${W + 220} ${H + 230}`}>
     <g transform="translate(110 200)">

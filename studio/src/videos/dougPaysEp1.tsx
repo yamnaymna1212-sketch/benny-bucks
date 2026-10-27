@@ -1,18 +1,18 @@
 // DOUG PAYS · EP. 1 "Rent" — new story (2026-10-26): Larry demands $1,600, Doug has $200, options fail one by one,
 // payday loan trap, 211 + a written payment plan beat Larry's "police tonight" bluff. Night look v3.
 // VO: Kokoro am_fenrir 1.3, one take per paragraph (videos/doug-rent-ep1/vo/paras.txt). Phrase map: data/doug-rent-ep1.json.
-// Sources: Nolo/FindLaw (no eviction without a court), USA.gov (211), LSC 2025 ($2,500–$8,000 per eviction), CFPB (~400% APR).
+// v2 (2026-10-27): TikTok restricted v1 for financial advice -> pure story: removed the advice ending (211 / payment plan / 'in real life'),\n// the 400% APR card and the $2,500–$8,000 eviction card; new ending = Doug pays 160 fish, family sleeps, next month Larry calls again.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {Fish, INK, Penguin, Seal, onTwos} from '../penguin/rig';
 import {Puffin, Seagull, Walrus} from '../penguin/cast';
-import {FishFlight, Paper, Stamp, Thought} from '../penguin/world';
+import {FishFlight, FishPile, Paper, Stamp, Thought} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
 import {Captions, Sfx, beat} from '../penguin/edit';
 import {GlassCard, NightBg, NightGround, N_GREEN, N_RED, Pill, SeriesBadge} from '../penguin/night';
 import {Fox} from './dougLaundering';
-import {Hook, TopLine} from './dougPaysHook';
+import {Hook, House, TopLine} from './dougPaysHook';
 import TIM from '../data/doug-rent-ep1.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
@@ -230,17 +230,11 @@ const Loan = ({t}: {t: number}) => <>
   <Card x={540} y={230} w={760} value="$500" label="BORROW TODAY" at={P(33)} t={t} color={N_GREEN} size={150} />
   <Card x={540} y={640} w={760} value="$575" label="PAY BACK IN 2 WEEKS" at={P(34) + 0.6} t={t} color={N_RED} size={150} />
   <Puffin x={880} y={G + 20} h={300} pose={{smirk: true}} />
-  <Penguin id="doug" x={220} y={G} h={380} pose={{turn: 0.4, look: [0.6, -0.8], brows: t >= P(34) + 0.6 ? 'shock' : 'none', beak: t >= P(34) + 0.6 ? 'frown' : 'smile', eyeScale: t >= P(34) + 0.6 ? 1.3 : 1}} />
+  <Penguin id="doug" x={220} y={G} h={380} pose={{turn: 0.4, look: [0.6, -0.8], brows: t >= P(35) ? 'angry' : t >= P(34) + 0.6 ? 'shock' : 'none', beak: t >= P(34) + 0.6 ? 'frown' : 'smile', eyeScale: t >= P(34) + 0.6 ? 1.3 : 1, flapL: t >= P(35) ? 100 : 0, flapR: t >= P(35) ? 100 : 0}} />
+  <Stamp text="NO" x={560} y={1040} at={P(35)} color={N_RED} size={130} rot={10} />
 </>;
-const Apr = ({t}: {t: number}) => <>
-  <NightGround y={G} />
-  <Card x={540} y={260} w={860} value="~400%" label="A YEAR" source="CFPB ($15 per $100, 2 weeks)" at={P(35)} t={t} color={N_RED} size={190} />
-  <Penguin id="doug" x={540} y={G} h={430} pose={{look: [0, -0.8], brows: t >= P(36) ? 'angry' : 'shock', eyeScale: 1.3, beak: 'frown', flapL: t >= P(36) ? 100 : 30, flapR: t >= P(36) ? 100 : 30}} />
-  <Stamp text="NO" x={820} y={900} at={P(36)} color={N_RED} size={130} rot={10} />
-</>;
-
 const Hour = ({t}: {t: number}) => {
-  const left = Math.max(0, 3600 - (t - P(37)) * 400), mm = Math.floor(left / 60), ss = Math.floor(left % 60);
+  const left = Math.max(0, 3600 - (t - P(36)) * 400), mm = Math.floor(left / 60), ss = Math.floor(left % 60);
   return <>
     <NightGround y={G} />
     <GlassCard x={140} y={260} w={800} h={300}>
@@ -253,19 +247,19 @@ const Hour = ({t}: {t: number}) => {
 
 const Dial = ({t}: {t: number}) => <>
   <NightGround y={G} />
-  <Phone x={540} y={980} w={330} t={t} ring={P(38) + 0.6} screen={t >= P(39) ? '✅' : '211'} />
-  <Penguin id="doug" x={200} y={G} h={380} pose={{turn: 0.5, look: [0.8, -0.5], brows: t >= P(39) ? 'happy' : 'worried', beak: t >= P(39) ? 'smile' : 'flat', flapR: 60}} />
-  <Word text="CALL 211" x={540} y={250} at={P(38)} until={P(39)} t={t} size={120} />
-  <Word text="RENT HELP: YES" x={540} y={250} at={P(39)} t={t} size={100} color={N_GREEN} />
+  <Phone x={540} y={980} w={330} t={t} ring={P(37) + 0.6} screen={t >= P(38) ? '✅' : '211'} />
+  <Penguin id="doug" x={200} y={G} h={380} pose={{turn: 0.5, look: [0.8, -0.5], brows: t >= P(38) ? 'happy' : 'worried', beak: t >= P(38) ? 'smile' : 'flat', flapR: 60}} />
+  <Word text="CALL 211" x={540} y={250} at={P(37)} until={P(38)} t={t} size={120} />
+  <Word text="RENT HELP: YES" x={540} y={250} at={P(38)} t={t} size={100} color={N_GREEN} />
 </>;
 
 const Wait = ({t}: {t: number}) => <>
   <NightGround y={G} />
   <div style={{position: 'absolute', left: 538, top: 300, width: 4, height: 1000, background: 'linear-gradient(180deg, transparent, rgba(190,210,255,0.8), transparent)'}} />
-  <Card x={270} y={260} w={480} value="2 WKS" label="CHARITY MONEY" at={P(40)} t={t} color={N_GREEN} size={110} />
-  <Card x={810} y={260} w={480} value="TONIGHT" label="LARRY WANTS IT" at={P(41)} t={t} color={N_RED} size={92} />
+  <Card x={270} y={260} w={480} value="2 WKS" label="CHARITY MONEY" at={P(39)} t={t} color={N_GREEN} size={110} />
+  <Card x={810} y={260} w={480} value="TONIGHT" label="LARRY WANTS IT" at={P(40)} t={t} color={N_RED} size={92} />
   <Penguin id="doug" x={270} y={G} h={400} pose={{look: [0.2, -0.6], brows: 'worried', beak: 'frown'}} />
-  {t >= P(41) && <Walrus x={810} y={G + 10} h={420} id="larry-wait" pose={{angry: true, mouth: 0.4 + 0.5 * Math.abs(Math.sin(t * 9)), lids: 0, look: -0.9}} />}
+  {t >= P(40) && <Walrus x={810} y={G + 10} h={420} id="larry-wait" pose={{angry: true, mouth: 0.4 + 0.5 * Math.abs(Math.sin(t * 9)), lids: 0, look: -0.9}} />}
 </>;
 
 const Line = ({text, y, at, t, mark, color}: {text: string; y: number; at: number; t: number; mark: string; color: string}) => {
@@ -276,58 +270,59 @@ const Line = ({text, y, at, t, mark, color}: {text: string; y: number; at: numbe
 const Math_ = ({t}: {t: number}) => <>
   <NightGround y={G} />
   <GlassCard x={70} y={190} w={940} h={560}>
-    <Line text="police tonight?" y={40} at={P(42)} t={t} mark="✗" color={N_RED} />
-    <Line text="first: a judge" y={160} at={P(43)} t={t} mark="⚖️" color="#fff" />
-    <Line text="court = weeks" y={280} at={P(44)} t={t} mark="⏳" color="#fff" />
-    <Line text="Larry gets 0 fish" y={400} at={P(45)} t={t} mark="✗" color={N_RED} />
+    <Line text="police tonight?" y={40} at={P(41)} t={t} mark="✗" color={N_RED} />
+    <Line text="first: a judge" y={160} at={P(42)} t={t} mark="⚖️" color="#fff" />
+    <Line text="court = weeks" y={280} at={P(43)} t={t} mark="⏳" color="#fff" />
+    <Line text="Larry gets 0 fish" y={400} at={P(44)} t={t} mark="✗" color={N_RED} />
   </GlassCard>
   <Penguin id="doug" x={260} y={G} h={420} pose={{turn: 0.4, look: [0.6, -0.8], brows: 'happy', beak: 'smile', flapL: 120}} />
-  <Walrus x={810} y={G + 10} h={430} id="larry-math" pose={{lids: 0.2, mouth: t >= P(45) ? 0.5 : 0, look: -0.6}} />
-  {t >= P(44) && <div style={{position: 'absolute', left: 890, top: G - 400, fontSize: 60}}>💧</div>}
+  <Walrus x={810} y={G + 10} h={430} id="larry-math" pose={{lids: 0.2, mouth: t >= P(44) ? 0.5 : 0, look: -0.6}} />
+  {t >= P(43) && <div style={{position: 'absolute', left: 890, top: G - 400, fontSize: 60}}>💧</div>}
 </>;
 
 const Deal = ({t}: {t: number}) => <>
   <NightGround y={G} />
   <Penguin id="doug" x={230} y={G} h={420} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'happy', beak: 'smile', flapR: 80}} />
-  <Walrus x={850} y={G + 10} h={440} id="larry-deal" pose={{lids: 0.3, look: -0.8, flap: t >= P(48) ? 40 : 0}} />
-  <FishFlight x1={300} y1={G - 300} x2={800} y2={G - 300} a={P(46) + 0.2} b={P(46) + 1.3} n={8} w={90} />
-  <Paper x={540} y={560} w={380} title="RENT DEAL" amount="$200 NOW" at={P(46)} rot={-4} id="deal" />
-  <PopIn at={P(47)} t={t} x={330} y={830}><Pill x={0} y={0} text="+ REST IN 2 WEEKS" color={N_GREEN} /></PopIn>
-  <Stamp text="SIGNED ✍️" x={540} y={360} at={P(48)} color={N_GREEN} size={96} />
-  <PopIn at={P(46) + 0.2} t={t} x={60} y={250}><Pill x={0} y={0} text="20 🐟 = $200" /></PopIn>
+  <Walrus x={850} y={G + 10} h={440} id="larry-deal" pose={{lids: 0.3, look: -0.8, flap: t >= P(47) ? 40 : 0}} />
+  <FishFlight x1={300} y1={G - 300} x2={800} y2={G - 300} a={P(45) + 0.2} b={P(45) + 1.3} n={8} w={90} />
+  <Paper x={540} y={560} w={380} title="RENT DEAL" amount="$200 NOW" at={P(45)} rot={-4} id="deal" />
+  <PopIn at={P(46)} t={t} x={330} y={830}><Pill x={0} y={0} text="+ REST IN 2 WEEKS" color={N_GREEN} /></PopIn>
+  <Stamp text="SIGNED ✍️" x={540} y={360} at={P(47)} color={N_GREEN} size={96} />
+  <PopIn at={P(45) + 0.2} t={t} x={60} y={250}><Pill x={0} y={0} text="20 🐟 = $200" /></PopIn>
 </>;
 
-const Court = ({t}: {t: number}) => <>
+// ---------- story ending (v2, no advice / no stats — TikTok restricted v1) ----------
+const Payoff = ({t}: {t: number}) => <>
   <NightGround y={G} />
-  <PopIn at={P(50)} t={t} x={370} y={180}><Pill x={0} y={0} text="IN REAL LIFE" /></PopIn>
-  <Card x={540} y={290} w={940} value="NO COURT ORDER" label="= NO EVICTION" source="Nolo · FindLaw" at={P(50) + 0.4} t={t} color={N_GREEN} size={82} />
-  <div style={{position: 'absolute', left: 440, top: 760, fontSize: 200, transform: `rotate(${t > P(50) + 1.4 ? Math.max(-30, -30 + 30 * Math.abs(Math.sin((t - P(50)) * 4))) : 0}deg)`}}>⚖️</div>
-  <Penguin id="doug" x={200} y={G} h={360} pose={{look: [0.5, -0.6], brows: 'happy', beak: 'smile'}} />
+  {t < P(52) && <PopIn at={P(49)} t={t} x={300} y={190}><Pill x={0} y={0} text="2 WEEKS LATER" /></PopIn>}
+  {t < P(52) && <PopIn at={P(50)} t={t} x={300} y={290}><Pill x={0} y={0} text="CHARITY MONEY ✓" color={N_GREEN} /></PopIn>}
+  <Walrus x={330} y={G + 10} h={460} id="larry-pay" flip pose={{lids: t >= P(54) ? 0.5 : 0.2, laugh: t >= P(54) ? 1 : 0, mouth: t >= P(54) ? 0.5 : 0, look: t >= P(53) && t < P(54) ? 0.2 : 0.8}} />
+  <Penguin id="doug" x={820} y={G} h={420} pose={{turn: -0.5, look: [-0.8, -0.3], brows: 'happy', beak: 'smile', flapL: 80}} />
+  <FishFlight x1={760} y1={G - 320} x2={380} y2={G - 300} a={P(51)} b={P(51) + 1.6} n={14} w={80} />
+  {t >= P(52) && <FishPile x={330} y={G + 30} n={Math.min(16, 4 + Math.floor((t - P(52)) * 6))} w={110} />}
+  <Word text="160 🐟" x={540} y={470} at={P(52)} t={t} size={150} color={N_GREEN} />
+  <Word text="NEW HAT ✨" x={540} y={650} at={P(55)} t={t} size={100} />
 </>;
-const Cost = ({t}: {t: number}) => <>
+const Home = ({t}: {t: number}) => <>
   <NightGround y={G} />
-  <Card x={540} y={260} w={980} value="$2,500–$8,000" label="ONE EVICTION COSTS THE LANDLORD" source="Legal Services Corp., 2025" at={P(51)} t={t} color={N_RED} size={110} />
-  <Walrus x={540} y={G + 10} h={520} id="larry-cost" pose={{lids: 0, look: 0, mouth: 0.6}} />
-  <div style={{position: 'absolute', left: 640, top: G - 520, fontSize: 70}}>💧</div>
+  <div style={{position: 'absolute', left: 820, top: 260, width: 140, height: 140, borderRadius: '50%', background: '#F7E9A0', boxShadow: '0 0 60px #F7E9A0'}} />
+  <House x={540} base={G - 60} t={t} sc={1.45} fx={40} />
+  <div style={{position: 'absolute', left: 220, top: G - 420, width: 640, height: 260, background: 'radial-gradient(ellipse, rgba(255,210,120,0.35), transparent 70%)'}} />
+  <Penguin id="wife" x={260} y={G + 80} h={380} pose={{lids: 1, beak: 'smile', brows: 'happy'}} /><Bow x={300} y={G - 260} s={1} />
+  <Penguin id="doug" x={460} y={G + 80} h={420} pose={{lids: 1, beak: 'smile', brows: 'happy'}} />
+  <Penguin id="girl" x={650} y={G + 80} h={290} build="thin" pose={{lids: 1, beak: 'smile'}} />
+  <Penguin id="baby" x={810} y={G + 80} h={210} build="baby" pose={{lids: 1, beak: 'flat'}} />
+  {[0, 1, 2].map((i) => <div key={i} style={{position: 'absolute', left: 560 + i * 60, top: 760 - i * 70 - ((t * 40) % 30), fontFamily: SANS, fontWeight: 900, fontSize: 60 + i * 16, color: '#fff'}}>Z</div>)}
 </>;
-const Tips = ({t}: {t: number}) => <>
+const Again = ({t}: {t: number}) => <>
   <NightGround y={G} />
-  <GlassCard x={60} y={170} w={960} h={640}>
-    <div style={{position: 'absolute', left: 0, right: 0, top: 30, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 76, color: N_RED}}>BEHIND ON RENT?</div>
-    {[['📞 CALL 211', 53, 170], ['🤝 ASK FOR A PAYMENT PLAN', 54, 300], ['✍️ GET IT IN WRITING', 55, 430]].map(([s, i, y]) => {
-      const p = ease((t - P(i as number)) / 0.2); if (p <= 0) return null;
-      return <div key={s as string} style={{position: 'absolute', left: 50, top: y as number, transform: `scale(${p})`, transformOrigin: '0 50%', fontFamily: SANS, fontWeight: 900, fontSize: 52, color: '#fff', whiteSpace: 'nowrap'}}>{s}</div>; })}
-    <div style={{position: 'absolute', left: 0, right: 0, top: 580, textAlign: 'center', fontFamily: SANS, fontWeight: 600, fontSize: 26, color: 'rgba(220,230,255,0.75)'}}>source: USA.gov — emergency rent help</div>
-  </GlassCard>
-  <Penguin id="doug" x={540} y={G} h={400} pose={{look: [0, -0.6], brows: 'happy', beak: 'smile', flapR: 110}} />
-</>;
-const Next = ({t}: {t: number}) => <>
-  <NightGround y={G} />
-  <PopIn at={P(56)} t={t} x={330} y={180}><Pill x={0} y={0} text="NEXT EPISODE" /></PopIn>
-  <Word text="RENT +20%" x={540} y={400} at={P(56) + 0.6} t={t} size={160} color={N_RED} />
-  <Walrus x={770} y={G + 10} h={520} id="larry-next" pose={{laugh: 1, mouth: 0.5, lids: 0.4, look: -0.6}} />
-  <Penguin id="doug" x={260} y={G} h={430} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'shock', eyeScale: 1.35, beak: 'frown', flapL: 50, flapR: 50}} />
-  <Word text="can Larry do that? 👇" x={540} y={620} at={P(57)} t={t} size={78} />
+  <PopIn at={P(57)} t={t} x={330} y={190}><Pill x={0} y={0} text="NEXT MONTH" /></PopIn>
+  <Penguin id="doug" x={260} y={G} h={430} pose={{turn: 0.5, look: [0.8, 0], brows: t >= P(61) ? 'shock' : 'worried', eyeScale: t >= P(61) ? 1.35 : 1, beak: 'frown', flapR: 70, sweat: t >= P(61)}} />
+  <Phone x={420} y={G - 250} w={110} t={t} ring={P(58)} screen="📞" rot={8} />
+  <Walrus x={810} y={G + 10} h={460} id="larry-again" pose={{angry: true, mouth: t >= P(59) ? 0.5 + 0.5 * Math.abs(Math.sin(t * 9)) : 0, lids: 0, look: -0.9, flap: 30}} />
+  <Word text="RENT. NOW." x={540} y={330} at={P(59)} until={P(61)} t={t} size={130} color={N_RED} />
+  <Card x={540} y={260} w={640} value="$200" label="DOUG · AGAIN" at={P(61)} t={t} color={N_GREEN} size={140} />
+  <Word text="what Doug do next? 👇" x={540} y={620} at={P(63)} t={t} size={80} />
 </>;
 
 // ---------- shots ----------
@@ -346,20 +341,18 @@ const SHOTS: Shot[] = [
   {at: P(31), set: (t) => <Mood t={t} at={P(31)} kind="scared" />, fx_: 'zoom'},
   {at: P(32), set: (t) => <Shop t={t} />, fx_: 'swipe'},
   {at: P(33), set: (t) => <Loan t={t} />, fx_: 'pop'},
-  {at: P(35), set: (t) => <Apr t={t} />, fx_: 'zoom'},
-  {at: P(37), set: (t) => <Hour t={t} />, fx_: 'swipeL'},
-  {at: P(38), set: (t) => <Dial t={t} />, fx_: 'pop'},
-  {at: P(40), set: (t) => <Wait t={t} />, fx_: 'swipe'},
-  {at: P(42), set: (t) => <Math_ t={t} />, fx_: 'iris'},
-  {at: P(46), set: (t) => <Deal t={t} />, fx_: 'swipeL'},
-  {at: P(49), set: (t) => <Mood t={t} at={P(49)} kind="happy" />, fx_: 'zoom'},
-  {at: P(50), set: (t) => <Court t={t} />, fx_: 'swipe'},
-  {at: P(51), set: (t) => <Cost t={t} />, fx_: 'pop'},
-  {at: P(52), set: (t) => <Tips t={t} />, fx_: 'swipeL'},
-  {at: P(56), set: (t) => <Next t={t} />, fx_: 'zoom'},
+  {at: P(36), set: (t) => <Hour t={t} />, fx_: 'swipeL'},
+  {at: P(37), set: (t) => <Dial t={t} />, fx_: 'pop'},
+  {at: P(39), set: (t) => <Wait t={t} />, fx_: 'swipe'},
+  {at: P(41), set: (t) => <Math_ t={t} />, fx_: 'iris'},
+  {at: P(45), set: (t) => <Deal t={t} />, fx_: 'swipeL'},
+  {at: P(48), set: (t) => <Mood t={t} at={P(48)} kind="happy" />, fx_: 'zoom'},
+  {at: P(49), set: (t) => <Payoff t={t} />, fx_: 'swipe'},
+  {at: P(56), set: (t) => <Home t={t} />, fx_: 'iris'},
+  {at: P(57), set: (t) => <Again t={t} />, fx_: 'zoom'},
 ];
 // deep zooms [phrase, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[13, 600, 700, 1.2], [16, 600, 640, 1.3], [19, 560, 620, 1.4], [28, 500, 820, 1.18], [31, 540, 700, 1.25], [34, 540, 760, 1.25], [45, 540, 640, 1.15], [48, 540, 500, 1.35]];
+const DEEP: [number, number, number, number][] = [[13, 600, 700, 1.2], [16, 600, 640, 1.3], [19, 560, 620, 1.4], [28, 500, 820, 1.18], [31, 540, 700, 1.25], [34, 540, 760, 1.25], [44, 540, 640, 1.15], [47, 540, 500, 1.35]];
 
 export const DougPaysEp1 = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
@@ -416,27 +409,30 @@ export const DougPaysEp1 = () => {
     <Sfx at={P(32)} name="user-ting" vol={0.3} />
     <Sfx at={P(33)} name="user-money" vol={0.35} />
     <Sfx at={P(34) + 0.6} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(35)} name="user-boom" vol={0.45} />
-    <Sfx at={P(36)} name="user-slap" vol={0.4} />
-    <Sfx at={P(37)} name="user-timer" vol={0.4} />
-    <Sfx at={P(38) + 0.6} name="user-notif2" vol={0.35} />
-    <Sfx at={P(39)} name="user-yeah" vol={0.4} />
-    <Sfx at={P(40)} name="user-timer" vol={0.3} />
-    <Sfx at={P(41)} name="walrus-grunt" vol={0.4} />
-    <Sfx at={P(42)} name="user-wrong" vol={0.3} />
-    <Sfx at={P(43)} name="user-ting" vol={0.3} />
-    <Sfx at={P(44)} name="user-timer" vol={0.25} />
-    <Sfx at={P(45)} name="user-boom" vol={0.4} />
-    <Sfx at={P(46) + 0.2} name="user-money-transfer" vol={0.35} />
-    <Sfx at={P(48)} name="user-slap" vol={0.35} />
-    <Sfx at={P(49)} name="user-yeah" vol={0.4} />
-    <Sfx at={P(50) + 0.4} name="user-ting" vol={0.35} />
-    <Sfx at={P(51)} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(51) + 0.6} name="user-boom" vol={0.4} />
-    <Sfx at={P(53)} name="user-pop" vol={0.3} />
-    <Sfx at={P(54)} name="user-pop" vol={0.3} />
-    <Sfx at={P(55)} name="user-pop" vol={0.3} />
-    <Sfx at={P(56) + 0.6} name="user-shock" vol={0.4} />
-    <Sfx at={P(57)} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(35)} name="user-slap" vol={0.4} />
+    <Sfx at={P(36)} name="user-timer" vol={0.4} />
+    <Sfx at={P(37) + 0.6} name="user-notif2" vol={0.35} />
+    <Sfx at={P(38)} name="user-yeah" vol={0.4} />
+    <Sfx at={P(39)} name="user-timer" vol={0.3} />
+    <Sfx at={P(40)} name="walrus-grunt" vol={0.4} />
+    <Sfx at={P(41)} name="user-wrong" vol={0.3} />
+    <Sfx at={P(42)} name="user-ting" vol={0.3} />
+    <Sfx at={P(43)} name="user-timer" vol={0.25} />
+    <Sfx at={P(44)} name="user-boom" vol={0.4} />
+    <Sfx at={P(45) + 0.2} name="user-money-transfer" vol={0.35} />
+    <Sfx at={P(47)} name="user-slap" vol={0.35} />
+    <Sfx at={P(48)} name="user-yeah" vol={0.4} />
+    <Sfx at={P(49)} name="user-ting" vol={0.3} />
+    <Sfx at={P(50)} name="user-yeah" vol={0.35} />
+    <Sfx at={P(51)} name="user-money-transfer" vol={0.4} />
+    <Sfx at={P(52)} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(54)} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(55)} name="user-pop" vol={0.35} />
+    <Sfx at={P(56)} name="user-aww" vol={0.3} />
+    <Sfx at={P(58)} name="user-notif" vol={0.45} />
+    <Sfx at={P(59)} name="walrus-grunt" vol={0.4} />
+    <Sfx at={P(61)} name="user-boom" vol={0.45} />
+    <Sfx at={P(62)} name="user-fahh" vol={0.4} />
+    <Sfx at={P(63)} name="user-pop" vol={0.3} />
   </AbsoluteFill>;
 };

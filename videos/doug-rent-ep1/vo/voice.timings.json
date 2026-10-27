@@ -5,13 +5,13 @@
   "text": "If you don't pay rent..."
  },
  {
-  "start": 0.97,
+  "start": 0.95,
   "end": 1.63,
   "text": "this happens."
  },
  {
   "start": 1.77,
-  "end": 3.39,
+  "end": 3.44,
   "text": "Rent is $1,600."
  },
  {
@@ -46,11 +46,11 @@
  },
  {
   "start": 8.47,
-  "end": 8.8,
+  "end": 8.79,
   "text": "Ring ring."
  },
  {
-  "start": 8.8,
+  "start": 8.79,
   "end": 9.81,
   "text": "Larry the landlord."
  },
@@ -85,43 +85,43 @@
   "text": "Wife."
  },
  {
-  "start": 14.51,
+  "start": 14.52,
   "end": 15.54,
   "text": "Doug try bank loan."
  },
  {
   "start": 15.66,
-  "end": 17.06,
+  "end": 17.0,
   "text": "Bank say: no steady job."
  },
  {
-  "start": 17.14,
-  "end": 17.41,
+  "start": 17.0,
+  "end": 17.35,
   "text": "No."
  },
  {
-  "start": 17.47,
-  "end": 18.19,
+  "start": 17.45,
+  "end": 18.23,
   "text": "Doug call friends."
  },
  {
-  "start": 18.19,
+  "start": 18.23,
   "end": 19.47,
   "text": "Friends more broke than Doug."
  },
  {
-  "start": 19.5,
-  "end": 20.44,
+  "start": 19.54,
+  "end": 20.45,
   "text": "Doug sell his stuff?"
  },
  {
   "start": 20.46,
-  "end": 21.22,
+  "end": 21.24,
   "text": "Doug own nothing."
  },
  {
-  "start": 21.33,
-  "end": 22.14,
+  "start": 21.35,
+  "end": 22.16,
   "text": "Doug rent everything."
  },
  {
@@ -130,7 +130,7 @@
   "text": "Doug cry."
  },
  {
-  "start": 22.93,
+  "start": 22.95,
   "end": 23.36,
   "text": "Larry again."
  },
@@ -140,153 +140,183 @@
   "text": "Tonight."
  },
  {
-  "start": 23.82,
-  "end": 24.8,
+  "start": 23.83,
+  "end": 24.81,
   "text": "No money, I bring police."
  },
  {
-  "start": 24.99,
-  "end": 25.83,
+  "start": 25.03,
+  "end": 25.84,
   "text": "Doug want to be duck."
  },
  {
-  "start": 25.83,
-  "end": 26.69,
+  "start": 25.84,
+  "end": 26.71,
   "text": "Duck no pay rent."
  },
  {
-  "start": 26.71,
+  "start": 26.74,
   "end": 27.25,
   "text": "Doug scared."
  },
  {
-  "start": 27.48,
+  "start": 27.57,
   "end": 28.77,
   "text": "Doug find payday loan."
  },
  {
-  "start": 28.98,
-  "end": 29.81,
+  "start": 28.78,
+  "end": 29.84,
   "text": "Borrow $500."
  },
  {
-  "start": 29.98,
-  "end": 32.28,
+  "start": 30.02,
+  "end": 32.14,
   "text": "Two weeks later, pay back $575."
  },
  {
-  "start": 32.97,
-  "end": 34.91,
-  "text": "That is almost 400% a year."
- },
- {
-  "start": 35.05,
-  "end": 35.77,
+  "start": 33.06,
+  "end": 33.84,
   "text": "Doug say no."
  },
  {
-  "start": 35.9,
-  "end": 36.65,
+  "start": 33.98,
+  "end": 34.73,
   "text": "One hour left."
  },
  {
-  "start": 36.7,
-  "end": 37.19,
-  "text": "Doug call two one one."
+  "start": 34.78,
+  "end": 35.73,
+  "text": "Doug call 211."
  },
  {
-  "start": 37.97,
-  "end": 38.72,
+  "start": 36.14,
+  "end": 36.78,
   "text": "Charity say yes."
  },
  {
-  "start": 38.72,
-  "end": 40.05,
+  "start": 36.78,
+  "end": 38.11,
   "text": "But money come in two weeks."
  },
  {
-  "start": 40.42,
-  "end": 41.36,
+  "start": 38.46,
+  "end": 39.42,
   "text": "Larry want money tonight."
  },
  {
-  "start": 41.52,
-  "end": 42.92,
+  "start": 39.51,
+  "end": 40.98,
   "text": "Police can't kick Doug out tonight."
  },
  {
-  "start": 43.0,
-  "end": 43.86,
+  "start": 41.09,
+  "end": 41.94,
   "text": "Larry need a judge."
  },
  {
-  "start": 44.08,
-  "end": 44.77,
+  "start": 42.16,
+  "end": 42.85,
   "text": "Court take weeks."
  },
  {
-  "start": 44.97,
-  "end": 46.04,
+  "start": 42.99,
+  "end": 44.12,
   "text": "Larry get zero fish."
  },
  {
-  "start": 46.27,
-  "end": 47.61,
-  "text": "Doug say: two hundred dollars now."
+  "start": 44.33,
+  "end": 45.69,
+  "text": "Doug say: $200 now."
  },
  {
-  "start": 47.69,
-  "end": 48.63,
+  "start": 45.79,
+  "end": 46.67,
   "text": "Rest in two weeks."
  },
  {
-  "start": 48.77,
-  "end": 49.19,
+  "start": 46.85,
+  "end": 47.25,
   "text": "Larry sign."
  },
  {
-  "start": 49.19,
-  "end": 49.91,
+  "start": 47.25,
+  "end": 47.97,
   "text": "Doug happy."
  },
  {
-  "start": 50.11,
-  "end": 53.35,
-  "text": "In real life, a landlord can't throw you out without a court order."
+  "start": 48.12,
+  "end": 48.84,
+  "text": "Two weeks later."
  },
  {
-  "start": 53.52,
-  "end": 57.83,
-  "text": "One eviction costs a landlord $2,500 to $8,000."
+  "start": 48.84,
+  "end": 49.84,
+  "text": "Charity money come."
  },
  {
-  "start": 57.83,
-  "end": 58.66,
-  "text": "Behind on rent?"
+  "start": 49.87,
+  "end": 50.54,
+  "text": "Doug pay Larry."
  },
  {
-  "start": 58.66,
-  "end": 59.08,
-  "text": "Call two one one."
+  "start": 50.54,
+  "end": 51.66,
+  "text": "160 fish."
  },
  {
-  "start": 59.98,
-  "end": 61.05,
-  "text": "Ask for a payment plan."
+  "start": 51.92,
+  "end": 53.12,
+  "text": "Larry count every fish."
  },
  {
-  "start": 61.05,
-  "end": 61.76,
-  "text": "In writing."
+  "start": 53.23,
+  "end": 53.83,
+  "text": "Larry happy."
  },
  {
-  "start": 62.02,
-  "end": 63.85,
-  "text": "Next episode: Larry raise rent 20%."
+  "start": 54.02,
+  "end": 54.9,
+  "text": "Larry buy new hat."
  },
  {
-  "start": 64.06,
-  "end": 65.06,
-  "text": "Can Larry do that?"
+  "start": 54.93,
+  "end": 56.16,
+  "text": "Doug family sleep warm."
+ },
+ {
+  "start": 56.28,
+  "end": 56.65,
+  "text": "Next month."
+ },
+ {
+  "start": 56.65,
+  "end": 57.16,
+  "text": "Ring ring."
+ },
+ {
+  "start": 57.16,
+  "end": 58.11,
+  "text": "Larry: Rent."
+ },
+ {
+  "start": 58.29,
+  "end": 58.54,
+  "text": "Now."
+ },
+ {
+  "start": 58.39,
+  "end": 59.32,
+  "text": "Doug has $200."
+ },
+ {
+  "start": 59.32,
+  "end": 59.85,
+  "text": "Again."
+ },
+ {
+  "start": 59.85,
+  "end": 60.79,
+  "text": "What Doug do next?"
  }
 ]
