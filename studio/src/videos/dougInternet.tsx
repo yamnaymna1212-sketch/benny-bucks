@@ -3,8 +3,7 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
 import {INK, Penguin, onTwos} from '../penguin/rig';
-import {HookTitle, Stamp} from '../penguin/world';
-import {Arrow, G, GREEN, Label, Puzzled, RED, UsFlag, Vs, Why, cl, ease} from './dougVenezuela';
+import {G, GREEN, Label, RED, UsFlag, Vs, Why, ease} from './dougVenezuela';
 
 const InFlag = () => <g>
   <rect width={190} height={40} fill="#FF9933" /><rect y={40} width={190} height={40} fill="#fff" /><rect y={80} width={190} height={40} fill="#138808" />
@@ -12,40 +11,36 @@ const InFlag = () => <g>
   <rect width={190} height={120} fill="none" stroke={INK} strokeWidth={5} />
 </g>;
 
-// Phone with flag, big "$x / MONTH" on the screen and a data bar that fills (fill 0..1).
-const PhoneSign = ({x, y, price, flag, color, note, t, fill}: {x: number; y: number; price: string; flag: 'us' | 'in'; color: string; note: string; t: number; fill: number}) => {
-  const wave = Math.sin(t * 5) * 3;
-  return <svg width={420} height={760} viewBox="0 0 420 760" style={{position: 'absolute', left: x - 210, top: y - 760, overflow: 'visible'}}>
-    <line x1={60} y1={40} x2={60} y2={200} stroke={INK} strokeWidth={8} />
-    <circle cx={60} cy={36} r={10} fill={INK} />
-    <g transform={`translate(64 ${50 + wave}) skewY(${wave})`}>{flag === 'us' ? <UsFlag /> : <InFlag />}</g>
-    <rect x={70} y={230} width={280} height={510} rx={44} fill="#2B2F36" stroke={INK} strokeWidth={8} />
-    <rect x={90} y={262} width={240} height={450} rx={22} fill="#fff" stroke={INK} strokeWidth={5} />
-    <rect x={165} y={242} width={90} height={12} rx={6} fill={INK} />
-    <text x={210} y={400} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={price.length > 3 ? 96 : 116} fill={color}>{price}</text>
-    <text x={210} y={452} textAnchor="middle" fontFamily="Montserrat" fontWeight={800} fontSize={40} fill={INK}>/ MONTH</text>
-    <text x={210} y={520} textAnchor="middle" fontFamily="Montserrat" fontWeight={800} fontSize={30} fill={INK}>DATA</text>
-    <rect x={112} y={540} width={196} height={40} rx={20} fill="#E8EEF2" stroke={INK} strokeWidth={5} />
-    <rect x={116} y={544} width={Math.max(0, 188 * fill)} height={32} rx={16} fill={GREEN} />
-    <text x={210} y={650} textAnchor="middle" fontFamily="Montserrat" fontWeight={800} fontSize={30} fill={INK}>{note}</text>
+// Simple phone: just the GB amount (same on both sides). Price sits above it.
+const GbPhone = ({x, y, color, gb, t}: {x: number; y: number; color: string; gb: string; t: number}) =>
+  <svg width={320} height={500} viewBox="0 0 320 500" style={{position: 'absolute', left: x - 160, top: y - 500, overflow: 'visible', transform: `rotate(${Math.sin(t * 3) * 1.5}deg)`}}>
+    <rect x={20} y={10} width={280} height={480} rx={46} fill={color} stroke={INK} strokeWidth={9} />
+    <rect x={44} y={46} width={232} height={408} rx={24} fill="#fff" stroke={INK} strokeWidth={6} />
+    <rect x={120} y={22} width={80} height={12} rx={6} fill={INK} />
+    <text x={160} y={282} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={92} fill={INK}>{gb}</text>
   </svg>;
+const Price = ({text, x, y, color, at, t}: {text: string; x: number; y: number; color: string; at: number; t: number}) => {
+  const p = ease((t - at) / 0.3);
+  return <div style={{position: 'absolute', left: x - 260, width: 520, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 180, lineHeight: "230px", color, WebkitTextStroke: `10px ${INK}`, paintOrder: 'stroke fill', opacity: p, transform: `scale(${0.5 + 0.5 * p})`}}>{text}</div>;
 };
+const MiniFlag = ({x, y, flag}: {x: number; y: number; flag: 'us' | 'in'}) =>
+  <svg width={171} height={108} viewBox="0 0 190 120" style={{position: 'absolute', left: x - 85, top: y}}>{flag === 'us' ? <UsFlag /> : <InFlag />}</svg>;
 
 const SWING = 1.2, SAME = 2.0;
 const Hook = ({t}: {t: number}) => {
   const lookR = t >= SWING;
   return <>
-    <HookTitle lines={['Internet Explained', 'by Doug']} x={540} y={130} size={72} at={0.1} />
-    <Why t={t} />
-    <Label text="USA" x={210} y={622} at={0.3} t={t} />
-    <Label text="INDIA" x={830} y={622} at={SWING} t={t} />
-    <PhoneSign x={210} y={G + 120} price="$25" flag="us" color={RED} note="UNLIMITED" t={t} fill={ease((t - 0.4) / 1.4)} />
-    <PhoneSign x={830} y={G + 120} price="~$2" flag="in" color={GREEN} note="189 RUPEES" t={t} fill={ease((t - SWING) / 1.0)} />
-    <Arrow x={540} y={512} t={t} swingAt={SWING} />
-    <Vs x={540} y={790} t={t} />
-    <Puzzled x={392} y={830} t={t} />
-    <Penguin id="doug" x={540} y={G + 60} h={470} pose={{turn: lookR ? 0.5 : -0.5, look: [lookR ? 0.8 : -0.8, -0.3], brows: lookR ? 'shock' : 'worried', eyeScale: lookR ? 1.25 : 1.05, pupil: lookR ? 0.5 : 1, beak: 'frown', flapR: 35, flapL: 35, sweat: lookR}} />
-    <Stamp text="SAME PHONE" x={540} y={1480} at={SAME} color={RED} size={90} />
+    <div style={{position: "absolute", inset: 0, transform: "translateY(-150px)"}}><Why t={t} /></div>
+    <Price text="$25" x={210} y={590} color={RED} at={0.3} t={t} />
+    <Price text="~$2" x={830} y={590} color={GREEN} at={SWING} t={t} />
+    <Vs x={540} y={700} t={t} />
+    <Label text="USA" x={210} y={780} at={0.3} t={t} />
+    <Label text="INDIA" x={830} y={780} at={SWING} t={t} />
+    <MiniFlag x={210} y={870} flag="us" />
+    <MiniFlag x={830} y={870} flag="in" />
+    <GbPhone x={210} y={1480} color="#E8443A" gb="2GB" t={t} />
+    <GbPhone x={830} y={1480} color="#2E9E4F" gb="2GB" t={t} />
+    <Penguin id="doug" x={540} y={G + 150} h={440} pose={{turn: lookR ? 0.5 : -0.5, look: [lookR ? 0.8 : -0.8, -0.3], brows: lookR ? 'shock' : 'worried', eyeScale: lookR ? 1.25 : 1.05, pupil: lookR ? 0.5 : 1, beak: 'frown', flapR: 35, flapL: 35, sweat: lookR}} />
   </>;
 };
 
