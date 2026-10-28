@@ -13,14 +13,14 @@ import TIM from '../data/doug-venezuela.json';
 
 const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
 export const DOUG_VENEZUELA_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
-const G = 1300;
-const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
-const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
-const RED = '#D83A2E', GREEN = '#2E9E4F';
+export const G = 1300;
+export const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+export const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
+export const RED = '#D83A2E', GREEN = '#2E9E4F';
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
 // ---------- props ----------
-const UsFlag = () => <g>
+export const UsFlag = () => <g>
   <rect width={190} height={120} fill="#fff" stroke={INK} strokeWidth={5} />
   {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 17.4} width={190} height={8.7} fill="#B22234" />)}
   <rect width={84} height={64} fill="#3C3B6E" />
@@ -64,7 +64,7 @@ const FlagPump = ({x, y, price, flag, top, t, color, fill}: {x: number; y: numbe
 };
 
 // Big hand-written "why?" with the red question mark and a red arrow toward the US pump (as in the original).
-const Why = ({t}: {t: number}) => {
+export const Why = ({t}: {t: number}) => {
   const p = ease(t / 0.25);
   return <div style={{position: 'absolute', left: 0, right: 0, top: 230, height: 330, transform: `scale(${0.6 + 0.4 * p})`, opacity: p, transformOrigin: '50% 60%'}}>
     <div style={{position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 290, lineHeight: '300px', color: INK, letterSpacing: -6}}>
@@ -72,10 +72,10 @@ const Why = ({t}: {t: number}) => {
     </div>
   </div>;
 };
-const Puzzled = ({x, y, t}: {x: number; y: number; t: number}) =>
+export const Puzzled = ({x, y, t}: {x: number; y: number; t: number}) =>
   <div style={{position: 'absolute', left: x, top: y + Math.sin(t * 6) * 8, fontFamily: 'Architects Daughter', fontWeight: 700, fontSize: 120, color: INK, transform: 'rotate(14deg)'}}>?</div>;
 // Red hand-drawn arrow: draws itself on, points at America, then swings over to point at Venezuela.
-const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: number}) => {
+export const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: number}) => {
   const draw = ease((t - 0.15) / 0.4), sw = t < swingAt ? 0 : cl((t - swingAt) / 0.35);
   const over = sw < 1 ? Math.sin(sw * Math.PI) * 12 : 0; // little overshoot while swinging
   const ang = 148 + (32 - 148) * ease(sw) - over;
@@ -86,11 +86,11 @@ const Arrow = ({x, y, t, swingAt}: {x: number; y: number; t: number; swingAt: nu
     </g>
   </svg>;
 };
-const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
+export const Label = ({text, x, y, at, t}: {text: string; x: number; y: number; at: number; t: number}) => {
   const p = ease((t - at) / 0.25);
   return <div style={{position: 'absolute', left: x - 260, width: 520, top: y, textAlign: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: text.length > 5 ? 64 : 80, color: INK, opacity: p, transform: `scale(${0.5 + 0.5 * p})`}}>{text}</div>;
 };
-const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
+export const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
   const p = ease((t - 0.5) / 0.3);
   return <div style={{position: 'absolute', left: x - 75, top: y - 75, width: 150, height: 150, borderRadius: '50%', background: RED, border: `7px solid ${INK}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Montserrat', fontWeight: 900, fontSize: 72, color: '#fff', transform: `scale(${p}) rotate(${-8 + Math.sin(t * 4) * 3}deg)`}}>VS</div>;
 };
