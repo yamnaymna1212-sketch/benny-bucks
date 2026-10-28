@@ -20,7 +20,7 @@ const RED = '#D83A2E', GREEN = '#2E9E4F';
 const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 
 // ---------- props ----------
-const UsFlag = () => <g>
+export const UsFlag = () => <g>
   <rect width={190} height={120} fill="#fff" stroke={INK} strokeWidth={5} />
   {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} y={i * 17.4} width={190} height={8.7} fill="#B22234" />)}
   <rect width={84} height={64} fill="#3C3B6E" />
