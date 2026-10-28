@@ -97,17 +97,38 @@ const Hook = ({t}: {t: number}) => {
 };
 
 // ---------- sets ----------
+// Cut right after the hook: the two identical phones, "=" between them, then Doug pops in.
+const Same = ({t}: {t: number}) => {
+  const doug = t >= P(3);
+  return <>
+    <Phone x={260} y={1120} w={330} color="#E8443A"><GbScreen size={96} /></Phone>
+    <Phone x={820} y={1120} w={330} color={GREEN}><GbScreen size={96} /></Phone>
+    <BigWord text="=" x={540} y={760} at={P(2)} size={260} color={INK} rot={0} />
+    <BigWord text="same phone" x={540} y={300} at={P(2)} until={P(3)} size={140} color={RED} />
+    {doug && <><Penguin id="doug" x={540} y={1480} h={520} pose={{beak: 'flat', brows: 'worried', eyeScale: 1.2, look: [0, 0.3], flapL: 40, flapR: 40}} />
+      <BigWord text="same Doug" x={540} y={300} at={P(3)} size={140} color={RED} /></>}
+  </>;
+};
+
+const Cheapest = ({t}: {t: number}) => <>
+  <Flag x={540} y={330} w={420} flag="in" />
+  <div style={{position: 'absolute', left: 0, right: 0, top: 640, textAlign: 'center', fontSize: 260, transform: `rotate(${Math.sin(t * 4) * 5}deg)`}}>🏆</div>
+  <BigWord text="cheapest data" x={540} y={1060} at={P(25) + 0.4} size={120} color={GREEN} />
+  <BigWord text="in the world" x={540} y={1210} at={P(25) + 1.0} size={100} />
+  <Note text="cable.co.uk Worldwide Mobile Data Pricing (top 5, 2022)" />
+</>;
+
 const Intro = ({t}: {t: number}) => <>
   <Snow />
   <Penguin id="doug" x={480} y={G + 120} h={720} pose={{beak: 'smile', brows: 'happy', flapR: 70 + Math.sin(t * 4) * 6, look: [0.6, -0.2]}} />
   <Phone x={790} y={G - 260} w={190} rot={12}><GbScreen size={56} /></Phone>
-  <BigWord text="Doug" x={540} y={330} at={P(3)} size={150} />
-  <BigWord text="+ phone" x={640} y={500} at={P(3) + 0.9} size={110} color="#3A9BD9" />
+  <BigWord text="Doug" x={540} y={330} at={P(4)} size={150} />
+  <BigWord text="+ phone" x={640} y={500} at={P(4) + 0.9} size={110} color="#3A9BD9" />
 </>;
 
 const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const Watch = ({t}: {t: number}) => {
-  const d = Math.floor(Math.max(0, t - P(4)) / 0.3) % 7;
+  const d = Math.floor(Math.max(0, t - P(5)) / 0.3) % 7;
   return <>
     <Snow />
     <Phone x={600} y={G + 60} w={480}>
@@ -116,34 +137,34 @@ const Watch = ({t}: {t: number}) => {
     </Phone>
     <Penguin id="doug" x={190} y={G + 120} h={430} pose={{look: [0.9, -0.4], eyeScale: 1.2, beak: 'smile', flapR: 40}} />
     <div style={{position: 'absolute', left: 340, top: 260, width: 400, height: 170, background: '#fff', border: `7px solid ${INK}`, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: MONT, fontWeight: 900, fontSize: 100, color: RED}}>{DAYS[d]}</div>
-    <BigWord text="every day" x={540} y={1380} at={P(4) + 0.6} size={110} color={RED} />
+    <BigWord text="every day" x={540} y={1380} at={P(5) + 0.6} size={110} color={RED} />
   </>;
 };
 
 const TowerSet = ({t}: {t: number}) => {
-  const larry = t >= P(6);
+  const larry = t >= P(7);
   return <>
     <Snow />
     <Tower x={700} y={G} t={t} sign={larry ? 'LARRY DATA' : undefined} />
     <Penguin id="doug" x={210} y={G + 110} h={420} pose={{look: [0.9, -0.6], beak: 'smile', flapR: 120}} />
     <Phone x={330} y={G - 200} w={110} rot={20}><Wifi size={56} color="#3A9BD9" /></Phone>
-    {larry && <Walrus id="larry" x={lerp(1250, 860, ease((t - P(6)) / 0.4))} y={G + 140} h={420} pose={{laugh: t > P(6) + 0.5 ? 1 : 0}} />}
-    <BigWord text="data" x={300} y={360} at={P(5)} until={P(6)} size={140} color="#3A9BD9" />
-    {larry && <BigWord text="Larry" x={540} y={300} at={P(6)} size={140} />}
+    {larry && <Walrus id="larry" x={lerp(1250, 860, ease((t - P(7)) / 0.4))} y={G + 140} h={420} pose={{laugh: t > P(7) + 0.5 ? 1 : 0}} />}
+    <BigWord text="data" x={300} y={360} at={P(6)} until={P(7)} size={140} color="#3A9BD9" />
+    {larry && <BigWord text="Larry" x={540} y={300} at={P(7)} size={140} />}
   </>;
 };
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG'];
 const Pay = ({t}: {t: number}) => {
-  const m = Math.floor(Math.max(0, t - P(7)) / 0.35) % 8;
+  const m = Math.floor(Math.max(0, t - P(8)) / 0.35) % 8;
   return <>
     <Snow />
     <Penguin id="doug" x={250} y={G + 120} h={470} pose={{turn: 0.5, look: [0.8, 0], beak: 'frown', brows: 'worried', flapR: 90}} />
     <Walrus id="larry" x={820} y={G + 140} h={500} pose={{laugh: 1, mouth: 0.5}} />
-    <FishFlight x1={330} y1={G - 280} x2={760} y2={G - 300} a={P(7) + 0.1} b={E(7) + 0.3} n={7} w={110} arc={150} />
+    <FishFlight x1={330} y1={G - 280} x2={760} y2={G - 300} a={P(8) + 0.1} b={E(8) + 0.3} n={7} w={110} arc={150} />
     <div style={{position: 'absolute', left: 390, top: 300, width: 300, height: 200, background: '#fff', border: `7px solid ${INK}`, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: MONT, fontWeight: 900, fontSize: 92, color: RED}}>
       <div style={{position: 'absolute', top: -7, left: -7, right: -7, height: 50, background: RED, border: `7px solid ${INK}`, borderRadius: '18px 18px 0 0'}} />{MONTHS[m]}</div>
-    <BigWord text="every month" x={540} y={620} at={P(7) + 0.8} size={100} color={RED} />
+    <BigWord text="every month" x={540} y={620} at={P(8) + 0.8} size={100} color={RED} />
   </>;
 };
 
@@ -151,52 +172,54 @@ const America = ({t}: {t: number}) => <>
   <Snow />
   <Flag x={540} y={230} w={260} flag="us" />
   <Tower x={830} y={G} h={700} t={t} />
-  <Walrus id="larry" x={720} y={G + 140} h={480} pose={{mouth: t < P(9) ? 0.5 : 0, laugh: t >= P(9) ? 1 : 0}} />
-  <PriceCard text="$25" x={540} y={470} color={RED} at={P(8) + 0.4} t={t} tilt={-4} w={420} h={210} size={170} />
-  <Penguin id="doug" x={230} y={G + 120} h={430} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'worried', beak: 'frown', sweat: t >= P(9), flapR: t >= P(9) ? 100 : 20}} />
-  {t >= P(9) + 0.6 && <FishFlight x1={300} y1={G - 250} x2={620} y2={G - 300} a={P(9) + 0.6} b={E(9) + 0.4} n={5} w={100} />}
-  <BigWord text="price high" x={540} y={820} at={P(9)} size={110} color={RED} />
+  <Walrus id="larry" x={720} y={G + 140} h={480} pose={{mouth: t < P(10) ? 0.5 : 0, laugh: t >= P(10) ? 1 : 0}} />
+  <PriceCard text="$25" x={540} y={470} color={RED} at={P(9) + 0.4} t={t} tilt={-4} w={420} h={210} size={170} />
+  <Penguin id="doug" x={230} y={G + 120} h={430} pose={{turn: 0.5, look: [0.8, -0.3], brows: 'worried', beak: 'frown', sweat: t >= P(10), flapR: t >= P(10) ? 100 : 20}} />
+  {t >= P(10) + 0.6 && <FishFlight x1={300} y1={G - 250} x2={620} y2={G - 300} a={P(10) + 0.6} b={E(10) + 0.4} n={5} w={100} />}
+  <BigWord text="price high" x={540} y={820} at={P(10)} size={110} color={RED} />
 </>;
 
 const Jio = ({t}: {t: number}) => {
-  const free = t >= P(11);
+  const free = t >= P(12);
   return <>
     <Snow />
     <Flag x={540} y={200} w={240} flag="in" />
     <Tower x={300} y={G} h={760} t={t} sign="JIO" />
-    <Walrus id="jio" x={lerp(-200, 470, ease((t - P(10)) / 0.5))} y={G + 140} h={440} flip pose={{laugh: free ? 1 : 0, mouth: 0.4}} />
-    {free && <PriceCard text="FREE DATA" x={720} y={430} color={GREEN} at={P(11)} t={t} tilt={4} w={600} h={190} size={104} />}
-    {free && <Crowd x={lerp(1500, 860, ease((t - P(11) - 0.2) / 0.8))} y={G + 150} n={5} h={250} run={1} dir={-1} />}
-    <BigWord text="Jio Larry" x={760} y={760} at={P(10) + 0.4} until={P(11)} size={110} color="#1F4BA8" />
-    {free && <BigWord text="FREE!" x={720} y={760} at={P(11) + 0.8} size={150} color={GREEN} />}
+    <Walrus id="jio" x={lerp(-200, 470, ease((t - P(11)) / 0.5))} y={G + 140} h={440} flip pose={{laugh: free ? 1 : 0, mouth: 0.4}} />
+    {free && <PriceCard text="FREE DATA" x={720} y={430} color={GREEN} at={P(12)} t={t} tilt={4} w={600} h={190} size={104} />}
+    {free && <Crowd x={lerp(1500, 860, ease((t - P(12) - 0.2) / 0.8))} y={G + 150} n={5} h={250} run={1} dir={-1} />}
+    <BigWord text="Jio Larry" x={760} y={760} at={P(11) + 0.4} until={P(12)} size={110} color="#1F4BA8" />
+    {free && <BigWord text="FREE!" x={720} y={760} at={P(12) + 0.8} until={P(13)} size={150} color={GREEN} />}
+    <BigWord text="everybody run" x={560} y={820} at={P(13)} size={100} color={GREEN} />
   </>;
 };
 
 const Airtel = ({t}: {t: number}) => {
-  const cut = t >= P(13);
+  const cut = t >= P(15);
   return <>
     <Snow />
     <Tower x={760} y={G} h={760} t={t} sign="AIRTEL" />
     <Walrus id="airtel" x={600} y={G + 140} h={480} pose={{mouth: 0.9, lids: 0, flap: Math.sin(t * 14) * 0.8}} />
-    {!cut && <BigWord text="!!!" x={600} y={560} at={P(12)} size={180} color={RED} />}
-    <PriceCard text="$25" x={260} y={420} color={RED} at={P(12)} t={t} tilt={-4} w={340} h={170} size={130} />
+    {!cut && <BigWord text="!!!" x={600} y={560} at={P(14)} size={180} color={RED} />}
+    <PriceCard text="$25" x={260} y={420} color={RED} at={P(14)} t={t} tilt={-4} w={340} h={170} size={130} />
     {cut && <div style={{position: 'absolute', left: 80, top: 500, width: 360, height: 16, background: INK, transform: 'rotate(-12deg)', borderRadius: 8}} />}
-    {cut && <PriceCard text="$10" x={260} y={680} color={GREEN} at={P(13) + 0.4} t={t} tilt={3} w={340} h={170} size={130} />}
-    <BigWord text="panic" x={760} y={300} at={P(12) + 0.3} until={P(13)} size={130} color={RED} />
-    {cut && <BigWord text="cut price" x={760} y={300} at={P(13)} size={120} color={GREEN} />}
+    {cut && <PriceCard text="$10" x={260} y={680} color={GREEN} at={P(15) + 0.4} t={t} tilt={3} w={340} h={170} size={130} />}
+    <BigWord text="panic" x={760} y={300} at={P(14) + 0.3} until={P(15)} size={130} color={RED} />
+    {cut && <BigWord text="cut price" x={760} y={300} at={P(15)} until={P(16)} size={120} color={GREEN} />}
+    <BigWord text="or lose Doug" x={720} y={300} at={P(16)} size={110} color={RED} />
   </>;
 };
 
 const AllCut = ({t}: {t: number}) => {
-  const down = t >= P(15), steps = ['$25', '$10', '$5', '$2'];
+  const down = t >= P(18), steps = ['$25', '$10', '$5', '$2'];
   return <>
     <Snow />
     {[180, 540, 900].map((x, i) => <Walrus key={i} id={`w${i}`} x={x} y={G + 140} h={330} flip={i === 0} pose={{mouth: 0.6, laugh: down ? 0 : 1}} />)}
-    {[180, 540, 900].map((x, i) => <PriceTag key={`p${i}`} x={x} y={G - 380} price="CUT" at={P(14) + i * 0.25} size={0.8} rot={i % 2 ? 5 : -5} />)}
-    {down && steps.map((s, i) => <PriceCard key={s} text={s} x={210 + i * 220} y={320 + i * 120} color={i === 3 ? GREEN : RED} at={P(15) + i * 0.45} t={t} w={220} h={130} size={84} />)}
+    {[180, 540, 900].map((x, i) => <PriceTag key={`p${i}`} x={x} y={G - 380} price="CUT" at={P(17) + i * 0.25} size={0.8} rot={i % 2 ? 5 : -5} />)}
+    {down && steps.map((s, i) => <PriceCard key={s} text={s} x={210 + i * 220} y={320 + i * 120} color={i === 3 ? GREEN : RED} at={P(18) + i * 0.45} t={t} w={220} h={130} size={84} />)}
     {down && <svg width={900} height={600} style={{position: 'absolute', left: 120, top: 300, overflow: 'visible'}}>
-      <path d="M40 40 L780 520" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ease((t - P(15)) / 1.4)} stroke={RED} strokeWidth={16} fill="none" strokeLinecap="round" opacity={0.35} /></svg>}
-    {!down && <BigWord text="all cut" x={540} y={420} at={P(14)} size={150} color={RED} />}
+      <path d="M40 40 L780 520" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ease((t - P(18)) / 1.4)} stroke={RED} strokeWidth={16} fill="none" strokeLinecap="round" opacity={0.35} /></svg>}
+    {!down && <BigWord text="all cut" x={540} y={420} at={P(17)} size={150} color={RED} />}
   </>;
 };
 
@@ -208,39 +231,39 @@ const Billion = ({t}: {t: number}) => <>
   <Crowd x={540} y={G - 120} n={9} h={210} seed={1} />
   <Crowd x={560} y={G + 40} n={9} h={230} seed={3} />
   <Crowd x={520} y={G + 210} n={8} h={250} seed={5} />
-  <BigWord text="1 BILLION" x={540} y={470} at={P(17) + 0.2} size={160} color={RED} />
-  <BigWord text="phones" x={540} y={640} at={P(17) + 0.6} size={110} />
+  <BigWord text="1 BILLION" x={540} y={470} at={P(20) + 0.2} size={160} color={RED} />
+  <BigWord text="phones" x={540} y={640} at={P(20) + 0.6} size={110} />
 </>;
 
 const SellSmall = ({t}: {t: number}) => <>
   <Snow />
   <Walrus id="larry" x={300} y={G + 140} h={440} flip pose={{laugh: 1, mouth: 0.4}} />
   <Crowd x={810} y={G + 150} n={4} h={240} seed={2} />
-  {Array.from({length: 8}, (_, i) => { const p = cl((t - P(18) - i * 0.25) / 0.7); if (p <= 0 || p >= 1) return null;
+  {Array.from({length: 8}, (_, i) => { const p = cl((t - P(21) - i * 0.25) / 0.7); if (p <= 0 || p >= 1) return null;
     return <div key={i} style={{position: 'absolute', left: lerp(380, 650 + (i % 4) * 110, p), top: lerp(G - 300, G - 260, p) - Math.sin(p * Math.PI) * 260, width: 54, height: 90, borderRadius: 12, background: GREEN, border: `5px solid ${INK}`, transform: `rotate(${p * 360}deg)`}} />; })}
-  <BigWord text="sell small" x={540} y={380} at={P(18)} size={130} color={GREEN} />
-  <BigWord text="to everybody" x={540} y={560} at={P(18) + 1.0} size={110} />
+  <BigWord text="sell small" x={540} y={380} at={P(21)} size={130} color={GREEN} />
+  <BigWord text="to everybody" x={540} y={560} at={P(21) + 1.0} size={110} />
 </>;
 
 const Equation = ({t}: {t: number}) => <>
   <Snow />
-  <PriceCard text="$2" x={190} y={360} color={GREEN} at={P(19)} t={t} w={240} h={160} size={110} />
-  <BigWord text="×" x={380} y={440} at={P(19) + 0.5} size={140} />
+  <PriceCard text="$2" x={190} y={360} color={GREEN} at={P(22)} t={t} w={240} h={160} size={110} />
+  <BigWord text="×" x={380} y={440} at={P(22) + 0.5} size={140} />
   <Crowd x={700} y={600} n={5} h={210} seed={4} />
-  <BigWord text="many Doug" x={700} y={300} at={P(19) + 0.6} size={90} />
-  <BigWord text="=" x={540} y={760} at={P(19) + 1.2} size={160} />
-  {t >= P(19) + 1.3 && <FishPile x={540} y={G + 40} n={22} w={150} />}
-  {t >= P(19) + 1.3 && <BigWord text="big money" x={540} y={1380} at={P(19) + 1.3} size={120} color={GREEN} />}
+  <BigWord text="many Doug" x={700} y={300} at={P(22) + 0.6} size={90} />
+  <BigWord text="=" x={540} y={760} at={P(22) + 1.2} size={160} />
+  {t >= P(22) + 1.3 && <FishPile x={540} y={G + 40} n={22} w={150} />}
+  {t >= P(22) + 1.3 && <BigWord text="big money" x={540} y={1380} at={P(22) + 1.3} size={120} color={GREEN} />}
 </>;
 
 const Angry = ({t}: {t: number}) => <>
   <div style={{position: 'absolute', inset: -400, background: '#FBE3E0'}} />
   <Penguin id="doug" x={540} y={G + 300} h={950} pose={{brows: 'angry', angry: 1, beak: 'frown', tremble: 1, flapL: 30, flapR: 30}} />
-  <BigWord text="Doug angry." x={540} y={340} at={P(21)} size={140} color={RED} />
+  <BigWord text="Doug angry." x={540} y={340} at={P(24)} size={140} color={RED} />
 </>;
 
 const RealUS = ({t}: {t: number}) => <>
-  <BigWord text="real life" x={540} y={260} at={P(22)} size={120} />
+  <BigWord text="real life" x={540} y={260} at={P(26)} size={120} />
   <Flag x={240} y={420} w={220} flag="us" />
   <Name text="USA" x={240} y={570} size={70} />
   <Phone x={640} y={1300} w={420} color="#E8443A">
@@ -251,7 +274,7 @@ const RealUS = ({t}: {t: number}) => <>
 </>;
 
 const RealIN = ({t}: {t: number}) => {
-  const only = t >= P(24);
+  const only = t >= P(28);
   return <>
     <Flag x={240} y={420} w={220} flag="in" />
     <Name text="INDIA" x={240} y={570} size={70} />
@@ -260,13 +283,13 @@ const RealIN = ({t}: {t: number}) => {
       <Txt text="≈ $2" size={80} color={INK} />
       <div style={{height: 20}} /><Txt text="2GB" size={66} color={only ? RED : INK} /><DataBar fill={only ? 0.18 : 0.6} />
     </Phone>
-    {only && <Stamp text="ONLY 2GB" x={330} y={900} at={P(24)} color={RED} size={100} />}
+    {only && <Stamp text="ONLY 2GB" x={330} y={900} at={P(28)} color={RED} size={100} />}
     <Note text="Jio 189 / Airtel 199 rupee plans, 28 days, Oct 2026" />
   </>;
 };
 
 const Move = ({t}: {t: number}) => {
-  const happy = t >= P(26), w = ease((t - P(25)) / 1.4);
+  const happy = t >= P(30), w = ease((t - P(29)) / 1.4);
   return <>
     <Snow />
     <Sign x={880} y={G - 300} text="INDIA" w={280} id="sign-india" />
@@ -275,12 +298,12 @@ const Move = ({t}: {t: number}) => {
     {happy && <>
       {[0, 1, 2, 3, 4].map((i) => <div key={i} style={{position: 'absolute', left: 120 + i * 200, top: 520 + (i % 2) * 120 + Math.sin(t * 6 + i) * 20, fontSize: 90}}>✨</div>)}
       <Penguin id="doug" x={540} y={G + 140} h={620} pose={{beak: 'smile', brows: 'happy', lids: 0.3, blush: 1, flapL: 120, flapR: 120, hop: Math.abs(Math.sin(t * 6)) * 0.5}} />
-      <BigWord text="life is good" x={540} y={360} at={P(26)} size={130} color={GREEN} /></>}
+      <BigWord text="life is good" x={540} y={360} at={P(30)} size={130} color={GREEN} /></>}
   </>;
 };
 
 const Video = ({t}: {t: number}) => {
-  const gone = t >= P(28), fill = 1 - ease((t - P(27) - 0.3) / 1.0);
+  const gone = t >= P(32), fill = 1 - ease((t - P(31) - 0.3) / 1.0);
   return <>
     <Snow />
     <Phone x={560} y={G + 80} w={460} color={GREEN}>
@@ -288,62 +311,64 @@ const Video = ({t}: {t: number}) => {
       <DataBar fill={gone ? 0 : fill} w={300} />
     </Phone>
     <Penguin id="doug" x={170} y={G + 140} h={400} pose={{look: [0.9, -0.3], eyeScale: gone ? 1.3 : 1, brows: gone ? 'shock' : 'happy', beak: gone ? 'frown' : 'smile', flapR: 40}} />
-    <BigWord text="1 video" x={560} y={330} at={P(27)} until={P(28)} size={130} />
-    {gone && <BigWord text="data gone" x={560} y={330} at={P(28)} size={130} color={RED} />}
+    <BigWord text="1 video" x={560} y={330} at={P(31)} until={P(32)} size={130} />
+    {gone && <BigWord text="data gone" x={560} y={330} at={P(32)} size={130} color={RED} />}
   </>;
 };
 
 const PayAgain = ({t}: {t: number}) => {
-  const sad = t >= P(30);
+  const sad = t >= P(34);
   return <>
     {sad && <div style={{position: 'absolute', inset: -400, background: '#E9EDF0'}} />}
     <Snow />
     <Tower x={880} y={G} h={620} t={t} sign="JIO" />
     <Walrus id="larry" x={720} y={G + 140} h={460} pose={{laugh: 1, mouth: 0.5}} />
     <Penguin id="doug" x={260} y={G + 120} h={460} pose={{turn: 0.5, look: [0.7, 0.2], brows: 'worried', beak: 'frown', tears: sad, lids: sad ? 0.4 : 0, flapR: sad ? 10 : 90}} />
-    <FishFlight x1={330} y1={G - 270} x2={660} y2={G - 300} a={P(29) + 0.1} b={E(29) + 0.3} n={5} w={100} />
-    <BigWord text="again" x={540} y={380} at={P(29) + 0.3} until={P(30)} size={140} color={RED} />
-    {sad && <BigWord text="life is not good" x={540} y={380} at={P(30)} size={110} color={RED} />}
+    <FishFlight x1={330} y1={G - 270} x2={660} y2={G - 300} a={P(33) + 0.1} b={E(33) + 0.3} n={5} w={100} />
+    <BigWord text="again" x={540} y={380} at={P(33) + 0.3} until={P(34)} size={140} color={RED} />
+    {sad && <BigWord text="life is not good" x={540} y={380} at={P(34)} size={110} color={RED} />}
   </>;
 };
 
 const Cta = ({t}: {t: number}) => <>
   <Snow />
-  <PriceCard text="$25 · UNLIMITED" x={540} y={330} color={RED} at={P(31) + 0.2} t={t} tilt={-3} w={760} h={170} size={84} />
+  <PriceCard text="$25 · UNLIMITED" x={540} y={330} color={RED} at={P(35) + 0.2} t={t} tilt={-3} w={760} h={170} size={84} />
   <Txt text="" size={10} />
   <div style={{position: 'absolute', left: 0, right: 0, top: 520, textAlign: 'center', fontFamily: MONT, fontWeight: 900, fontSize: 80, color: INK}}>or</div>
-  <PriceCard text="$2 · 2GB" x={540} y={640} color={GREEN} at={P(31) + 0.7} t={t} tilt={3} w={760} h={170} size={92} />
+  <PriceCard text="$2 · 2GB" x={540} y={640} color={GREEN} at={P(35) + 0.7} t={t} tilt={3} w={760} h={170} size={92} />
   <Penguin id="doug" x={540} y={G + 120} h={480} pose={{flapR: 120 + Math.sin(t * 10) * 10, beak: 'smile', look: [0, 0.6]}} />
-  <BigWord text="👇" x={800} y={1080} at={P(32)} size={140} />
+  <BigWord text="👇" x={800} y={1080} at={P(36)} size={140} />
 </>;
 
 // ---------- shots ----------
 type Shot = {at: number; set: (t: number) => React.ReactNode; fx_?: Fx};
 const SHOTS: Shot[] = [
   {at: 0, set: (t) => <Hook t={t} />},
-  {at: P(3), set: (t) => <Intro t={t} />, fx_: 'zoom'},
-  {at: P(4), set: (t) => <Watch t={t} />, fx_: 'swipe'},
-  {at: P(5), set: (t) => <TowerSet t={t} />, fx_: 'swipeL'},
-  {at: P(7), set: (t) => <Pay t={t} />, fx_: 'pop'},
-  {at: P(8), set: (t) => <America t={t} />, fx_: 'swipe'},
-  {at: P(10), set: (t) => <Jio t={t} />, fx_: 'iris'},
-  {at: P(12), set: (t) => <Airtel t={t} />, fx_: 'swipeL'},
-  {at: P(14), set: (t) => <AllCut t={t} />, fx_: 'pop'},
-  {at: P(16), set: () => <Called lines={['PRICE', 'WAR']} />, fx_: 'zoom'},
-  {at: P(17), set: (t) => <Billion t={t} />, fx_: 'swipe'},
-  {at: P(18), set: (t) => <SellSmall t={t} />, fx_: 'swipeL'},
-  {at: P(19), set: (t) => <Equation t={t} />, fx_: 'pop'},
-  {at: P(20), set: () => <Called lines={['SCALE']} />, fx_: 'zoom'},
-  {at: P(21), set: (t) => <Angry t={t} />, fx_: 'zoom'},
-  {at: P(22), set: (t) => <RealUS t={t} />, fx_: 'swipe'},
-  {at: P(23), set: (t) => <RealIN t={t} />, fx_: 'swipeL'},
-  {at: P(25), set: (t) => <Move t={t} />, fx_: 'iris'},
-  {at: P(27), set: (t) => <Video t={t} />, fx_: 'pop'},
-  {at: P(29), set: (t) => <PayAgain t={t} />, fx_: 'swipe'},
-  {at: P(31), set: (t) => <Cta t={t} />, fx_: 'pop'},
+  {at: P(2), set: (t) => <Same t={t} />, fx_: 'pop'},
+  {at: P(4), set: (t) => <Intro t={t} />, fx_: 'zoom'},
+  {at: P(5), set: (t) => <Watch t={t} />, fx_: 'swipe'},
+  {at: P(6), set: (t) => <TowerSet t={t} />, fx_: 'swipeL'},
+  {at: P(8), set: (t) => <Pay t={t} />, fx_: 'pop'},
+  {at: P(9), set: (t) => <America t={t} />, fx_: 'swipe'},
+  {at: P(11), set: (t) => <Jio t={t} />, fx_: 'iris'},
+  {at: P(14), set: (t) => <Airtel t={t} />, fx_: 'swipeL'},
+  {at: P(17), set: (t) => <AllCut t={t} />, fx_: 'pop'},
+  {at: P(19), set: () => <Called lines={['PRICE', 'WAR']} />, fx_: 'zoom'},
+  {at: P(20), set: (t) => <Billion t={t} />, fx_: 'swipe'},
+  {at: P(21), set: (t) => <SellSmall t={t} />, fx_: 'swipeL'},
+  {at: P(22), set: (t) => <Equation t={t} />, fx_: 'pop'},
+  {at: P(23), set: () => <Called lines={['SCALE']} />, fx_: 'zoom'},
+  {at: P(24), set: (t) => <Angry t={t} />, fx_: 'zoom'},
+  {at: P(25), set: (t) => <Cheapest t={t} />, fx_: 'iris'},
+  {at: P(26), set: (t) => <RealUS t={t} />, fx_: 'swipe'},
+  {at: P(27), set: (t) => <RealIN t={t} />, fx_: 'swipeL'},
+  {at: P(29), set: (t) => <Move t={t} />, fx_: 'iris'},
+  {at: P(31), set: (t) => <Video t={t} />, fx_: 'pop'},
+  {at: P(33), set: (t) => <PayAgain t={t} />, fx_: 'swipe'},
+  {at: P(35), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[6, 860, 1000, 1.5], [9, 540, 640, 1.4], [12, 600, 900, 1.5], [24, 450, 950, 1.3], [28, 560, 800, 1.4], [30, 300, 900, 1.5]];
+const DEEP: [number, number, number, number][] = [[7, 860, 1000, 1.5], [10, 540, 640, 1.4], [14, 600, 900, 1.5], [28, 450, 950, 1.3], [32, 560, 800, 1.4], [34, 300, 900, 1.5]];
 
 export const DougInternet = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
@@ -368,41 +393,45 @@ export const DougInternet = () => {
     <Sfx at={0.3} name="user-cash-register" vol={0.3} />
     <Sfx at={IN()} name="user-boom" vol={0.45} />
     <Sfx at={P(2)} name="user-slap" vol={0.35} />
-    <Sfx at={P(3)} name="penguin-squawk" vol={0.35} />
-    <Sfx at={P(3) + 0.9} name="user-pop" vol={0.3} />
-    <Sfx at={P(4) + 0.6} name="user-timer" vol={0.3} />
-    <Sfx at={P(5)} name="user-notif" vol={0.3} />
-    <Sfx at={P(6)} name="walrus-laugh" vol={0.4} />
-    <Sfx at={P(7) + 0.1} name="user-money" vol={0.3} />
-    <Sfx at={P(7) + 0.8} name="user-timer" vol={0.25} />
-    <Sfx at={P(8) + 0.4} name="user-cash-register" vol={0.35} />
-    <Sfx at={P(9)} name="user-wrong" vol={0.3} />
-    <Sfx at={P(9) + 0.6} name="user-money-transfer" vol={0.3} />
-    <Sfx at={P(10)} name="walrus-grunt" vol={0.4} />
-    <Sfx at={P(11)} name="user-wow" vol={0.4} />
-    <Sfx at={P(11) + 0.8} name="user-yeah" vol={0.3} />
-    <Sfx at={P(12)} name="user-shock" vol={0.4} />
-    <Sfx at={P(13)} name="user-slap" vol={0.35} />
-    <Sfx at={P(13) + 0.4} name="user-ting" vol={0.3} />
-    <Sfx at={P(14)} name="user-pop" vol={0.3} />
-    {[0, 1, 2, 3].map((i) => <Sfx key={`d${i}`} at={P(15) + i * 0.45} name="swoosh-fast" vol={0.3} />)}
-    <Sfx at={P(16)} name="user-boom" vol={0.4} />
-    <Sfx at={P(17) + 0.2} name="user-wow" vol={0.35} />
-    <Sfx at={P(18)} name="user-money-transfer" vol={0.3} />
-    <Sfx at={P(19) + 1.3} name="user-cash-register" vol={0.4} />
-    <Sfx at={P(20)} name="user-boom" vol={0.4} />
-    <Sfx at={P(21)} name="user-fahh" vol={0.45} />
-    <Sfx at={P(22)} name="user-ting" vol={0.35} />
-    <Sfx at={P(23)} name="user-ting" vol={0.35} />
-    <Sfx at={P(24)} name="user-boom" vol={0.4} />
-    <Sfx at={P(25)} name="swoosh-fast" vol={0.3} />
-    <Sfx at={P(26)} name="user-yeah" vol={0.4} />
-    <Sfx at={P(27)} name="user-notif2" vol={0.3} />
-    <Sfx at={P(28)} name="user-wrong" vol={0.4} />
-    <Sfx at={P(29) + 0.1} name="user-money" vol={0.3} />
-    <Sfx at={P(29) + 0.3} name="walrus-laugh" vol={0.35} />
-    <Sfx at={P(30)} name="user-aww" vol={0.4} />
-    <Sfx at={P(31) + 0.2} name="user-pop" vol={0.3} />
-    <Sfx at={P(32)} name="user-pop" vol={0.35} />
+    <Sfx at={P(3)} name="penguin-honk" vol={0.35} />
+    <Sfx at={P(13)} name="swoosh-fast" vol={0.3} />
+    <Sfx at={P(16)} name="user-wrong" vol={0.3} />
+    <Sfx at={P(25) + 0.4} name="user-wow" vol={0.35} />
+    <Sfx at={P(4)} name="penguin-squawk" vol={0.35} />
+    <Sfx at={P(4) + 0.9} name="user-pop" vol={0.3} />
+    <Sfx at={P(5) + 0.6} name="user-timer" vol={0.3} />
+    <Sfx at={P(6)} name="user-notif" vol={0.3} />
+    <Sfx at={P(7)} name="walrus-laugh" vol={0.4} />
+    <Sfx at={P(8) + 0.1} name="user-money" vol={0.3} />
+    <Sfx at={P(8) + 0.8} name="user-timer" vol={0.25} />
+    <Sfx at={P(9) + 0.4} name="user-cash-register" vol={0.35} />
+    <Sfx at={P(10)} name="user-wrong" vol={0.3} />
+    <Sfx at={P(10) + 0.6} name="user-money-transfer" vol={0.3} />
+    <Sfx at={P(11)} name="walrus-grunt" vol={0.4} />
+    <Sfx at={P(12)} name="user-wow" vol={0.4} />
+    <Sfx at={P(12) + 0.8} name="user-yeah" vol={0.3} />
+    <Sfx at={P(14)} name="user-shock" vol={0.4} />
+    <Sfx at={P(15)} name="user-slap" vol={0.35} />
+    <Sfx at={P(15) + 0.4} name="user-ting" vol={0.3} />
+    <Sfx at={P(17)} name="user-pop" vol={0.3} />
+    {[0, 1, 2, 3].map((i) => <Sfx key={`d${i}`} at={P(18) + i * 0.45} name="swoosh-fast" vol={0.3} />)}
+    <Sfx at={P(19)} name="user-boom" vol={0.4} />
+    <Sfx at={P(20) + 0.2} name="user-wow" vol={0.35} />
+    <Sfx at={P(21)} name="user-money-transfer" vol={0.3} />
+    <Sfx at={P(22) + 1.3} name="user-cash-register" vol={0.4} />
+    <Sfx at={P(23)} name="user-boom" vol={0.4} />
+    <Sfx at={P(24)} name="user-fahh" vol={0.45} />
+    <Sfx at={P(26)} name="user-ting" vol={0.35} />
+    <Sfx at={P(27)} name="user-ting" vol={0.35} />
+    <Sfx at={P(28)} name="user-boom" vol={0.4} />
+    <Sfx at={P(29)} name="swoosh-fast" vol={0.3} />
+    <Sfx at={P(30)} name="user-yeah" vol={0.4} />
+    <Sfx at={P(31)} name="user-notif2" vol={0.3} />
+    <Sfx at={P(32)} name="user-wrong" vol={0.4} />
+    <Sfx at={P(33) + 0.1} name="user-money" vol={0.3} />
+    <Sfx at={P(33) + 0.3} name="walrus-laugh" vol={0.35} />
+    <Sfx at={P(34)} name="user-aww" vol={0.4} />
+    <Sfx at={P(35) + 0.2} name="user-pop" vol={0.3} />
+    <Sfx at={P(36)} name="user-pop" vol={0.35} />
   </AbsoluteFill>;
 };

@@ -1,33 +1,37 @@
-Why Doug pay twenty-five dollars for one month of data in America...|0.1
-but two dollars in India?|0.1
-Same phone. Same Doug.|0.12
-This is Doug. Doug have phone.|0.07
-Doug watch video. Every day.|0.07
-Data come from tower.|0.07
-Larry own tower.|0.07
-Doug pay Larry. Every month.|0.07
-In America, Larry say price.|0.07
-Price high. Doug pay.|0.07
-Then Jio Larry come to India.|0.07
-Jio Larry give data free. Free!|0.07
-Airtel Larry panic.|0.07
-Airtel Larry cut price.|0.07
-All Larry cut price.|0.07
-Price go down. Down. Down.|0.07
-This is called price war.|0.12
-India have one billion phones.|0.07
-Larry sell small. Sell to everybody.|0.07
-Small price. Many Doug. Big money.|0.07
-This is called scale.|0.12
-Doug angry.|0.35
-In real life, Visible cost twenty-five dollars. Unlimited data.|0.07
-Jio cost one hundred eighty-nine rupees. About two dollars.|0.07
-But only two gigabytes.|0.12
-Doug move to India.|0.07
-Doug happy. Life is good.|0.07
-Doug watch one video.|0.07
-Data gone.|0.12
-Doug pay Larry again.|0.07
-Life is not good.|0.12
-Would you pay less for less data?|0.07
+Why Doug pay twenty-five dollars for one month of data in America...|0.05
+but two dollars in India?|0.05
+Same phone.|0.03
+Same Doug.|0.05
+This is Doug. Doug have phone.|0.03
+Doug watch video. Every day.|0.03
+Data come from tower.|0.03
+Larry own tower.|0.03
+Doug pay Larry. Every month.|0.03
+In America, Larry say price.|0.03
+Price high. Doug pay.|0.03
+Then Jio Larry come to India.|0.03
+Jio Larry give data free. Free!|0.03
+Everybody run to Jio Larry.|0.03
+Airtel Larry panic.|0.03
+Airtel Larry cut price.|0.03
+Or Airtel Larry lose every Doug.|0.03
+All Larry cut price.|0.03
+Price go down. Down. Down.|0.03
+This is called price war.|0.05
+India have one billion phones.|0.03
+Larry sell small. Sell to everybody.|0.03
+Small price. Many Doug. Big money.|0.03
+This is called scale.|0.05
+Doug angry.|0.3
+India data is one of the cheapest in the world.|0.05
+In real life, Visible cost twenty-five dollars. Unlimited data.|0.03
+Jio cost one hundred eighty-nine rupees. About two dollars.|0.03
+But only two gigabytes.|0.05
+Doug move to India.|0.03
+Doug happy. Life is good.|0.03
+Doug watch one video.|0.03
+Data gone.|0.05
+Doug pay Larry again.|0.03
+Life is not good.|0.05
+Would you pay less for less data?|0.03
 Tell Doug in the comments.|0.2
