@@ -1,182 +1,132 @@
 [
  {
   "start": 0.0,
-  "end": 2.65,
+  "end": 3.61,
   "text": "Why Doug pay forty-five thousand dollars a year for college in America..."
  },
  {
-  "start": 2.7,
-  "end": 3.75,
+  "start": 3.66,
+  "end": 5.39,
   "text": "but Germany pay almost zero?"
  },
  {
-  "start": 3.8,
-  "end": 4.4,
+  "start": 5.44,
+  "end": 6.55,
   "text": "Same degree."
  },
  {
-  "start": 4.43,
-  "end": 4.92,
+  "start": 6.58,
+  "end": 7.5,
   "text": "Same Doug."
  },
  {
-  "start": 4.97,
-  "end": 6.04,
-  "text": "This is Doug. Doug want degree."
+  "start": 7.55,
+  "end": 9.64,
+  "text": "Doug want degree. Doug need it for job."
  },
  {
-  "start": 6.08,
-  "end": 7.91,
-  "text": "Doug need paper for job. So Doug go to college."
- },
- {
-  "start": 7.95,
-  "end": 9.23,
+  "start": 9.68,
+  "end": 11.81,
   "text": "College is building. Larry own building."
  },
  {
-  "start": 9.27,
-  "end": 10.57,
-  "text": "Larry say price. Price high. Doug pay."
+  "start": 11.85,
+  "end": 14.25,
+  "text": "Four years. One hundred eighty thousand dollars."
  },
  {
-  "start": 10.61,
-  "end": 13.02,
-  "text": "Four years. Every year. One hundred eighty thousand dollars. Doug pay."
+  "start": 14.29,
+  "end": 16.46,
+  "text": "Doug have no fish. Fox give loan."
  },
  {
-  "start": 13.06,
-  "end": 17.02,
-  "text": "Not every Doug pay full price. Larry give discount. Discount called scholarship. Still big price."
+  "start": 16.5,
+  "end": 19.7,
+  "text": "Doug pay late, Fox take more fish. Fish on top of fish."
  },
  {
-  "start": 17.06,
-  "end": 18.35,
-  "text": "Doug have no fish. Doug go to Fox."
- },
- {
-  "start": 18.39,
-  "end": 19.56,
-  "text": "Fox give loan. Doug sign paper."
- },
- {
-  "start": 19.6,
-  "end": 22.58,
-  "text": "Now Doug owe fish. If Doug pay late, Fox take more fish. Fish on top of fish."
- },
- {
-  "start": 22.62,
-  "end": 23.42,
+  "start": 19.74,
+  "end": 21.23,
   "text": "This is called interest."
  },
  {
-  "start": 23.47,
-  "end": 24.55,
-  "text": "Many Doug owe. Many, many Doug."
- },
- {
-  "start": 24.59,
-  "end": 25.49,
+  "start": 21.28,
+  "end": 22.87,
   "text": "This is called student debt."
  },
  {
-  "start": 25.54,
-  "end": 26.02,
+  "start": 22.92,
+  "end": 23.75,
   "text": "Doug poor."
  },
  {
-  "start": 26.37,
-  "end": 27.66,
-  "text": "Now Germany. Boss Bear run country."
+  "start": 24.1,
+  "end": 27.17,
+  "text": "Now Germany. Boss Bear take small fish from everybody."
  },
  {
-  "start": 27.7,
-  "end": 29.13,
-  "text": "Boss Bear take small fish from everybody."
- },
- {
-  "start": 29.17,
-  "end": 29.88,
+  "start": 27.21,
+  "end": 28.52,
   "text": "This is called tax."
  },
  {
-  "start": 29.93,
-  "end": 32.36,
-  "text": "Boss Bear use fish to pay for college. And roads. And hospital."
+  "start": 28.57,
+  "end": 30.25,
+  "text": "Boss Bear pay for college."
  },
  {
-  "start": 32.4,
-  "end": 33.87,
-  "text": "Student go to class. Student keep fish."
- },
- {
-  "start": 33.91,
-  "end": 36.03,
-  "text": "Student still pay for food and igloo. But not for class."
- },
- {
-  "start": 36.07,
-  "end": 37.0,
+  "start": 30.29,
+  "end": 31.91,
   "text": "Student pay almost zero."
  },
  {
-  "start": 37.04,
-  "end": 38.13,
+  "start": 31.95,
+  "end": 33.9,
   "text": "This is called public university."
  },
  {
-  "start": 38.18,
-  "end": 38.72,
+  "start": 33.95,
+  "end": 35.0,
   "text": "Doug angry."
  },
  {
-  "start": 39.07,
-  "end": 41.94,
+  "start": 35.35,
+  "end": 39.3,
   "text": "In real life, private college cost about forty-five thousand dollars a year."
  },
  {
-  "start": 41.99,
-  "end": 44.35,
-  "text": "Public college in your state? About twelve thousand. Still not free."
+  "start": 39.35,
+  "end": 42.08,
+  "text": "Public college in your state? About twelve thousand."
  },
  {
-  "start": 44.4,
-  "end": 47.29,
-  "text": "And Americans owe more than one point six trillion dollars in student loans."
+  "start": 42.13,
+  "end": 45.85,
+  "text": "Americans owe more than one point six trillion dollars in student loans."
  },
  {
-  "start": 47.34,
-  "end": 50.59,
+  "start": 45.9,
+  "end": 50.39,
   "text": "German public universities charge no tuition. Only a small fee each semester."
  },
  {
-  "start": 50.64,
-  "end": 52.37,
+  "start": 50.44,
+  "end": 53.15,
   "text": "But nothing is free. Germans pay with higher tax."
  },
  {
-  "start": 52.42,
-  "end": 54.01,
+  "start": 53.2,
+  "end": 55.74,
   "text": "Doug move to Germany. Doug study. Doug happy."
  },
  {
-  "start": 54.06,
-  "end": 56.04,
-  "text": "Doug eat fish. Doug sleep. Doug graduate. No tuition debt."
+  "start": 55.79,
+  "end": 58.36,
+  "text": "Doug see tax paper. Doug still choose Germany."
  },
  {
-  "start": 56.09,
-  "end": 57.22,
-  "text": "Doug see tax paper. Doug sigh."
- },
- {
-  "start": 57.27,
-  "end": 58.99,
-  "text": "Doug think. Doug think hard. Doug still choose Germany."
- },
- {
-  "start": 59.04,
-  "end": 61.81,
+  "start": 58.41,
+  "end": 62.19,
   "text": "Would you pay tax for free college... or pay Larry? Tell Doug in the comments."
  }
 ]

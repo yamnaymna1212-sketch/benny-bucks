@@ -1,5 +1,6 @@
 // EP8 "College Explained by Doug" — private US college $45,000/yr vs Germany public university ~$0 (same degree).
-// Line timings: studio/src/data/doug-college.json (Kokoro VO am_puck 1.35). Sub-beats inside long lines come from pauses in vo/voice.wav.
+// Shots were built on the v2 voice (am_puck 1.35, timings doug-college-v2.json = OLD; all P()/E()/hard-coded times below are OLD times).
+// v3 voice (am_liam 1.05, shorter script, timings doug-college.json = TIM) plays them through a time-warp: MAP says which OLD range each new line shows.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, Fonts, HandFont} from '../base';
@@ -7,12 +8,51 @@ import {Fish, INK, Penguin, Seal, onTwos} from '../penguin/rig';
 import {Walrus} from '../penguin/cast';
 import {BigWord, Crowd, FishFlight, FishPile, Igloo, Paper, Sign, Stamp, Thought, Title} from '../penguin/world';
 import {Fx, cutFX} from '../penguin/acting';
-import {Captions, Sfx, beat} from '../penguin/edit';
+import {Captions, Sfx as SfxRaw, beat} from '../penguin/edit';
 import {BossBear, GREEN, RED, UsFlag, Vs, Why} from './dougVenezuela';
 import {Fox} from './dougLaundering';
+import OLD from '../data/doug-college-v2.json';
 import TIM from '../data/doug-college.json';
 
-const P = (i: number) => TIM[i].start, E = (i: number) => TIM[i].end;
+const P = (i: number) => OLD[i].start, E = (i: number) => OLD[i].end;
+// new line -> [fraction of the new line, OLD start, OLD end] pieces
+const MAP: [number, number, number][][] = [
+  [[1, P(0), E(0)]], [[1, P(1), E(1)]], [[1, P(2), E(2)]], [[1, P(3), E(3)]],
+  [[0.45, P(4), E(4)], [1, P(5), 7.0]],             // Doug want degree. | Doug need it for job.
+  [[1, P(6), E(6)]],                                // College is building. Larry own building.
+  [[1, P(8), 12.6]],                                // Four years. 180k.
+  [[0.55, P(10), E(10)], [1, P(11), 18.95]],        // Doug have no fish. | Fox give loan.
+  [[1, P(12), E(12)]], [[1, P(13), E(13)]], [[1, P(15), E(15)]], [[1, P(16), E(16)]],
+  [[0.25, P(17), 26.9], [1, P(18), E(18)]],         // Now Germany. | Boss Bear take small fish...
+  [[1, P(19), E(19)]], [[1, P(20), 31.25]],         // tax | Boss Bear pay for college.
+  [[1, P(23), E(23)]], [[1, P(24), E(24)]], [[1, P(25), E(25)]], [[1, P(26), E(26)]],
+  [[1, P(27), 43.4]], [[1, P(28), E(28)]], [[1, P(29), E(29)]], [[1, P(30), E(30)]], [[1, P(31), E(31)]],
+  [[0.45, P(33), 56.7], [1, 58.0, E(34)]],          // Doug see tax paper. | Doug still choose Germany.
+  [[1, P(35), E(35)]],
+];
+type Piece = {ns: number; ne: number; os: number; oe: number};
+const PIECES: Piece[] = (() => {
+  const out: Piece[] = [];
+  MAP.forEach((parts, k) => { const {start, end} = TIM[k]; let f0 = 0;
+    parts.forEach(([f, os, oe]) => { out.push({ns: start + (end - start) * f0, ne: start + (end - start) * f, os, oe}); f0 = f; }); });
+  const all: Piece[] = [];
+  out.forEach((p, i) => { all.push(p); const q = out[i + 1]; // natural pause between neighbouring OLD lines -> play it, else hold
+    if (q && q.os - p.oe > 0 && q.os - p.oe < 0.2 && q.ns > p.ne) all.push({ns: p.ne, ne: q.ns, os: p.oe, oe: q.os}); });
+  return all;
+})();
+const LAST = PIECES[PIECES.length - 1];
+const warp = (tn: number) => { // new time -> OLD time
+  if (tn >= LAST.ne) return LAST.oe + (tn - LAST.ne);
+  let prev = 0;
+  for (const p of PIECES) { if (tn < p.ns) return prev; if (tn < p.ne) return p.os + (tn - p.ns) / (p.ne - p.ns) * (p.oe - p.os); prev = p.oe - 0.001; }
+  return prev;
+};
+const unwarp = (to: number): number | null => { // OLD time -> new time (null = cut)
+  if (to >= LAST.oe) return LAST.ne + (to - LAST.oe);
+  const p = PIECES.find((q) => to >= q.os && to < q.oe);
+  return p ? p.ns + (to - p.os) / (p.oe - p.os) * (p.ne - p.ns) : null;
+};
+const Sfx = ({at, ...r}: React.ComponentProps<typeof SfxRaw>) => { const n = unwarp(at); return n === null ? null : <SfxRaw at={n} {...r} />; };
 export const DOUG_COLLEGE_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.8) * 30) / 30;
 const cl = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = (p: number) => 1 - Math.pow(1 - cl(p), 3);
@@ -471,7 +511,7 @@ const SHOTS: Shot[] = [
 const DEEP: [number, number, number, number][] = [[7, 560, 700, 1.22], [12, 450, 800, 1.2], [16, 540, 760, 1.25], [23, 540, 700, 1.3], [32, 540, 900, 1.2]];
 
 export const DougCollege = () => {
-  const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
+  const frame = useCurrentFrame(), tn = frame / FPS, t = warp(onTwos(frame)), tc = warp(tn);
   const sh = [...SHOTS].reverse().find((x) => tc >= x.at)!;
   let s0 = 1 + 0.012 * (tc - sh.at), fx = 540, fy = 960;
   if (sh.at === 0) { // push toward the side being named (USA, then Germany), back out on "Same degree"
@@ -479,16 +519,16 @@ export const DougCollege = () => {
     s0 = 1 + 0.18 * (toUS + toDE); fx = 540 - 230 * toUS + 230 * toDE; fy = 960 + 40 * (toUS + toDE);
   }
   const dz = DEEP.find(([i]) => tc >= P(i) && tc < E(i) + 0.15), dp = dz ? ease((tc - P(dz[0])) / 0.22) : 0;
-  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (tc < 1.0 ? 1 : beat(tc, TIM));
+  const s = (dz ? s0 + (dz[3] - s0) * dp : s0) * (tn < 1.0 ? 1 : beat(tn, TIM));
   if (dz) { fx += (dz[1] - fx) * dp; fy += (dz[2] - fy) * dp; }
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
     <Fonts /><HandFont />
     <AbsoluteFill style={cutFX(tc, SHOTS.map((x) => ({at: x.at, fx: x.fx_})))}>
       <AbsoluteFill style={{transform: `translate(${540 - fx * s}px, ${960 - fy * s}px) scale(${s})`, transformOrigin: '0 0'}}>{sh.set(t)}</AbsoluteFill>
     </AbsoluteFill>
-    <Captions t={tc} phrases={TIM} />
+    <Captions t={tn} phrases={TIM} />
     <Audio src={staticFile('doug-college-voice.mp3')} />
-    {SHOTS.slice(1).map((x, i) => <Sfx key={`w${i}`} at={x.at - 0.05} name="user-whoosh" vol={0.22} />)}
+    {SHOTS.slice(1).map((x, i) => { const n = unwarp(x.at); return n === null ? null : <SfxRaw key={`w${i}`} at={Math.max(0, n - 0.05)} name="user-whoosh" vol={0.22} />; })}
     <Sfx at={0} name="user-ting" vol={0.5} />
     <Sfx at={0.3} name="user-cash-register" vol={0.3} />
     <Sfx at={DE()} name="user-boom" vol={0.45} />
