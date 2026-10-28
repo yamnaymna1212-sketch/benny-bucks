@@ -1,14 +1,14 @@
 [
  {
-  "voice": "am_michael",
+  "voice": "am_fenrir",
   "text": "Why is gas five dollars and two cents in America...",
   "start": 0.0,
-  "end": 3.07
+  "end": 2.42
  },
  {
-  "voice": "am_michael",
+  "voice": "am_fenrir",
   "text": "but just one dollar in Kuwait?",
-  "start": 3.32,
-  "end": 5.11
+  "start": 2.5,
+  "end": 3.89
  }
 ]

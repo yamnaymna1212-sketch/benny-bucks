@@ -82,15 +82,16 @@ const Arrow = ({t, drawAt, swingAt}: {t: number; drawAt: number; swingAt: number
 };
 
 // Beats (s) from the hook voice: line 1 = America, line 2 = Kuwait.
-const US_AT = TIM[0].start, US_PRICE = 0.85, KW_AT = TIM[1].start, KW_PRICE = KW_AT + 0.75;
+// price words sit at ~28% of line 1 and ~42% of line 2 (scales with any voice speed)
+const US_AT = TIM[0].start, US_PRICE = US_AT + 0.28 * (TIM[0].end - US_AT), KW_AT = TIM[1].start, KW_PRICE = KW_AT + 0.42 * (TIM[1].end - KW_AT);
 const mix = (a: number, b: number, p: number) => a + (b - a) * p;
 
 export const KuwaitHook = ({t}: {t: number}) => {
   // Doug: puzzled look toward America, points at it; then whips to Kuwait, stunned, points at it.
-  const toUS = ease((t - 0.3) / 0.35), toKW = ease((t - KW_AT) / 0.25), shock = ease((t - KW_PRICE) / 0.15);
+  const toUS = ease((t - 0.2) / 0.3), toKW = ease((t - KW_AT) / 0.2), shock = ease((t - KW_PRICE) / 0.15);
   const turn = mix(mix(0, -0.5, toUS), 0.5, toKW);
   const lookX = mix(mix(0, -0.85, toUS), 0.85, toKW);
-  const pointL = ease((t - US_PRICE) / 0.3) * (1 - toKW), pointR = ease((t - (KW_AT + 0.35)) / 0.3);
+  const pointL = ease((t - US_PRICE) / 0.3) * (1 - toKW), pointR = ease((t - (KW_AT + 0.2)) / 0.25);
   const jolt = t >= KW_PRICE && t < KW_PRICE + 0.3 ? Math.sin((t - KW_PRICE) / 0.3 * Math.PI) : 0;
   return <>
     <WhyBanner t={t} />
@@ -110,7 +111,7 @@ export const DOUG_KUWAIT_HOOK_SECONDS = Math.ceil((TIM[TIM.length - 1].end + 0.6
 export const DougKuwaitHook = () => {
   const frame = useCurrentFrame(), tc = frame / FPS, t = onTwos(frame);
   // slow push toward the side being spoken: America first, then a quick pan to Kuwait and keep pushing
-  const z1 = ease((tc - 0.3) / 2.6), z2 = ease((tc - KW_AT) / 0.45), z3 = ease((tc - KW_AT - 0.45) / 1.6);
+  const z1 = ease((tc - 0.3) / (KW_AT - 0.3)), z2 = ease((tc - KW_AT) / 0.35), z3 = ease((tc - KW_AT - 0.35) / 1.2);
   const s = (1 + 0.16 * z1 + 0.06 * z3) * beat(tc, TIM);
   const fx = mix(mix(540, 300, z1), 780, z2), fy = mix(960, 1080, z1);
   return <AbsoluteFill style={{background: '#fff', overflow: 'hidden'}}>
