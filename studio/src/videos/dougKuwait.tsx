@@ -28,31 +28,18 @@ const WhyBanner = ({t}: {t: number}) => {
   </svg>;
 };
 
-// Classic gas pump (real colours: red body, white panel, black LCD, hose + nozzle). Same pump on both sides.
+// Simple gas pump: solid red body, screen, black hose + nozzle on the side. Same pump on both sides.
 const GasPump = ({x, bottom, s = 0.9}: {x: number; bottom: number; s?: number}) =>
   <svg width={300} height={470} viewBox="0 0 300 470" style={{position: 'absolute', left: x - 150 * s, top: bottom - 470 * s, overflow: 'visible', transform: `scale(${s})`, transformOrigin: '0 0'}}>
-    {/* hose + nozzle on the outer side */}
-    <path d="M262 190 C 335 200, 335 330, 290 360" fill="none" stroke={INK} strokeWidth={22} strokeLinecap="round" />
-    <path d="M262 190 C 335 200, 335 330, 290 360" fill="none" stroke="#3A3A3A" strokeWidth={10} strokeLinecap="round" />
-    <g transform="rotate(-14 286 372)">
-      <rect x={266} y={352} width={40} height={78} rx={10} fill="#2B2B2B" stroke={INK} strokeWidth={6} />
-      <rect x={290} y={364} width={22} height={34} rx={6} fill="#C9CED3" stroke={INK} strokeWidth={5} />
-    </g>
-    {/* body */}
-    <rect x={20} y={40} width={250} height={380} rx={26} fill="#D9372B" stroke={INK} strokeWidth={9} />
-    <rect x={20} y={40} width={250} height={64} rx={22} fill="#fff" stroke={INK} strokeWidth={9} />
-    <text x={145} y={90} textAnchor="middle" fontFamily="Montserrat" fontWeight={900} fontSize={48} fill={INK} letterSpacing={4}>GAS</text>
-    {/* LCD */}
-    <rect x={48} y={128} width={194} height={92} rx={12} fill="#fff" stroke={INK} strokeWidth={7} />
-    <rect x={60} y={140} width={170} height={68} rx={8} fill="#1B2A20" />
-    <text x={218} y={194} textAnchor="end" fontFamily="Montserrat" fontWeight={800} fontSize={52} fill="#5CFF8A" letterSpacing={2}>0.00</text>
-    {/* grade buttons */}
-    {[0, 1, 2].map((i) => <rect key={i} x={52 + i * 64} y={246} width={52} height={34} rx={8} fill={['#2E9E4F', '#F2B705', '#2F6FD6'][i]} stroke={INK} strokeWidth={5} />)}
-    {/* nozzle holster + drop logo */}
-    <rect x={52} y={304} width={186} height={78} rx={14} fill="#fff" stroke={INK} strokeWidth={6} />
-    <path d="M145 316 C 145 316, 120 346, 120 358 A 25 25 0 0 0 170 358 C 170 346, 145 316, 145 316 Z" fill="#D9372B" stroke={INK} strokeWidth={5} />
+    {/* body: one solid colour, like the real thing (and the ⛽ icon) */}
+    <rect x={20} y={20} width={230} height={400} rx={30} fill="#D9372B" stroke={INK} strokeWidth={9} />
+    <rect x={50} y={60} width={170} height={110} rx={14} fill="#F4F6F8" stroke={INK} strokeWidth={7} />
+    {/* hose from the bottom of the pump up to the nozzle hanging on its side */}
+    <path d="M250 370 C 330 350, 335 230, 292 186" fill="none" stroke={INK} strokeWidth={18} strokeLinecap="round" />
+    <rect x={250} y={96} width={46} height={98} rx={12} fill="#2B2B2B" stroke={INK} strokeWidth={6} />
+    <rect x={226} y={102} width={40} height={20} rx={6} fill="#2B2B2B" stroke={INK} strokeWidth={6} />
     {/* base */}
-    <rect x={0} y={420} width={290} height={34} rx={8} fill="#555" stroke={INK} strokeWidth={7} />
+    <rect x={0} y={420} width={270} height={34} rx={8} fill="#555" stroke={INK} strokeWidth={7} />
   </svg>;
 
 // One column: waving flag, big price board, down arrow, pump.
