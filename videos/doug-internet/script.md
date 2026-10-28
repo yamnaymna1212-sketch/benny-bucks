@@ -1,6 +1,7 @@
 # EP7 "Internet Explained by Doug" (~62 s) — Price Gap: USA vs India
 
-On-screen title: **Internet Explained / by Doug** (blue). HOOK = versus format (copy `Hook` from dougVenezuela.tsx): left USA phone "$25 / MONTH" (RED), right INDIA phone "~$2 / MONTH" (GREEN), "SAME PHONE" stamp, ONE "?" by Doug. SFX: ting at 0 s, boom on "twenty-five".
+HOOK (user-approved v3, simplified): big "why?" on top; USA / INDIA flags + names; solid price cards $25 (RED) VS $2 (GREEN); two identical phones showing wifi + "2GB DATA"; Doug small between the phones. No blue title, no arrow, no stamp (user: less clutter). SFX: ting at 0 s, boom on India.
+VO: Kokoro am_michael speed 1.0 (tools/tts.py) -> videos/doug-internet/vo/voice.mp3, 62.3 s; final lines = vo/lines.txt.
 
 ## Spoken script (paste into ElevenLabs / or tools/tts.py)
 Why Doug pay twenty-five dollars for one month of data in America... but two dollars in India? Same phone. Same Doug.
