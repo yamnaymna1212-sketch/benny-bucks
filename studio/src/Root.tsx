@@ -5,14 +5,14 @@ import {DougGas, DOUG_GAS_SECONDS} from './videos/dougGas';
 import {DougRent, DOUG_RENT_SECONDS} from './videos/dougRent';
 import {DougVenezuela, DOUG_VENEZUELA_SECONDS} from './videos/dougVenezuela';
 import {DougLaundering, DOUG_LAUNDERING_SECONDS} from './videos/dougLaundering';
-import {DougKuwaitHook} from './videos/dougKuwait';
+import {DougKuwaitHook, DOUG_KUWAIT_HOOK_SECONDS} from './videos/dougKuwait';
 export const Root = () => (
   <>
     <Composition id="doug-rent" component={DougRent} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_RENT_SECONDS * 30)} />
     <Composition id="doug-gas" component={DougGas} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_GAS_SECONDS * 30)} />
     <Composition id="doug-venezuela" component={DougVenezuela} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_VENEZUELA_SECONDS * 30)} />
     <Composition id="doug-laundering" component={DougLaundering} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_LAUNDERING_SECONDS * 30)} />
-    <Composition id="doug-kuwait-hook" component={DougKuwaitHook} width={1080} height={1920} fps={30} durationInFrames={150} />
+    <Composition id="doug-kuwait-hook" component={DougKuwaitHook} width={1080} height={1920} fps={30} durationInFrames={Math.round(DOUG_KUWAIT_HOOK_SECONDS * 30)} />
     <Composition id="penguin-cast2" component={PenguinCast2} width={1080} height={1920} fps={30} durationInFrames={60} />
     <Composition id="penguin-world" component={PenguinWorld} width={1080} height={1920} fps={30} durationInFrames={60} />
   </>
