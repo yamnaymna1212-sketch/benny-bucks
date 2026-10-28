@@ -99,7 +99,7 @@ const Hook = ({t}: {t: number}) => {
 // ---------- sets ----------
 const Intro = ({t}: {t: number}) => <>
   <Snow />
-  <Penguin id="doug" x={480} y={G + 120} h={720} pose={{beak: 'smile', brows: 'happy', flapR: 70 + Math.sin(t * 4) * 6, look: [0.6, -0.2], holding: true}} />
+  <Penguin id="doug" x={480} y={G + 120} h={720} pose={{beak: 'smile', brows: 'happy', flapR: 70 + Math.sin(t * 4) * 6, look: [0.6, -0.2]}} />
   <Phone x={790} y={G - 260} w={190} rot={12}><GbScreen size={56} /></Phone>
   <BigWord text="Doug" x={540} y={330} at={P(3)} size={150} />
   <BigWord text="+ phone" x={640} y={500} at={P(3) + 0.9} size={110} color="#3A9BD9" />
@@ -125,7 +125,7 @@ const TowerSet = ({t}: {t: number}) => {
   return <>
     <Snow />
     <Tower x={700} y={G} t={t} sign={larry ? 'LARRY DATA' : undefined} />
-    <Penguin id="doug" x={210} y={G + 110} h={420} pose={{look: [0.9, -0.6], beak: 'smile', flapR: 120, holding: true}} />
+    <Penguin id="doug" x={210} y={G + 110} h={420} pose={{look: [0.9, -0.6], beak: 'smile', flapR: 120}} />
     <Phone x={330} y={G - 200} w={110} rot={20}><Wifi size={56} color="#3A9BD9" /></Phone>
     {larry && <Walrus id="larry" x={lerp(1250, 860, ease((t - P(6)) / 0.4))} y={G + 140} h={420} pose={{laugh: t > P(6) + 0.5 ? 1 : 0}} />}
     <BigWord text="data" x={300} y={360} at={P(5)} until={P(6)} size={140} color="#3A9BD9" />
@@ -140,7 +140,7 @@ const Pay = ({t}: {t: number}) => {
     <Snow />
     <Penguin id="doug" x={250} y={G + 120} h={470} pose={{turn: 0.5, look: [0.8, 0], beak: 'frown', brows: 'worried', flapR: 90}} />
     <Walrus id="larry" x={820} y={G + 140} h={500} pose={{laugh: 1, mouth: 0.5}} />
-    <FishFlight x1={330} y1={G - 280} x2={760} y2={G - 300} a={P(7) + 0.1} b={E(7) + 0.3} n={7} w={110} />
+    <FishFlight x1={330} y1={G - 280} x2={760} y2={G - 300} a={P(7) + 0.1} b={E(7) + 0.3} n={7} w={110} arc={150} />
     <div style={{position: 'absolute', left: 390, top: 300, width: 300, height: 200, background: '#fff', border: `7px solid ${INK}`, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: MONT, fontWeight: 900, fontSize: 92, color: RED}}>
       <div style={{position: 'absolute', top: -7, left: -7, right: -7, height: 50, background: RED, border: `7px solid ${INK}`, borderRadius: '18px 18px 0 0'}} />{MONTHS[m]}</div>
     <BigWord text="every month" x={540} y={620} at={P(7) + 0.8} size={100} color={RED} />
@@ -192,7 +192,7 @@ const AllCut = ({t}: {t: number}) => {
   return <>
     <Snow />
     {[180, 540, 900].map((x, i) => <Walrus key={i} id={`w${i}`} x={x} y={G + 140} h={330} flip={i === 0} pose={{mouth: 0.6, laugh: down ? 0 : 1}} />)}
-    {[180, 540, 900].map((x, i) => <PriceTag key={`p${i}`} x={x} y={G - 380} price="-$" at={P(14) + i * 0.25} size={0.8} rot={i % 2 ? 5 : -5} />)}
+    {[180, 540, 900].map((x, i) => <PriceTag key={`p${i}`} x={x} y={G - 380} price="CUT" at={P(14) + i * 0.25} size={0.8} rot={i % 2 ? 5 : -5} />)}
     {down && steps.map((s, i) => <PriceCard key={s} text={s} x={210 + i * 220} y={320 + i * 120} color={i === 3 ? GREEN : RED} at={P(15) + i * 0.45} t={t} w={220} h={130} size={84} />)}
     {down && <svg width={900} height={600} style={{position: 'absolute', left: 120, top: 300, overflow: 'visible'}}>
       <path d="M40 40 L780 520" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - ease((t - P(15)) / 1.4)} stroke={RED} strokeWidth={16} fill="none" strokeLinecap="round" opacity={0.35} /></svg>}
@@ -343,7 +343,7 @@ const SHOTS: Shot[] = [
   {at: P(31), set: (t) => <Cta t={t} />, fx_: 'pop'},
 ];
 // deep zooms [segment, focusX, focusY, scale]
-const DEEP: [number, number, number, number][] = [[6, 860, 1000, 1.5], [9, 540, 640, 1.4], [12, 600, 900, 1.5], [15, 540, 560, 1.2], [24, 450, 950, 1.3], [28, 560, 800, 1.4], [30, 300, 900, 1.5]];
+const DEEP: [number, number, number, number][] = [[6, 860, 1000, 1.5], [9, 540, 640, 1.4], [12, 600, 900, 1.5], [24, 450, 950, 1.3], [28, 560, 800, 1.4], [30, 300, 900, 1.5]];
 
 export const DougInternet = () => {
   const frame = useCurrentFrame(), t = onTwos(frame), tc = frame / FPS;
