@@ -151,7 +151,7 @@ export const Sign = ({x, y, text, w = 300, id = 'sign', sway = 1}: {x: number; y
     <Svg x={x} y={y} w={w} h={w * 1.1} vb="0 0 300 330" id={id}>
       <rect x={142} y={150} width={16} height={180} fill="#9A6A35" stroke={INK} strokeWidth={LW} />
       <path d="M6 10 L294 4 L296 160 L4 166 Z" fill="#C8924E" stroke={INK} strokeWidth={LW} strokeLinejoin="round" />
-      <text x={150} y={102} textAnchor="middle" fontFamily={HAND} fontSize={Math.min(70, 470 / Math.max(1, text.length))} fill={INK}>{text}</text>
+      <text x={150} y={102} textAnchor="middle" fontFamily={HAND} fontSize={Math.min(70, 400 / Math.max(1, text.length))} fill={INK}>{text}</text>
     </Svg>
   </div>;
 };

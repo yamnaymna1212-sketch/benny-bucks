@@ -97,7 +97,7 @@ export const Vs = ({x, y, t}: {x: number; y: number; t: number}) => {
 
 
 // ---------- Boss Bear (polar bear = the government that pays for the gas) ----------
-const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
+export const BossBear = ({x, y, h = 520, mouth = 0, sweat, sad, flip}: {x: number; y: number; h?: number; mouth?: number; sweat?: boolean; sad?: boolean; flip?: boolean}) => {
   const t = useCurrentFrame() / FPS, bob = Math.sin(t * 3) * 3;
   return <svg width={h * 0.8} height={h} viewBox="0 0 320 400" style={{position: 'absolute', left: x - h * 0.4, top: y - h + bob, overflow: 'visible', transform: flip ? 'scaleX(-1)' : undefined}}>
     <ellipse cx={160} cy={395} rx={120} ry={10} fill="#E3E8EC" />
