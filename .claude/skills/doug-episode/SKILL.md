@@ -6,6 +6,8 @@ description: Make a "Doug the Penguin" TikTok episode (the ACTIVE channel) — s
 
 Talk to the user in Arabic; video text/voice in English. Follow the TOKEN GUARD in CLAUDE.md (warn before expensive steps, offer the cheaper option). Read PROJECT_LOG.md (bottom) + videos/penguin-series/script-formula.md first.
 
+## 0. DEFAULT STYLE = videos/penguin-series/style-v2-3-reasons.md (user-locked 2026-10-28). Copy studio/src/videos/dougKuwait.tsx. It overrides the older hook/script notes below where they differ (no caveman lines, no RECORD/TODAY tags, simple red ⛽ pumps with a drop, Doug alone in the middle, 3-reasons countdown).
+
 ## 1. Topic + script
 - Pick American money pain (rent, gas, tipping, credit score, BNPL, groceries, investing...). Check real numbers with WebSearch (cite source, e.g. AAA, BLS, Harvard JCHS).
 - Script template = videos/doug-gas/script.md: spoken hook starts "Why..." (or "If Doug..."), split-screen contrast with real US prices; caveman-English explanation ("Gas come from oil."); concept named after the example; "Doug <state>." gag line alone (e.g. "Doug poor." / "Doug happy." / "Doug angry." — NEVER bare "Doug."); one "In real life, ..." line with the real number; twist/loop ending (e.g. Doug melts in Texas); last line = comment question. ~150–190 words.
