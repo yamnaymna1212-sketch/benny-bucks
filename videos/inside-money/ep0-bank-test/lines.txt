@@ -1,0 +1,10 @@
+Why isn't your money in the bank's vault?|0.05
+You deposit a thousand dollars.|0.04
+The bank lends it out.|0.04
+To car buyers.|0.02
+To homebuyers.|0.02
+To businesses.|0.04
+So how much must it keep?|0.04
+Since twenty twenty, the legal minimum is zero percent.|0.05
+Your deposit is really a loan to the bank.|0.04
+Next: what if everyone wants it back?|0

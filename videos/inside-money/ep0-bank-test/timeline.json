@@ -1,0 +1,292 @@
+{
+ "dur": 15.7,
+ "phrases": [
+  {
+   "voice": "am_fenrir",
+   "text": "Why isn't your money in the bank's vault?",
+   "start": 0.0,
+   "end": 1.74
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "You deposit a thousand dollars.",
+   "start": 1.79,
+   "end": 3.4
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "The bank lends it out.",
+   "start": 3.44,
+   "end": 4.45
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "To car buyers.",
+   "start": 4.49,
+   "end": 5.39
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "To homebuyers.",
+   "start": 5.41,
+   "end": 6.27
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "To businesses.",
+   "start": 6.29,
+   "end": 7.14
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "So how much must it keep?",
+   "start": 7.18,
+   "end": 8.42
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "Since twenty twenty, the legal minimum is zero percent.",
+   "start": 8.46,
+   "end": 11.5
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "Your deposit is really a loan to the bank.",
+   "start": 11.55,
+   "end": 13.63
+  },
+  {
+   "voice": "am_fenrir",
+   "text": "Next: what if everyone wants it back?",
+   "start": 13.67,
+   "end": 15.44
+  }
+ ],
+ "words": [
+  {
+   "w": "Why",
+   "s": 0.0
+  },
+  {
+   "w": "isn't",
+   "s": 0.199
+  },
+  {
+   "w": "your",
+   "s": 0.398
+  },
+  {
+   "w": "money",
+   "s": 0.597
+  },
+  {
+   "w": "in",
+   "s": 0.944
+  },
+  {
+   "w": "the",
+   "s": 1.143
+  },
+  {
+   "w": "bank's",
+   "s": 1.342
+  },
+  {
+   "w": "vault?",
+   "s": 1.541
+  },
+  {
+   "w": "You",
+   "s": 1.79
+  },
+  {
+   "w": "deposit",
+   "s": 1.992
+  },
+  {
+   "w": "a",
+   "s": 2.494
+  },
+  {
+   "w": "thousand",
+   "s": 2.696
+  },
+  {
+   "w": "dollars.",
+   "s": 3.048
+  },
+  {
+   "w": "The",
+   "s": 3.44
+  },
+  {
+   "w": "bank",
+   "s": 3.642
+  },
+  {
+   "w": "lends",
+   "s": 3.844
+  },
+  {
+   "w": "it",
+   "s": 4.046
+  },
+  {
+   "w": "out.",
+   "s": 4.248
+  },
+  {
+   "w": "To",
+   "s": 4.49
+  },
+  {
+   "w": "car",
+   "s": 4.79
+  },
+  {
+   "w": "buyers.",
+   "s": 5.09
+  },
+  {
+   "w": "To",
+   "s": 5.41
+  },
+  {
+   "w": "homebuyers.",
+   "s": 5.657
+  },
+  {
+   "w": "To",
+   "s": 6.29
+  },
+  {
+   "w": "businesses.",
+   "s": 6.491
+  },
+  {
+   "w": "So",
+   "s": 7.18
+  },
+  {
+   "w": "how",
+   "s": 7.387
+  },
+  {
+   "w": "much",
+   "s": 7.593
+  },
+  {
+   "w": "must",
+   "s": 7.8
+  },
+  {
+   "w": "it",
+   "s": 8.007
+  },
+  {
+   "w": "keep?",
+   "s": 8.213
+  },
+  {
+   "w": "Since",
+   "s": 8.46
+  },
+  {
+   "w": "twenty",
+   "s": 8.674
+  },
+  {
+   "w": "twenty,",
+   "s": 9.047
+  },
+  {
+   "w": "the",
+   "s": 9.42
+  },
+  {
+   "w": "legal",
+   "s": 9.635
+  },
+  {
+   "w": "minimum",
+   "s": 10.008
+  },
+  {
+   "w": "is",
+   "s": 10.54
+  },
+  {
+   "w": "zero",
+   "s": 10.754
+  },
+  {
+   "w": "percent.",
+   "s": 11.127
+  },
+  {
+   "w": "Your",
+   "s": 11.55
+  },
+  {
+   "w": "deposit",
+   "s": 11.735
+  },
+  {
+   "w": "is",
+   "s": 12.195
+  },
+  {
+   "w": "really",
+   "s": 12.381
+  },
+  {
+   "w": "a",
+   "s": 12.703
+  },
+  {
+   "w": "loan",
+   "s": 12.889
+  },
+  {
+   "w": "to",
+   "s": 13.074
+  },
+  {
+   "w": "the",
+   "s": 13.259
+  },
+  {
+   "w": "bank.",
+   "s": 13.445
+  },
+  {
+   "w": "Next:",
+   "s": 13.67
+  },
+  {
+   "w": "what",
+   "s": 13.879
+  },
+  {
+   "w": "if",
+   "s": 14.087
+  },
+  {
+   "w": "everyone",
+   "s": 14.296
+  },
+  {
+   "w": "wants",
+   "s": 14.814
+  },
+  {
+   "w": "it",
+   "s": 15.023
+  },
+  {
+   "w": "back?",
+   "s": 15.231
+  }
+ ],
+ "zeroAt": 10.754
+}

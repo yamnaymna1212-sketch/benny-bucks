@@ -1,0 +1,62 @@
+[
+ {
+  "voice": "am_fenrir",
+  "text": "Why isn't your money in the bank's vault?",
+  "start": 0.0,
+  "end": 1.74
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "You deposit a thousand dollars.",
+  "start": 1.79,
+  "end": 3.4
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "The bank lends it out.",
+  "start": 3.44,
+  "end": 4.45
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "To car buyers.",
+  "start": 4.49,
+  "end": 5.39
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "To homebuyers.",
+  "start": 5.41,
+  "end": 6.27
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "To businesses.",
+  "start": 6.29,
+  "end": 7.14
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "So how much must it keep?",
+  "start": 7.18,
+  "end": 8.42
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "Since twenty twenty, the legal minimum is zero percent.",
+  "start": 8.46,
+  "end": 11.5
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "Your deposit is really a loan to the bank.",
+  "start": 11.55,
+  "end": 13.63
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "Next: what if everyone wants it back?",
+  "start": 13.67,
+  "end": 15.44
+ }
+]
