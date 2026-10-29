@@ -163,13 +163,13 @@ const guyBox=()=>new THREE.Box3().setFromObject(guy);
 const boxOf=o=>new THREE.Box3().setFromObject(o);
 const vaultBox=new THREE.Box3(V3(-3.3,-6.4,-2),V3(3.3,-2.1,2.5)),bankBox=boxOf(bank),fedBox=boxOf(fed),houseBox=boxOf(house),shopBox=boxOf(shop),carBox=boxOf(car),serverBox=new THREE.Box3(V3(4.0,-4.7,-1),V3(8.8,-2.1,2.5));
 const beats=[
- [0,      t=>V3(-2.2,-1.6,0), V3(.18,.06,1), 20, ()=>[guyBox(),bankBox,vaultBox]],          // HOOK: guy + bank + vault in one frame
- [2.6,    t=>V3(-1.8,-1.2,0), V3(.1,.05,1), 19, ()=>[guyBox(),bankBox,vaultBox]],           // slow push
+ [0,      t=>V3(-4.5,1.75,1), V3(.3,.05,1), 3.6, ()=>[]],          // HOOK: guy + bank + vault in one frame
+ [2.6,    t=>V3(-3.6,1.6,0),  V3(.25,.05,1), 8, ()=>[]],           // slow push
  [T.vault1,t=>V3(0,-2.4,0),   V3(0,.02,1), 30, ()=>[bankBox,vaultBox]],                     // bank + vault below
  [T.lets, t=>V3(0,-4.0,0),    V3(.1,0,1), 12, ()=>[vaultBox]],                              // dive into vault
  [T.yes,  t=>V3(-1.0,-5.0,0), V3(-.25,.08,1), 8.5, ()=>[]],                                // shelves (small part)
  [T.so1,  t=>V3(3.4,-3.6,0),  V3(.3,.05,1), 13, ()=>[]],                                    // turn toward the exit
- [T.most, t=>V3(-3.6,1.4,0),  V3(.2,.05,1), 10, ()=>[guyBox()]],                            // guy: "never cash"
+ [T.most, t=>V3(-4.5,1.7,1),  V3(.3,.05,1), 3.8, ()=>[]],                            // guy: "never cash"
  [T.when-.2,t=>hero(t)?hero(t).p:V3(0,0,0),V3(.6,.06,1), 6, ()=>[]],                        // FOLLOW the number
  [T.that+.3,t=>V3(6.4,-3.3,0),V3(.2,.04,1), 10, ()=>[serverBox]],                          // number on the bank screen
  [T.lends,t=>hero(t)?hero(t).p:V3(6,0,0),V3(-.5,.08,1), 8, ()=>[]],                         // FOLLOW loans
@@ -178,15 +178,15 @@ const beats=[
  [T.biz+.2,t=>hero(t).p.clone().setY(1.6),V3(.1,.06,1), 13, ()=>[shopBox]],
  [T.since,t=>V3(0,-4.0,0),    V3(-.1,.02,1), 13, ()=>[vaultBox]],                           // back to the vault
  [T.zero-.2,t=>V3(0,-4.2,0),  V3(.05,0,1), 9, ()=>[zero.visible?boxOf(zero):vaultBox]],      // 0%
- [T.wait, t=>V3(-3.4,1.5,0),  V3(.3,.08,1), 9, ()=>[guyBox()]],                             // guy at the ATM
+ [T.wait, t=>V3(-4.5,1.7,1),  V3(-.2,.05,1), 3.8, ()=>[]],                             // guy at the ATM
  [T.banks,t=>hero(t)?hero(t).p.clone().setY(1.2):V3(-10,1,0),V3(-.7,.1,1), 11, ()=>[]],     // FOLLOW the armored truck
  [T.fed1-.3,t=>V3(-12,2.2,0), V3(.05,.1,1), 22, ()=>[fedBox]],                              // Federal Reserve building
  [T.own,  t=>hero(t)?hero(t).p:V3(0,-2,0),V3(.1,.06,1), 11, ()=>[]],                        // FOLLOW reserves to the Fed
  [T.fed2+.6,t=>V3(-15.5,-2.6,0),V3(.1,.05,1), 14, ()=>[new THREE.Box3(V3(-19.4,-4.7,-1),V3(-11.6,-2.1,2.5))]],
  [T.so2,  t=>V3(-1,0,0),      V3(.05,.08,1), 46, ()=>[fedBox,bankBox,carBox]],              // wide: money moving
  [T.insured,t=>V3(0,4.5,0),   V3(.05,.05,1), 20, ()=>[bankBox]],                            // $250,000 over the bank
- [T.cta,  t=>V3(-4.4,1.9,1),  V3(.35,.12,1), 6.5, ()=>[]],                                  // loop: back to the guy
- [tEnd+1, t=>V3(-4.4,1.9,1),  V3(.35,.12,1), 6.0, ()=>[]]];
+ [T.cta,  t=>V3(-4.5,1.75,1), V3(.3,.05,1), 3.6, ()=>[]],                                  // loop: back to the guy
+ [tEnd+1, t=>V3(-4.5,1.8,1),  V3(.3,.05,1), 3.0, ()=>[]]];
 const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
 function fits(boxes){cam.updateMatrixWorld();const v=new THREE.Vector3();for(const b of boxes){for(let i=0;i<8;i++){v.set(i&1?b.max.x:b.min.x,i&2?b.max.y:b.min.y,i&4?b.max.z:b.min.z).project(cam);if(v.z>1||Math.abs(v.x)>.86||v.y>.86||v.y<-.62)return false;}}return true;}
 function rawCam(t){let i=0;while(i<beats.length-1&&t>=beats[i+1][0])i++;const [t0,tf,dir,dist,objs]=beats[i];
