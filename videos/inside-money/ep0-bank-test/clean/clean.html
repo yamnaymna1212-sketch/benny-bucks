@@ -1,0 +1,131 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:InterD;src:url(./InterDisplay-Black.otf)}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3}
+.cap{position:absolute;left:0;right:0;text-align:center;font:900 104px InterD,sans-serif;color:#fff;letter-spacing:-1px;text-shadow:0 6px 18px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.6)}
+</style></head><body><canvas id="c"></canvas><div id="ov"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+await document.fonts.load('900 100px InterD');
+const Q=new URLSearchParams(location.search),mode=Q.get('mode')||'hook';
+const W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=Number(Q.get('exp')||1.05);
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+const ROT=Number(Q.get('rot')||1.57);
+scene.background=hdr;scene.environment=hdr;scene.backgroundRotation.y=ROT;scene.environmentRotation.y=ROT;scene.backgroundBlurriness=Number(Q.get('blur')||.03);scene.environmentIntensity=1.0;
+// ---------- helpers ----------
+const LM=new THREE.LoadingManager();let pend=0;const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM);
+function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d);const RB=(w,h,d,r=.03)=>new RoundedBoxGeometry(w,h,d,3,r);
+// ---------- ground block ----------
+const X0=-6.5,X1=6.5,GD=6,GY=11,FZ=GD/2;
+const cx0=-3.3,cx1=3.3,cy0=-6.4,cy1=-2.1;
+const soil=(w,h)=>pbr('excavated_soil_wall',w/3,h/3);
+const sb=(x0,x1,y0,y1)=>add(B(x1-x0,y1-y0,GD),soil(x1-x0,y1-y0),(x0+x1)/2,(y0+y1)/2,0);
+sb(X0,X1,cy1,-.32);sb(X0,X1,-GY,cy0);sb(X0,cx0,cy0,cy1);sb(cx1,X1,cy0,cy1);
+add(B(X1-X0,.32,GD),pbr('concrete_wall_008',6,.4),0,-.16,0);                 // slab
+add(B(X1-X0,.05,GD),pbr('granite_tile',8,4),0,.025,0);                      // plaza
+// ---------- vault ----------
+const vw=pbr('concrete_wall_008',2.5,1.6),vx=0,vy=(cy0+cy1)/2;
+add(B(cx1-cx0,cy1-cy0,.3),vw,vx,vy,-FZ+.45);add(B(cx1-cx0,.25,GD-.4),pbr('granite_tile',4,3),vx,cy0+.125,0);
+add(B(.25,cy1-cy0,GD-.4),vw,cx0+.13,vy,0);add(B(.25,cy1-cy0,GD-.4),vw,cx1-.13,vy,0);add(B(cx1-cx0,.25,GD-.4),vw,vx,cy1-.125,0);
+for(const x of[-2,0,2])add(RB(1.2,.05,.16,.02),M(0xffffff,.3,0,{emissive:0xfff2dc,emissiveIntensity:3}),x,cy1-.28,.8,scene,false);
+const steel=M(0x9aa2aa,.22,1);const door=new THREE.Group();door.position.set(0,cy0+1.95,-FZ+.65);scene.add(door);
+{const d=add(new THREE.CylinderGeometry(1.45,1.45,.36,128),steel,0,0,0,door);d.rotation.x=Math.PI/2;
+add(new THREE.TorusGeometry(1.48,.12,32,160),M(0x7d848b,.28,1),0,0,.14,door);add(new THREE.TorusGeometry(1.05,.03,16,128),M(0x7d848b,.3,1),0,0,.19,door);
+for(let i=0;i<12;i++){const a=i/12*Math.PI*2;const b=add(new THREE.CylinderGeometry(.08,.08,.22,24),M(0xc6ccd2,.18,1),Math.cos(a)*1.25,Math.sin(a)*1.25,.2,door);b.rotation.x=Math.PI/2;}
+const wh=new THREE.Group();wh.position.z=.3;door.add(wh);add(new THREE.TorusGeometry(.46,.05,24,80),M(0xdfe4e8,.12,1),0,0,0,wh);
+for(let i=0;i<3;i++){add(RB(.95,.06,.06,.02),M(0xdfe4e8,.12,1),0,0,0,wh).rotation.z=i*Math.PI/3;}
+add(new THREE.CylinderGeometry(.14,.14,.18,32),M(0xdfe4e8,.12,1),0,0,.03,wh).rotation.x=Math.PI/2;}
+// cash (generic note design)
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+let sd=3;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+const topT=tex(512,220,x=>{x.fillStyle='#b7c2a2';x.fillRect(0,0,512,220);x.strokeStyle='rgba(40,70,50,.3)';for(let i=0;i<60;i++){x.beginPath();for(let a=0;a<=512;a+=8)x.lineTo(a,110+Math.sin(a*.03+i*.5)*80*Math.sin(i*.2));x.stroke();}
+ x.fillStyle='rgba(55,78,60,.5)';x.beginPath();x.ellipse(256,110,62,80,0,0,7);x.fill();x.fillStyle='#2c4a36';x.font='bold 46px Georgia';x.fillText('100',18,52);x.fillText('100',420,200);x.strokeStyle='#2c4a36';x.lineWidth=5;x.strokeRect(8,8,496,204);});
+const edgeT=tex(64,256,x=>{for(let i=0;i<256;i+=2){const v=150+Math.floor(rnd()*35);x.fillStyle=`rgb(${v-12},${v+8},${v-18})`;x.fillRect(0,i,64,2);}});
+const strapT=tex(256,64,x=>{x.fillStyle='#c9a227';x.fillRect(0,0,256,64);x.fillStyle='#3a2a05';x.font='bold 34px Arial';x.textAlign='center';x.fillText('$10000',128,45);});
+const topM=new THREE.MeshStandardMaterial({map:topT,roughness:.85}),edgeM=new THREE.MeshStandardMaterial({map:edgeT,roughness:.9}),strapM=new THREE.MeshStandardMaterial({map:strapT,roughness:.7});
+function cash(x,y,z,p=scene){const g=new THREE.Group();g.position.set(x,y,z);p.add(g);const m=new THREE.Mesh(B(.62,.16,.27),[edgeM,edgeM,topM,edgeM,edgeM,edgeM]);m.castShadow=m.receiveShadow=true;g.add(m);add(B(.1,.165,.275),strapM,0,0,0,g);return g;}
+const shelfM=M(0x4f565d,.35,.8);
+for(let s=0;s<3;s++){const sy=cy0+.3+s*.8;add(B(2.0,.05,.8),shelfM,-2.15,sy,1.5);if(s<1)for(let i=0;i<3;i++)for(let j=0;j<2;j++)for(let k=0;k<2;k++)cash(-2.75+i*.62,sy+.11+k*.165,1.32+j*.34);}
+for(const px of[-3.1,-1.2])for(const pz of[1.15,1.85])add(B(.05,2.2,.05),shelfM,px,cy0+1.35,pz);
+const tr=new THREE.Shape();tr.moveTo(-.25,0);tr.lineTo(.25,0);tr.lineTo(.2,.16);tr.lineTo(-.2,.16);tr.closePath();
+const barG=new THREE.ExtrudeGeometry(tr,{depth:.5,bevelEnabled:true,bevelSize:.01,bevelThickness:.01,bevelSegments:2});barG.translate(0,0,-.25);
+const goldM=new THREE.MeshPhysicalMaterial({color:0xffc75a,metalness:1,roughness:.18,clearcoat:.3});
+[[4,0],[3,1],[2,2]].forEach(([n,r])=>{for(let c=0;c<n;c++)add(barG,goldM,2.15+(c-(n-1)/2)*.52,cy0+.25+r*.17,1.2).rotation.y=Math.PI/2;});
+const vl=new THREE.PointLight(0xfff0dc,9,9,1.5);vl.position.set(0,cy1-.6,2);vl.castShadow=true;vl.shadow.mapSize.set(1024,1024);scene.add(vl);
+// ---------- the bank (one clear, iconic building) ----------
+const bk=new THREE.Group();bk.position.set(0,0,-.9);scene.add(bk);
+{const ss=(w,h)=>pbr('white_sandstone_blocks_02',w/1.8,h/1.8),mar=pbr('marble_01',1,2.5),gran=w=>pbr('granite_tile',w/1.5,.4);
+for(let i=0;i<4;i++)add(B(7.6-i*.3,.13,3.6-i*.22),gran(7.6),0,.065+i*.13,.35-i*.06,bk);
+add(B(6.8,5.4,3.0),ss(6.8,5.4),0,3.22,-.3,bk);
+for(let i=0;i<6;i++){const x=-2.75+i*1.1;add(new THREE.CylinderGeometry(.22,.25,4.1,40),mar,x,2.6,1.45,bk);add(B(.62,.16,.62),mar,x,.6,1.45,bk);add(B(.66,.22,.66),mar,x,4.73,1.45,bk);}
+add(B(7.2,.75,1.0),ss(7.2,.75),0,5.2,1.25,bk);
+const bt=tex(1024,128,x=>{x.fillStyle='#000';x.fillRect(0,0,1024,128);x.fillStyle='#fff';x.font='700 96px Georgia';x.textAlign='center';x.fillText('B  A  N  K',512,100);});
+add(new THREE.PlaneGeometry(5.2,.68),new THREE.MeshStandardMaterial({color:0xc9a54a,metalness:1,roughness:.3,alphaMap:bt,transparent:true}),0,5.2,1.755,bk,false);
+const ps=new THREE.Shape();ps.moveTo(-3.75,0);ps.lineTo(3.75,0);ps.lineTo(0,1.35);ps.closePath();
+add(new THREE.ExtrudeGeometry(ps,{depth:.9,bevelEnabled:false}),ss(7.5,1.35),0,5.57,.85,bk);
+const glass=new THREE.MeshPhysicalMaterial({color:0x0d1a24,metalness:.2,roughness:.04,clearcoat:1,envMapIntensity:1.4,emissive:0xffc78a,emissiveIntensity:.04});
+const bronze=M(0x5a3d1e,.35,.9);
+for(const x of[-2.2,-1.1,1.1,2.2]){add(B(.6,2.2,.04),glass,x,2.9,1.205,bk);add(B(.66,.07,.07),bronze,x,1.8,1.21,bk);add(B(.66,.07,.07),bronze,x,4.0,1.21,bk);}
+add(B(1.2,2.4,.06),bronze,0,1.72,1.21,bk);add(B(.02,2.3,.07),M(0x2a1a08,.5),0,1.72,1.24,bk);add(B(.6,.28,.06),glass,0,3.2,1.21,bk);
+add(new THREE.CylinderGeometry(.035,.04,3.0,16),M(0xd8dce0,.25,1),0,7.75,-.3,bk);add(new THREE.SphereGeometry(.07,16,16),M(0xd4af37,.2,1),0,9.28,-.3,bk);}
+const fg=new THREE.PlaneGeometry(1.8,.95,48,26);fg.translate(.9,0,0);
+const flagT=tex(1140,600,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*600/13,1140,600/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,456,323);x.fillStyle='#fff';
+ const st=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?r*.38:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}x.fill();};
+ for(let r=0;r<9;r++){const n=r%2?5:6;for(let k=0;k<n;k++)st(38+(r%2?38:0)+k*76,32+r*32,12);}});
+const flag=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:flagT,side:THREE.DoubleSide,roughness:.8}));flag.position.set(.04,8.75,-1.2);flag.castShadow=true;scene.add(flag);
+{const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i),a=X/1.8;p.setZ(i,Math.sin(X*4-.6*7+Y*1.3)*.11*a+Math.sin(X*7-4)*.03*a);p.setY(i,Y-a*a*.08);}fg.computeVertexNormals();}
+// ---------- glass deposit tube + falling cash bundle ----------
+const TX=2.75,TZ=FZ-.06;
+const tube=new THREE.MeshPhysicalMaterial({color:0xe6f3ff,roughness:.03,metalness:0,transparent:true,opacity:.28,clearcoat:1,depthWrite:false});
+add(new THREE.CylinderGeometry(.3,.3,2.15,48,1,true),tube,TX,-1.05,TZ,scene,false);
+add(new THREE.TorusGeometry(.3,.035,12,48),M(0xb9c0c7,.25,1),TX,-.02,TZ,scene).rotation.x=Math.PI/2;add(new THREE.TorusGeometry(.3,.035,12,48),M(0xb9c0c7,.25,1),TX,-2.1,TZ,scene).rotation.x=Math.PI/2;
+const fall=cash(TX,-1.0,TZ);fall.rotation.set(.35,.6,1.25);
+// ---------- 3D elements kit ----------
+const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
+function txt3(s,size,mat){const g=new TextGeometry(s,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.03,bevelSize:size*.025,bevelSegments:4});g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,mat);m.castShadow=true;scene.add(m);return m;}
+const goldTxt=new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5});
+const whiteTxt=new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.35,clearcoat:.4,emissive:0xffffff,emissiveIntensity:.08});
+const zero=txt3('0%',1.0,goldTxt);zero.position.set(0,cy0+2.2,1.9);zero.visible=false;
+const thousand=txt3('$1,000',.62,whiteTxt);thousand.position.set(TX+.05,.45,TZ+.35);thousand.visible=false;
+function arrow3(len=1.1){const s=new THREE.Shape();s.moveTo(-.12,0);s.lineTo(.12,0);s.lineTo(.12,len*.62);s.lineTo(.3,len*.62);s.lineTo(0,len);s.lineTo(-.3,len*.62);s.lineTo(-.12,len*.62);s.closePath();
+ const m=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:.08,bevelEnabled:true,bevelSize:.02,bevelThickness:.02,bevelSegments:3}),new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.3,clearcoat:.6}));m.castShadow=true;scene.add(m);return m;}
+const arrows=[];for(let i=0;i<3;i++){const a=arrow3();a.visible=false;arrows.push(a);}
+// ---------- sun (golden hour) ----------
+const sun=new THREE.DirectionalLight(0xffd7a8,3.4);sun.position.set(-16,14,18);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-14,right:14,top:14,bottom:-14,near:1,far:90});sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;scene.add(sun);
+// ---------- camera + post ----------
+const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
+const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.14,.4,.96));comp.addPass(new OutputPass());
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+fragmentShader:`uniform sampler2D tDiffuse;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.18);c=c*c*(3.-2.*c)*.3+c*.7;
+float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.32;c+=(h(vUv*900.)-.5)*.015;gl_FragColor=vec4(c,1.);}`}));
+await loaded;const ov=document.getElementById('ov');
+const shot=(p,t)=>{cam.position.set(...p);cam.lookAt(...t);comp.render();};
+if(mode==='hook'){zero.visible=true;thousand.visible=true;shot([0,3.2,37],[0,-.6,0]);ov.innerHTML='<div class="cap" style="top:46%">why?</div>';}
+if(mode==='wide'){shot([0,3.2,37],[0,-.6,0]);}
+if(mode==='k1'){shot([TX+.6,-.7,TZ+3.2],[TX,-1.0,TZ]);}                                        // cash bundle in tube (macro)
+if(mode==='k2'){zero.visible=true;shot([0,cy0+3.0,8.5],[0,cy0+2.9,0]);}                       // 3D gold number in the vault
+if(mode==='k3'){arrows.forEach((a,i)=>{a.visible=true;a.rotation.z=-Math.PI/2;a.position.set(1.0+i*1.3,cy0+3.4,FZ-.1);});shot([1.6,cy0+3.2,9],[1.6,cy0+3.0,0]);} // white 3D flow arrows
+if(mode==='k4'){shot([-1.2,1.6,14],[-1.2,1.6,0]);ov.innerHTML='<div class="cap" style="top:46%">deposit</div>';} // caption style
+document.title='ready';
+</script></body></html>
