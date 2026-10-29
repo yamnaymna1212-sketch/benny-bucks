@@ -1,0 +1,188 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3}
+.cap{position:absolute;left:0;right:0;top:47%;text-align:center;font:800 96px Mont,sans-serif;color:#fff;letter-spacing:-1px;-webkit-text-stroke:5px #0b0d10;paint-order:stroke fill;text-shadow:0 5px 16px rgba(0,0,0,.55);transform-origin:50% 50%}.red{color:#ff3b30}.green{color:#2ee66b}
+</style></head><body><canvas id="c"></canvas><div id="ov"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+await document.fonts.load('800 96px Mont');const TLN=await (await fetch('timeline2.json')).json();
+const Q=new URLSearchParams(location.search),mode=Q.get('mode')||'hook';
+const W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=Number(Q.get('exp')||1.05);
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+const ROT=Number(Q.get('rot')||1.57);
+scene.background=hdr;scene.environment=hdr;scene.backgroundRotation.y=ROT;scene.environmentRotation.y=ROT;scene.backgroundBlurriness=Number(Q.get('blur')||.03);scene.environmentIntensity=1.0;
+// ---------- helpers ----------
+const LM=new THREE.LoadingManager();let pend=0;const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM);
+function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d);const RB=(w,h,d,r=.03)=>new RoundedBoxGeometry(w,h,d,3,r);
+// ---------- ground block ----------
+const X0=-6.5,X1=8.0,GD=6,GY=11,FZ=GD/2;
+const cx0=-3.3,cx1=3.3,cy0=-6.4,cy1=-2.1;
+const soil=(w,h)=>pbr('excavated_soil_wall',w/3,h/3);
+const sb=(x0,x1,y0,y1)=>add(B(x1-x0,y1-y0,GD),soil(x1-x0,y1-y0),(x0+x1)/2,(y0+y1)/2,0);
+sb(X0,X1,cy1,-.32);sb(X0,X1,-GY,cy0);sb(X0,cx0,cy0,cy1);sb(cx1,X1,cy0,cy1);
+add(B(X1-X0,.32,GD),pbr('concrete_wall_008',6,.4),0,-.16,0);                 // slab
+add(B(X1-X0,.05,GD),pbr('granite_tile',8,4),0,.025,0);                      // plaza
+// ---------- vault ----------
+const vw=pbr('concrete_wall_008',2.5,1.6),vx=0,vy=(cy0+cy1)/2;
+add(B(cx1-cx0,cy1-cy0,.3),vw,vx,vy,-FZ+.45);add(B(cx1-cx0,.25,GD-.4),pbr('granite_tile',4,3),vx,cy0+.125,0);
+add(B(.25,cy1-cy0,GD-.4),vw,cx0+.13,vy,0);add(B(.25,cy1-cy0,GD-.4),vw,cx1-.13,vy,0);add(B(cx1-cx0,.25,GD-.4),vw,vx,cy1-.125,0);
+for(const x of[-2,0,2])add(RB(1.2,.05,.16,.02),M(0xffffff,.3,0,{emissive:0xfff2dc,emissiveIntensity:3}),x,cy1-.28,.8,scene,false);
+const steel=M(0x9aa2aa,.22,1);const door=new THREE.Group();door.position.set(0,cy0+1.95,-FZ+.65);scene.add(door);
+{const d=add(new THREE.CylinderGeometry(1.45,1.45,.36,128),steel,0,0,0,door);d.rotation.x=Math.PI/2;
+add(new THREE.TorusGeometry(1.48,.12,32,160),M(0x7d848b,.28,1),0,0,.14,door);add(new THREE.TorusGeometry(1.05,.03,16,128),M(0x7d848b,.3,1),0,0,.19,door);
+for(let i=0;i<12;i++){const a=i/12*Math.PI*2;const b=add(new THREE.CylinderGeometry(.08,.08,.22,24),M(0xc6ccd2,.18,1),Math.cos(a)*1.25,Math.sin(a)*1.25,.2,door);b.rotation.x=Math.PI/2;}
+const wh=new THREE.Group();wh.position.z=.3;door.add(wh);add(new THREE.TorusGeometry(.46,.05,24,80),M(0xdfe4e8,.12,1),0,0,0,wh);
+for(let i=0;i<3;i++){add(RB(.95,.06,.06,.02),M(0xdfe4e8,.12,1),0,0,0,wh).rotation.z=i*Math.PI/3;}
+add(new THREE.CylinderGeometry(.14,.14,.18,32),M(0xdfe4e8,.12,1),0,0,.03,wh).rotation.x=Math.PI/2;}
+// cash (generic note design)
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+let sd=3;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+const topT=tex(512,220,x=>{x.fillStyle='#b7c2a2';x.fillRect(0,0,512,220);x.strokeStyle='rgba(40,70,50,.3)';for(let i=0;i<60;i++){x.beginPath();for(let a=0;a<=512;a+=8)x.lineTo(a,110+Math.sin(a*.03+i*.5)*80*Math.sin(i*.2));x.stroke();}
+ x.fillStyle='rgba(55,78,60,.5)';x.beginPath();x.ellipse(256,110,62,80,0,0,7);x.fill();x.fillStyle='#2c4a36';x.font='bold 46px Georgia';x.fillText('100',18,52);x.fillText('100',420,200);x.strokeStyle='#2c4a36';x.lineWidth=5;x.strokeRect(8,8,496,204);});
+const edgeT=tex(64,256,x=>{for(let i=0;i<256;i+=2){const v=150+Math.floor(rnd()*35);x.fillStyle=`rgb(${v-12},${v+8},${v-18})`;x.fillRect(0,i,64,2);}});
+const strapT=tex(256,64,x=>{x.fillStyle='#c9a227';x.fillRect(0,0,256,64);x.fillStyle='#3a2a05';x.font='bold 34px Arial';x.textAlign='center';x.fillText('$10000',128,45);});
+const topM=new THREE.MeshStandardMaterial({map:topT,roughness:.85}),edgeM=new THREE.MeshStandardMaterial({map:edgeT,roughness:.9}),strapM=new THREE.MeshStandardMaterial({map:strapT,roughness:.7});
+function cash(x,y,z,p=scene){const g=new THREE.Group();g.position.set(x,y,z);p.add(g);const m=new THREE.Mesh(B(.62,.16,.27),[edgeM,edgeM,topM,edgeM,edgeM,edgeM]);m.castShadow=m.receiveShadow=true;g.add(m);add(B(.1,.165,.275),strapM,0,0,0,g);return g;}
+const shelfM=M(0x4f565d,.35,.8);
+for(let s=0;s<3;s++){const sy=cy0+.3+s*.8;add(B(2.0,.05,.8),shelfM,-2.15,sy,1.5);if(s<1)for(let i=0;i<3;i++)for(let j=0;j<2;j++)for(let k=0;k<2;k++)cash(-2.75+i*.62,sy+.11+k*.165,1.32+j*.34);}
+for(const px of[-3.1,-1.2])for(const pz of[1.15,1.85])add(B(.05,2.2,.05),shelfM,px,cy0+1.35,pz);
+const tr=new THREE.Shape();tr.moveTo(-.25,0);tr.lineTo(.25,0);tr.lineTo(.2,.16);tr.lineTo(-.2,.16);tr.closePath();
+const barG=new THREE.ExtrudeGeometry(tr,{depth:.5,bevelEnabled:true,bevelSize:.01,bevelThickness:.01,bevelSegments:2});barG.translate(0,0,-.25);
+const goldM=new THREE.MeshPhysicalMaterial({color:0xffc75a,metalness:1,roughness:.18,clearcoat:.3});
+[[4,0],[3,1],[2,2]].forEach(([n,r])=>{for(let c=0;c<n;c++)add(barG,goldM,2.15+(c-(n-1)/2)*.52,cy0+.25+r*.17,1.2).rotation.y=Math.PI/2;});
+const vl=new THREE.PointLight(0xfff0dc,9,9,1.5);vl.position.set(0,cy1-.6,2);vl.castShadow=true;vl.shadow.mapSize.set(1024,1024);scene.add(vl);
+// ---------- the bank (one clear, iconic building) ----------
+const bk=new THREE.Group();bk.position.set(0,0,-.9);scene.add(bk);
+{const ss=(w,h)=>pbr('white_sandstone_blocks_02',w/1.8,h/1.8),mar=pbr('marble_01',1,2.5),gran=w=>pbr('granite_tile',w/1.5,.4);
+for(let i=0;i<4;i++)add(B(7.6-i*.3,.13,3.6-i*.22),gran(7.6),0,.065+i*.13,.35-i*.06,bk);
+add(B(6.8,5.4,3.0),ss(6.8,5.4),0,3.22,-.3,bk);
+for(let i=0;i<6;i++){const x=-2.75+i*1.1;add(new THREE.CylinderGeometry(.22,.25,4.1,40),mar,x,2.6,1.45,bk);add(B(.62,.16,.62),mar,x,.6,1.45,bk);add(B(.66,.22,.66),mar,x,4.73,1.45,bk);}
+add(B(7.2,.75,1.0),ss(7.2,.75),0,5.2,1.25,bk);
+const bt=tex(1024,128,x=>{x.fillStyle='#000';x.fillRect(0,0,1024,128);x.fillStyle='#fff';x.font='700 96px Georgia';x.textAlign='center';x.fillText('B  A  N  K',512,100);});
+add(new THREE.PlaneGeometry(5.2,.68),new THREE.MeshStandardMaterial({color:0xc9a54a,metalness:1,roughness:.3,alphaMap:bt,transparent:true}),0,5.2,1.755,bk,false);
+const ps=new THREE.Shape();ps.moveTo(-3.75,0);ps.lineTo(3.75,0);ps.lineTo(0,1.35);ps.closePath();
+add(new THREE.ExtrudeGeometry(ps,{depth:.9,bevelEnabled:false}),ss(7.5,1.35),0,5.57,.85,bk);
+const glass=new THREE.MeshPhysicalMaterial({color:0x0d1a24,metalness:.2,roughness:.04,clearcoat:1,envMapIntensity:1.4,emissive:0xffc78a,emissiveIntensity:.04});
+const bronze=M(0x5a3d1e,.35,.9);
+for(const x of[-2.2,-1.1,1.1,2.2]){add(B(.6,2.2,.04),glass,x,2.9,1.205,bk);add(B(.66,.07,.07),bronze,x,1.8,1.21,bk);add(B(.66,.07,.07),bronze,x,4.0,1.21,bk);}
+add(B(1.2,2.4,.06),bronze,0,1.72,1.21,bk);add(B(.02,2.3,.07),M(0x2a1a08,.5),0,1.72,1.24,bk);add(B(.6,.28,.06),glass,0,3.2,1.21,bk);
+add(new THREE.CylinderGeometry(.035,.04,3.0,16),M(0xd8dce0,.25,1),0,7.75,-.3,bk);add(new THREE.SphereGeometry(.07,16,16),M(0xd4af37,.2,1),0,9.28,-.3,bk);}
+const fg=new THREE.PlaneGeometry(1.8,.95,48,26);fg.translate(.9,0,0);
+const flagT=tex(1140,600,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*600/13,1140,600/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,456,323);x.fillStyle='#fff';
+ const st=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?r*.38:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}x.fill();};
+ for(let r=0;r<9;r++){const n=r%2?5:6;for(let k=0;k<n;k++)st(38+(r%2?38:0)+k*76,32+r*32,12);}});
+const flag=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:flagT,side:THREE.DoubleSide,roughness:.8}));flag.position.set(.04,8.75,-1.2);flag.castShadow=true;scene.add(flag);
+{const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i),a=X/1.8;p.setZ(i,Math.sin(X*4-.6*7+Y*1.3)*.11*a+Math.sin(X*7-4)*.03*a);p.setY(i,Y-a*a*.08);}fg.computeVertexNormals();}
+// ---------- glass deposit tube + falling cash bundle ----------
+const TX=2.75,TZ=FZ-.06;
+const tube=new THREE.MeshPhysicalMaterial({color:0xe6f3ff,roughness:.03,metalness:0,transparent:true,opacity:.28,clearcoat:1,depthWrite:false});
+add(new THREE.CylinderGeometry(.3,.3,2.15,48,1,true),tube,TX,-1.05,TZ,scene,false);
+add(new THREE.TorusGeometry(.3,.035,12,48),M(0xb9c0c7,.25,1),TX,-.02,TZ,scene).rotation.x=Math.PI/2;add(new THREE.TorusGeometry(.3,.035,12,48),M(0xb9c0c7,.25,1),TX,-2.1,TZ,scene).rotation.x=Math.PI/2;
+
+// ---------- 3D elements kit ----------
+const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
+function txt3(s,size,mat){const g=new TextGeometry(s,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.03,bevelSize:size*.025,bevelSegments:4});g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,mat);m.castShadow=true;scene.add(m);return m;}
+const goldTxt=new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5});
+const whiteTxt=new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.35,clearcoat:.4,emissive:0xffffff,emissiveIntensity:.08});
+const zero=txt3('0%',1.0,goldTxt);zero.position.set(0,cy0+2.2,1.9);zero.visible=false;
+const thousand=txt3('$1,000',.62,whiteTxt);thousand.position.set(TX+.05,.45,TZ+.35);thousand.visible=false;
+function arrow3(len=1.1){const s=new THREE.Shape();s.moveTo(-.12,0);s.lineTo(.12,0);s.lineTo(.12,len*.62);s.lineTo(.3,len*.62);s.lineTo(0,len);s.lineTo(-.3,len*.62);s.lineTo(-.12,len*.62);s.closePath();
+ const m=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:.08,bevelEnabled:true,bevelSize:.02,bevelThickness:.02,bevelSegments:3}),new THREE.MeshPhysicalMaterial({color:0xffffff,roughness:.3,clearcoat:.6}));m.castShadow=true;scene.add(m);return m;}
+// (kit arrows removed)
+// ---------- sun (golden hour) ----------
+const sun=new THREE.DirectionalLight(0xffd7a8,3.4);sun.position.set(-16,14,18);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-14,right:14,top:14,bottom:-14,near:1,far:90});sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;scene.add(sun);
+// ---------- camera + post ----------
+const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
+const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.14,.4,.96));comp.addPass(new OutputPass());
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+fragmentShader:`uniform sampler2D tDiffuse;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.18);c=c*c*(3.-2.*c)*.3+c*.7;
+float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.32;c+=(h(vUv*900.)-.5)*.015;gl_FragColor=vec4(c,1.);}`}));
+
+// ================= EP0 v2 animation =================
+await loaded;const ov=document.getElementById('ov');
+const gltfMod=await import('three/addons/loaders/GLTFLoader.js');
+const car=(await new gltfMod.GLTFLoader().loadAsync('dl/models/car/CarConcept.glb')).scene;
+car.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
+{const bb=new THREE.Box3().setFromObject(car),sz=bb.getSize(new THREE.Vector3());const k=2.3/Math.max(sz.x,sz.z);car.scale.setScalar(k);
+ const bb2=new THREE.Box3().setFromObject(car);car.position.set(5.6-(bb2.max.x+bb2.min.x)/2,.05-bb2.min.y,.9-(bb2.max.z+bb2.min.z)/2);car.rotation.y=-.55;scene.add(car);}
+// loan tube T2: vault right wall -> right -> up to the car
+const T2X=4.25,T2Y=cy0+1.0;
+add(new THREE.CylinderGeometry(.3,.3,T2X-cx1+.3,48,1,true),tube,(cx1+T2X)/2,T2Y,TZ,scene,false).rotation.z=Math.PI/2;
+add(new THREE.SphereGeometry(.3,48,24),tube,T2X,T2Y,TZ,scene,false);
+add(new THREE.CylinderGeometry(.3,.3,-T2Y,48,1,true),tube,T2X,T2Y/2,TZ,scene,false);
+add(new THREE.TorusGeometry(.3,.035,12,48),M(0xb9c0c7,.25,1),T2X,-.02,TZ,scene).rotation.x=Math.PI/2;
+// loop path (closed): vault -> T2 -> car -> T1 -> vault
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const pts=[V3(1.2,cy0+.75,1.6),V3(cx1-.2,T2Y,TZ),V3(T2X,T2Y,TZ),V3(T2X,.35,TZ),V3(5.0,1.05,TZ+.1),V3(TX,.7,TZ),V3(TX,-2.25,TZ),V3(1.2,cy0+.75,1.6)];
+const loop=new THREE.CurvePath();for(let i=0;i<pts.length-1;i++)loop.add(new THREE.LineCurve3(pts[i],pts[i+1]));
+const lens=loop.getCurveLengths(),LT=lens[lens.length-1],U=i=>lens[i-1]/LT; // u at point i
+const uCar=U(4),uT1top=U(5);
+// white 3D arrows along the loop
+const arrows=[];
+[[ (cx1+T2X)/2,T2Y,-Math.PI/2],[T2X,-1.6,0],[TX,-1.3,Math.PI]].forEach(([x,y,r])=>{const a=arrow3(.9);a.position.set(x,y,TZ+.4);a.rotation.z=r;a.material.transparent=true;arrows.push(a);});
+arrows.forEach(a=>{a.geometry.translate(0,-.45,0);});
+// bundles
+const b0=cash(TX,.8,TZ);const loopB=[0,1,2,3].map(()=>{const g=cash(0,0,0);g.visible=false;g.scale.setScalar(1.15);return g;});
+// dust in vault light
+const dN=260,dG=new THREE.BufferGeometry(),dP=new Float32Array(dN*3);for(let i=0;i<dN;i++){dP[i*3]=cx0+.3+rnd()*(cx1-cx0-.6);dP[i*3+1]=cy0+.3+rnd()*(cy1-cy0-.6);dP[i*3+2]=-1.5+rnd()*4;}
+dG.setAttribute('position',new THREE.BufferAttribute(dP,3));const dust=new THREE.Points(dG,new THREE.PointsMaterial({color:0xfff1d6,size:.035,transparent:true,opacity:.7,depthWrite:false}));scene.add(dust);
+// timeline
+const WD=TLN.words,DUR=TLN.dur;const W_=(w,n=1)=>{let c=0;for(const x of WD){if(x.w.toLowerCase().replace(/[^a-z']/g,'')===w&&++c===n)return x;}return null;};
+const tVault=W_('vault').s,tMost2=W_('most',2).s,tZero=W_('zero').s,tSo=W_('so').s,tThous=W_('thousand').s,tBecomes=W_('becomes').s,tLoan=W_('loan').e,
+ tCarD=W_('car',2).s,tBank2e=W_('bank',2).e,tLends=W_('lends').s-.25,tAgain=W_('again').e,tThat=W_("that's").s,tMoving=W_('moving').s;
+const KEYS=[[0,V3(0,3.2,37),V3(0,-.6,0)],[tVault,V3(.4,.4,25),V3(0,-2.6,0)],[tMost2+.3,V3(-.3,-3.1,14.5),V3(0,-4.3,0)],[tZero+.2,V3(.2,-3.6,10.5),V3(0,-4.2,0)],[tSo+.15,V3(.6,-3.5,11.2),V3(.4,-4.1,0)],
+ [tThous+.35,V3(2.6,-3.4,13),V3(3.1,-3.9,0)],[tLoan-.1,V3(5.2,1.0,14.5),V3(5.0,.3,0)],[(tCarD+tBank2e)/2+.2,V3(3.2,.9,15.5),V3(2.8,-.2,0)],[tLends+.2,V3(2.2,-2.4,17),V3(2.0,-3.4,0)],
+ [tMoving,V3(1.8,2.4,38),V3(1.4,-1.8,0)],[DUR,V3(1.4,3.0,42),V3(1.2,-1.6,0)]];
+const posC=new THREE.CatmullRomCurve3(KEYS.map(k=>k[1]),false,'centripetal'),tgtC=new THREE.CatmullRomCurve3(KEYS.map(k=>k[2]),false,'centripetal');
+const camP=t=>{const n=KEYS.length-1;for(let i=0;i<n;i++){const a=KEYS[i][0],b=KEYS[i+1][0];if(t<=b){const u=(t-a)/(b-a);return (i+u)/n;}}return 1;};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,lerp=(a,b,k)=>a+(b-a)*k;
+const seg=(t,t0,t1,u0,u1)=>lerp(u0,u1,ease(clamp((t-t0)/(t1-t0))));
+const cap=document.createElement('div');cap.className='cap';ov.appendChild(cap);
+const grade=comp.passes[comp.passes.length-1];
+window.renderAt=(t)=>{
+ const q=camP(t);cam.position.copy(posC.getPoint(q));cam.lookAt(tgtC.getPoint(q));
+ // flag
+ {const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y0=((i/49|0)/26-.5)*.95,a=X/1.8;p.setZ(i,Math.sin(X*4-t*7+Y0*1.3)*.11*a+Math.sin(X*7-t*11)*.03*a);}p.needsUpdate=true;fg.computeVertexNormals();}
+ // b0: your $1,000 drops down T1 into the vault
+ {const k=ease(clamp(t/(tVault+.15)));const P=new THREE.Vector3().lerpVectors(V3(TX,.9,TZ),V3(TX,-2.25,TZ),clamp(k/0.8)).lerp(V3(-1.9,cy0+.6,1.45),clamp((k-.8)/.2));b0.position.copy(P);b0.rotation.set(t*2.2,t*1.3,.9);b0.visible=t<tBecomes;}
+ // circulation
+ let u0=null;
+ if(t>=tBecomes&&t<tCarD)u0=seg(t,tBecomes,tLoan,0,uCar);
+ else if(t>=tCarD&&t<tLends)u0=seg(t,tCarD,tBank2e,uCar,1);
+ else if(t>=tLends&&t<tMoving)u0=seg(t,tLends,tAgain+.3,0,uCar*.8);
+ loopB.forEach((g,i)=>{let u=null;if(t>=tMoving)u=((t-tMoving)*.32+i/4+.02)%1;else if(i===0)u=u0;
+  g.visible=u!==null;if(g.visible){g.position.copy(loop.getPointAt(clamp(u,0,.9999)));g.rotation.set(t*1.7+i,t*1.1,.4);}});
+ // 3D zero
+ zero.visible=t>=tZero-.05&&t<tThous+.2;zero.scale.setScalar(zero.visible?Math.min(1,.4+(t-tZero+.05)*4):1);zero.rotation.y=Math.sin(t*1.5)*.15;
+ thousand.visible=false;
+ arrows.forEach((a,i)=>{a.visible=t>tBecomes-.2;a.material.opacity=.55+.45*Math.sin(t*6-i);});
+ // dust
+ {const p=dG.attributes.position;for(let i=0;i<dN;i++){p.array[i*3+1]+=.0025*Math.sin(i+t);p.array[i*3]+=.002*Math.cos(i*.7+t*.8);}p.needsUpdate=true;}
+ // caption: current word (exact whisper timing), colour by meaning
+ let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w.replace(/[.,?]/g,'');cap.className='cap '+(w.c||'');
+ const wa=t-w.s;cap.style.transform=`scale(${wa<.09?.88+wa/.09*.12:1})`;
+ comp.render();return true;};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>

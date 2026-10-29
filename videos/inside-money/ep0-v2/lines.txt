@@ -1,0 +1,8 @@
+Most people think the bank keeps your money in a vault.|0.04
+Most of it isn't there.|0.05
+The legal minimum it must keep? Zero percent.|0.05
+So where does your thousand dollars go?|0.04
+It becomes someone's car loan.|0.04
+The car dealer deposits that money back in a bank.|0.04
+And the bank lends it again.|0.04
+That's how one deposit keeps money moving.|0

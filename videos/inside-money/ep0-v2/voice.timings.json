@@ -1,0 +1,50 @@
+[
+ {
+  "voice": "am_fenrir",
+  "text": "Most people think the bank keeps your money in a vault.",
+  "start": 0.0,
+  "end": 2.69
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "Most of it isn't there.",
+  "start": 2.73,
+  "end": 3.85
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "The legal minimum it must keep? Zero percent.",
+  "start": 3.9,
+  "end": 6.47
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "So where does your thousand dollars go?",
+  "start": 6.52,
+  "end": 8.39
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "It becomes someone's car loan.",
+  "start": 8.43,
+  "end": 9.86
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "The car dealer deposits that money back in a bank.",
+  "start": 9.9,
+  "end": 12.53
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "And the bank lends it again.",
+  "start": 12.57,
+  "end": 13.82
+ },
+ {
+  "voice": "am_fenrir",
+  "text": "That's how one deposit keeps money moving.",
+  "start": 13.86,
+  "end": 15.94
+ }
+]
