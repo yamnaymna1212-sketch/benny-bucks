@@ -128,7 +128,7 @@ const guy=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;scene.add(guy);
 guy.traverse(o=>{if(o.isMesh){o.castShadow=true;o.frustumCulled=false;const mt=o.material;mt.transparent=false;mt.depthWrite=true;mt.alphaTest=0;
  if(/short02|eyebrow|eyelash/i.test(o.name+mt.name)){mt.alphaTest=.5;mt.side=THREE.DoubleSide;}
  if(/high-poly/i.test(o.name+mt.name)){mt.alphaTest=.5;mt.roughness=.15;mt.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\nfloat mxx=max(diffuseColor.r,max(diffuseColor.g,diffuseColor.b)),mnn=min(diffuseColor.r,min(diffuseColor.g,diffuseColor.b));if(mxx-mnn>.15){float l=dot(diffuseColor.rgb,vec3(.3,.59,.11));diffuseColor.rgb=vec3(l*1.25,l*.95,l*.62);}');};}}});
-const GS=1.25;guy.scale.setScalar(GS);guy.position.set(-4.6,.04,.95);guy.rotation.y=.35;   // 1.79 m * 1.25 ~ in scene units
+const GS=1.25;guy.scale.setScalar(GS);guy.position.set(-4.6,.04,.95);guy.rotation.y=.35;guy.userData.home=guy.position.clone();   // 1.79 m * 1.25 ~ in scene units
 const bone=n=>guy.getObjectByName(n);const bUA_L=bone('upperarm01L'),bUA_R=bone('upperarm01R'),bLA_R=bone('lowerarm01R'),bHead=bone('head'),bNeck=bone('neck01'),bSpine=bone('spine03');
 const rest=new Map();[bUA_L,bUA_R,bLA_R,bHead,bNeck,bSpine].forEach(b=>b&&rest.set(b,b.quaternion.clone()));
 const qx=new THREE.Quaternion(),E=new THREE.Euler();
@@ -170,16 +170,16 @@ const beats=[
  [T.yes,  t=>V3(-1.0,-5.0,0), V3(-.25,.08,1), 8.5, ()=>[]],                                // shelves (small part)
  [T.so1,  t=>V3(3.4,-3.6,0),  V3(.3,.05,1), 13, ()=>[]],                                    // turn toward the exit
  [T.most, t=>V3(-3.6,1.4,0),  V3(.2,.05,1), 10, ()=>[guyBox()]],                            // guy: "never cash"
- [T.when-.2,t=>hero(t)?hero(t).p:V3(0,0,0),V3(.15,.06,1), 9, ()=>[]],                        // FOLLOW the number
+ [T.when-.2,t=>hero(t)?hero(t).p:V3(0,0,0),V3(.6,.06,1), 6, ()=>[]],                        // FOLLOW the number
  [T.that+.3,t=>V3(6.4,-3.3,0),V3(.2,.04,1), 10, ()=>[serverBox]],                          // number on the bank screen
- [T.lends,t=>hero(t)?hero(t).p:V3(6,0,0),V3(.1,.08,1), 11, ()=>[]],                         // FOLLOW loans
+ [T.lends,t=>hero(t)?hero(t).p:V3(6,0,0),V3(-.5,.08,1), 8, ()=>[]],                         // FOLLOW loans
  [T.car+.2,t=>hero(t).p.clone().setY(.9),V3(.1,.06,1), 12, ()=>[carBox]],
  [T.home+.2,t=>hero(t).p.clone().setY(1.6),V3(.1,.06,1), 13, ()=>[houseBox]],
  [T.biz+.2,t=>hero(t).p.clone().setY(1.6),V3(.1,.06,1), 13, ()=>[shopBox]],
  [T.since,t=>V3(0,-4.0,0),    V3(-.1,.02,1), 13, ()=>[vaultBox]],                           // back to the vault
  [T.zero-.2,t=>V3(0,-4.2,0),  V3(.05,0,1), 9, ()=>[zero.visible?boxOf(zero):vaultBox]],      // 0%
  [T.wait, t=>V3(-3.4,1.5,0),  V3(.3,.08,1), 9, ()=>[guyBox()]],                             // guy at the ATM
- [T.banks,t=>hero(t)?hero(t).p.clone().setY(1.2):V3(-10,1,0),V3(.12,.1,1), 13, ()=>[]],     // FOLLOW the armored truck
+ [T.banks,t=>hero(t)?hero(t).p.clone().setY(1.2):V3(-10,1,0),V3(-.7,.1,1), 11, ()=>[]],     // FOLLOW the armored truck
  [T.fed1-.3,t=>V3(-12,2.2,0), V3(.05,.1,1), 22, ()=>[fedBox]],                              // Federal Reserve building
  [T.own,  t=>hero(t)?hero(t).p:V3(0,-2,0),V3(.1,.06,1), 11, ()=>[]],                        // FOLLOW reserves to the Fed
  [T.fed2+.6,t=>V3(-15.5,-2.6,0),V3(.1,.05,1), 14, ()=>[new THREE.Box3(V3(-19.4,-4.7,-1),V3(-11.6,-2.1,2.5))]],
@@ -190,7 +190,7 @@ const beats=[
 const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
 function fits(boxes){cam.updateMatrixWorld();const v=new THREE.Vector3();for(const b of boxes){for(let i=0;i<8;i++){v.set(i&1?b.max.x:b.min.x,i&2?b.max.y:b.min.y,i&4?b.max.z:b.min.z).project(cam);if(v.z>1||Math.abs(v.x)>.86||v.y>.86||v.y<-.62)return false;}}return true;}
 function rawCam(t){let i=0;while(i<beats.length-1&&t>=beats[i+1][0])i++;const [t0,tf,dir,dist,objs]=beats[i];
- const tgt=tf(t),d=dir.clone().normalize();const orbit=Math.sin(t*.35)*.12;d.applyAxisAngle(V3(0,1,0),orbit);   // never static: slow orbit
+ const tgt=tf(t),d=dir.clone().normalize();const orbit=Math.sin(t*.45)*.3;d.applyAxisAngle(V3(0,1,0),orbit);const vk=Math.floor(t/3.5)%4;const tilt=[.0,.1,-.06,.08][vk];d.y+=tilt;d.normalize();   // never static: slow orbit
  let D=dist;const bx=objs();for(let n=0;n<40;n++){cam.position.copy(tgt).addScaledVector(d,D);cam.lookAt(tgt);if(!bx.length||fits(bx))break;D*=1.06;}
  return {pos:cam.position.clone(),tgt};}
 // precompute a smooth camera track (critically damped follow) so motion is continuous, never jerky, never frozen
