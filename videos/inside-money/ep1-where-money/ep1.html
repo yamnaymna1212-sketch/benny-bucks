@@ -152,7 +152,18 @@ const pLoop=path([[-15.5,-.2,NZ],[-15.5,CY,NZ],[20.5,CY,NZ]]);
 // ================= TIMELINE (beats: what moves + what must stay in frame) =================
 const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,k01=(t,a,b)=>ease(clamp((t-a)/(b-a)));
 const T=A;const tEnd=DUR;
+// ===== HOOK: real cash bundles flow into the bank, down a glass tube, into the vault... then leave ("you're wrong")
+const tWrong=(WD.find(w=>/^wrong/i.test(w.w))||{s:5.85}).s;
+const hookA=new THREE.CatmullRomCurve3([V3(-6.5,1.5,3.4),V3(-3,1.35,2.6),V3(0,1.15,1.4),V3(0,.6,NZ-.3),V3(0,-.6,NZ-.3),V3(0,-1.9,NZ-.3),V3(0,-3.1,2.6),V3(0,-4.25,1.8)],false,'centripetal');
+const hookB=new THREE.CatmullRomCurve3([V3(0,-4.25,1.8),V3(1.6,-4.1,1.8),V3(3.1,-3.5,1.7),V3(4.6,-3.25,1.6),V3(6.3,-3.15,1.6)],false,'centripetal');
+add(new THREE.CylinderGeometry(.42,.42,2.9,48,1,true),new THREE.MeshPhysicalMaterial({color:0xe6f3ff,roughness:.03,transparent:true,opacity:.25,clearcoat:1,depthWrite:false}),0,-.95,NZ-.3,scene,false);
+add(new THREE.TorusGeometry(.42,.04,12,48),M(0xb9c0c7,.25,1),0,.5,NZ-.3).rotation.x=Math.PI/2;
+const hookCash=[0,1,2,3,4,5].map(i=>{const g=cash(0,0,0);g.scale.setScalar(1.5);g.visible=false;g.userData.off=V3((i%3-1)*.25,(i%2)*.18,(i%3-1)*.12);return g;});
+function hookP(t,i){const d=i*.38;const ta=t+d*0; // followers trail behind the lead
+ const a=k01(t-d,0,T.vault1+.3),b=k01(t-d*.6,tWrong-.15,T.lets+.5);
+ const p=(t-d*.6<tWrong-.15)?hookA.getPoint(a):hookB.getPoint(b);return i?p.add(hookCash[i].userData.off):p;}
 function hero(t){ // returns the main moving thing + its position (camera follows it)
+ if(t<T.lets+.5)return {p:hookP(t,0),o:hookCash[0]};
  if(t>=T.when-.2&&t<T.that+.3){const k=k01(t,T.when,T.changes+.4);return {p:pDeposit.getPointAt(k),o:nums[0]};}
  if(t>=T.lends&&t<T.since){const xs=[9.5,14.5,20.5],ts=[T.car,T.home,T.biz];let i=t<T.home-.1?0:t<T.biz-.1?1:2;const k=k01(t,ts[i]-.75,ts[i]+.15);return {p:pLoan(xs[i]).getPointAt(k),o:nums[1+i]};}
  if(t>=T.banks&&t<T.own){const k=k01(t,T.truck-.6,T.fed1+.9);return {p:V3(-15.5+(-1.2+15.5)*k,1.0,2.1),o:truck};}
@@ -163,9 +174,10 @@ const guyBox=()=>new THREE.Box3().setFromObject(guy);
 const boxOf=o=>new THREE.Box3().setFromObject(o);
 const vaultBox=new THREE.Box3(V3(-3.3,-6.4,-2),V3(3.3,-2.1,2.5)),bankBox=boxOf(bank),fedBox=boxOf(fed),houseBox=boxOf(house),shopBox=boxOf(shop),carBox=boxOf(car),serverBox=new THREE.Box3(V3(4.0,-4.7,-1),V3(8.8,-2.1,2.5));
 const beats=[
- [0,      t=>V3(-4.5,1.75,1), V3(.3,.05,1), 3.6, ()=>[]],          // HOOK: guy + bank + vault in one frame
- [2.6,    t=>V3(-3.6,1.6,0),  V3(.25,.05,1), 8, ()=>[]],           // slow push
- [T.vault1,t=>V3(0,-2.4,0),   V3(0,.02,1), 30, ()=>[bankBox,vaultBox]],                     // bank + vault below
+ [0,      t=>hookP(t,0).lerp(V3(0,2.6,0),.55), V3(-.18,.1,1), 13, ()=>[bankBox]],   // HOOK: bank + cash flying in          // HOOK: guy + bank + vault in one frame
+ [2.3,    t=>hookP(t,0),      V3(.2,.06,1), 6.5, ()=>[]],                   // follow the cash down the tube           // slow push
+ [T.vault1+.35,t=>V3(0,-4.1,0), V3(.15,.03,1), 9.5, ()=>[vaultBox]],        // vault: the cash lands...
+ [tWrong-.2,t=>hookP(t,0),      V3(-.15,.04,1), 7, ()=>[]],                   // ...and leaves: you're wrong                     // bank + vault below
  [T.lets, t=>V3(0,-4.0,0),    V3(.1,0,1), 12, ()=>[vaultBox]],                              // dive into vault
  [T.yes,  t=>V3(-1.0,-5.0,0), V3(-.25,.08,1), 8.5, ()=>[]],                                // shelves (small part)
  [T.so1,  t=>V3(3.4,-3.6,0),  V3(.3,.05,1), 13, ()=>[]],                                    // turn toward the exit
@@ -211,6 +223,7 @@ function applyState(t){
  pose(bHead,talk*.5,(t>T.vault1&&t<T.most)?-.5:Math.sin(t*.8)*.12,0);
  // flag
  {const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=fgY[i*3],Y=fgY[i*3+1],a=X/1.8;p.setZ(i,Math.sin(X*4-t*7+Y*1.3)*.11*a+Math.sin(X*7-t*11)*.03*a);}p.needsUpdate=true;fg.computeVertexNormals();}
+ hookCash.forEach((g,i)=>{const vis=t<T.lets+.5&&t-i*.38>=0;g.visible=vis;if(vis){if(i)g.position.copy(hookP(t,i));g.rotation.set(Math.sin(t*2+i)*.4,t*1.3+i,Math.cos(t*1.7+i)*.3);}});
  // numbers
  nums.forEach(n=>n.visible=false);
  const h=hero(t);if(h&&h.o!==truck){h.o.visible=true;h.o.position.copy(h.p);h.o.rotation.y=Math.sin(t*2)*.25;}
