@@ -2,7 +2,7 @@
 @font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
 html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #ov{position:absolute;inset:0;z-index:3}
-.cap{position:absolute;left:0;right:0;top:47%;text-align:center;font:800 96px Mont,sans-serif;color:#fff;letter-spacing:-1px;-webkit-text-stroke:5px #0b0d10;paint-order:stroke fill;text-shadow:0 5px 16px rgba(0,0,0,.55);transform-origin:50% 50%}.red{color:#ff3b30}.green{color:#2ee66b}
+.cap{position:absolute;left:0;right:0;top:56%;text-align:center;font:800 96px Mont,sans-serif;color:#fff;letter-spacing:-1px;-webkit-text-stroke:5px #0b0d10;paint-order:stroke fill;text-shadow:0 5px 16px rgba(0,0,0,.55);transform-origin:50% 50%}.red{color:#ff3b30}.green{color:#2ee66b}
 </style></head><body><canvas id="c"></canvas><div id="ov"></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
@@ -153,7 +153,7 @@ const WD=TLN.words,DUR=TLN.dur;const W_=(w,n=1)=>{let c=0;for(const x of WD){if(
 const tVault=W_('vault').s,tMost2=W_('most',2).s,tZero=W_('zero').s,tSo=W_('so').s,tThous=W_('thousand').s,tBecomes=W_('becomes').s,tLoan=W_('loan').e,
  tCarD=W_('car',2).s,tBank2e=W_('bank',2).e,tLends=W_('lends').s-.25,tAgain=W_('again').e,tThat=W_("that's").s,tMoving=W_('moving').s;
 const KEYS=[[0,V3(0,3.2,37),V3(0,-.6,0)],[tVault,V3(.4,.4,25),V3(0,-2.6,0)],[tMost2+.3,V3(-.3,-3.1,14.5),V3(0,-4.3,0)],[tZero+.2,V3(.2,-3.6,10.5),V3(0,-4.2,0)],[tSo+.15,V3(.6,-3.5,11.2),V3(.4,-4.1,0)],
- [tThous+.35,V3(2.6,-3.4,13),V3(3.1,-3.9,0)],[tLoan-.1,V3(5.2,1.0,14.5),V3(5.0,.3,0)],[(tCarD+tBank2e)/2+.2,V3(3.2,.9,15.5),V3(2.8,-.2,0)],[tLends+.2,V3(2.2,-2.4,17),V3(2.0,-3.4,0)],
+ [tThous+.35,V3(2.0,-3.5,13),V3(2.2,-4.0,0)],[tLoan-.1,V3(5.2,1.0,14.5),V3(5.0,.3,0)],[tCarD+.35,V3(4.4,1.1,17.5),V3(4.1,.1,0)],[tBank2e,V3(2.9,.4,15.5),V3(2.7,-.7,0)],[tLends+.2,V3(2.2,-2.4,17),V3(2.0,-3.4,0)],
  [tMoving,V3(1.8,2.4,38),V3(1.4,-1.8,0)],[DUR,V3(1.4,3.0,42),V3(1.2,-1.6,0)]];
 const posC=new THREE.CatmullRomCurve3(KEYS.map(k=>k[1]),false,'centripetal'),tgtC=new THREE.CatmullRomCurve3(KEYS.map(k=>k[2]),false,'centripetal');
 const camP=t=>{const n=KEYS.length-1;for(let i=0;i<n;i++){const a=KEYS[i][0],b=KEYS[i+1][0];if(t<=b){const u=(t-a)/(b-a);return (i+u)/n;}}return 1;};
@@ -166,7 +166,7 @@ window.renderAt=(t)=>{
  // flag
  {const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y0=((i/49|0)/26-.5)*.95,a=X/1.8;p.setZ(i,Math.sin(X*4-t*7+Y0*1.3)*.11*a+Math.sin(X*7-t*11)*.03*a);}p.needsUpdate=true;fg.computeVertexNormals();}
  // b0: your $1,000 drops down T1 into the vault
- {const k=ease(clamp(t/(tVault+.15)));const P=new THREE.Vector3().lerpVectors(V3(TX,.9,TZ),V3(TX,-2.25,TZ),clamp(k/0.8)).lerp(V3(-1.9,cy0+.6,1.45),clamp((k-.8)/.2));b0.position.copy(P);b0.rotation.set(t*2.2,t*1.3,.9);b0.visible=t<tBecomes;}
+ {const k=ease(clamp(t/(tVault+.15)));const P=new THREE.Vector3().lerpVectors(V3(TX,.9,TZ),V3(TX,-2.25,TZ),clamp(k/0.8)).lerp(V3(1.2,cy0+.75,1.6),clamp((k-.8)/.2));b0.position.copy(P);b0.rotation.set(t*2.2,t*1.3,.9);b0.visible=t<tBecomes;}
  // circulation
  let u0=null;
  if(t>=tBecomes&&t<tCarD)u0=seg(t,tBecomes,tLoan,0,uCar);
@@ -181,7 +181,7 @@ window.renderAt=(t)=>{
  // dust
  {const p=dG.attributes.position;for(let i=0;i<dN;i++){p.array[i*3+1]+=.0025*Math.sin(i+t);p.array[i*3]+=.002*Math.cos(i*.7+t*.8);}p.needsUpdate=true;}
  // caption: current word (exact whisper timing), colour by meaning
- let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w.replace(/[.,?]/g,'');cap.className='cap '+(w.c||'');
+ let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w.replace(/[.,?]/g,'');cap.className='cap '+(w.c||'');cap.style.top=zero.visible?'70%':'56%';
  const wa=t-w.s;cap.style.transform=`scale(${wa<.09?.88+wa/.09*.12:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
