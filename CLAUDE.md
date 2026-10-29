@@ -1,3 +1,6 @@
+# ACTIVE DIRECTION (2026-10-29): "Inside Money" — 3D cutaway videos about how money/banks/finance work. START with videos/inside-money/PROJECT_BRIEF.md.
+The Doug the Penguin rules below are LEGACY (kept for reference) unless the user asks to resume Doug.
+
 # CHANNEL = "Doug the Penguin" (the only project in this repo)
 For new video IDEAS use the `doug-ideas` skill (web research, never from memory). For any new video use the `doug-episode` skill + HANDOFF.md + the last 20 lines of PROJECT_LOG.md + videos/penguin-series/script-formula-v2.md (v2 replaces the caveman-English parts of script-formula.md: natural English, viewer-stake hook, mystery structure, no "3 reasons" lists — proven by TikTok retention data 2026-10-29).
 Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_count=1 ONLY, one take, never 4 — user rule 2026-10-19), NO music, hand-written one-colour captions, the user's SFX library (tools/sfx_user_map.json, "ting" at 0 s of every hook), hook starts with "Why", hook preview before the full render.
