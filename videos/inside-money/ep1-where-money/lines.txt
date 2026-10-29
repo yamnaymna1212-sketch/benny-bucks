@@ -1,0 +1,16 @@
+Have you ever wondered where your bank keeps everyone's money?|0.04
+If you think it's piled up in a vault under the building... you're wrong.|0.06
+Let's go under the bank.|0.04
+Yes, there's a vault. But it holds only a small part of the money.|0.05
+So where is the rest?|0.05
+Most of your money was never cash.|0.04
+When you get paid by direct deposit, no bills move. The bank just changes a number.|0.05
+That number is your deposit. And the bank doesn't let it sit still.|0.04
+It lends it out. To a car buyer. A home buyer. A business.|0.05
+Since twenty twenty, the legal minimum a U.S. bank must keep in reserve is zero percent.|0.06
+Wait. Then what happens when you want your cash?|0.05
+Banks keep some cash ready. When they need more, an armored truck brings it from the Federal Reserve.|0.05
+And the bank's own reserves? Mostly numbers too, in an account at the Federal Reserve.|0.06
+So the money isn't hiding under the bank. It's moving, as loans and as numbers.|0.04
+And your deposit is insured up to two hundred fifty thousand dollars by the F.D.I.C.|0.06
+So... did you think the money was in the vault? Yes or no, in the comments.|0
