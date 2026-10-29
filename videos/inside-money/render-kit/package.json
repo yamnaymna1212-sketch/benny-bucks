@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "setup": "npx playwright install chromium && node assets.mjs",
+    "setup": "node assets.mjs",
     "render": "node render.mjs"
   },
   "dependencies": {
