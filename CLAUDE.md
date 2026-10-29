@@ -41,3 +41,7 @@ Sound effects: cash sound on prices, whoosh on camera moves/transitions, boom on
 - Is it one line = one shot?
 - Are sound effects included?
 If any item fails, rewrite before sending. Give me blunt, direct criticism of my ideas and don't flatter me.
+
+# Script safety (user rule 2026-10-29, all channels, TikTok is strict on money topics)
+Never in a script or on screen: anything that encourages illegal acts, misleading info, made-up or inflated numbers, "do this / buy this" instructions, promises (gains, guarantees), insults or sensitive wording. Every number needs a source in the episode's facts.md; simplifications must not change the truth.
+Real brand names/logos on screen: allowed by the user (2026-10-29) for realism.

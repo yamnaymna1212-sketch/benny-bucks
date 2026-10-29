@@ -1,0 +1,167 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Fred;src:url(./node_modules/@fontsource/fredoka/files/fredoka-latin-700-normal.woff2) format('woff2');font-weight:700}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#cap{position:absolute;left:0;right:0;top:46%;text-align:center;font:700 108px Fred,sans-serif;color:#fff;-webkit-text-stroke:13px #10151c;paint-order:stroke fill}
+</style></head><body><canvas id="c"></canvas><div id="cap">Vault</div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+await document.fonts.load('700 100px Fred');
+const W=720,H=1280,PR=Number(new URLSearchParams(location.search).get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
+const scene=new THREE.Scene();
+let seed=5;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+// ---------- real city HDRI (Poly Haven, CC0) ----------
+const hdr=await new RGBELoader().loadAsync('dl/canary_wharf_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;const ROT=Number(new URLSearchParams(location.search).get('rot')||0);scene.backgroundRotation.y=ROT;scene.environmentRotation.y=ROT;scene.environmentIntensity=.9;scene.backgroundIntensity=1.0;
+// ---------- PBR textures ----------
+const TL=new THREE.TextureLoader();const cache={};
+function pbr(name,rx,ry,opt={}){const k=name+rx+ry;if(cache[k])return cache[k];
+ const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;
+ return cache[k]=new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const RB=(w,h,d,r=.03)=>new RoundedBoxGeometry(w,h,d,3,r);
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
+// ---------- ground block with cutaway ----------
+const X0=-7,X1=7,GD=6,GY=8,FZ=GD/2;
+const cx0=-5.2,cx1=-.6,cy0=-5.4,cy1=-1.5;            // vault room
+const soil=(w,h)=>pbr('excavated_soil_wall',w/3,h/3);
+function sb(x0,x1,y0,y1){add(B(x1-x0,y1-y0,GD),soil(x1-x0,y1-y0),(x0+x1)/2,(y0+y1)/2,0);}
+sb(X0,X1,cy1,-.45);sb(X0,X1,-GY,cy0);sb(X0,cx0,cy0,cy1);sb(cx1,X1,cy0,cy1);
+// concrete slab + gravel base under the pavement (real street section)
+add(B(X1-X0,.18,GD),pbr('concrete_wall_008',6,1),0,-.09,0);
+add(B(X1-X0,.27,GD),pbr('granite_tile',8,.5,{color:0x8a8070}),0,-.315,0);
+
+// pavement on top + curb + street strip in front
+add(B(X1-X0,.04,GD),pbr('concrete_pavement',7,3),0,.02,0);
+// ---------- utilities under the sidewalk (real city underground) ----------
+const pipe=(r,len,mat,x,y)=>{const m=add(new THREE.CylinderGeometry(r,r,len,40),mat,x,y,0);m.rotation.x=Math.PI/2;return m;};
+pipe(.55,GD+.02,pbr('concrete_wall_008',1,2),3.6,-3.2);   // storm sewer (concrete)
+add(new THREE.CylinderGeometry(.42,.42,GD+.04,40),M(0x1b1e22,.9),3.6,-3.2,0).rotation.x=Math.PI/2;
+pipe(.16,GD+.02,M(0x2f5fa8,.5),4.6,-1.7);pipe(.12,GD+.02,M(0xd6a41e,.5),5.1,-1.75);pipe(.1,GD+.02,M(0xe8e8e8,.6),5.5,-1.7);pipe(.2,GD+.02,M(0x6b6f74,.4,.6),5.6,-1.4);
+// ---------- vault room ----------
+const vx=(cx0+cx1)/2,vy=(cy0+cy1)/2;
+const vw=pbr('concrete_wall_008',2,1.6);
+add(B(cx1-cx0,cy1-cy0,.3),vw,vx,vy,-FZ+.45);                       // back wall
+add(B(cx1-cx0,.25,GD-.4),pbr('granite_tile',3,3),vx,cy0+.125,0);   // floor
+add(B(.25,cy1-cy0,GD-.4),vw,cx0+.13,vy,0);add(B(cx1-cx0,.25,GD-.4),vw,vx,cy1-.125,0);
+for(const x of[cx0+1,vx,cx1-1]){add(RB(.9,.05,.18,.02),M(0xffffff,.3,0,{emissive:0xfff4e0,emissiveIntensity:3}),x,cy1-.28,.6,scene,false);}
+// safe deposit wall (brushed steel + brass)
+const sdM=M(0xb7bcc2,.28,1),brass=M(0xc9a14a,.3,1);
+for(let r=0;r<7;r++)for(let c=0;c<6;c++){add(RB(.04,.42,.52,.01),sdM,cx0+.28,cy0+.55+r*.46,-1.9+c*.62);add(new THREE.CylinderGeometry(.035,.035,.04,16),brass,cx0+.32,cy0+.55+r*.46,-1.9+c*.62).rotation.z=Math.PI/2;}
+// round vault door
+const steel=M(0x9aa2aa,.25,1);const door=new THREE.Group();door.position.set(vx+.5,cy0+1.75,-FZ+.62);scene.add(door);
+{const d=add(new THREE.CylinderGeometry(1.3,1.3,.35,96),steel,0,0,0,door);d.rotation.x=Math.PI/2;
+add(new THREE.TorusGeometry(1.33,.11,32,128),M(0x80878e,.3,1),0,0,.14,door);
+add(new THREE.TorusGeometry(.95,.03,16,96),M(0x80878e,.3,1),0,0,.19,door);
+for(let i=0;i<12;i++){const a=i/12*Math.PI*2;const b=add(new THREE.CylinderGeometry(.08,.08,.22,20),M(0xc2c8ce,.2,1),Math.cos(a)*1.12,Math.sin(a)*1.12,.2,door);b.rotation.x=Math.PI/2;}
+const wh=new THREE.Group();wh.position.z=.3;door.add(wh);add(new THREE.TorusGeometry(.42,.045,20,64),M(0xd8dde2,.15,1),0,0,0,wh);
+for(let i=0;i<3;i++){const s=add(RB(.86,.06,.06,.02),M(0xd8dde2,.15,1),0,0,0,wh);s.rotation.z=i*Math.PI/3;}
+add(new THREE.CylinderGeometry(.13,.13,.18,32),M(0xd8dde2,.15,1),0,0,.03,wh).rotation.x=Math.PI/2;}
+// ---------- realistic cash (generic note design, not a replica) ----------
+function noteTop(){const c=document.createElement('canvas');c.width=512;c.height=220;const x=c.getContext('2d');
+ x.fillStyle='#b9c4a6';x.fillRect(0,0,512,220);x.strokeStyle='rgba(40,70,50,.35)';x.lineWidth=1;
+ for(let i=0;i<60;i++){x.beginPath();for(let a=0;a<=512;a+=8)x.lineTo(a,110+Math.sin(a*.03+i*.5)*80*Math.sin(i*.2));x.stroke();}
+ x.fillStyle='rgba(60,80,65,.55)';x.beginPath();x.ellipse(256,110,62,80,0,0,7);x.fill();
+ x.fillStyle='#2c4a36';x.font='bold 46px Georgia';x.fillText('100',18,52);x.fillText('100',420,200);
+ x.strokeStyle='#2c4a36';x.lineWidth=5;x.strokeRect(8,8,496,204);
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+function noteEdge(){const c=document.createElement('canvas');c.width=64;c.height=256;const x=c.getContext('2d');
+ for(let i=0;i<256;i+=2){const v=150+Math.floor(rnd()*35);x.fillStyle=`rgb(${v-12},${v+8},${v-18})`;x.fillRect(0,i,64,2);}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+const topM=new THREE.MeshStandardMaterial({map:noteTop(),roughness:.85}),edgeM=new THREE.MeshStandardMaterial({map:noteEdge(),roughness:.9});
+const strapC=document.createElement('canvas');strapC.width=256;strapC.height=64;{const x=strapC.getContext('2d');x.fillStyle='#c9a227';x.fillRect(0,0,256,64);x.fillStyle='#3a2a05';x.font='bold 34px Arial';x.textAlign='center';x.fillText('$10000',128,45);}
+const strapT=new THREE.CanvasTexture(strapC);strapT.colorSpace=THREE.SRGBColorSpace;const strapM=new THREE.MeshStandardMaterial({map:strapT,roughness:.7});
+function cash(x,y,z,ry=0){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);
+ const geo=B(.62,.16,.27);const m=new THREE.Mesh(geo,[edgeM,edgeM,topM,edgeM,edgeM,edgeM]);m.castShadow=m.receiveShadow=true;g.add(m);
+ add(B(.1,.165,.275),strapM,0,0,0,g);return g;}
+// steel shelving with cash bricks
+const shelfM=M(0x5d646b,.4,.8);
+for(let s=0;s<3;s++){const sy=cy0+.25+.05+s*.75;add(B(2.3,.05,.75),shelfM,cx0+1.65,sy,1.6);
+ for(let i=0;i<3;i++)for(let j=0;j<2;j++)for(let k=0;k<(s===2?2:3);k++)cash(cx0+.85+i*.66,sy+.11+k*.165,1.42+j*.32);}
+for(const px of[cx0+.5,cx0+2.8])for(const pz of[1.25,1.95])add(B(.05,2.3,.05),shelfM,px,cy0+1.4,pz);
+// gold bars (trapezoid)
+const tr=new THREE.Shape();tr.moveTo(-.25,0);tr.lineTo(.25,0);tr.lineTo(.2,.16);tr.lineTo(-.2,.16);tr.closePath();
+const barG=new THREE.ExtrudeGeometry(tr,{depth:.5,bevelEnabled:true,bevelSize:.01,bevelThickness:.01,bevelSegments:2});barG.translate(0,0,-.25);
+const goldM=new THREE.MeshPhysicalMaterial({color:0xffc75a,metalness:1,roughness:.18,clearcoat:.3});
+[[5,0],[4,1],[3,2],[2,3]].forEach(([n,r])=>{for(let c=0;c<n;c++){const b=add(barG,goldM,cx1-1.4+(c-(n-1)/2)*.52,cy0+.25+r*.17,1.1);b.rotation.y=Math.PI/2;}});
+// warm vault light
+const vl=new THREE.PointLight(0xfff0dc,7,8,1.5);vl.position.set(vx,cy1-.5,1.8);vl.castShadow=true;vl.shadow.mapSize.set(1024,1024);scene.add(vl);
+// ---------- BANK building (sandstone + marble) ----------
+const bk=new THREE.Group();bk.position.set(-3.2,0,-.6);scene.add(bk);
+{const ss=(w,h)=>pbr('white_sandstone_blocks_02',w/1.6,h/1.6),mar=pbr('marble_01',1,2),gran=(w)=>pbr('granite_tile',w/1.5,.4);
+for(let i=0;i<3;i++)add(B(5.6-i*.25,.12,3.3-i*.18),gran(5.6),0,.06+i*.12,.25-i*.05,bk);
+add(B(5.0,4.4,2.6),ss(5,4.4),0,2.56,-.2,bk);                                   // body
+for(let i=0;i<6;i++){const x=-2.0+i*.8;add(new THREE.CylinderGeometry(.17,.19,3.3,32),mar,x,2.05,1.25,bk);add(B(.48,.14,.48),mar,x,.47,1.25,bk);add(B(.5,.18,.5),mar,x,3.78,1.25,bk);}
+add(B(5.3,.55,.8),ss(5.3,.55),0,4.12,1.1,bk);                                  // entablature
+const sg=document.createElement('canvas');sg.width=1024;sg.height=100;{const x=sg.getContext('2d');x.fillStyle='#000';x.fillRect(0,0,1024,100);x.fillStyle='#fff';x.font='600 70px Georgia';x.textAlign='center';x.fillText('N A T I O N A L   B A N K',512,76);}
+const st=new THREE.CanvasTexture(sg);add(new THREE.PlaneGeometry(4.6,.42),new THREE.MeshStandardMaterial({color:0x2a2520,alphaMap:st,transparent:true,roughness:.6}),0,4.12,1.505,bk,false);
+const ps=new THREE.Shape();ps.moveTo(-2.75,0);ps.lineTo(2.75,0);ps.lineTo(0,1.0);ps.closePath();
+add(new THREE.ExtrudeGeometry(ps,{depth:.7,bevelEnabled:false}),ss(5.5,1),0,4.39,.8,bk);
+add(B(5.2,.25,2.7),ss(5.2,.25),0,4.9,-.2,bk);
+const glass=new THREE.MeshPhysicalMaterial({color:0x10202c,metalness:.2,roughness:.04,clearcoat:1,envMapIntensity:1.4});
+const bronze=M(0x5a3d1e,.35,.9);
+for(const x of[-1.6,-.8,.8,1.6]){add(B(.46,1.55,.04),glass,x,2.55,1.105,bk);add(B(.52,.06,.06),bronze,x,1.76,1.11,bk);add(B(.52,.06,.06),bronze,x,3.34,1.11,bk);}
+add(B(.95,1.9,.06),bronze,0,1.36,1.11,bk);add(B(.02,1.8,.07),M(0x2a1a08,.5),0,1.36,1.14,bk);
+add(B(.42,.2,.06),glass,0,2.45,1.11,bk);
+// ATM in the facade
+add(B(.5,.75,.05),M(0x23272c,.35,.6),-2.35,1.25,1.14,bk);add(B(.36,.26,.02),M(0x0a2a48,.2,0,{emissive:0x4aa3ff,emissiveIntensity:1.6}),-2.35,1.42,1.17,bk);
+add(B(.38,.12,.08),M(0x9aa1a8,.3,.8),-2.35,1.15,1.18,bk);
+// flagpole + US flag
+add(new THREE.CylinderGeometry(.03,.035,2.6,16),M(0xd8dce0,.25,1),0,6.6,-.2,bk);add(new THREE.SphereGeometry(.06,16,16),M(0xd4af37,.2,1),0,7.92,-.2,bk);}
+function usFlag(){const c=document.createElement('canvas');c.width=1140;c.height=600;const x=c.getContext('2d');
+ for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*600/13,1140,600/13+1);}
+ x.fillStyle='#3c3b6e';x.fillRect(0,0,456,323);x.fillStyle='#fff';
+ const star=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?r*.38:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}x.fill();};
+ for(let r=0;r<9;r++){const n=r%2?5:6;for(let k=0;k<n;k++)star(38+(r%2?38:0)+k*76,32+r*32,12);}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const fg=new THREE.PlaneGeometry(1.5,.8,40,22);fg.translate(.75,0,0);
+const flag=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:usFlag(),side:THREE.DoubleSide,roughness:.8}));flag.position.set(-3.2+.03,7.35,-.8);flag.castShadow=true;scene.add(flag);
+function wave(t){const p=fg.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Y=p.getY(i);const a=X/1.5;p.setZ(i,Math.sin(X*4.2-t*7+Y*1.3)*.09*a+Math.sin(X*7-t*11)*.025*a);p.setY(i,Y+(0)-a*a*.05*0);}p.needsUpdate=true;fg.computeVertexNormals();}
+wave(.6);
+// ---------- McDonald's (real brand, user approved) ----------
+const md=new THREE.Group();md.position.set(3.7,0,-.4);scene.add(md);
+{add(B(4.2,3.4,3.0),M(0xb5121b,.55),0,1.7,0,md);add(B(4.3,.35,3.1),M(0x2b2b2b,.5),0,3.55,0,md);
+add(B(3.6,2.0,.05),new THREE.MeshPhysicalMaterial({color:0x0c0d10,metalness:.3,roughness:.03,clearcoat:1,emissive:0xffa64a,emissiveIntensity:.05,envMapIntensity:1.6}),0,1.25,1.51,md);
+for(const x of[-1.2,0,1.2])add(B(.05,2.0,.07),M(0x222222,.4,.6),x,1.25,1.53,md);
+add(B(4.2,.12,.08),M(0xffc72c,.5),0,2.35,1.53,md);
+const c=document.createElement('canvas');c.width=1024;c.height=300;const x=c.getContext('2d');x.fillStyle='#da291c';x.fillRect(0,0,1024,300);
+x.strokeStyle='#ffc72c';x.lineWidth=34;x.lineCap='butt';x.beginPath();x.moveTo(70,270);x.bezierCurveTo(80,-40,180,-40,190,150);x.bezierCurveTo(200,-40,300,-40,310,270);x.stroke();
+x.fillStyle='#ffffff';x.font='bold 120px Arial';x.textAlign='left';x.fillText("McDonald's",360,195);
+const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;add(B(3.4,1.0,.08),new THREE.MeshStandardMaterial({map:t,roughness:.45,emissive:0xffffff,emissiveMap:t,emissiveIntensity:.25}),0,2.85,1.55,md);}
+// ---------- street props (Poly Haven models, CC0) ----------
+const gl=new GLTFLoader();
+async function prop(n,x,y,z,s=.5,ry=0){const g=(await gl.loadAsync(`dl/models/${n}/${n}_1k.gltf`)).scene;g.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});g.position.set(x,y,z);g.scale.setScalar(s);g.rotation.y=ry;scene.add(g);return g;}
+await prop('street_lamp_01',.6,.04,2.3,.55,Math.PI);await prop('street_lamp_01',6.2,.04,2.3,.55,Math.PI);
+await prop('fire_hydrant',1.3,.04,2.4,.6);await prop('metal_trash_can',-.15,.04,2.35,.6);
+await prop('modular_street_seating',-5.8,.04,2.1,.5,Math.PI/2);await prop('potted_plant_02',-4.3,.4,1.15,.55);await prop('potted_plant_02',-2.1,.4,1.15,.55);
+await prop('security_camera_01',-.75,3.4,.72,.5,-.6);await prop('utility_box_01',6.0,.04,1.3,.5);
+// ---------- sun ----------
+const sun=new THREE.DirectionalLight(0xfff1dc,3.2);sun.position.set(14,20,16);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-12,right:12,top:12,bottom:-12,near:1,far:80});sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;scene.add(sun);
+// ---------- camera ----------
+const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);cam.position.set(2.2,2.2,31);cam.lookAt(-.8,-.9,0);
+// ---------- post: real colour grade ----------
+const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.12,.4,.97));
+comp.addPass(new OutputPass());
+const grade=new ShaderPass({uniforms:{tDiffuse:{value:null},seed:{value:1}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+fragmentShader:`uniform sampler2D tDiffuse;uniform float seed;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.22);   // saturation
+c=c*c*(3.-2.*c)*.35+c*.65;                                                                                              // contrast S-curve
+c*=vec3(1.03,1.0,.97);float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.35;c+=(h(vUv*900.+seed)-.5)*.018;gl_FragColor=vec4(c,1.);}`});
+comp.addPass(grade);
+comp.render();document.title='ready';
+</script></body></html>
