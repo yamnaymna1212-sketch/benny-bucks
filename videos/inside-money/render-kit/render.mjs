@@ -9,8 +9,8 @@ const srv=http.createServer((q,r)=>{const f=path.join(root,decodeURIComponent(q.
   r.writeHead(200,{'Content-Type':types[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(r);}).listen(PORT);
 const args=process.argv.slice(2),show=args.includes('--show'),secs=Number(args.find(a=>/^[0-9.]+$/.test(a))||0);
 const EP=args.includes('ep1')?{page:'ep1.html',tl:'timeline_ep1.json',wav:'mix_ep1.wav',out:'ep1-where-money.mp4'}:{page:'v2.html',tl:'timeline2.json',wav:'mix2.wav',out:'bank-v2.mp4'};
-const b=await chromium.launch({headless:!show,args:['--enable-gpu','--ignore-gpu-blocklist','--enable-unsafe-webgpu','--use-angle=default']});
-const p=await b.newPage({viewport:{width:720,height:1280}});p.on('pageerror',e=>console.log('page error:',e.message));
+const b=await chromium.launch({headless:!show,args:['--ignore-gpu-blocklist']});
+const p=await b.newPage({viewport:{width:720,height:1280}});p.on('console',m=>{if(m.type()==='error')console.log('browser:',m.text().slice(0,200));});p.on('pageerror',e=>console.log('page error:',e.message));
 await p.goto(`http://localhost:${PORT}/${EP.page}?pr=2`);await p.waitForFunction(()=>document.title==='ready',null,{timeout:600000});
 console.log('GPU:',await p.evaluate(()=>{const g=document.createElement('canvas').getContext('webgl2');const e=g.getExtension('WEBGL_debug_renderer_info');return e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):'unknown';}));
 const dur=secs||JSON.parse(fs.readFileSync(EP.tl)).dur,N=Math.round(dur*30);
