@@ -106,11 +106,12 @@ const cam=new THREE.PerspectiveCamera(30,W/H,.02,400);
 const headW=V3(),phoneW=V3();
 const F=f=>({f});const SHOTS=[];const dv=r=>r.f?r:V3(...r);const shot=(a,b,t0,t1,d0,d1,r0,r1,tr=.85)=>SHOTS.push({a,b,t0,t1,d0,d1,r0:dv(r0),r1:dv(r1),tr});
 const PH=F(()=>phoneW.clone()),HEAD=F(()=>headW.clone()),CHEST=F(()=>GP.clone().add(V3(0,1.38,0)));
-// HOOK: phone close-up (number readable in frame 1) -> pull out to the man + red $120,000 -> side push on phone -> "the day before": flashback on the phone
-const EYE=F(()=>eyeDir.clone()),EYE2=F(()=>eyeDir.clone().add(V3(.15,0,0)));
-shot(0,1.3,PH,PH,.3,.27,EYE,EYE2);
-shot(1.3,2.75,CHEST,CHEST,3.4,3.0,[0,.04,1],[.05,.04,1],.6);
-shot(2.75,L(2),PH,PH,1.0,.85,[.55,.25,1],[.45,.25,1],.6);
+// HOOK: open on the man in his living room (phone buzzes, he raises it) -> push over his shoulder onto the screen ($120,000 readable on the word)
+// -> pull back: hand to his head, red $120,000 above -> "the day before": flashback on the phone
+const EYE=F(()=>eyeDir.clone()),EYE2=F(()=>eyeDir.clone().add(V3(-.15,0,0))),UPPER=F(()=>GP.clone().add(V3(0,1.52,0)));
+shot(0,1.15,CHEST,CHEST,3.9,3.3,[0,.04,1],[.04,.04,1]);
+shot(1.15,2.75,PH,PH,.32,.28,EYE,EYE2,.5);
+shot(2.75,L(2),UPPER,UPPER,2.0,1.7,[-.7,.08,1],[-.45,.06,1],.6);
 shot(L(2),L(3),PH,PH,.36,.31,EYE2,EYE,.6);
 {let t=L(3),i=0;while(t<DUR+1){const e=t+1.9;shot(t,e,CHEST,CHEST,i%2?2.6:3.6,i%2?2.3:3.2,[.12*(i%2?-1:1),.05,1],[.06*(i%2?-1:1),.05,1]);t=e;i++;}}   // placeholder after the hook
 function shotState(S,t){const k=ease(clamp((t-S.a)/(S.b-S.a)));const rv=v=>v.f?v.f(t):v;
@@ -122,22 +123,28 @@ function camAtT(t){let i=0;while(i<SHOTS.length-1&&t>=SHOTS[i+1].a)i++;const S=S
  return {pos:st.tgt.clone().addScaledVector(st.dir,st.dist),tgt:st.tgt};}
 // ================= SCENE STATE =================
 const wR=V3(),laR=V3(),hq=new THREE.Quaternion(),eyeDir=V3(0,.5,1);
+const RDOWN=[.08,0,.85,.06,0,0],RHOLD=JSON.parse(Q.get('pa')||'[0.3,-0.55,0.6,1.3,-2.4,0]'),LDOWN=[.08,0,-.85,.06,0,0],LHEAD=JSON.parse(Q.get('la')||'[0.25,0,-0.5,1.35,1.2,0]');
+const mixA=(A,B_,k)=>A.map((v,i)=>lerp(v,B_[i],k));
 function applyState(t){
- const br=Math.sin(t*2.1)*.015,look=Math.sin(t*.7)*.04;
- guy.rotation.y=-.12+Math.sin(t*.35)*.03;
- pose('spine01',.04,0,0);pose('spine03',.05+br,look,0);pose('neck01',.22,0,0);pose('head',.32,look,0);
- // right arm: phone held in front of the chest; left arm relaxed
- const P=JSON.parse(Q.get('pa')||'[0.3,-0.55,0.6,1.3,0,0]');
- pose('upperarm01R',P[0],P[1],P[2]);pose('lowerarm01R',P[3],P[4],P[5]);pose('upperarm01L',.08,0,-Number(Q.get('lz')||0.85));pose('lowerarm01L',.06,0,0);
- pose('upperleg01L',0,0,.03);pose('upperleg01R',.02,0,-.04);pose('lowerleg01L',.02,0,0);pose('lowerleg01R',.04,0,0);
- for(const [o,r] of FING){o.quaternion.copy(r);qx.setFromEuler(E.set(0,0,/R$|_r|Right|R\./.test(o.name)?.35:.5));o.quaternion.multiply(qx);}
+ const br=Math.sin(t*2.1)*.015,sway=Math.sin(t*.9)*.02;
+ // beats: raise phone 0.35-1.05 s | double-take on "$120,000" | lean in | left hand to his head on "wasn't" | drops in the flashback
+ const raise=ease(clamp((t-.35)/.7)),w1=WS('$120,000'),take=Math.exp(-Math.pow((t-w1-.15)/.22,2)),lean=ease(clamp((t-w1-.5)/.6))*(1-ease(clamp((t-L(2)+.2)/.5)));
+ const wn=WS("wasn't")||2.9,hh=ease(clamp((t-wn+.25)/.45))*(1-ease(clamp((t-L(2)-.1)/.5))),shake=hh*Math.sin((t-wn)*9)*.12*Math.exp(-Math.max(0,t-wn-.6)*2);
+ guy.rotation.y=-.12+Math.sin(t*.35)*.03;const step=ease(clamp((t-w1-.05)/.35));guy.position.copy(GP).add(V3(sway,0,-.12*step));
+ pose('spine01',.04+.08*lean-.06*take,0,sway*2);pose('spine03',.05+br+.06*lean-.08*take,0,0);
+ pose('neck01',.05+.17*raise,0,0);const up=Math.exp(-Math.pow((t-wn-.35)/.35,2));pose('head',.08+.26*raise-.25*take+.05*lean-.3*up,shake+Math.sin(t*.7)*.03,0);
+ const R=mixA(RDOWN,RHOLD,raise),Lm=mixA(LDOWN,LHEAD,hh);
+ pose('upperarm01R',R[0],R[1],R[2]);pose('lowerarm01R',R[3],R[4],R[5]);pose('upperarm01L',Lm[0],Lm[1],Lm[2]);pose('lowerarm01L',Lm[3],Lm[4],Lm[5]);
+ pose('upperleg01L',-.02*lean,0,.03+sway);pose('upperleg01R',.02,0,-.04+sway);pose('lowerleg01L',.02,0,0);pose('lowerleg01R',.04+.05*lean,0,0);
+ for(const [o,r] of FING){o.quaternion.copy(r);qx.setFromEuler(E.set(0,0,/R$|_r|Right|R\./.test(o.name)?.62:.45+.2*hh));o.quaternion.multiply(qx);}
  guy.updateMatrixWorld(true);
  BN.head.getWorldPosition(headW);headW.y+=.08;
- // phone sits in the right hand, screen turned to the eyes
- BN.wristR.getWorldPosition(wR);BN.wristR.getWorldQuaternion(hq);
- // phone a few cm in front of the palm toward the eyes, so the hand holds it from behind
- BN.lowerarm01R.getWorldPosition(laR);const hand=wR.clone().sub(laR).normalize(),view=headW.clone().add(V3(0,0,.55));   // screen turned between his eyes and the camera
- const toV=view.clone().sub(wR).normalize();phone.position.copy(wR).addScaledVector(hand,.06).addScaledVector(toV,.05);phone.lookAt(view);phoneW.copy(phone.position);eyeDir.copy(view).sub(phoneW).normalize();
+ // phone lies in the palm (palm turned to the eyes): back on the palm, long side along the hand, screen to his eyes
+ BN.wristR.getWorldPosition(wR);BN.lowerarm01R.getWorldPosition(laR);const hand=wR.clone().sub(laR).normalize();
+ const nrm=headW.clone().sub(wR).normalize(),yAx=hand.clone().addScaledVector(nrm,-hand.dot(nrm)).normalize(),xAx=yAx.clone().cross(nrm).normalize();
+ phone.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(xAx,yAx,nrm));
+ const buzz=t<.9?Math.sin(t*90)*.0025*(Math.sin(t*12)>0?1:0):0;
+ phone.position.copy(wR).addScaledVector(hand,.085).addScaledVector(nrm,.018+buzz);phoneW.copy(phone.position);eyeDir.copy(nrm).add(V3(-.75,.2,.1)).normalize();   // over his right shoulder
  drawApp(t<L(2)?'now':'before');
  // red numbers: $120,000 pops over his head on the word, $1,100 replaces it in line 2
  const a1=WS('$120,000');n120.visible=t>a1-.1&&t<L(2);n120.scale.setScalar(pop(t,a1-.1));n120.position.copy(headW).add(V3(0,.24+Math.sin(t*2)*.01,0));
@@ -157,11 +164,13 @@ await loaded;
 const cap=document.getElementById('cap'),FPS=30;
 window.camAt=t=>{const c=camAtT(t);return [c.pos.toArray().map(v=>+v.toFixed(2)),c.tgt.toArray().map(v=>+v.toFixed(2))];};
 window.renderAt=t=>{applyState(t);{const c=camAtT(t);cam.position.copy(c.pos);cam.lookAt(c.tgt);bokeh.uniforms.focus.value=c.pos.distanceTo(c.tgt);}
+ if(Q.get('eye')){cam.position.copy(headW).add(V3(0,.05,.38));cam.lookAt(wR);bokeh.uniforms.focus.value=cam.position.distanceTo(wR);phone.visible=!Q.get('nophone');}
+ if(Q.get('dbg')){const d=JSON.parse(Q.get('dbg'));const tg=Q.get('dt')==='head'?headW:wR;cam.position.copy(tg).add(V3(...d));cam.lookAt(tg);bokeh.uniforms.focus.value=cam.position.distanceTo(tg);phone.visible=!Q.get('nophone');}
  let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w;cap.className='cap '+(w.c||'');
  const wa=t-w.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  const glc=renderer.domElement,mb=document.getElementById('mb');if(mb.width!==glc.width){mb.width=glc.width;mb.height=glc.height;}const cx=mb.getContext('2d');
  const c0=camAtT(t-.5/FPS),c1=camAtT(t+.5/FPS),mv=c0.tgt.distanceTo(c1.tgt)/c1.pos.distanceTo(c1.tgt)+Math.abs(Math.log(c0.pos.distanceTo(c0.tgt)/c1.pos.distanceTo(c1.tgt)));
- const SUB=Number(Q.get('mb')||(mv>.008?20:4));for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.9/FPS;if(i){applyState(ts);const c=camAtT(ts);cam.position.copy(c.pos);cam.lookAt(c.tgt);}
+ const SUB=Number(Q.get('mb')||(Q.get('dbg')||Q.get('eye')?1:(mv>.008?20:4)));for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.9/FPS;if(i){applyState(ts);const c=camAtT(ts);cam.position.copy(c.pos);cam.lookAt(c.tgt);}
   comp.render();cx.globalAlpha=1/(i+1);cx.drawImage(glc,0,0);}
  return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
