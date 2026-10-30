@@ -24,3 +24,21 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 
 ## Pool sheet re-check (references/inside-money/analysis/pool-sheet.jpg)
 - Stylised-real (toon-ish clean geometry), cutaway earth 2/3 of frame, white arrows, rounded white 1-word caption centred ~y 52%. This level IS reachable in the Three.js render-kit.
+
+## Zack D. Films: zack-02-missing-dollar-hotel.mp4 (hotel "missing dollar" riddle) — MAIN REFERENCE (user 2026-10-30) — sheet: references/inside-money/analysis/zack-02-sheet.jpg
+Measured 2026-10-30 (ffmpeg + numpy, same metrics run on our EP2 v2 for comparison): 50.7 s, 720x1280, 29.97 fps.
+- **No hard cuts**: scene detector at 0.3 finds 0. Shot changes are FAST CAMERA MOVES (whip/push with motion blur): 22 moves, avg 0.37 s long, one every ~2.1 s, dense in the story part (0-33 s), then calmer for the math explanation (33-50 s). Only 6 of 50 seconds have low visual change. -> "every second something changes" confirmed.
+- **Story first, money as the subject**: 3 friends, manager, bellhop, real hotel lobby (sofa, desk bell, monitor, carpet, ceiling lights), REAL banknote textures held in hands (close-ups of $10/$5/$1 bills), a screen close-up "Amount Due $25.00".
+- **Characters look real**: skin shading, faces with expressions, hair, clothes with logo (ZACK D FILMS shirts), hands holding money, eye contact to camera; shallow depth of field on close-ups.
+- **Numbers as floating 3D/graphic red text** ($30 over the door, $9 over a head, $27 over the bellhop, "$1?" at the end) and pure number cards on a light-blue radial gradient for the math (9x3=27, $29) — the visual explains the maths.
+- **Captions**: small white phrase (2-4 words, lower case), centred ~y 78%, soft shadow; not 1 word.
+- **Audio** (user observation confirmed by numbers): loudness -11.3 LUFS (ours -14.4), LRA 2.0 = always loud, never drops. Time below -35 dB: 2.4 s in 50 s (ours 6.4 s in 62 s = 2.7x more quiet). High/low spectral ratio 1.39 (ours 0.75): a constant layer of crisp high-frequency SFX (whooshes, foley, cloth, paper, room) runs UNDER the voice the whole time, not only on transitions (energy during moves = same as rest, x0.99). Every pause in the voice is filled by an effect.
+- Hook frame 1: hands + money on the hotel desk, caption "check into", story starts mid-action, no intro.
+
+### Copy for Inside Money (priority order)
+1. **Audio bed never silent**: fill every voice gap (> 0.05 s) with an SFX; add a continuous soft foley/room layer + a soft whoosh on EVERY camera move; master to about -11 LUFS. Cheapest, biggest gain.
+2. **Shot rhythm**: a fast motion move (0.3-0.45 s, motion blur) every ~2 s in the story part; calmer, slower moves in the explanation part. (EP2 v2 already: 0.85 s moves after the hook — user wanted calmer; keep 0.5-0.85 s.)
+3. **Money must be real-looking**: real banknote textures (US currency photos are allowed in media if clearly not printable; keep them non-full-size/angled), money in hands, receipts/screens with amounts.
+4. **Numbers as floating red 3D text over the subject** + number cards for maths (we already do 3D text; add the card style).
+5. **Characters**: biggest gap. Three.js MakeHuman has no expressions; options: (a) Mixamo/RPM characters with blend-shape faces + DOF in Three.js; (b) Blender EEVEE/Cycles render for Zack-level skin/light. Decide after 2-3 more episodes.
+6. Real interior sets (room, furniture, lamps) instead of only the cutaway: one set per story beat.
