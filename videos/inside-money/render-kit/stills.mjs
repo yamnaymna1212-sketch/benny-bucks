@@ -12,6 +12,6 @@ const p=await b.newPage({viewport:{width:720,height:1280}});
 p.on('console',m=>{if(m.type()==='error')console.log('browser:',m.text().slice(0,300));});p.on('pageerror',e=>console.log('page error:',e.message));
 await p.goto(`http://localhost:${PORT}/${page}?pr=1.5&${extra}`);await p.waitForFunction(()=>document.title==='ready',null,{timeout:300000});
 console.log('GPU:',await p.evaluate(()=>{const g=document.createElement('canvas').getContext('webgl2');const e=g&&g.getExtension('WEBGL_debug_renderer_info');return e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):'unknown';}));
-console.log('missing bones:',await p.evaluate(()=>window.missingBones));
+console.log('missing bones:',await p.evaluate(()=>window.missingBones),await p.evaluate(()=>window.capNZ));
 for(const t of times){await p.evaluate(t=>renderAt(t),t);await p.screenshot({path:`still-${t}.jpg`,type:'jpeg',quality:90});console.log('still',t);}
 await b.close();srv.close();
