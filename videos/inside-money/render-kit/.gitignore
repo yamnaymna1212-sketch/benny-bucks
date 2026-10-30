@@ -1,4 +1,5 @@
-node_modules/
-dl/
+node_modules
+dl
 frames/
 *.mp4
+preview*.jpg
