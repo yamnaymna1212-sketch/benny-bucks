@@ -1,0 +1,1 @@
+Put reference videos here: examples/ (You Built It pool video, etc.) and zack/ (Zack's videos). Analyse once with ffmpeg and write the result to videos/inside-money/REFERENCE_ANALYSIS.md. Videos are large: keep them local (gitignored by size rule below) unless the user asks to commit them.

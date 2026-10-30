@@ -10,7 +10,7 @@
 - Captions: 1 word at a time, Montserrat ExtraBold, white; RED for prices/danger/loss words, GREEN for money-positive words (green = assumption, user never confirmed). Not cartoonish, no cards/signs/icons over the picture.
 - Real, not cartoon: real city HDRI (Poly Haven sunset_jhbcentral), real PBR textures, real glTF models. One bank only: no McDonald's/clutter (real brands ARE allowed by user, but only when relevant).
 - Voice: Kokoro am_fenrir (free, tools/tts.py), no gaps (max_gap 0.06). Word timing from faster-whisper (align.py). Audio never silent: air bed + whoosh per camera move + riser before twist + boom/sub on twist + ting on key number + money SFX (user library studio/public/sfx).
-- 15 s test first, then 30-45 s (rewards need >60 s but are tiny; reach matters more). Start 1 video/day, scale to 3/day only after the template is stable.
+- MIN 60 s: every video must be >= 60 s (aim 61-65 s); anything shorter is rejected (user rule 2026-10-29). Start 1 video/day, scale to 3/day only after the template is stable.
 
 ## 3. Script rules
 - See SCRIPT_STRUCTURE.md (7 beats + psychology) and ../penguin-series/script-formula-v2.md.
@@ -33,3 +33,6 @@ Price-gap ideas (older, optional): US ambulance vs UK/Germany; insulin vs Canada
 - Credit in description: car "Car Concept" by Eric Chadwick / Darmstadt Graphics Group CC BY 4.0; Poly Haven CC0.
 - TikTok: turn on AI-generated label (synthetic voice); pin a binary question comment.
 - Doug penguin channel + CLAUDE.md Doug rules are LEGACY (kept for reference).
+
+## 7. EP2 status (2026-10-30) — read ep2-dig-200m/PLAN.md + SCRIPT.md
+Script v1 re-verified (see bottom of SCRIPT.md; gold $3,993.60/oz -> ~$813 B). Voice: Kokoro am_fenrir 1.18, one take, 64.2 s (vo.wav, vo.timings.json). User wants BETTER quality: animated rigged character, realistic rocks/strata, particles, voice = energetic young American with no pauses (compare am_liam / am_puck / am_michael on the hook line first). Next: hook 5-s preview only; do NOT render full before approval.
