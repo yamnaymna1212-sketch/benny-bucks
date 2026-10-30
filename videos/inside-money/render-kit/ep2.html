@@ -8,7 +8,7 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #dep{position:absolute;left:34px;top:150px;font:800 22px Mont,sans-serif;color:#fff;letter-spacing:2px;text-shadow:0 2px 6px rgba(0,0,0,.7)}
 #dep b{display:block;font-size:64px;letter-spacing:-1px;line-height:1;-webkit-text-stroke:3px #0b0d10;paint-order:stroke fill}
 #dep i{font-style:normal;font-size:24px;opacity:.85}
-</style></head><body><canvas id="c"></canvas><div id="ov"><div id="dep">DEPTH<b id="dm">0 m</b><i id="df">0 ft</i></div><div class="cap" id="cap"></div></div>
+</style></head><body><canvas id="c"></canvas><canvas id="mb" style="position:absolute;left:0;top:0;width:720px;height:1280px;z-index:2"></canvas><div id="ov"><div id="dep">DEPTH<b id="dm">0 m</b><i id="df">0 ft</i></div><div class="cap" id="cap"></div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 import * as THREE from 'three';
@@ -30,7 +30,7 @@ renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
 const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
-scene.background=hdr;scene.environment=hdr;scene.backgroundRotation.y=1.57;scene.environmentRotation.y=1.57;scene.backgroundBlurriness=.04;scene.environmentIntensity=.8;
+scene.background=hdr;scene.environment=hdr;scene.backgroundRotation.y=1.57;scene.environmentRotation.y=1.57;scene.backgroundBlurriness=.015;scene.environmentIntensity=.8;
 const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM);
 function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
  const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
@@ -52,7 +52,7 @@ const bands=[[0,5,'excavated_soil_wall',0xffffff],[5,14,'gravel_floor',0xc9b9a4]
 const bandMat=(n,tint,w,h)=>{const m=pbr(n,w/4,h/4);m.color.set(tint);return m;};
 const slab=(x0,x1,y0,y1,mat)=>{if(x1-x0>.01&&y0-y1>.01)return add(B(x1-x0,y0-y1,GD),mat,(x0+x1)/2,(y0+y1)/2,0);};
 const holes=[[V.x0,V.x1,V.y1,V.y0]];          // [x0,x1,yTop,yBottom] carved out of the left block
-for(const [d0,d1,n,tint] of bands){const y0=Y(d0),y1=Y(d1);
+for(const [d0,d1,n,tint] of bands){const y0=d0===0?-.32:Y(d0),y1=Y(d1);
  const L=bandMat(n,tint,SX0-X0,y0-y1),R=bandMat(n,tint,X1-SX1,y0-y1);
  let cut=false;
  for(const [hx0,hx1,hy0,hy1] of holes){if(hy0<=y1||hy1>=y0)continue;cut=true;
@@ -60,6 +60,8 @@ for(const [d0,d1,n,tint] of bands){const y0=Y(d0),y1=Y(d1);
   if(y0>yt)slab(X0,SX0,y0,yt,L);if(yb>y1)slab(X0,SX0,yb,y1,L);}
  if(!cut)slab(X0,SX0,y0,y1,L);
  slab(SX1,X1,y0,y1,R);}
+// shaft walls: thin boxes so the rock texture keeps its real scale
+for(const [d0,d1,n,tint] of bands){const y0=d0===0?-.32:Y(d0),y1=Y(d1),h=y0-y1;for(const x of[SX0+.05,SX1-.05])add(B(.1,h,GD),bandMat(n,tint*1,GD,h),x,(y0+y1)/2,0);}
 // below the shaft: one block whose top follows the digger (texture re-tiled each frame)
 const under=add(B(1,1,GD),bandMat('rock_face_03',0xa8a39d,1,1),SX,0,0);
 // ================= STREET + BANK =================
@@ -72,7 +74,7 @@ strip(.05,w=>pbr('asphalt_02',w/1.5,1.2),.03,2.1,1.8);
 // shaft back wall (rock behind the digger) + a dirt pile that grows at the mouth
 add(B(SX1-SX0,-BOT,.6),bandMat('rock_face_03',0x8f8983,SX1-SX0,-BOT),SX,BOT/2,-FZ+.3);
 const pile=add(new THREE.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),bandMat('excavated_soil_wall',0xffffff,3,2),SX1+1.6,.05,-.6);
-for(let x=X0+1;x<X1;x+=2.2)add(B(1.0,.01,.08),M(0xf2f2ee,.6),x,.06,2.1,scene,false);
+for(let x=X0+1;x<X1;x+=2.2)if(x+.5<SX0-.2||x-.5>SX1+.2)add(B(1.0,.01,.08),M(0xf2f2ee,.6),x,.06,2.1,scene,false);
 const ss=(w,h)=>pbr('white_sandstone_blocks_02',w/1.8,h/1.8),mar=pbr('marble_01',1,2.5),gran=w=>pbr('granite_tile',w/1.5,.4);
 const glass=new THREE.MeshPhysicalMaterial({color:0x0d1a24,metalness:.2,roughness:.04,clearcoat:1,envMapIntensity:1.4,emissive:0xffc78a,emissiveIntensity:.04}),bronze=M(0x5a3d1e,.35,.9);
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
@@ -157,19 +159,22 @@ const PR_=[...Array(NCH*3)].map(()=>[rnd()*2-1,rnd(),rnd()*2-1,rnd()]),PD=[...Ar
 // ================= CAMERA (one continuous move, critically damped) =================
 const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
 function guyPos(t){return V3(SX-.15,Y(depthAt(t))+.02,.9);}
-function rawCam(t){const g=guyPos(t);const orbit=Math.sin(t*.33)*.10;
- let tgt,dist,dir;
- const wide=V3(1.4,-1.8,0),k=k01(t,1.6,4.6);                 // hook: wide (bank + gold + digger) -> dive to the digger
- const L3=LN[2].start,L8=LN[7].end,focus=g.clone().add(V3(-.3,1.0,0));
- if(t<L3-.3){tgt=wide.clone().lerp(focus,k);dist=lerp(42,11,k);dir=V3(lerp(.08,.25,k),lerp(.02,.1,k),1);}
- else if(t<L8){const kk=k01(t,L3-.3,L3+1.2);tgt=focus.clone().lerp(V3(.6,(V.y0+V.y1)/2,0),kk*.75);dist=lerp(11,22,kk);dir=V3(.1,.04,1);}  // vault + digger together
- else{tgt=g.clone().add(V3(-.2,.9,0));dist=12+3.5*Math.sin((t-L8)*.8);dir=V3(.18+.08*Math.sin(t*.4),.06,1);}       // follow down, dive/pull every ~8 s
+function rawCam(t){const g=guyPos(t),focus=g.clone().add(V3(-.25,1.05,0));const orbit=Math.sin(t*.33)*.08;
+ const L=i=>LN[i].start,vaultC=V3(.2,(V.y0+V.y1)/2+.2,0),door=V3(V.x0+1.2,V.y0+1.7,0);
+ // keyframes: [time, target, distance, dir]
+ const KF=[[0,V3(1.4,-1.8,0),42,V3(.08,.02,1)],[1.0,V3(1.4,-1.8,0),40,V3(.08,.02,1)],[2.4,focus,7.5,V3(.3,.1,1)],
+  [L(2)-.4,focus,7.5,V3(.3,.08,1)],[L(2)+.9,vaultC,10,V3(-.05,.04,1)],[L(4)-.2,vaultC,9,V3(.12,.05,1)],
+  [L(5)+.2,door,7.5,V3(-.25,.05,1)],[L(7)-.3,door,8,V3(-.2,.05,1)],[L(7)+.8,focus,8,V3(.3,.08,1)],[DUR+1,focus,8,V3(.3,.08,1)]];
+ let i=0;while(i<KF.length-2&&t>=KF[i+1][0])i++;const [t0,p0,d0,r0]=KF[i],[t1,p1,d1,r1]=KF[i+1];const k=k01(t,t0,t1);
+ const live=v=>v===focus?focus:v;   // focus follows the digger
+ const tgt=live(p0).clone().lerp(live(p1),k),dir=r0.clone().lerp(r1,k);let dist=lerp(d0,d1,k);
+ if(t>L(7)+.8)dist+=1.5*Math.sin((t-L(7))*.7);   // gentle push/pull while following down
  dir.normalize().applyAxisAngle(V3(0,1,0),orbit);
  return {pos:tgt.clone().addScaledVector(dir,dist),tgt};}
 const FPS=30,NF=Math.ceil(DUR*FPS)+2,track=[];
 {let p=null,g=null,vp=V3(0,0,0),vg=V3(0,0,0);const dt=1/FPS;
  for(let f=0;f<NF;f++){const r=rawCam(f/FPS);if(!p){p=r.pos.clone();g=r.tgt.clone();}
-  for(const [x,v,tg,w] of [[p,vp,r.pos,5],[g,vg,r.tgt,6]]){const a=tg.clone().sub(x).multiplyScalar(w*w).addScaledVector(v,-2*w);v.addScaledVector(a,dt);x.addScaledVector(v,dt);}
+  for(const [x,v,tg,w] of [[p,vp,r.pos,3.6],[g,vg,r.tgt,4.2]]){const a=tg.clone().sub(x).multiplyScalar(w*w).addScaledVector(v,-2*w);v.addScaledVector(a,dt);x.addScaledVector(v,dt);}
   track.push([p.clone(),g.clone()]);}}
 // ================= SCENE STATE =================
 const wR=V3(),wL=V3(),sR=V3(),sL=V3(),tmp=V3(),hq=new THREE.Quaternion();
@@ -215,20 +220,24 @@ function applyState(t){
  return d;}
 // ================= POST =================
 const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
-comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.25,.45,.88));comp.addPass(new OutputPass());
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.16,.35,.92));comp.addPass(new OutputPass());
 comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
 fragmentShader:`uniform sampler2D tDiffuse;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.15);c=c*c*(3.-2.*c)*.3+c*.7;float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.35;c+=(h(vUv*900.)-.5)*.015;gl_FragColor=vec4(c,1.);}`}));
+void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.15);c=c*c*(3.-2.*c)*.3+c*.7;float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.35;c+=(h(vUv*900.)-.5)*.005;gl_FragColor=vec4(c,1.);}`}));
 const sun=new THREE.DirectionalLight(0xffd7a8,3.0);sun.position.set(-16,14,18);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-26,right:26,top:16,bottom:-20,near:1,far:120});sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;scene.add(sun);
 scene.add(new THREE.HemisphereLight(0xcfe3ff,0x3a2a1c,.35));
 await loaded;
 const cap=document.getElementById('cap'),dm=document.getElementById('dm'),df=document.getElementById('df');
+window.camAt=t=>{const f=Math.min(track.length-1,Math.round(t*FPS));return [track[f][0].toArray().map(v=>+v.toFixed(2)),track[f][1].toArray().map(v=>+v.toFixed(2))];};
 window.renderAt=t=>{const d=applyState(t);const f=Math.min(track.length-1,Math.round(t*FPS));cam.position.copy(track[f][0]);cam.lookAt(track[f][1]);
  if(Q.get('close')){const g=guyPos(t).add(V3(0,1,0));cam.position.copy(g).add(V3(0,.3,6));cam.lookAt(g);}
  let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w.replace(/[,?!]|\.$/g,'');cap.className='cap '+(w.c||'');
  const wa=t-w.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;cap.style.top=t<LN[1].start?'46%':'70%';
  dm.textContent=Math.round(d)+' m';df.textContent=Math.round(d*3.281)+' ft';
- comp.render();return true;};
+ const glc=renderer.domElement,mb=document.getElementById('mb');if(mb.width!==glc.width){mb.width=glc.width;mb.height=glc.height;}const cx=mb.getContext('2d');
+ const SUB=Number(Q.get('mb')||4);for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.5/FPS;if(i){applyState(ts);const ff=Math.min(track.length-1,Math.max(0,ts*FPS));const f0=Math.floor(ff),k=ff-f0,f1=Math.min(track.length-1,f0+1);cam.position.copy(track[f0][0]).lerp(track[f1][0],k);cam.lookAt(track[f0][1].clone().lerp(track[f1][1],k));}
+  comp.render();cx.globalAlpha=1/(i+1);cx.drawImage(glc,0,0);}
+ return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>
