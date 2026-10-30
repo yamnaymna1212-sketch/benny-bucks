@@ -1,4 +1,4 @@
-# Reference analysis: "How a Hole in Your Yard Becomes a Swimming Pool" (You Built It) — file: ssstik.io_1793267516348.MP4 on origin/main
+# Reference analysis: "How a Hole in Your Yard Becomes a Swimming Pool" (You Built It) — file: ssstik.io_1793267516348.MP4 on origin/main (now at references/inside-money/examples/pool-example-you-built-it.mp4)
 Measured with ffmpeg (2026-10-29): 66.6 s, 720x1280, 30 fps, h264 + aac.
 - **No hard cuts** (scene-change detector finds none at 0.08) = ONE continuous 3D camera move through ONE scene whose state changes over time.
 - **Composition**: house/sky on top ~1/3 (anchor, always visible when wide), earth cross-section ~2/3 (the stage). Camera alternates wide (house) <-> macro dive (drain, valve, pump, pebbles), a new framing about every 3 s.
