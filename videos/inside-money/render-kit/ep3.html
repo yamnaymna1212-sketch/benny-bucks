@@ -25,6 +25,7 @@ import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 await document.fonts.load('800 66px Mont');
 const TLN=await (await fetch('timeline_ep3.json')).json(),WD=TLN.words,LN=TLN.lines,DUR=TLN.dur;
 const L=n=>LN[n-1].start,LE=n=>LN[n-1].end,WS=(w,n=1)=>{let c=0;for(const x of WD)if(x.w===w&&++c===n)return x.s;return 0;};
@@ -73,17 +74,58 @@ Object.assign(sun.shadow.camera,{left:-6,right:6,top:6,bottom:-6,near:1,far:30})
 const lampL=new THREE.PointLight(0xffc98a,6,6,1.6);lampL.position.set(.35,1.15,-2.45);scene.add(lampL);
 const ceilL=new THREE.PointLight(0xfff1dd,8,9,1.4);ceilL.position.set(0,2.3,-.3);scene.add(ceilL);
 scene.add(new THREE.HemisphereLight(0xdfe9ff,0x6b5a48,.55));
-// ================= THE MAN (MakeHuman CC0 rig) =================
-const guy=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;scene.add(guy);
-guy.traverse(o=>{if(o.isMesh){o.castShadow=true;o.frustumCulled=false;const mt=o.material;mt.transparent=false;mt.depthWrite=true;mt.alphaTest=0;
- if(/short02|eyebrow|eyelash/i.test(o.name+mt.name)){mt.alphaTest=.5;mt.side=THREE.DoubleSide;}
- if(/high-poly/i.test(o.name+mt.name)){mt.alphaTest=.5;}
- if(/casualsuit/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0x55657a);}}});   // blue-grey t-shirt
-const BN={};for(const n of['spine01','spine03','neck01','head','upperarm01L','upperarm01R','lowerarm01L','lowerarm01R','wristL','wristR','upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])BN[n]=guy.getObjectByName(n);
-const FING=[];guy.traverse(o=>{if(o.isBone&&/finger|thumb/i.test(o.name))FING.push([o,o.quaternion.clone()]);});
-const rest=new Map();for(const b of Object.values(BN))if(b)rest.set(b,b.quaternion.clone());
+// ================= CHARACTERS =================
+// men: MakeHuman CC0 rig cloned per person; each one gets his own build (fat/thin via spine scale), height, head shape, skin, hair,
+// clothes and accessories (mustache, beard, glasses, cap) so no two faces read the same.
+const guySrc=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;
+const BONES=['spine01','spine03','neck01','head','upperarm01L','upperarm01R','lowerarm01L','lowerarm01R','wristL','wristR','upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'];
+function makeMan(o={}){const g=SkeletonUtils.clone(guySrc);scene.add(g);const C={root:g,BN:{},rest:new Map(),FING:[],o};
+ g.traverse(m=>{if(!m.isMesh)return;m.castShadow=true;m.frustumCulled=false;m.material=m.material.clone();const mt=m.material,n=m.name+mt.name;mt.transparent=false;mt.depthWrite=true;mt.alphaTest=0;
+  if(/short02|eyebrow|eyelash/i.test(n)){mt.alphaTest=.5;mt.side=THREE.DoubleSide;}
+  if(/high-poly/i.test(n))mt.alphaTest=.5;
+  if(/casualsuit/i.test(n)){   // the suit mesh holds shirt + trousers: tint above the waist (bind-pose height) as the shirt, below as the trousers
+   const sh=new THREE.Color(o.shirt??0x55657a),pa=new THREE.Color(o.pants??0xffffff);
+   mt.onBeforeCompile=p=>{p.uniforms.uShirt={value:sh};p.uniforms.uPants={value:pa};
+    p.vertexShader=p.vertexShader.replace('#include <common>','#include <common>\nvarying float vBindY;').replace('#include <begin_vertex>','#include <begin_vertex>\nvBindY=position.y;');
+    p.fragmentShader=p.fragmentShader.replace('#include <common>','#include <common>\nvarying float vBindY;uniform vec3 uShirt;uniform vec3 uPants;').replace('#include <map_fragment>','#include <map_fragment>\ndiffuseColor.rgb*=mix(uPants,uShirt,smoothstep(WAIST-.02,WAIST+.02,vBindY));');
+    p.fragmentShader=p.fragmentShader.replace(/WAIST/g,(Number(Q.get('waist')||0.98)).toFixed(3));};mt.customProgramCacheKey=()=>'suit'+sh.getHexString()+pa.getHexString();}
+  if(/Human\.body|^base/i.test(n)&&o.skin)mt.color.set(o.skin);
+  if(/short02|eyebrow/i.test(n)&&o.hair)mt.color.set(o.hair);
+  if(/short02/i.test(n)&&o.bald)m.visible=false;});
+ for(const n of BONES)C.BN[n]=g.getObjectByName(n);for(const b of Object.values(C.BN))if(b)C.rest.set(b,b.quaternion.clone());
+ g.traverse(b=>{if(b.isBone&&/finger|thumb/i.test(b.name))C.FING.push([b,b.quaternion.clone()]);});
+ const sb=(n,x,y,z)=>{const b=g.getObjectByName(n);if(b)b.scale.set(x,y,z);};
+ const f=o.fat||0;if(f){const a=1+f*.45,c=1+f*.6;sb('spine01',a,1,c);sb('spine03',(1+f*.12)/a,1,(1+f*.16)/c);sb('upperleg01L',1+f*.18,1,1+f*.18);sb('upperleg01R',1+f*.18,1,1+f*.18);}
+ if(o.head)sb('head',...o.head);if(o.h)g.scale.setScalar(o.h);
+ const hb=C.BN.head,acc=(geo,mat,x,y,z)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;hb.add(m);return m;};
+ g.updateMatrixWorld(true);const HS=hb.getWorldScale(V3()).x/g.scale.x||1,u=1/HS;   // accessories are authored in metres, head bone may carry the export scale
+ if(o.mustache){const mm=M(o.hair??0x2a1d14,.9);acc(RB(.062*u,.016*u,.03*u,.008*u),mm,0,-.01*u,.104*u);}
+ if(o.beard){const bm=M(o.hair??0x2a1d14,.95);acc(new THREE.SphereGeometry(.085*u,24,12,0,Math.PI*2,Math.PI*.5,Math.PI*.45),bm,0,-.005*u,.025*u).scale.set(1,1,1.15);}
+ if(o.glasses){const gm=M(0x111111,.3,.6);for(const s of[-1,1])acc(new THREE.TorusGeometry(.019*u,.0025*u,8,24),gm,s*.032*u,.045*u,.105*u);acc(B(.02*u,.003*u,.003*u),gm,0,.047*u,.108*u);}
+ if(o.cap){const cm=M(o.cap,.6);const c=acc(new THREE.SphereGeometry(.105*u,32,16,0,Math.PI*2,0,Math.PI/2),cm,0,Number(Q.get('cy')||0.08)*u,.0);c.scale.set(1,.8,1.05);acc(new THREE.CylinderGeometry(.09*u,.09*u,.006*u,32,1,false,-Math.PI/2,Math.PI),cm,0,(Number(Q.get('cy')||0.08)+.003)*u,.07*u);
+  if(o.badge){acc(new THREE.CircleGeometry(.018*u,6),M(0xd4af37,.3,.9),0,.15*u,.1*u);}}
+ C.pose=(n,x,y,z)=>{const b=C.BN[n];if(!b)return;b.quaternion.copy(C.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);};
+ C.fingers=fn=>{for(const [b,r] of C.FING){b.quaternion.copy(r);qx.setFromEuler(E.set(...fn(b.name)));b.quaternion.multiply(qx);}};
+ return C;}
+// woman: Michelle (Mixamo character shipped with the three.js examples)
+const womSrc=(await gl.loadAsync('dl/models/michelle/Michelle.glb')).scene;
+{womSrc.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(womSrc,true),h=bb.getSize(V3()).y;womSrc.scale.multiplyScalar(Number(Q.get('ws')||1.66/h));}   // normalise to 1.66 m
+function makeWoman(o={}){const g=SkeletonUtils.clone(womSrc);scene.add(g);g.traverse(m=>{if(m.isMesh){m.castShadow=true;m.frustumCulled=false;}});
+ const C={root:g,B:n=>g.getObjectByName('mixamorig'+n)||g.getObjectByName('mixamorig:'+n)};C.rest=new Map();g.traverse(b=>{if(b.isBone)C.rest.set(b,b.quaternion.clone());});
+ C.pose=(n,x,y,z)=>{const b=C.B(n);if(!b)return;b.quaternion.copy(C.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);};return C;}
+const MAN=makeMan({shirt:0x55657a});const guy=MAN.root,BN=MAN.BN,FING=MAN.FING,rest=MAN.rest;
 const qx=new THREE.Quaternion(),E=new THREE.Euler();
-function pose(n,x,y,z){const b=BN[n];if(!b)return;b.quaternion.copy(rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);}
+// the cast (each one a different build/face read)
+const CAST={
+ teller:makeMan({shirt:0xf0f0ee,skin:0xf1c9a5,hair:0x15110e,glasses:1,h:.97,head:[1.04,.97,1]}),
+ salesman:makeMan({shirt:0x2b2f3a,skin:0xe8b48f,hair:0x3b2a1e,mustache:1,fat:.9,h:1.02,head:[1.08,1,1.05]}),
+ friend1:makeMan({shirt:0xb3362b,skin:0x8d5a3b,hair:0x111111,cap:0x1d3557,fat:-.35,h:1.05,head:[.97,1.03,.98]}),
+ friend2:makeMan({shirt:0x2e7d57,skin:0xf3c6a8,hair:0xb08a4a,fat:.6,h:.96,head:[1.05,.96,1.03]}),   // blond, heavier
+ manager:makeMan({shirt:0xdfe6ee,skin:0xe2b08c,hair:0x8a8a8a,bald:1,glasses:1,mustache:1,fat:.4,h:.98,head:[1.06,.98,1.04]}),
+ officer:makeMan({shirt:0x1b2a4a,skin:0xd9a07a,hair:0x2a1d14,cap:0x101a33,badge:1,mustache:1,h:1.05,fat:.15}),
+ };
+for(const c of Object.values(CAST))c.root.position.set(0,-50,0);   // parked until their scene
+const pose=(n,x,y,z)=>MAN.pose(n,x,y,z);
 const GP=V3(.35,0,.15);guy.position.copy(GP);
 // ================= THE PHONE + BANK APP (generic bank, not a real brand) =================
 const phone=new THREE.Group();scene.add(phone);
@@ -174,6 +216,7 @@ await loaded;
 const cap=document.getElementById('cap'),FPS=30;
 window.camAt=t=>{const c=camAtT(t);return [c.pos.toArray().map(v=>+v.toFixed(2)),c.tgt.toArray().map(v=>+v.toFixed(2))];};
 window.renderAt=t=>{applyState(t);{const c=camAtT(t);cam.position.copy(c.pos);cam.up.copy(c.up);cam.lookAt(c.tgt);bokeh.uniforms.focus.value=c.pos.distanceTo(c.tgt);}
+ if(LINEUP){MAN.root.position.set(-3.1,0,.4);MAN.root.rotation.set(0,0,0);const cx_=Number(Q.get('cx')||0);const ly=Number(Q.get('ly')||1.0);cam.position.set(cx_,ly+.1,Number(Q.get('cz')||7));cam.up.set(0,1,0);cam.lookAt(cx_,ly,0);bokeh.uniforms.focus.value=7;}
  if(Q.get('eye')){cam.position.copy(headW).add(V3(0,.05,.38));cam.lookAt(wR);bokeh.uniforms.focus.value=cam.position.distanceTo(wR);phone.visible=!Q.get('nophone');}
  if(Q.get('dbg')){const d=JSON.parse(Q.get('dbg'));const tg=Q.get('dt')==='head'?headW:wR;cam.position.copy(tg).add(V3(...d));cam.lookAt(tg);bokeh.uniforms.focus.value=cam.position.distanceTo(tg);phone.visible=!Q.get('nophone');}
  {const hk=document.getElementById('hk'),o=t<L(2)-.3?1:clamp(1-(t-L(2)+.3)/.3);hk.style.opacity=o;hk.style.transform=`scale(${t<.25?.9+.1*ease(t/.25):1})`;}
@@ -181,8 +224,13 @@ window.renderAt=t=>{applyState(t);{const c=camAtT(t);cam.position.copy(c.pos);ca
  const wa=t-w.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  const glc=renderer.domElement,mb=document.getElementById('mb');if(mb.width!==glc.width){mb.width=glc.width;mb.height=glc.height;}const cx=mb.getContext('2d');
  const c0=camAtT(t-.5/FPS),c1=camAtT(t+.5/FPS),mv=c0.tgt.distanceTo(c1.tgt)/c1.pos.distanceTo(c1.tgt)+Math.abs(Math.log(c0.pos.distanceTo(c0.tgt)/c1.pos.distanceTo(c1.tgt)));
- const SUB=Number(Q.get('mb')||(Q.get('dbg')||Q.get('eye')?1:(mv>.008?20:4)));for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.9/FPS;if(i){applyState(ts);const c=camAtT(ts);cam.position.copy(c.pos);cam.up.copy(c.up);cam.lookAt(c.tgt);}
+ const SUB=Number(Q.get('mb')||(LINEUP||Q.get('dbg')||Q.get('eye')?1:(mv>.008?20:4)));for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.9/FPS;if(i){applyState(ts);const c=camAtT(ts);cam.position.copy(c.pos);cam.up.copy(c.up);cam.lookAt(c.tgt);}
   comp.render();cx.globalAlpha=1/(i+1);cx.drawImage(glc,0,0);}
  return true;};
+let LINEUP=false;if(Q.get('lineup')){const L_=[MAN,...Object.values(CAST)];if(Q.get('only')){const k=Q.get('only').split(',');for(const [n,c] of Object.entries(CAST))c.root.visible=k.includes(n);}L_.forEach((c,i)=>{c.root.position.set(-3.1+i*.9,0,.4);c.root.rotation.set(0,0,0);
+  if(c.BN){c.pose('upperarm01L',.08,0,-.85);c.pose('upperarm01R',.08,0,.85);c.pose('lowerarm01L',.06,0,0);c.pose('lowerarm01R',.06,0,0);}
+  else{const W_=JSON.parse(Q.get('wa')||'[0,0,1.2]');c.pose('LeftArm',...W_);c.pose('RightArm',W_[0],-W_[1],-W_[2]);}});
+
+ LINEUP=true;}
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>
