@@ -9,4 +9,9 @@ for(const t of['excavated_soil_wall','concrete_wall_008','granite_tile','marble_
   for(const [m,k] of [['Diffuse','diff'],['nor_gl','nor'],['Rough','rough']]) await get(f[m]['2k'].jpg.url,`dl/tex/${t}_${k}.jpg`);}
 await get('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CarConcept/glTF-Binary/CarConcept.glb','dl/models/car/CarConcept.glb');
 fs.mkdirSync('dl/models/guy',{recursive:true});fs.copyFileSync('assets/guy.glb','dl/models/guy/guy.glb');
+// EP3 interior (Poly Haven CC0): textures + glTF furniture (1k, with their texture files)
+for(const t of['laminate_floor_02','painted_plaster_wall']){const f=await files(t);
+  for(const [m,k] of [['Diffuse','diff'],['nor_gl','nor'],['Rough','rough']]) await get(f[m]['2k'].jpg.url,`dl/tex/${t}_${k}.jpg`);}
+for(const m of['sofa_03','modern_coffee_table_01','potted_plant_01','side_table_01','modern_ceiling_lamp_01','hanging_picture_frame_02','desk_lamp_arm_01']){const g=(await files(m)).gltf['1k'].gltf;
+  await get(g.url,`dl/models/${m}/${m}.gltf`);for(const [p,v] of Object.entries(g.include||{}))await get(v.url,`dl/models/${m}/${p}`);}
 console.log('assets done');

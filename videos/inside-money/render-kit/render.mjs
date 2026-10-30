@@ -8,7 +8,7 @@ const root=process.cwd(),PORT=8765;const types={'.html':'text/html','.js':'text/
 const srv=http.createServer((q,r)=>{const f=path.join(root,decodeURIComponent(q.url.split('?')[0]));if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);return r.end();}
   r.writeHead(200,{'Content-Type':types[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(r);}).listen(PORT);
 const args=process.argv.slice(2),show=args.includes('--show'),secs=Number(args.find(a=>/^[0-9.]+$/.test(a))||0);
-const EPS={ep1:{page:'ep1.html',tl:'timeline_ep1.json',wav:'mix_ep1.wav',out:'ep1-where-money.mp4'},ep2:{page:'ep2.html',tl:'timeline_ep2.json',wav:'mix_ep2.wav',out:'ep2-dig-200m.mp4'},ep2v2:{page:'ep2v2.html',tl:'timeline_ep2v2.json',wav:'mix_ep2v2.wav',out:'ep2-dig-200m-v2.mp4'}};
+const EPS={ep1:{page:'ep1.html',tl:'timeline_ep1.json',wav:'mix_ep1.wav',out:'ep1-where-money.mp4'},ep2:{page:'ep2.html',tl:'timeline_ep2.json',wav:'mix_ep2.wav',out:'ep2-dig-200m.mp4'},ep2v2:{page:'ep2v2.html',tl:'timeline_ep2v2.json',wav:'mix_ep2v2.wav',out:'ep2-dig-200m-v2.mp4'},ep3:{page:'ep3.html',tl:'timeline_ep3.json',wav:'mix_ep3.wav',out:'ep3-bank-mistake.mp4'}};
 const EP=EPS[args.find(a=>EPS[a])]||{page:'v2.html',tl:'timeline2.json',wav:'mix2.wav',out:'bank-v2.mp4'};
 const b=await chromium.launch({channel:'chrome',headless:!show,args:['--ignore-gpu-blocklist','--use-angle=metal','--enable-gpu']});
 let p=await b.newPage({viewport:{width:720,height:1280}});p.on('console',m=>{if(m.type()==='error')console.log('browser:',m.text().slice(0,200));});p.on('pageerror',e=>console.log('page error:',e.message));
