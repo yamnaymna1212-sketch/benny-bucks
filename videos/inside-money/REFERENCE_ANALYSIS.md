@@ -14,3 +14,13 @@ Render budget: ~2000 frames; measure s/frame in the build session (swiftshader, 
 speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <0 = pull-out.
 - 0-15 s CALM (speed 0.5-1.9, slow drift while narrator sets up) -> 18-45 s ACTIVE (speed 3-5: alternating dive-in (+2.3 at 18 s, +1.4 at 36 s) and pull-out (-2.0 at 24 s and 33 s), fast pans up to 5 at 30 s and 42 s) -> 45-66 s CALM again (speed 1-2), nearly still at the end (0.18) for the payoff.
 - Rule to copy: slow open, 25-30 s of dive/pull-out rhythm every ~6-9 s, slow settle for the payoff.
+
+## Zack D. Films style: zack-01-boy-repaid-rescuer.mp4 (36.5 s, 480x854 copy, 2026-10-30) — sheet: references/inside-money/analysis/zack-01-sheet.jpg
+- Cut every ~1.5-2.5 s (many shots, NOT one continuous move) — close-ups of faces, over-shoulder, wide establishing.
+- Realistic rigged humans with FACIAL EXPRESSIONS (fear, crying, surprise "O" mouth), cloth, hair, skin shading; water/splash simulation; shallow depth of field (blurred background).
+- Bright saturated daylight, cyan sky, soft GI lighting = offline renderer (Blender/Unreal level), not real-time WebGL.
+- Caption: small white lowercase phrase (2-3 words), centred ~y 78%, thin dark shadow.
+- Copy for Inside Money: emotion close-ups on the character's face at the key beats, depth of field, bright sky, cut on every line if we leave the one-shot format. Cannot be matched in Three.js: faces/expressions, cloth, water sim -> needs Blender (Cycles/Eevee on the M3) + rigged characters (Mixamo / Character Creator).
+
+## Pool sheet re-check (references/inside-money/analysis/pool-sheet.jpg)
+- Stylised-real (toon-ish clean geometry), cutaway earth 2/3 of frame, white arrows, rounded white 1-word caption centred ~y 52%. This level IS reachable in the Three.js render-kit.
