@@ -25,7 +25,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 await document.fonts.load('800 66px Mont');
 const TLN=await (await fetch('timeline_ep2v2.json')).json(),WD=TLN.words,LN=TLN.lines,DUR=TLN.dur;
-const K=[[0,0],[6.6,0],[9.2,12],[11.4,21],[14.2,25],[18.6,25],[DUR,25]];   // depth keyframes (m); later shots extend this
+const K=[[0,0],[6.9,0],[9.1,12],[11.4,20],[13.6,25],[LN[21].start+.1,25],[LN[21].end-.2,0],[DUR+1,0]];   // depth keyframes (m)
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -105,6 +105,7 @@ const flag=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:flagT,side:THRE
 // 90-ton cylinder door (left wall)
 const steel=M(0x9aa2aa,.22,1);
 {const door=add(new THREE.CylinderGeometry(1.3,1.3,.5,96),steel,V.x0+.45,V.y0+1.75,0);door.rotation.z=Math.PI/2;
+ add(new THREE.CylinderGeometry(.32,.32,.25,48),M(0xc6ccd2,.18,1),V.x0+.75,V.y0+1.75,0).rotation.z=Math.PI/2;for(let i=0;i<3;i++){const sk=add(B(.05,1.6,.07),M(0xc6ccd2,.2,1),V.x0+.8,V.y0+1.75,0);sk.rotation.x=i*Math.PI/3;}
  for(let i=0;i<10;i++){const a=i/10*Math.PI*2;add(new THREE.CylinderGeometry(.07,.07,.2,16),M(0xc6ccd2,.18,1),V.x0+.72,V.y0+1.75+Math.sin(a)*1.05,Math.cos(a)*1.05).rotation.z=Math.PI/2;}}
 // gold: stacked bars in cages
 // real-proportion bars (~ 250 x 70 x 40 mm): tapered sides + rounded edges so every face catches a different highlight
@@ -122,7 +123,7 @@ const goldM=new THREE.MeshPhysicalMaterial({color:0xffd070,metalness:1,roughness
    m4.compose(V3(cxx+(i-(nx-1)/2)*dx,V.y0+.3+.0375+r*.077,-.4+(k-(nz-1)/2)*dz),q.setFromEuler(new THREE.Euler(0,(along?0:Math.PI/2)+(rnd()-.5)*.02,0)),V3(1,1,1));
    inst.setMatrixAt(n,m4);inst.setColorAt(n++,tint.setHSL(.113+(rnd()-.5)*.008,1,.95+(rnd()-.5)*.05));}}
  inst.count=n;scene.add(inst);
- const cage=M(0x2a2e33,.4,.8);for(const xx of[-2.75,-1.05,.65,2.35])add(B(.06,1.75,2.7),cage,xx,V.y0+1.17,-.4,scene,false);   // compartment dividers only: nothing in front of the gold
+ const cage=M(0x2a2e33,.4,.8);for(const xx of[-2.75,-1.05,.65,2.35])add(B(.06,1.45,2.45),cage,xx,V.y0+1.02,-.4,scene,false);   // compartment dividers only: nothing in front of the gold
  for(const xx of[-1.9,-.2,1.5]){const sp=new THREE.SpotLight(0xffe7c2,4,6,.6,.7,1.2);sp.position.set(xx,V.y1-.5,1.6);sp.target.position.set(xx,V.y0+.6,-.4);scene.add(sp,sp.target);}}
 // $800 BILLION (gold 3D, floats in front of the soil above the vault)
 const bigM=new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.18,clearcoat:.6,emissive:0x7a4a00,emissiveIntensity:.5});
@@ -173,13 +174,113 @@ const JJ=[...Array(NJ)].map(()=>[rnd(),rnd()*2-1,rnd()*2-1,rnd()]);
  for(let m=0;m<=200;m+=50)add(B(.8,.09,.09),dm_,7.7,Y(m),FZ+.6,scene,false);
  const l2=txt3('200 m',.62,M(0xff3b30,.4,0,{emissive:0xff3b30,emissiveIntensity:.7}));l2.position.set(7.75,Y(11),FZ+.7);
  const ar=add(new THREE.ConeGeometry(.28,.6,24),M(0xff3b30,.4,0,{emissive:0xff3b30,emissiveIntensity:.7}),7.7,Y(11)-1.2,FZ+.6,scene,false);ar.rotation.z=Math.PI;}
+// ================= v2 STORY PROPS (one per script line) =================
+const L=n=>LN[n-1].start,LE=n=>LN[n-1].end,VF=V.y0+.3;          // VF = vault floor top (digger floor at 25 m is V.y0)
+const pop=(t,a,d=.35)=>{const x=clamp((t-a)/d);return x<=0?1e-4:x<1?1+Math.sin(x*Math.PI)*.12*(1-x)+(ease(x)-1):1;};
+// sea level: the vault floor (80 ft) sits below it
+const sea=new THREE.Group();scene.add(sea);
+{const sm=M(0x4fb4ff,.4,0,{emissive:0x4fb4ff,emissiveIntensity:1});for(let x=X0+.5;x<X1;x+=1.1)add(B(.6,.07,.03),sm,x,Y(9),FZ+.05,sea,false);
+ const st=txt3('SEA LEVEL',.42,sm,sea);st.position.set(-1.2,Y(9)+.5,FZ+.15);}
+// water collecting at the bottom of the shaft (rises in line 4, pumped out in line 6)
+const puddle=add(B(SX1-SX0-.12,1,GD-.3),new THREE.MeshStandardMaterial({color:0x16384a,roughness:.55,metalness:0,transparent:true,opacity:.92,envMapIntensity:.1}),SX,0,0,scene,false);
+// thick concrete wall between the shaft and the vault (line 7)
+add(B(SX0+.12-V.x1,V.y1-V.y0+.9,GD+.08),pbr('concrete_wall_008',.6,1.2),(V.x1+SX0+.12)/2,(V.y0+V.y1)/2,0);
+const NS=46,spark=new THREE.Points(new THREE.BufferGeometry(),new THREE.PointsMaterial({color:0xffb347,size:.07,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+spark.geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(NS*3),3));spark.frustumCulled=false;scene.add(spark);
+const SP_=[...Array(NS)].map(()=>[rnd()*2-1,rnd(),rnd()*2-1]);
+// pump + hose up the shaft to the street (line 6)
+const pump=new THREE.Group();pump.position.set(SX1-.55,V.y0+.02,-1.2);scene.add(pump);
+add(RB(.75,.12,.5,.02),M(0x2b2f33,.5,.6),0,.06,0,pump);
+add(new THREE.CylinderGeometry(.2,.2,.55,32),M(0x1f6fb2,.3,.5),-.05,.34,0,pump).rotation.z=Math.PI/2;
+add(RB(.28,.3,.3,.03),M(0xd8a21a,.4,.3),.3,.3,0,pump);
+for(let i=0;i<6;i++)add(new THREE.CylinderGeometry(.205,.205,.02,32),M(0x174f80,.35,.5),-.25+i*.08,.34,0,pump).rotation.z=Math.PI/2;
+const hoseT=tex(64,256,x=>{x.fillStyle='#20262b';x.fillRect(0,0,64,256);x.fillStyle='#3a4249';for(let i=0;i<256;i+=32)x.fillRect(0,i,64,10);});hoseT.wrapS=hoseT.wrapT=THREE.RepeatWrapping;hoseT.repeat.set(1,30);
+const hose=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V3(SX1-.3,V.y0+.36,-1.2),V3(SX1-.18,V.y0+1,-1.8),V3(SX1-.18,-1,-1.9),V3(SX1-.05,.2,-1.9),V3(SX1+.8,.32,-1.7),V3(SX1+2,.07,-1.4)]),300,.06,12),new THREE.MeshStandardMaterial({map:hoseT,roughness:.55}));
+hose.castShadow=true;scene.add(hose);
+// alarm beacons in the vault (line 10)
+const alarmL=new THREE.PointLight(0xff2a1a,0,16,1.2);alarmL.position.set(0,V.y1-1,1.4);scene.add(alarmL);
+const alarmM=M(0x400000,.3,0,{emissive:0xff2010,emissiveIntensity:0});for(const x of[-1.6,1.6]){const d_=add(new THREE.SphereGeometry(.2,24,12,0,7,0,Math.PI/2),alarmM,x,V.y1-.36,1.2,scene,false);d_.rotation.x=Math.PI;}
+// vehicles (street level, road at z 2.1)
+function decal(w,h,draw,pw=1024,ph=256){const t=tex(pw,ph,draw);return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:t,transparent:true,roughness:.35,metalness:.2}));}
+function wheels(g,xs,wid){for(const x of xs)for(const s of[-1,1]){const w=add(new THREE.CylinderGeometry(.34,.34,.24,32),M(0x141414,.85),x,.34,s*wid*.47,g);w.rotation.x=Math.PI/2;
+ add(new THREE.CylinderGeometry(.19,.19,.25,24),M(0xb8bcc0,.3,1),x,.34,s*wid*.47,g).rotation.x=Math.PI/2;}}
+function car(len,wid,bodyH,cabLen,cabH,col,cabX=0){const g=new THREE.Group();scene.add(g);
+ const paint=new THREE.MeshPhysicalMaterial({color:col,metalness:.5,roughness:.32,clearcoat:1,clearcoatRoughness:.08});
+ add(RB(len,bodyH,wid,.12),paint,0,.3+bodyH/2,0,g);add(RB(cabLen,cabH,wid*.9,.14),paint,cabX,.3+bodyH+cabH/2-.04,0,g);
+ add(RB(cabLen*.94,cabH*.62,wid*.92,.06),M(0x0a1117,.05,.4,{envMapIntensity:1.5}),cabX,.3+bodyH+cabH*.48,0,g,false);
+ add(B(.05,.18,wid*.7),M(0xffffff,.2,0,{emissive:0xfff3d6,emissiveIntensity:2}),len/2,.3+bodyH*.62,0,g,false);
+ wheels(g,[-len*.32,len*.32],wid);return {g,paint,top:.3+bodyH+cabH};}
+// Federal Reserve Police car
+const PC=car(4.5,1.85,.7,2.3,.6,0xf3f5f7,-.2);PC.g.position.set(40,0,2.1);
+{const d_=decal(3.9,.42,x=>{x.fillStyle='#14306b';x.fillRect(0,96,1024,64);x.font='800 60px Arial';x.textAlign='center';x.fillStyle='#14306b';x.fillText('FEDERAL RESERVE POLICE',512,70);});d_.position.set(0,.68,.94);PC.g.add(d_);
+ const d2=d_.clone();d2.rotation.y=Math.PI;d2.position.z=-.94;PC.g.add(d2);}
+const pcR=M(0x300000,.3,0,{emissive:0xff1a1a,emissiveIntensity:0}),pcB=M(0x000830,.3,0,{emissive:0x2a5cff,emissiveIntensity:0});
+add(RB(.5,.12,1.3,.03),pcR,-.2,PC.top+.06,-.33,PC.g,false).scale.z=.5;add(RB(.5,.12,1.3,.03),pcB,-.2,PC.top+.06,.33,PC.g,false).scale.z=.5;
+const pcLR=new THREE.PointLight(0xff2020,0,12,1.4),pcLB=new THREE.PointLight(0x3060ff,0,12,1.4);pcLR.position.set(-.2,PC.top+.5,-.6);pcLB.position.set(-.2,PC.top+.5,.6);PC.g.add(pcLR,pcLB);
+// FBI SUV
+const FB=car(4.9,1.95,1.0,3.3,.75,0x0e1013,-.4);FB.g.position.set(44,0,2.1);
+{const d_=decal(2.2,.7,x=>{x.font='900 210px Arial';x.textAlign='center';x.fillStyle='#ffd21f';x.fillText('FBI',512,210);});d_.position.set(-.2,.8,.99);FB.g.add(d_);}
+const fbR=M(0x300000,.3,0,{emissive:0xff1a1a,emissiveIntensity:0}),fbB=M(0x000830,.3,0,{emissive:0x2a5cff,emissiveIntensity:0});
+add(B(.04,.1,.3),fbR,2.46,.85,-.4,FB.g,false);add(B(.04,.1,.3),fbB,2.46,.85,.4,FB.g,false);
+// police helicopter with a searchlight (line 12)
+const HE=new THREE.Group();HE.position.set(5.4,30,.4);scene.add(HE);
+let rotor,tailRotor;
+{const hp=new THREE.MeshPhysicalMaterial({color:0x13213a,metalness:.5,roughness:.3,clearcoat:1});
+ const body=add(new THREE.CapsuleGeometry(.62,1.5,12,24),hp,0,0,0,HE);body.rotation.z=Math.PI/2;
+ add(new THREE.SphereGeometry(.6,32,16,0,Math.PI*2,0,Math.PI/2),M(0x0a1622,.05,.3),-.95,-.05,0,HE,false).rotation.z=Math.PI/2;
+ add(new THREE.CylinderGeometry(.09,.2,3,16),hp,2.1,.15,0,HE).rotation.z=Math.PI/2;
+ add(B(.5,.8,.06),hp,3.45,.5,0,HE);tailRotor=add(B(.06,.9,.05),M(0x222222,.5),3.45,.5,.12,HE,false);
+ add(new THREE.CylinderGeometry(.06,.06,.4,12),M(0x333333,.4,.6),0,.75,0,HE);rotor=new THREE.Group();rotor.position.set(0,.95,0);HE.add(rotor);
+ for(const r of[0,Math.PI/2]){const bl=add(B(6.4,.035,.2),M(0x1b1b1b,.5,.3),0,0,0,rotor,false);bl.rotation.y=r;}
+ for(const z of[-.5,.5]){add(new THREE.CylinderGeometry(.04,.04,2.2,10),M(0x2a2a2a,.4,.7),0,-.85,z,HE).rotation.z=Math.PI/2;add(B(.05,.3,.05),M(0x2a2a2a,.4,.7),-.4,-.7,z,HE);add(B(.05,.3,.05),M(0x2a2a2a,.4,.7),.4,-.7,z,HE);}
+ const d_=decal(1.6,.32,x=>{x.font='800 150px Arial';x.textAlign='center';x.fillStyle='#ffffff';x.fillText('POLICE',512,190);});d_.position.set(.2,0,.63);HE.add(d_);}
+const beam=new THREE.Mesh(new THREE.ConeGeometry(1.6,11,48,1,true),new THREE.MeshBasicMaterial({color:0xfff2cc,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));beam.position.set(-.3,-6.2,0);HE.add(beam);
+const heS=new THREE.SpotLight(0xfff2cc,0,40,.25,.5,1);heS.position.set(-.3,-.8,0);HE.add(heS,heS.target);heS.target.position.set(-.3,-20,0);
+// prison bars dropping in front of the digger + "UP TO 20 YEARS" (line 14)
+const bars=new THREE.Group();scene.add(bars);
+{const st=M(0x3b4148,.35,.9);for(let i=0;i<10;i++)add(new THREE.CylinderGeometry(.035,.035,2.7,16),st,-.9+i*.2,0,0,bars);for(const y of[-1.3,1.3,.55])add(B(2,.08,.08),st,0,y,0,bars);}
+const yrs=txt3('UP TO 20 YEARS',.34,M(0xff3b30,.4,0,{emissive:0xff2a1a,emissiveIntensity:.8}));
+// stylised banknote (not a real design), wallet, 1971 (lines 15-17)
+const billT=tex(512,218,x=>{x.fillStyle='#cdd6c0';x.fillRect(0,0,512,218);x.strokeStyle='#3c5940';x.lineWidth=10;x.strokeRect(8,8,496,202);x.lineWidth=2;x.strokeRect(24,24,464,170);x.fillStyle='#3c5940';x.font='bold 52px Georgia';x.fillText('100',36,78);x.textAlign='right';x.fillText('100',476,186);x.textAlign='center';x.beginPath();x.ellipse(256,109,60,74,0,0,7);x.lineWidth=4;x.stroke();x.font='bold 80px Georgia';x.fillText('$',256,136);});
+const billM=new THREE.MeshStandardMaterial({map:billT,roughness:.8,side:THREE.DoubleSide});
+const bill=new THREE.Mesh(new THREE.PlaneGeometry(.52,.22),billM);bill.castShadow=true;scene.add(bill);
+const link=new THREE.Group();scene.add(link);const linkM=M(0xffd27a,.3,.8,{emissive:0x6a4a00,emissiveIntensity:.4});
+const lk1=add(new THREE.CylinderGeometry(.012,.012,1,8),linkM,0,0,0,link,false),lk2=add(new THREE.CylinderGeometry(.012,.012,1,8),linkM,0,0,0,link,false);
+const wallet=new THREE.Group();wallet.position.set(-.55,VF,1.95);wallet.rotation.y=.25;scene.add(wallet);
+let wTop;{const lea=new THREE.MeshPhysicalMaterial({color:0x4a2a16,roughness:.55,sheen:1,sheenColor:0x8a5a3a});
+ add(RB(.2,.02,.17,.008),lea,0,.01,0,wallet);
+ for(const [z,c] of [[-.04,0x1d4f9c],[-.01,0xc9a227],[.02,0x2e2e2e]])add(RB(.17,.004,.1,.003),M(c,.4,.3),.005,.023+z*.01,z,wallet,false);
+ for(let i=0;i<3;i++){const b_=new THREE.Mesh(new THREE.PlaneGeometry(.19,.08),billM);b_.rotation.x=-Math.PI/2+.05;b_.position.set(0,.03+i*.003,-.05+i*.01);wallet.add(b_);}
+ wTop=new THREE.Group();wTop.position.set(-.1,.02,0);wallet.add(wTop);add(RB(.2,.018,.17,.008),lea,.1,.009,0,wTop);}
+const y71=txt3('1971',.42,M(0xffd27a,.25,.9,{emissive:0x5a3a00,emissiveIntensity:.5}));y71.position.set(.2,VF+2.25,1.6);
+// ATM kiosk on the sidewalk + cash + armored truck (lines 18-21)
+const ATM=new THREE.Group();ATM.position.set(-6.2,0,-.35);scene.add(ATM);
+const atmC=document.createElement('canvas');atmC.width=512;atmC.height=384;const atmX=atmC.getContext('2d'),atmT=new THREE.CanvasTexture(atmC);atmT.colorSpace=THREE.SRGBColorSpace;let atmKey='';
+function drawATM(k,bal){if(k===atmKey)return;atmKey=k;const x=atmX,g=x.createLinearGradient(0,0,0,384);g.addColorStop(0,'#0e3a66');g.addColorStop(1,'#071c33');x.fillStyle=g;x.fillRect(0,0,512,384);x.textAlign='center';x.fillStyle='#fff';
+ if(k==='w'){x.font='800 46px Arial';x.fillText('WITHDRAW CASH',256,170);x.font='500 30px Arial';x.fillStyle='#9cc6ee';x.fillText('Processing...',256,230);}
+ else if(k==='a'){x.fillStyle='#22c55e';x.beginPath();x.arc(256,140,70,0,7);x.fill();x.strokeStyle='#fff';x.lineWidth=16;x.beginPath();x.moveTo(222,142);x.lineTo(248,168);x.lineTo(294,116);x.stroke();x.fillStyle='#fff';x.font='800 58px Arial';x.fillText('APPROVED',256,290);}
+ else{x.font='800 48px Arial';x.fillText('BALANCE',256,120);x.fillStyle='#22324a';x.fillRect(66,180,380,64);x.fillStyle=bal>.5?'#22c55e':'#ff3b30';x.fillRect(66,180,380*bal,64);x.strokeStyle='#fff';x.lineWidth=4;x.strokeRect(66,180,380,64);}
+ atmT.needsUpdate=true;}
+{const body=M(0x2a3340,.35,.7),trim=M(0xc9ced4,.25,1);
+ add(RB(.85,1.8,.7,.05),body,0,.9,0,ATM);add(RB(.9,.32,.74,.05),M(0x0f5fae,.3,.3,{emissive:0x0f5fae,emissiveIntensity:.8}),0,1.98,0,ATM);
+ const lab=decal(.6,.2,x=>{x.font='900 200px Arial';x.textAlign='center';x.fillStyle='#fff';x.fillText('ATM',512,205);});lab.position.set(0,1.98,.375);ATM.add(lab);
+ add(B(.62,.5,.04),trim,0,1.3,.34,ATM,false);const scr=new THREE.Mesh(new THREE.PlaneGeometry(.52,.39),new THREE.MeshBasicMaterial({map:atmT,toneMapped:false}));scr.position.set(0,1.3,.365);ATM.add(scr);
+ add(B(.36,.05,.24),trim,0,.98,.42,ATM,false);for(let r=0;r<4;r++)for(let c=0;c<3;c++)add(B(.07,.02,.05),M(0x9aa3ad,.3,.8),-.09+c*.09,1.01,.34+r*.055,ATM,false);
+ add(B(.4,.05,.06),M(0x050505,.5),0,.82,.36,ATM,false);}
+const cash=[0,1,2].map(i=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(.22,.095),billM);m.rotation.x=-Math.PI/2;ATM.add(m);return m;});
+const TK=new THREE.Group();TK.position.set(-40,0,2.1);scene.add(TK);
+{const armor=new THREE.MeshPhysicalMaterial({color:0x5a6466,metalness:.6,roughness:.38,clearcoat:.6});
+ add(RB(3.6,2.1,2.05,.08),armor,-.8,.32+1.05,0,TK);add(RB(1.7,1.55,1.95,.12),armor,1.95,.32+.78,0,TK);
+ add(RB(.9,.6,1.97,.06),M(0x0a1117,.05,.4),2.25,1.45,0,TK,false);add(B(.05,.2,1.4),M(0xffffff,.2,0,{emissive:0xfff3d6,emissiveIntensity:2}),2.8,.75,0,TK,false);
+ for(let i=0;i<5;i++)add(B(.5,.06,.02),M(0x30393b,.5,.6),-2.2+i*.7,1.9,1.03,TK,false);wheels(TK,[-1.9,-.9,1.95],2.05);}
 // ================= THE DIGGER (MakeHuman CC0 rig, bone-keyframed) =================
 const gl=new GLTFLoader();
-const guy=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;scene.add(guy);
+let suitM;const guy=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;scene.add(guy);
 guy.traverse(o=>{if(o.isMesh){o.castShadow=true;o.frustumCulled=false;const mt=o.material;mt.transparent=false;mt.depthWrite=true;mt.alphaTest=0;
  if(/short02|eyebrow|eyelash/i.test(o.name+mt.name)){mt.alphaTest=.5;mt.side=THREE.DoubleSide;}
  if(/high-poly/i.test(o.name+mt.name)){mt.alphaTest=.5;}
- if(/casualsuit/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0xd9772b);}}}); // orange work suit
+ if(/casualsuit/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0xd9772b);suitM=o.material;}}}); // orange work suit
+const MUD=new THREE.Color(0x5a3a22);
 const GS=Number(Q.get('gs')||1.0);guy.scale.setScalar(GS);
 const bone=n=>guy.getObjectByName(n);
 const BN={};for(const n of['root','spine01','spine03','spine05','neck01','head','upperarm01L','upperarm01R','lowerarm01L','lowerarm01R','wristL','wristR','upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])BN[n]=bone(n);
@@ -199,6 +300,9 @@ const pick=new THREE.Group();scene.add(pick);
 {add(new THREE.CylinderGeometry(.025,.03,1.0,16),M(0x7a5230,.7),0,.5,0,pick);
  const hd=new THREE.Shape();hd.moveTo(-.42,0);hd.quadraticCurveTo(0,.12,.42,0);hd.lineTo(.42,.04);hd.quadraticCurveTo(0,.17,-.42,.04);hd.closePath();
  add(new THREE.ExtrudeGeometry(hd,{depth:.05,bevelEnabled:true,bevelSize:.008,bevelThickness:.008}),M(0x5d646b,.35,.9),0,.94,-.025,pick).rotation.y=Math.PI/2;}
+const shovel=new THREE.Group();scene.add(shovel);
+{add(new THREE.CylinderGeometry(.022,.026,1.1,16),M(0x7a5230,.7),0,.55,0,shovel);const mud=M(0x4a3020,.95);
+ const bl=add(RB(.26,.32,.03,.02),M(0x6b6f74,.4,.8),0,1.25,0,shovel);for(let i=0;i<9;i++)add(new THREE.SphereGeometry(.03+rnd()*.04,10,8),mud,(rnd()-.5)*.24,1.12+rnd()*.3,(rnd()-.5)*.06,shovel,false);}
 // rope from the street down to the digger + winch
 const rope=add(new THREE.CylinderGeometry(.02,.02,1,8),M(0xd8c79a,.8),SX1-.25,0,.4,scene,false);
 add(RB(.9,.6,.7,.05),M(0x2b3036,.4,.7),SX1+.4,.35,.6);
@@ -216,40 +320,91 @@ const PR_=[...Array(NCH*3)].map(()=>[rnd()*2-1,rnd(),rnd()*2-1,rnd()]),PD=[...Ar
 // ================= CAMERA (shot list: a cut at least every 2 s, each shot has a slow move toward its subject) =================
 const cam=new THREE.PerspectiveCamera(30,W/H,.1,4000);
 function guyPos(t){return V3(SX-.15,Y(depthAt(t))+.02,.9);}
-const G=(x,y,z=0)=>({g:V3(x,y,z)});                       // target relative to the digger
-const SHOTS=[];const shot=(a,b,t0,t1,d0,d1,r0,r1)=>SHOTS.push({a,b,t0,t1,d0,d1,r0:V3(...r0),r1:V3(...r1)});
-const vaultC=V3(0,(V.y0+V.y1)/2-.2,0),bankC=V3(0,3.2,0);
+const G=(x,y,z=0)=>({g:V3(x,y,z)}),F=f=>({f});                 // target relative to the digger / moving prop
+const SHOTS=[];const shot=(a,b,t0,t1,d0,d1,r0,r1,tr=.85)=>SHOTS.push({a,b,t0,t1,d0,d1,r0:V3(...r0),r1:V3(...r1),tr});
+const vaultC=V3(0,(V.y0+V.y1)/2-.2,0);
 // HOOK (lines 1-2): wide (bank, $800B, vault, 200 m) -> fast zoom to the digger -> fly to the gold -> back to the digger on the sidewalk
 const GV=V3(-.2,V.y0+.85,0);
 shot(0,.75,V3(2.0,-4.4,0),V3(2.0,-4.2,0),52,48,[0,.03,1],[0,.03,1]);
-shot(.75,2.55,G(0,.9),G(0,.95),6.4,5.4,[0,.08,1],[.04,.08,1]);
-shot(2.55,4.3,GV,GV.clone().add(V3(.1,0,0)),7.0,5.8,[0,.22,1],[.04,.18,1]);
-shot(4.3,6.2,G(0,.9),G(0,.9),9,7.4,[0,.1,1],[.05,.09,1]);
-shot(6.2,7.29,G(-.5,.45),G(-.55,.4),4.6,3.8,[0,.12,1],[.04,.12,1]);
-// after the hook: placeholder shots on the digger every <=2 s (props per line are built after the hook is approved)
-{let t=7.29,i=0;while(t<DUR+1){const e=t+1.9;shot(t,e,G(0,.9),G(0,.9),i%2?5.5:9,i%2?6.5:8,[.1*(i%2?-1:1),.08,1],[.06*(i%2?-1:1),.08,1]);t=e;i++;}}
-const TR=.42;   // fly-move between shots (s)
-function shotState(S,t){const k=ease(clamp((t-S.a)/(S.b-S.a)));const rv=v=>v.g?guyPos(t).add(v.g):v;
+shot(.75,2.55,G(0,.9),G(0,.95),6.4,5.4,[0,.08,1],[.04,.08,1],.55);
+shot(2.55,4.3,GV,GV.clone().add(V3(.1,0,0)),7.0,5.8,[0,.22,1],[.04,.18,1],.6);
+shot(4.3,6.2,G(0,.9),G(0,.9),9,7.4,[0,.1,1],[.05,.09,1],.7);
+shot(6.2,L(3),G(-.5,.45),G(-.55,.4),4.6,3.8,[0,.12,1],[.04,.12,1],.6);
+// after the hook: every move is >= 0.85 s and the subject stays centred (pan first, then zoom)
+shot(L(3),L(4),G(0,.9),G(0,1.0),8.5,7.5,[0,.06,1],[.05,.06,1]);                          // 3 rock: follow him down
+shot(L(4),L(5),G(0,1.2),G(0,1.2),6.5,5.6,[0,.05,1],[-.05,.05,1]);                         // 4 water seeping in
+shot(L(5),L(5)+1.4,V3(2,Y(16),0),V3(2,Y(16.5),0),30,27,[0,.04,1],[0,.04,1],1.0);         // 5 sea level vs vault
+shot(L(5)+1.4,L(6),V3(2.3,Y(21.5),0),V3(2.4,Y(21.5),0),17,15.5,[0,.05,1],[.04,.05,1]);
+const PUMPT=pump.position.clone().add(V3(0,.45,0));
+shot(L(6),L(6)+1.3,PUMPT,PUMPT,3.4,3.0,[0,.15,1],[.06,.15,1]);                             // 6 pump
+shot(L(6)+1.3,L(7),PUMPT.clone().add(V3(-.6,.5,0)),PUMPT.clone().add(V3(-.6,.6,0)),7,6.6,[.06,.08,1],[.02,.08,1]);
+shot(L(7),L(8),G(-.6,.9),G(-.65,.85),5,4.2,[0,.06,1],[.04,.06,1]);                        // 7 concrete wall
+shot(L(8),L(8)+1.2,GV,GV,7,6,[0,.2,1],[.04,.18,1]);                                       // 8 gold
+shot(L(8)+1.2,L(9),vaultC,vaultC,12,11,[0,.08,1],[.05,.08,1]);
+const DOOR=V3(V.x0+.45,V.y0+1.75,0);
+shot(L(9),L(9)+1.1,DOOR,DOOR,4,3.4,[.9,.05,.45],[.85,.05,.5]);                            // 9 door
+shot(L(9)+1.1,L(10),DOOR,DOOR,5,4.6,[.7,.1,.75],[.65,.1,.8]);
+shot(L(10),L(10)+1.0,V3(1.6,V.y1-.7,1.2),V3(1.6,V.y1-.7,1.2),4,3.5,[0,-.05,1],[.05,-.05,1]); // 10 alarms
+shot(L(10)+1.0,L(11),vaultC,vaultC,13,12,[0,.05,1],[0,.05,1]);
+const pcT=F(()=>PC.g.position.clone().add(V3(0,.9,0)));
+shot(L(11),L(11)+1.1,pcT,pcT,17,15,[0,.12,1],[.05,.12,1],1.1);                              // 11 Fed police
+shot(L(11)+1.1,L(12),pcT,pcT,11,10,[.25,.12,1],[.3,.12,1]);
+const heT=F(()=>HE.position.clone());
+shot(L(12),L(12)+1.0,heT,heT,22,19,[0,-.12,1],[.05,-.12,1]);                              // 12 helicopter
+shot(L(12)+1.0,L(13),V3(5.4,6,0),V3(5.4,6,0),32,29,[0,.05,1],[0,.05,1]);
+const fbT=F(()=>FB.g.position.clone().add(V3(0,1,0)));
+shot(L(13),L(14),fbT,fbT,17,14.5,[0,.1,1],[.08,.1,1]);                                        // 13 FBI
+shot(L(14),L(14)+1.2,G(0,1.1),G(0,1.1),6.5,5.6,[0,.05,1],[0,.05,1],1.1);                  // 14 bars + 20 years
+shot(L(14)+1.2,L(15),G(0,1.6),G(0,1.6),8.5,8,[0,.05,1],[.04,.05,1]);
+shot(L(15),L(15)+1.4,V3(.3,VF+.9,1.0),V3(.35,VF+.9,1.0),5.5,4.8,[0,.12,1],[.04,.12,1],1.1); // 15 twist
+shot(L(15)+1.4,L(16),V3(.55,VF+.95,1.4),V3(.55,VF+.95,1.4),3.2,2.8,[.05,.1,1],[0,.1,1]);
+const WALP=wallet.position.clone().add(V3(0,.04,0));
+shot(L(16),L(16)+1.0,WALP,WALP,1.4,1.2,[0,.6,1],[.05,.6,1]);                              // 16 wallet
+shot(L(16)+1.0,L(17),WALP,WALP,1.0,.9,[0,.9,1],[.05,.9,1]);
+shot(L(17),L(17)+1.4,y71.position.clone(),y71.position.clone(),5,4.5,[0,.03,1],[.03,.03,1]); // 17 1971
+shot(L(17)+1.4,L(17)+2.8,V3(.6,VF+1.0,1.4),V3(.6,VF+1.0,1.4),5.5,5,[0,.1,1],[-.04,.1,1]);
+shot(L(17)+2.8,L(18),GV,GV,8,7.5,[0,.18,1],[.05,.16,1]);
+const ATMS=ATM.position.clone().add(V3(0,1.3,.37)),SLOT=ATM.position.clone().add(V3(0,.84,.4));
+shot(L(18),L(18)+1.1,ATM.position.clone().add(V3(0,1.1,0)),ATM.position.clone().add(V3(0,1.1,0)),5,4.4,[0,.05,1],[.05,.05,1],1.2); // 18 ATM
+shot(L(18)+1.1,L(19),ATMS,ATMS,2.4,2.1,[0,.05,1],[0,.05,1]);
+shot(L(19),L(19)+1.0,ATMS,ATMS,1.6,1.4,[0,.05,1],[0,.05,1]);                             // 19 approved + cash
+shot(L(19)+1.0,L(20),SLOT,SLOT,1.5,1.3,[0,.3,1],[.05,.3,1]);
+const tkT=F(()=>TK.position.clone().add(V3(0,1.3,0)));
+shot(L(20),L(20)+1.1,tkT,tkT,21,19,[0,.08,1],[.05,.08,1],1.0);                             // 20 armored truck
+shot(L(20)+1.1,L(21),V3(-8.6,1.3,.8),V3(-8.6,1.3,.8),25,23,[0,.1,1],[0,.1,1]);
+shot(L(21),L(21)+1.1,ATMS,ATMS,1.6,1.5,[0,.05,1],[0,.05,1]);                             // 21 balance drops, gold stays
+shot(L(21)+1.1,L(22),V3(-1.5,-4.5,0),V3(-1.5,-4.6,0),40,38,[0,.03,1],[0,.03,1],1.0);
+shot(L(22),L(22)+1.4,G(0,1.3),G(0,1.3),7.5,7,[0,.05,1],[.04,.05,1],1.0);                  // 22 stuck, pulled out
+shot(L(22)+1.4,L(23),G(0,1.3),G(0,1.3),9,8.5,[.1,.08,1],[.1,.08,1]);
+shot(L(23),L(23)+1.3,G(0,.95),G(0,.95),5.8,5.2,[0,.08,1],[.05,.08,1]);                      // 23 muddy shovel
+shot(L(23)+1.3,L(24),G(0,.85),G(0,.85),4.2,3.8,[0,.06,1],[.03,.06,1]);
+shot(L(24),L(24)+1.7,V3(1.6,-4.4,0),V3(1.8,-4.4,0),34,42,[0,.03,1],[0,.03,1],1.0);         // 24 vote: back to the opening frame
+shot(L(24)+1.7,DUR+1,V3(2,-4.4,0),V3(2,-4.4,0),46,50,[0,.03,1],[0,.03,1]);
+function shotState(S,t){const k=ease(clamp((t-S.a)/(S.b-S.a)));const rv=v=>v.f?v.f(t):v.g?guyPos(t).add(v.g):v;
  return {tgt:rv(S.t0).clone().lerp(rv(S.t1),k),dir:S.r0.clone().lerp(S.r1,k).normalize(),dist:lerp(S.d0,S.d1,k)};}
 function camAtT(t){let i=0;while(i<SHOTS.length-1&&t>=SHOTS[i+1].a)i++;const S=SHOTS[i];let st=shotState(S,t);
- if(i>0&&t<S.a+TR){const P=SHOTS[i-1],p=shotState(P,Math.min(t,P.b)),e=ease((t-S.a)/TR);
-  // distance blends in log space so a zoom from 50 to 6 feels like one fast push
-  st={tgt:p.tgt.clone().lerp(st.tgt,e),dir:p.dir.clone().lerp(st.dir,e).normalize(),dist:Math.exp(lerp(Math.log(p.dist),Math.log(st.dist),e))*(1+Math.sin(Math.PI*e)*Math.min(2.5,p.tgt.distanceTo(st.tgt)/Math.max(p.dist,st.dist)))};}
+ if(i>0&&t<S.a+S.tr){const P=SHOTS[i-1],p=shotState(P,Math.min(t,P.b)),x=(t-S.a)/S.tr,zin=st.dist<p.dist;
+  // zoom in: pan to the new subject first, then push in; zoom out: pull back first, then pan -> the subject never leaves the frame
+  const ep=ease(clamp(zin?x*1.5:(x-.33)*1.5)),ed=ease(clamp(zin?(x-.33)*1.5:x*1.5)),sep=p.tgt.distanceTo(st.tgt)/Math.max(p.dist,st.dist);
+  st={tgt:p.tgt.clone().lerp(st.tgt,ep),dir:p.dir.clone().lerp(st.dir,ease(x)).normalize(),dist:Math.exp(lerp(Math.log(p.dist),Math.log(st.dist),ed))*(1+Math.sin(Math.PI*x)*Math.min(.8,sep*.3))};}
  return {pos:st.tgt.clone().addScaledVector(st.dir,st.dist),tgt:st.tgt};}
 // ================= SCENE STATE =================
+const modeAt=t=>t>=L(23)-.1?'shovel':t>=L(22)?'hang':(t>=L(14)-.2&&t<L(15))?'up':'dig';
 const wR=V3(),wL=V3(),sR=V3(),sL=V3(),tmp=V3(),hq=new THREE.Quaternion();
 const AX=JSON.parse(Q.get('ax')||'null');   // debug: override arm axes from the URL
 function applyState(t){
  const d=depthAt(t),gp=guyPos(t);
  guy.position.copy(gp);guy.rotation.y=-1.2+Math.sin(t*.4)*.05;
- const s=swingAt(t),br=Math.sin(t*2.1)*.02;
+ const mode0=modeAt(t);if(mode0!=='dig')guy.rotation.y=mode0==='hang'?Math.sin(t*2)*.25:mode0==='shovel'?-.35+Math.sin(t*.8)*.05:-.08+Math.sin(t*.8)*.05;
+ const s=mode0==='dig'?swingAt(t):mode0==='shovel'?.0:1,br=Math.sin(t*2.1)*.02;
  const SB=Number(Q.get('sb')||1);pose('spine01',SB*(.45-.55*s),0,0);pose('spine03',SB*(.2-.3*s)+br,Math.sin(t*.7)*.05,0);
  pose('neck01',-.05+.15*s,0,0);pose('head',.1-.25*s,0,0);
  // arms (axes measured: +x = arm forward/up, +z = toward the body): raised overhead (s=1) -> strike forward-down (s=0)
- const a=AX||[.95,1.65,.30,-.05,.25,-.15];
+ const a=AX||(mode0==='up'?[.95,1.65,-.25,-.05,.6,-.15]:[.95,1.65,.30,-.05,.25,-.15]);
  pose('upperarm01R',a[0]+a[1]*s,0,a[2]+a[3]*s);pose('lowerarm01R',a[4]+a[5]*s,0,0);
  pose('upperarm01L',a[0]+a[1]*s,0,-(a[2]+a[3]*s));pose('lowerarm01L',a[4]+a[5]*s,0,0);
- pose('upperleg01L',-.25,0,.05);pose('lowerleg01L',.35,0,0);pose('upperleg01R',.15,0,-.05);pose('lowerleg01R',.12,0,0);
+ if(mode0==='dig'){pose('upperleg01L',-.25,0,.05);pose('lowerleg01L',.35,0,0);pose('upperleg01R',.15,0,-.05);pose('lowerleg01R',.12,0,0);}
+ else{const sw=mode0==='hang'?Math.sin(t*3)*.15:0;pose('upperleg01L',sw,0,.03);pose('lowerleg01L',mode0==='hang'?.2:0,0,0);pose('upperleg01R',-sw,0,-.03);pose('lowerleg01R',mode0==='hang'?.3:0,0,0);pose('spine01',0,0,0);pose('spine03',br,0,0);pose('head',mode0==='up'?-.1:.05,0,0);}
  if(Q.get('face'))guy.rotation.y=Number(Q.get('face'))-1;
  if(Q.get('arm')){const r=JSON.parse(Q.get('arm'));pose('upperarm01R',...r);pose('upperarm01L',r[0],-r[1],-r[2]);pose('lowerarm01R',0,0,0);pose('lowerarm01L',0,0,0);}
  {const fa=JSON.parse(Q.get('fa')||'[0,0,1.1]');for(const [o,r] of FING){o.quaternion.copy(r);qx.setFromEuler(E.set(...fa.map(v=>/thumb/i.test(o.name)?v*.5:v)));o.quaternion.multiply(qx);}}
@@ -260,14 +415,15 @@ function applyState(t){
  const hands=wR.clone().lerp(wL,.5),dir=hands.clone().sub(sR.clone().lerp(sL,.5)).normalize();
  const right=V3(Math.cos(guy.rotation.y),0,-Math.sin(guy.rotation.y)),bz=right.clone().cross(dir).normalize(),bx=dir.clone().cross(bz).normalize();
  pick.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(bx,dir,bz));pick.position.copy(hands).addScaledVector(dir,-.25);
- BN.head.getWorldPosition(tmp);BN.head.getWorldQuaternion(hq);helmet.position.copy(tmp).add(V3(0,.13*GS,0).applyQuaternion(hq));helmet.quaternion.copy(hq);
+ shovel.rotation.set(0,0,Math.PI+.08);shovel.position.set(hands.x,gp.y+1.42,hands.z);pick.visible=mode0==='dig';shovel.visible=mode0==='shovel';   // shovel planted upright, blade in the mud
+ BN.head.getWorldPosition(tmp);BN.head.getWorldQuaternion(hq);helmet.position.copy(tmp).add(V3(0,(mode0==='dig'?.13:.075)*GS,0).applyQuaternion(hq));helmet.quaternion.copy(hq);
  lamp.position.copy(helmet.position).add(V3(0,.1,0));lamp.target.position.copy(gp).addScaledVector(V3(Math.sin(guy.rotation.y),0,Math.cos(guy.rotation.y)),1.5);
  const top=Y(d),h=top-BOT;under.scale.set(SX1-SX0,h,1);under.position.set(SX,(top+BOT)/2,0);const um=under.material;for(const k of['map','normalMap','roughnessMap'])um[k].repeat.set((SX1-SX0)/4,h/4);
  {const k=Math.min(1,.25+d/30);pile.scale.set(1.3*k,.7*k,1.1*k);}
- rope.scale.y=Math.max(.01,-top+.4);rope.position.y=top/2+.2;
+ if(mode0==='hang'){const hy=gp.y+2.05;rope.position.set(gp.x,(hy+.4)/2,gp.z);rope.scale.y=Math.max(.01,.4-hy);}else{rope.position.set(SX1-.25,top/2+.2,.4);rope.scale.y=Math.max(.01,-top+.4);}
  const hs=hitTimes(t),m4=new THREE.Matrix4(),q=new THREE.Quaternion(),pos=dust.geometry.attributes.position;let ci=0,di=0;
  const fwd=V3(Math.sin(guy.rotation.y),0,Math.cos(guy.rotation.y)),tip=gp.clone().addScaledVector(fwd,.95).add(V3(0,.05,0));
- for(let h3=0;h3<3;h3++){const th=hs[h3],ag=th===undefined?99:t-th;
+ for(let h3=0;h3<3;h3++){const th=hs[h3],ag=th===undefined||mode0!=='dig'?99:t-th;
   for(let i=0;i<NCH;i++,ci++){const [vx,vy,vz,r]=PR_[ci];const alive=ag<1.1;
    const p=alive?tip.clone().add(V3(vx*1.6*ag,(1.8+vy*1.6)*ag-4.9*ag*ag,vz*.8*ag)):V3(0,-999,0);if(alive&&p.y<gp.y)p.y=gp.y+.03;
    m4.compose(p,q.setFromEuler(new THREE.Euler(ag*9*r,ag*7,0)),V3(.6+r,.6+r,.6+r));chips.setMatrixAt(ci,m4);}
@@ -283,14 +439,37 @@ function applyState(t){
  // water breaking in during line 12
  {const L0=LN[3].start,L1=LN[3].end+.6,on=t>L0&&t<L1,pj=jet.geometry.attributes.position;for(let i=0;i<NJ;i++){const [ph,vy,vz,sp]=JJ[i];const a=((t*1.6+ph)%1)*.7;const o=V3(SX0+.12,gp.y+1.6+vy*.3,vz*.6);
    pj.setXYZ(i,on?o.x+a*(3+sp*2):0,on?o.y-a*a*5+vy*.2*a:-999,on?o.z+vz*a:0);}pj.needsUpdate=true;}
+ // ---- v2 story state ----
+ {const lv=t<L(4)?0:t<L(6)+.3?.24*ease(clamp((t-L(4))/2.5)):.24*(1-ease(clamp((t-L(6)-.3)/2)))+.03;puddle.visible=lv>.02&&d>15;puddle.scale.y=Math.max(.01,lv);puddle.position.y=gp.y+lv/2;}
+ {const on=t>L(7)-.3&&t<LE(7)+.4,hs2=hitTimes(t),th=hs2[hs2.length-1],ag=th===undefined?9:t-th,ps=spark.geometry.attributes.position;
+  for(let i=0;i<NS;i++){const [vx,vy,vz]=SP_[i],al=on&&ag<.45;ps.setXYZ(i,al?tip.x+vx*.25*ag*6+.4*ag:0,al?tip.y+.3+(vy*2.4)*ag-4.9*ag*ag:-999,al?tip.z+vz*1.5*ag:0);}ps.needsUpdate=true;}
+ pump.visible=t>L(6)-.4;pump.scale.setScalar(pop(t,L(6)-.4));hose.visible=pump.visible;if(t>L(6))pump.position.x=SX1-.55+Math.sin(t*90)*.006;hoseT.offset.y=-t*3;
+ {const al=t>L(10)&&t<LE(14)+.5,f=al?Math.pow(.5+.5*Math.sin((t-L(10))*9),2):0;alarmM.emissiveIntensity=f*6;alarmL.intensity=f*30;alarmU.value=(t>L(10)&&t<LE(10)+.4)?f*.35:0;}
+ PC.g.position.x=lerp(28,10.5,ease(clamp((t-(L(11)-.7))/1.7)));{const f=Math.sin(t*22)>0;pcR.emissiveIntensity=f?7:.3;pcB.emissiveIntensity=f?.3:7;pcLR.intensity=f?10:0;pcLB.intensity=f?0:10;}
+ FB.g.position.x=lerp(30,15.6,ease(clamp((t-(L(13)-.6))/1.5)));{const f=Math.sin(t*25)>0;fbR.emissiveIntensity=f?7:.3;fbB.emissiveIntensity=f?.3:7;}
+ HE.position.y=lerp(24,11.5,ease(clamp((t-(L(12)-.8))/1.6)))+Math.sin(t*1.7)*.12;HE.rotation.z=Math.sin(t*1.1)*.03;rotor.rotation.y=t*31;tailRotor.rotation.z=t*45;
+ {const on=t>L(12)-.2;beam.material.opacity=on?.1:0;heS.intensity=on?60:0;}
+ bars.visible=t>L(14)-.1&&t<L(15);bars.position.set(SX,gp.y+1.35+6*(1-ease(clamp((t-L(14))/.45)))+(t>L(14)+.45?Math.exp(-(t-L(14)-.45)*9)*Math.sin((t-L(14)-.45)*30)*.05:0),2.05);
+ {const w20=WD.find(w=>w.w==='20');yrs.visible=bars.visible;yrs.scale.setScalar(pop(t,w20.s-.1));yrs.position.set(SX,gp.y+2.75,FZ+.45);}
+ {const on=t>L(15)-.3&&t<L(18);bill.visible=on;const away=ease(clamp((t-(L(17)+1.4))/1.8));
+  bill.position.set(.75+away*1.4,VF+.95+Math.sin(t*1.6)*.03+away*.4,1.45+away*.6);bill.rotation.set(-.15+Math.sin(t*1.1)*.05,-.25+away*.6,Math.sin(t*.9)*.04);bill.scale.setScalar(pop(t,L(15)-.3)*1.3);
+  const w=WD.find(x=>x.w==="doesn't"),br_=ease(clamp((t-w.s)/.5));link.visible=on&&t<L(17);linkM.emissive.setHex(br_>0?0xff2010:0x6a4a00);
+  const A=V3(.2,VF+1.0,.85),Bp=bill.position.clone(),mid=A.clone().lerp(Bp,.5);
+  for(const [lk,from,to,sg] of [[lk1,A,mid,-1],[lk2,mid,Bp,1]]){const o=V3(sg*br_*.12,-br_*.15,0),p0=from.clone().add(sg<0?V3():o),p1=to.clone().add(sg<0?o:V3());lk.position.copy(p0).lerp(p1,.5);lk.scale.y=p0.distanceTo(p1)*(1-.25*br_);lk.quaternion.setFromUnitVectors(V3(0,1,0),p1.clone().sub(p0).normalize());}}
+ wallet.visible=t>L(16)-.9&&t<L(18);wTop.rotation.z=-Math.PI*ease(clamp((t-L(16)-.15)/.7));
+ y71.visible=t>L(17)-.2&&t<L(18);y71.scale.setScalar(pop(t,(WD.find(w=>w.w==='1971')||{s:L(17)}).s-.1));y71.rotation.y=Math.sin(t*.8)*.12;
+ drawATM(t<L(19)?'w':t<L(21)?'a':'b'+Math.round((1-.7*ease(clamp((t-L(21)-.1)/1.2)))*40),1-.7*ease(clamp((t-L(21)-.1)/1.2)));
+ cash.forEach((m,i)=>{const k=ease(clamp((t-L(19)-.55-i*.15)/.5));m.visible=t>L(19)+.5&&t<L(21);m.position.set((i-1)*.012,.84-i*.004,.36+.16*k);});
+ TK.position.x=lerp(-30,-11,ease(clamp((t-(L(20)-.7))/1.8)));
+ {const k=ease(clamp((t-L(22))/(LE(22)-L(22))));suitM.color.setHex(0xd9772b).lerp(MUD,k*.6);}
  heatU.value=0;
  return d;}
 // ================= POST =================
 const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
 comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.16,.35,.92));comp.addPass(new OutputPass());
-const heatU={value:0};comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},heat:heatU},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-fragmentShader:`uniform sampler2D tDiffuse;uniform float heat;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.15);c=c*c*(3.-2.*c)*.3+c*.7;float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.35;c=mix(c,c*vec3(1.18,.95,.78)+vec3(.05,.01,0.),heat);c+=(h(vUv*900.)-.5)*.005;gl_FragColor=vec4(c,1.);}`}));
+const heatU={value:0},alarmU={value:0};comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},heat:heatU,alarm:alarmU},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+fragmentShader:`uniform sampler2D tDiffuse;uniform float heat;uniform float alarm;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));c=mix(vec3(l),c,1.15);c=c*c*(3.-2.*c)*.3+c*.7;float d=distance(vUv,vec2(.5));c*=1.-smoothstep(.45,1.,d)*.35;c=mix(c,c*vec3(1.18,.95,.78)+vec3(.05,.01,0.),heat);c=mix(c,c*vec3(1.35,.45,.4)+vec3(.08,0.,0.),alarm);c+=(h(vUv*900.)-.5)*.005;gl_FragColor=vec4(c,1.);}`}));
 const sun=new THREE.DirectionalLight(0xffd7a8,3.0);sun.position.set(-16,14,18);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-26,right:26,top:16,bottom:-20,near:1,far:120});sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;scene.add(sun);
 scene.add(new THREE.HemisphereLight(0xcfe3ff,0x3a2a1c,.35));
@@ -301,7 +480,7 @@ window.renderAt=t=>{const d=applyState(t);{const c=camAtT(t);cam.position.copy(c
  if(Q.get('close')){const g=guyPos(t).add(V3(0,1,0));cam.position.copy(g).add(V3(0,.3,6));cam.lookAt(g);}
  let w=WD[0];for(const x of WD)if(t>=x.s-.04)w=x;cap.textContent=w.w.replace(/[,?!]|\.$/g,'');cap.className='cap '+(w.c||'');
  const wa=t-w.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;cap.style.top='70%';
- dm.textContent=Math.round(d)+' m';df.textContent=Math.round(d*3.281)+' ft';
+ document.getElementById('dep').style.opacity=(t<L(10)||(t>=L(14)&&t<L(15))||t>=L(22))?1:0;dm.textContent=Math.round(d)+' m';df.textContent=Math.round(d*3.281)+' ft';
  const glc=renderer.domElement,mb=document.getElementById('mb');if(mb.width!==glc.width){mb.width=glc.width;mb.height=glc.height;}const cx=mb.getContext('2d');
  const c0=camAtT(t-.5/FPS),c1=camAtT(t+.5/FPS),mv=c0.tgt.distanceTo(c1.tgt)/c1.pos.distanceTo(c1.tgt)+Math.abs(Math.log(c0.pos.distanceTo(c0.tgt)/c1.pos.distanceTo(c1.tgt)));
  const SUB=Number(Q.get('mb')||(mv>.008?24:6));for(let i=0;i<SUB;i++){const ts=t+(i/SUB-.5)*.9/FPS;if(i){applyState(ts);const c=camAtT(ts);cam.position.copy(c.pos);cam.lookAt(c.tgt);}
