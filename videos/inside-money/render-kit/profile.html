@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1080px;height:1080px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#1d3a5f 0%,#0b1626 62%,#060b14 100%)}#c{display:block}
+</style></head><body><canvas id="c"></canvas>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// Inside Money — TikTok profile picture: a classical bank cut open, the gold vault glowing underneath. Composed for the round crop.
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const S=1080;
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);renderer.setSize(S,S);renderer.setClearColor(0x000000,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
+const scene=new THREE.Scene();
+{const c=document.createElement('canvas');c.width=c.height=1024;const x=c.getContext('2d'),g=x.createRadialGradient(512,470,40,512,512,720);g.addColorStop(0,'#24476f');g.addColorStop(.55,'#0e1d33');g.addColorStop(1,'#050a12');x.fillStyle=g;x.fillRect(0,0,1024,1024);
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;scene.background=t;}   // navy backdrop (kept inside the round crop)
+const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;scene.environment=hdr;scene.environmentIntensity=.55;scene.environmentRotation.y=1.2;
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM);
+function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+// ---- the bank (above ground) ----
+const ss=(w,h)=>pbr('white_sandstone_blocks_02',w/1.8,h/1.8),mar=pbr('marble_01',1,2.5),gran=w=>pbr('granite_tile',w/1.5,.4);
+for(let i=0;i<3;i++)add(B(7.4-i*.35,.16,2.6-i*.25),gran(7.4),0,.08+i*.16,.25-i*.08);
+add(B(6.6,4.6,2.0),ss(6.6,4.6),0,2.78,-.5);
+for(let i=0;i<6;i++){const x=-2.65+i*1.06;add(new THREE.CylinderGeometry(.22,.25,3.7,40),mar,x,2.33,.62);add(B(.62,.16,.62),mar,x,.56,.62);add(B(.66,.22,.66),mar,x,4.27,.62);}
+add(B(7.0,.7,1.0),ss(7,.7),0,4.73,.45);
+{const ps=new THREE.Shape();ps.moveTo(-3.65,0);ps.lineTo(3.65,0);ps.lineTo(0,1.45);ps.closePath();add(new THREE.ExtrudeGeometry(ps,{depth:.9,bevelEnabled:false}),ss(7.3,1.45),0,5.08,0);}
+add(B(1.1,2.3,.06),M(0x5a3d1e,.35,.9),0,1.63,-.02);
+// ---- ground cut open: earth band, the vault, the gold ----
+const earth=pbr('rocky_terrain_02',2.4,2.4,{color:0xb09a86});const GY=-.02;
+add(B(9.2,.3,3.2),pbr('concrete_wall_008',3,.4),0,GY-.15,0);
+const VY0=-4.2,VY1=-.75;   // vault interior (box open toward the viewer)
+add(B(9.2,VY1-VY0+1.2,.6),earth,0,(VY0+VY1)/2-.25,-1.6);                       // back wall of earth
+for(const x of[-3.75,3.75])add(B(1.7,VY1-VY0+1.2,3.2),earth,x,(VY0+VY1)/2-.25,0);  // earth left/right of the vault
+add(B(5.8,.6,3.2),earth,0,VY0-.55,0);add(B(5.8,.45,3.2),earth,0,VY1+.05,0);
+const conc=M(0x4d5157,.8);add(B(5.8,.12,2.6),conc,0,VY0-.2,0);                   // vault floor
+add(B(.18,VY1-VY0,2.6),conc,-2.82,(VY0+VY1)/2,-.1);add(B(.18,VY1-VY0,2.6),conc,2.82,(VY0+VY1)/2,-.1);add(B(5.8,VY1-VY0,.15),conc,0,(VY0+VY1)/2,-1.25);
+// round vault door on the back wall, rolled open to the side
+{const st=M(0xa7aeb5,.25,1);const d=add(new THREE.CylinderGeometry(1.05,1.05,.32,96),st,-1.85,(VY0+VY1)/2+.05,-1.05);d.rotation.x=Math.PI/2;
+ for(let i=0;i<12;i++){const a=i/12*Math.PI*2;add(new THREE.CylinderGeometry(.06,.06,.12,16),M(0xd2d7dc,.2,1),-1.85+Math.cos(a)*.85,(VY0+VY1)/2+.05+Math.sin(a)*.85,-.86).rotation.x=Math.PI/2;}
+ add(new THREE.TorusGeometry(.32,.05,16,48),M(0xd2d7dc,.2,1),-1.85,(VY0+VY1)/2+.05,-.85);}
+// gold: real-proportion tapered bars, criss-cross layers, studio reflections
+const barG=new RoundedBoxGeometry(.42,.075,.13,3,.012);{const p=barG.attributes.position;for(let i=0;i<p.count;i++)if(p.getY(i)>0){p.setX(i,p.getX(i)*.9);p.setZ(i,p.getZ(i)*.8);}barG.computeVertexNormals();}
+const envS=new THREE.Scene();envS.add(new THREE.Mesh(new THREE.BoxGeometry(20,12,20),new THREE.MeshBasicMaterial({color:0x4a3a26,side:THREE.BackSide})));
+for(const [x,y,z,w,h,c] of [[0,5.9,0,12,8,9],[-9.9,2,3,8,6,6],[6,1.5,9.9,10,5,6],[0,1,-9.9,10,4,3]]){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(1,.95,.85).multiplyScalar(c),side:THREE.DoubleSide}));m.position.set(x,y,z);m.lookAt(0,0,0);envS.add(m);}
+const pm=new THREE.PMREMGenerator(renderer),goldEnv=pm.fromScene(envS,.02).texture;
+const goldM=new THREE.MeshPhysicalMaterial({color:0xffd070,metalness:1,roughness:.24,envMap:goldEnv,envMapIntensity:1.25});
+{let n=0;const MAX=3000,inst=new THREE.InstancedMesh(barG,goldM,MAX);inst.castShadow=inst.receiveShadow=true;const m4=new THREE.Matrix4(),q=new THREE.Quaternion(),tint=new THREE.Color();
+ // a stepped pyramid of bars in the middle of the vault, so the silhouette reads at 100 px
+ for(let r=0;r<20;r++){const along=r%2===0,w=Math.max(.9,3.9-r*.15),dz=Math.max(.5,1.6-r*.05);const nx=along?Math.floor(w/.44):Math.floor(w/.145),nz=along?Math.floor(dz/.142):Math.floor(dz/.44);
+  for(let i=0;i<nx;i++)for(let k=0;k<nz;k++){if(n>=MAX)break;const dx=along?.44:.145,dzz=along?.142:.44;
+   m4.compose(V3(.45+(i-(nx-1)/2)*dx,VY0-.14+.0375+r*.077,-.1+(k-(nz-1)/2)*dzz),q.setFromEuler(new THREE.Euler(0,(along?0:Math.PI/2)+(rnd()-.5)*.02,0)),V3(1,1,1));
+   inst.setMatrixAt(n,m4);inst.setColorAt(n++,tint.setHSL(.113+(rnd()-.5)*.008,1,.95+(rnd()-.5)*.05));}}
+ inst.count=n;scene.add(inst);}
+// light: warm key from the top left, gold glow inside the vault, cool rim behind the bank
+const key=new THREE.DirectionalLight(0xffe0b8,3.2);key.position.set(-8,12,12);key.castShadow=true;key.shadow.mapSize.set(2048,2048);
+Object.assign(key.shadow.camera,{left:-8,right:8,top:9,bottom:-7,near:1,far:40});key.shadow.bias=-.0003;scene.add(key);
+const glow=new THREE.PointLight(0xffb64a,9,7,1.6);glow.position.set(.3,VY1-.5,1.4);scene.add(glow);
+const glow2=new THREE.PointLight(0xffc870,4,5,1.8);glow2.position.set(.6,VY0+1.1,1.6);scene.add(glow2);
+const rim=new THREE.DirectionalLight(0x7fb2ff,1.6);rim.position.set(6,8,-10);scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xbcd2ff,0x2a1d10,.35));
+await loaded;
+const cam=new THREE.PerspectiveCamera(30,1,.1,200);cam.position.set(0,1.2,30.5);cam.lookAt(0,.75,0);
+const comp=new EffectComposer(renderer);comp.setSize(S,S);comp.addPass(new RenderPass(scene,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(S,S),.22,.45,.9));comp.addPass(new OutputPass());
+comp.render();document.title='ready';
+</script></body></html>
