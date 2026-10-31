@@ -18,11 +18,12 @@ def put(sig,t,g):
 S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','pop','money']}
 put(S['ting'],0.0,.45)                    # ting at 0 s (channel rule)
 put(S['money'],0.0,.22)                   # the press running
-put(S['whoosh'],1.62,.3)                  # cut 1: press -> Mike close
+put(S['whoosh'],1.0,.28)                  # cut 1: wide -> printer
+put(S['whoosh'],1.66,.28)                 # cut 2: printer -> pickup
 put(S['cash-register'],W('million')+.05,.32)   # price pops on the word
-put(S['whoosh'],2.5,.32)                  # cut 2: Mike -> the crowd
-put(S['cash-register'],1.97,.25)          # the hand-over
-for i in range(3):put(S['pop'],2.66+i*.12,.2)   # served people's prices pop in
+put(S['whoosh'],2.5,.32)                  # cut 3: pickup -> wide
+for tp in [.5,1.72,2.5,3.28]:put(S['cash-register'],tp+.1,.22)   # each pickup
+for tp in [.5,1.72,2.5,3.28]:put(S['pop'],tp+.12,.2)   # price pops over each person
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep4_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep4_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep4.wav'],check=True);print('ok',DUR)
