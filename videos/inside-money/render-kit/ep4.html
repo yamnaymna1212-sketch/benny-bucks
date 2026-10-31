@@ -4,7 +4,7 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #ov{position:absolute;inset:0;z-index:3;pointer-events:none}
 /* Zack-style caption: 2-3 words, low centre */
 .cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 58px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.75),0 0 2px #000}
-</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap">a million dollars</div></div>
+</style></head><body><canvas id="c"></canvas><div id="ov"><div id="qq" style="position:absolute;left:0;width:720px;top:16%;text-align:center;font:800 92px Mont,sans-serif;color:#ffd23a;opacity:0;text-shadow:0 0 18px rgba(255,200,40,.75),0 4px 10px rgba(0,0,0,.8)">YES or NO?</div><div class="cap" id="cap">a million dollars</div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 // EP4 scene: timeline-driven (timeline_ep4.json). Hook = 4 cuts on words, one story: official at a podium + money printer, people take a bundle and leave, Mike watches.
@@ -229,6 +229,162 @@ function animate(t){
   headOf(P).getWorldPosition(tmp);P.price.position.copy(tmp).add(tmp2.set(0,.34,0));P.price.lookAt(camP);P.price.scale.setScalar(pop(t,TP[i]+.12,.25)*.62);});
  const tm=Wd('million')??1.38;printPrice.scale.setScalar(t<1.72?pop(t,tm,.3)*1.1:0);printPrice.lookAt(camP);
 }
+let sdd=3;const rr=()=>{sdd=(sdd*16807)%2147483647;return sdd/2147483647;};
+// ================= STORY (after the hook): 4 sets, a new shot / action / glow on every line =================
+const Wn=(w,n=0)=>{const k=WD.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$]/g,'')===w);return (k[n]||k[k.length-1]||{s:0}).s;};
+const YEL=0xffd23a,RED=0xff2a20,GRN=0x22ff6a,WHT=0xffffff,GRY=0x9aa3a8;
+function big(str,size,c,i=1.1){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:8,bevelEnabled:true,bevelThickness:size*.03,bevelSize:size*.02,bevelSegments:3});
+ g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,glowMat(c,i));m.scale.setScalar(0);scene.add(m);return m;}
+function arrowUp(c,s=1){const sh=new THREE.Shape();sh.moveTo(-.09,0);sh.lineTo(.09,0);sh.lineTo(.09,.22);sh.lineTo(.2,.22);sh.lineTo(0,.45);sh.lineTo(-.2,.22);sh.lineTo(-.09,.22);sh.closePath();
+ const m=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.06,bevelEnabled:true,bevelSize:.01,bevelThickness:.01}),glowMat(c,1.1));m.geometry.translate(0,-.22,0);m.scale.setScalar(0);scene.add(m);m.userData.s=s;return m;}
+const showAt=(m,t,t0,t1,s=1)=>{m.scale.setScalar(t>=t0&&t<t1?pop(t,t0,.3)*s:0);};
+const face=m=>m.lookAt(camP);
+// ---------- STAGE (numbers studio) ----------
+const SX=-30;
+add(new THREE.BoxGeometry(30,16,34),new THREE.MeshStandardMaterial({color:0x0d1320,roughness:.95,side:THREE.BackSide}),SX,7.9,-4,scene,false);
+{const f=add(new THREE.CircleGeometry(14.5,72),new THREE.MeshStandardMaterial({color:0x1b2433,roughness:.32,metalness:.25}),SX,.005,-4,scene,false);f.rotation.x=-Math.PI/2;f.castShadow=false;}
+for(let i=0;i<4;i++){const L=new THREE.PointLight(0xdfe8ff,14,24,1.5);L.position.set(SX-6+i*4,8.5,-2);scene.add(L);}
+const NP=640,pawnMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6,emissive:GRN,emissiveIntensity:0});
+const pawnB=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.12,.38,4,10),pawnMat,NP),pawnH=new THREE.InstancedMesh(new THREE.SphereGeometry(.11,14,10),pawnMat,NP);
+{const d=new THREE.Object3D(),c=new THREE.Color();for(let i=0;i<NP;i++){const r=Math.floor(i/32),k=i%32;d.position.set(SX-7.75+k*.5+(r%2)*.25,.31,-2.4-r*.55);d.updateMatrix();pawnB.setMatrixAt(i,d.matrix);
+ d.position.y=.78;d.updateMatrix();pawnH.setMatrixAt(i,d.matrix);c.setHSL(.05+rr()*.6,.25,.3+rr()*.35);pawnB.setColorAt(i,c);pawnH.setColorAt(i,c);}}
+pawnB.castShadow=pawnH.castShadow=true;scene.add(pawnB,pawnH);
+const T342M=big('342,000,000 PEOPLE',.24,YEL),T342T=big('$342 TRILLION',.42,RED);
+const stripeT=tex(64,256,x=>{for(let i=0;i<32;i++){x.fillStyle=i%2?'#d8e0c8':'#93ad87';x.fillRect(0,i*8,64,8);}x.fillStyle='#c79a2c';x.fillRect(26,0,12,256);});stripeT.wrapS=stripeT.wrapT=THREE.RepeatWrapping;
+function tower(w,h,c,glow){const t2=stripeT.clone();t2.repeat.set(1,h/.25);t2.needsUpdate=true;const g=new THREE.BoxGeometry(w,h,w);g.translate(0,h/2,0);
+ return add(g,new THREE.MeshStandardMaterial({map:t2,color:c,roughness:.7,emissive:c,emissiveIntensity:glow}),0,0,0,scene,true);}
+const towRed=tower(1.6,9,0xff8a80,.12);towRed.position.set(SX+1.6,0,-3.2);
+const H23=9*23/342;const tow23=[...Array(15)].map((_,i)=>{const o=tower(1.6,H23,0xb8f5c4,.12);o.position.set(SX-1.6,i*H23,-3.2);return o;});
+const L23=big('$23 TRILLION',.22,YEL),L342=big('$342 TRILLION',.3,RED),X15=big('x15',.6,YEL);
+const tinyBrick=add(new THREE.BoxGeometry(BW*1.6,.03,BH*1.6),brickM,SX-.7,.015,-1.0,scene,true);const L140=big('$109-140 BILLION',.038,GRN);
+// Zimbabwe note (generic design, no portrait, not a reproduction)
+const zimT=tex(1400,600,x=>{const g=x.createLinearGradient(0,0,1400,600);g.addColorStop(0,'#c9d9c2');g.addColorStop(1,'#e3d6a9');x.fillStyle=g;x.fillRect(0,0,1400,600);
+ x.strokeStyle='#5a4a2a';x.lineWidth=14;x.strokeRect(18,18,1364,564);x.fillStyle='#3e4a2c';x.textAlign='center';x.font='800 78px Mont';x.fillText('ZIMBABWE',700,130);
+ x.font='800 116px Mont';x.fillText('100 000 000 000 000',700,330);x.font='800 58px Mont';x.fillText('ONE HUNDRED TRILLION DOLLARS',700,440);x.font='800 44px Mont';x.fillText('2008',1240,540);});
+const zim=add(new THREE.PlaneGeometry(2.2,.95),new THREE.MeshStandardMaterial({map:zimT,roughness:.7,side:THREE.DoubleSide,emissive:0xffffff,emissiveMap:zimT,emissiveIntensity:.08}),SX+.15,1.75,-1.7,scene,false);
+const T100T=big('100,000,000,000,000',.15,YEL);
+// balance scale: money (left) vs the things you can buy (right)
+const scaleG=new THREE.Group();scaleG.position.set(SX,0,-1.4);scene.add(scaleG);const beam=new THREE.Group();beam.position.y=1.7;scaleG.add(beam);const plates=[];
+{add(new THREE.CylinderGeometry(.05,.07,1.7,24),GOLD,0,.85,0,scaleG);add(new THREE.CylinderGeometry(.35,.4,.08,32),GOLD,0,.04,0,scaleG);add(RB(2.6,.06,.08,.02),GOLD,0,0,0,beam);
+ for(const sx of[-1.25,1.25]){const pl=new THREE.Group();pl.position.set(sx,0,0);beam.add(pl);add(new THREE.CylinderGeometry(.005,.005,.6,6),M(0x333333),0,-.3,0,pl);
+  add(new THREE.CylinderGeometry(.42,.38,.04,40),GOLD,0,-.62,0,pl);plates.push(pl);}
+ for(let i=0;i<3;i++)add(brickG,brickM,(i-1)*.09,-.57,0,plates[0]);
+ const pr=plates[1];add(B(.22,.18,.18),M(0xf1ece2,.6),-.18,-.51,0,pr);add(new THREE.ConeGeometry(.17,.1,4),M(0x5b3a2a,.7),-.18,-.37,0,pr).rotation.y=Math.PI/4;
+ add(new THREE.CylinderGeometry(.06,.06,.06,20),M(0xc98a3a,.6),.06,-.57,.08,pr);add(new THREE.SphereGeometry(.06,20,10,0,Math.PI*2,0,Math.PI/2),M(0xc98a3a,.6),.06,-.54,.08,pr);
+ add(RB(.1,.24,.08,.01),M(0xf2f2f2,.4),.2,-.48,-.06,pr);add(B(.1,.05,.082),M(0xc0141c,.5),.2,-.38,-.06,pr);}
+const LMON=big('MONEY',.09,GRN),LSTF=big('STUFF',.09,WHT,1.0);
+// ---------- STREET (burger kiosk, house for rent, gas station) ----------
+const TX=50;
+add(B(30,.2,22),pbr('asphalt_02',8,6,{roughness:.85}),TX,-.096,6,scene,false);add(B(30,.12,3.2),pbr('concrete_pavement',10,1.2),TX,-.04,.5,scene,false);
+const signT=(txt,bg,fg,fs=150,w=1024,h=220)=>tex(w,h,x=>{x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=fg;x.font=`800 ${fs}px Mont`;x.textAlign='center';x.fillText(txt,w/2,h*.72);});
+const KX=TX-4.2;
+{const G=new THREE.Group();G.position.set(KX,0,-1.6);scene.add(G);
+ add(B(3.4,3.0,2.0),M(0xb5282c,.6),0,1.5,-.4,G);add(B(3.7,.1,1.0),M(0xffc21a,.5),0,2.35,1.0,G).rotation.x=.18;
+ add(new THREE.PlaneGeometry(2.8,.55),new THREE.MeshStandardMaterial({map:signT('BURGERS','#ffc21a','#b5282c'),roughness:.5}),0,2.75,.61,G,false);
+ add(new THREE.PlaneGeometry(1.5,.5),new THREE.MeshStandardMaterial({map:signT('MENU','#151515','#fff',130),roughness:.5}),0,1.95,.62,G,false);
+ add(B(2.2,1.05,.5),M(0xe9e2d2,.5),0,.525,1.45,G);add(B(2.3,.05,.6),M(0x8a8f94,.3,.7),0,1.07,1.45,G);}
+const burger=new THREE.Group();burger.position.set(KX+.55,1.1,-.2);scene.add(burger);
+{const bun=M(0xc98a3a,.6);add(new THREE.CylinderGeometry(.1,.1,.04,32),bun,0,.02,0,burger);add(new THREE.CylinderGeometry(.105,.105,.035,32),M(0x4a2a18,.7),0,.06,0,burger);
+ add(B(.2,.008,.2),M(0xffc21a,.5),0,.08,0,burger).rotation.y=.6;add(new THREE.CylinderGeometry(.11,.11,.012,32),M(0x3f9a3a,.6),0,.09,0,burger);
+ add(new THREE.SphereGeometry(.1,32,16,0,Math.PI*2,0,Math.PI/2),bun,0,.095,0,burger);}
+const HX=TX+.4;
+{const G=new THREE.Group();G.position.set(HX,0,-2.4);scene.add(G);
+ add(B(3,2.4,2.4),tint(pbr('painted_plaster_wall',2,2),0xf1ece2),0,1.2,0,G);const roof=add(new THREE.ConeGeometry(2.35,1.3,4),M(0x5b3a2a,.7),0,3.05,0,G);roof.rotation.y=Math.PI/4;
+ add(B(.8,1.6,.05),M(0x3a5a7a,.5),0,.8,1.21,G);for(const sx of[-.95,.95])add(B(.7,.6,.05),M(0x9fc6e0,.1,.3),sx,1.5,1.21,G);
+ add(new THREE.CylinderGeometry(.03,.03,1.2,8),M(0xffffff,.5),1.5,.6,2.6,G);add(new THREE.PlaneGeometry(.9,.5),new THREE.MeshStandardMaterial({map:signT('FOR RENT','#ffffff','#c0141c',150),roughness:.5,side:THREE.DoubleSide}),1.5,1.25,2.64,G,false);}
+const GX=TX+4.8;
+{const G=new THREE.Group();G.position.set(GX,0,-1.4);scene.add(G);add(B(3.6,.35,3),M(0xf5f5f5,.4),0,3.5,0,G);add(B(3.62,.12,3.02),M(0xc0141c,.5),0,3.3,0,G);
+ for(const sx of[-1.5,1.5])add(new THREE.CylinderGeometry(.08,.08,3.3,16),M(0xdddddd,.3,.6),sx,1.65,0,G);
+ add(RB(.7,1.7,.45,.04),M(0xf2f2f2,.4),0,.85,.6,G);add(B(.72,.3,.47),M(0xc0141c,.5),0,1.55,.6,G);add(B(.12,.35,.12),M(0x222222,.5),.42,1.0,.6,G);}
+const pumpScr=add(new THREE.PlaneGeometry(.42,.26),new THREE.MeshBasicMaterial({map:signT('GAS','#0a1a12','#35ff80',150,512,300),toneMapped:false}),GX,1.15,-.564,scene,false);
+const seller=person('seller',KX,-.62,0),landlord=person('landlord',HX+1.1,.5,-.25);
+const kioskP=big('PRICE',.26,RED),kioskA=arrowUp(RED,1.2),rentP=big('RENT',.26,RED),rentA=arrowUp(RED,1.2),gasP=big('GAS',.26,RED),gasA=arrowUp(RED,1.2);
+const sameT=big('SAME',.3,WHT,1.6);
+const climb=[arrowUp(RED,1.4),arrowUp(RED,1.1),arrowUp(RED,1.6)];
+// ---------- LOBBY: the Fed's yearly print order + worn-out cash ----------
+const clipT=tex(512,680,x=>{x.fillStyle='#f6f3ea';x.fillRect(0,0,512,680);x.fillStyle='#14233f';x.fillRect(0,0,512,110);x.fillStyle='#fff';x.font='800 40px Mont';x.textAlign='center';
+ x.fillText('FEDERAL RESERVE',256,52);x.font='800 30px Mont';x.fillText('2026 PRINT ORDER',256,94);x.fillStyle='#14233f';x.font='800 40px Mont';x.fillText('NEW NOTES',256,220);
+ x.fillStyle='#0f7a3a';x.font='800 64px Mont';x.fillText('3.8 - 5.1',256,320);x.fillText('BILLION',256,395);x.fillStyle='#55606e';x.font='800 30px Mont';x.fillText('to replace worn-out',256,500);x.fillText('cash + meet demand',256,545);});
+const clip=new THREE.Group();scene.add(clip);add(B(.3,.4,.012),M(0x7a5230,.6),0,0,0,clip);add(new THREE.PlaneGeometry(.27,.36),new THREE.MeshStandardMaterial({map:clipT,roughness:.8}),0,0,.007,clip,false);
+const T45=big('4-5 BILLION NEW BILLS A YEAR',.05,YEL);
+const worn=new THREE.Group();worn.position.set(-.55,TOP+.005,-1.95);scene.add(worn);
+{const wm=new THREE.MeshStandardMaterial({map:billT,color:0x8d8a7a,roughness:1,side:THREE.DoubleSide});for(let i=0;i<14;i++){const b=add(new THREE.PlaneGeometry(BW,BH,4,2),wm,(rr()-.5)*.3,.01+i*.004,(rr()-.5)*.18,worn,false);b.rotation.set(-Math.PI/2+(rr()-.5)*.5,0,rr()*3);}}
+const fresh=[...Array(4)].map((_,i)=>add(brickG,brickM,.05+(i%2)*.17,TOP+.026+Math.floor(i/2)*.051,-1.95,scene,true));
+const LWORN=big('WORN OUT',.045,WHT,1.0),LNEW=big('NEW',.045,GRN);
+// ---------- Mike's own money + end question ----------
+const pmFan=fan(5,.5);scene.add(pmFan);const pmPrice=new THREE.Mesh(priceGeo,GREEN);scene.add(pmPrice);
+const GREYP=glowMat(GRY,1.0);
+const qq=document.getElementById('qq');
+// pose presets (bone-local euler, tuned with stills)
+const PS={shock:[[.35,0,-.85],[1.9,0,0]],shrug:[[.25,0,.35],[1.1,0,0]],hold:[[.85,0,.72],[.75,0,0]],clip:[[.9,0,.6],[1.0,0,0]]};
+function armsP(P,k,both=true){const [u,l]=PS[k];pose(P,'upperarm01R',u[0],u[1],u[2]);pose(P,'lowerarm01R',...l);if(both){pose(P,'upperarm01L',u[0],-u[1],-u[2]);pose(P,'lowerarm01L',...l);}}
+const inB=(t,a,b)=>t>=a&&t<b;
+function story(t){
+ const vis=(o,v)=>{o.visible=v;};
+ // stage props visible only in their beats
+ const st2=inB(t,6.0,12.85),st4=inB(t,12.85,19.3),st11=inB(t,34.9,40.0),st14=inB(t,47.7,53.05),st15=inB(t,53.05,56.3);
+ vis(pawnB,st2);vis(pawnH,st2);pawnMat.emissiveIntensity=t>=Wn('million',2)-.05&&t<12.85?.55:0;
+ vis(towRed,st4||st14);tow23.forEach((o,i)=>vis(o,st4&&(i===0||t>=Wn('15')+i*.12)));
+ vis(zim,st11);vis(tinyBrick,st14);vis(scaleG,st15);
+ showAt(T342M,t,Wn('342')-.02,9.2,1);T342M.position.set(SX,2.7,-2.6);face(T342M);
+ showAt(T342T,t,Wn('342',1),12.85,1);T342T.position.set(SX,3.4,-3.6);face(T342T);
+ showAt(L23,t,Wn('23'),19.3,1);L23.position.set(SX-1.6,(t>=Wn('15')?9.2:H23+.3),-2.4);face(L23);
+ showAt(L342,t,13.0,19.3,1);L342.position.set(SX+1.6,9.35,-2.4);face(L342);if(st14){L342.scale.setScalar(t>=Wn('not',0)?pop(t,Wn('342',2),.3):0);}
+ showAt(X15,t,Wn('15'),19.3,1);X15.position.set(SX,5.2,-1.8);face(X15);
+ showAt(T100T,t,Wn('100',1)-.05,40.0,1);T100T.position.set(SX+.15,2.6,-1.7);face(T100T);
+ showAt(L140,t,Wn('140')-.4,53.05,1);L140.position.set(SX-.7,.16,-1.0);face(L140);
+ showAt(LMON,t,53.2,56.3);showAt(LSTF,t,53.2,56.3);if(st15){plates[0].getWorldPosition(tmp);LMON.position.copy(tmp).add(V3(0,-.2,0));plates[1].getWorldPosition(tmp);LSTF.position.copy(tmp).add(V3(0,-.12,0));}face(LMON);face(LSTF);
+ beam.rotation.z=st15?-.32*Math.min(1,Math.max(0,(t-Wn('things'))/.6)):0;for(const pl of plates)pl.rotation.z=-beam.rotation.z;
+ // street signs
+ showAt(kioskP,t,Wn('raises')-.05,31.5);kioskP.position.set(KX-.2,3.0,-.9);face(kioskP);showAt(kioskA,t,Wn('raises'),31.5,1.2);kioskA.position.set(KX+.75,3.1+.08*Math.sin(t*6),-.9);face(kioskA);
+ showAt(rentP,t,Wn('landlord')+.05,31.5);rentP.position.set(HX+1.5,2.0,.25);face(rentP);showAt(rentA,t,Wn('landlord')+.1,31.5,1.2);rentA.position.set(HX+2.25,2.1+.08*Math.sin(t*6),.25);face(rentA);
+ showAt(gasP,t,Wn('gas',1)-.05,31.5);gasP.position.set(GX-.25,2.25,-.6);face(gasP);showAt(gasA,t,Wn('gas',1),31.5,1.2);gasA.position.set(GX+.45,2.35+.08*Math.sin(t*6),-.6);face(gasA);
+ pumpScr.material.map=t>=Wn('gas',1)&&t<31.5?(pumpScr.userData.red??=signT('GAS +','#2a0505','#ff3b30',150,512,300)):(pumpScr.userData.g??=pumpScr.material.map);
+ // SAME x3 (houses / burgers / gas)
+ const sm=[Wn('houses'),Wn('burgers'),Wn('gallons'),24.85];let si=-1;for(let i=0;i<3;i++)if(inB(t,sm[i],sm[i+1]))si=i;
+ sameT.scale.setScalar(si<0?0:pop(t,sm[si]+.05,.25));sameT.position.copy([V3(HX,3.25,-.9),V3(KX+.55,1.34,-.2),V3(GX,1.95,-.3)][Math.max(0,si)]);sameT.scale.multiplyScalar([1,.3,.55][Math.max(0,si)]);face(sameT);
+ // red arrows climbing around Mike ("prices keep climbing")
+ climb.forEach((a,i)=>{const on=inB(t,31.55,34.9);a.scale.setScalar(on?pop(t,31.6+i*.25,.3)*a.userData.s:0);a.position.set(TX-1.3+[-.95,.95,-1.25][i],.7+((t-31.6-i*.25)*.55%1.4),.8);face(a);});
+ // lobby: clipboard, worn vs new
+ showAt(T45,t,Wn('4')-.05,45.5);T45.position.set(.45,1.98,-2.3);face(T45);
+ showAt(LWORN,t,Wn('worn'),47.7);LWORN.position.set(-.42,TOP+.14,-1.9);face(LWORN);showAt(LNEW,t,Wn('worn')+.35,47.7);LNEW.position.set(.13,TOP+.16,-1.9);face(LNEW);
+ // ---- MIKE across the sets
+ let mx=null,mz=0,mr=0,act='relax',fanOn=false,priceMode=0;   // priceMode 0 none,1 green,2 grey
+ if(inB(t,4.45,6.1)){mx=PX+.5;mz=3.5;mr=.6*Math.max(0,1-(t-4.6)/.5);act='relax';}
+ else if(inB(t,6.1,12.85)){mx=SX;mz=-.9;mr=Math.PI;act=t>=Wn('342',1)?'shock':'relax';}
+ else if(inB(t,12.85,19.3)){mx=SX;mz=-1.0;mr=Math.PI*.85;act=t>=Wn('15')?'shock':'relax';}
+ else if(inB(t,19.3,21.9)){mx=TX-1.3;mz=1.2;mr=0;act=t>=Wn('stuff')?'shrug':'relax';}
+ else if(inB(t,31.5,34.9)){mx=TX-1.3;mz=1.0;mr=.15;act='hold';fanOn=true;priceMode=t>=Wn('less')?2:1;}
+ else if(inB(t,34.9,40.0)){mx=SX+1.65;mz=-.8;mr=-.75;act=t>=Wn('100',1)?'shock':'relax';}
+ else if(inB(t,40.0,42.1)){const k=(t-40.0)/2.1;mx=PX+1.8-1.4*k;mz=3.4-2.0*k;mr=Math.atan2(-1.4,-2.0);act='walk';}
+ else if(inB(t,47.7,53.05)){mx=SX-1.2;mz=-.4;mr=.5;act=t>=Wn('not')?'shock':'relax';}
+ else if(inB(t,53.05,56.3)){mx=SX-1.9;mz=-.9;mr=.9;act='relax';}
+ else if(inB(t,56.3,59.6)){mx=PX+.2;mz=.9;mr=0;act=t>=Wn('nobody')?'shrug':'hold';fanOn=true;priceMode=t>=Wn('nobody')?2:1;}
+ else if(t>=59.6){mx=PX;mz=.4;mr=0;act='hold';fanOn=true;priceMode=1;}
+ if(mx!==null){pm.g.position.set(mx,0,mz);pm.g.rotation.y=mr;for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(pm,n,0,0,0);
+  if(act==='walk'){const ph=t*7;walkLegs(pm,ph,.42);pose(pm,'upperarm01L',AD[0]+.3*Math.sin(ph),0,-AD[2]);pose(pm,'upperarm01R',AD[0]-.3*Math.sin(ph),0,AD[2]);pose(pm,'lowerarm01L',0,0,0);pose(pm,'lowerarm01R',0,0,0);}
+  else if(act==='relax')relaxArms(pm);else if(act==='hold'){relaxArms(pm);armsP(pm,'hold',false);curl(pm,'R',.9,.5);}else armsP(pm,act);
+  pose(pm,'head',act==='shock'?-.12:0,0,0);}
+ // queue people: in the street walking into the burger kiosk (B8), in the plaza holding money (B16)
+ const QS=inB(t,24.85,28.0),QP=inB(t,56.3,59.6);
+ Q4.forEach((P,i)=>{if(QS){const k=Math.min(1,Math.max(0,(t-24.9)/2.6));const x0=TX-10.5-i*.9,x1=KX-1.0-i*.75;const x=x0+(x1-x0)*k;P.g.position.set(x,0,.95);P.g.rotation.y=Math.PI/2;
+   for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);if(k<1)walkLegs(P,x*4.2,.42);relaxArms(P);armsP(P,'hold',false);curl(P,'R',.9,.5);}
+  if(QP){P.g.position.set(PX-1.5+i*.75+(i>1?.95:0),0,.6+(i%2)*.35);P.g.rotation.y=0;for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);relaxArms(P);
+   if(t<Wn('nobody')){armsP(P,'hold',false);curl(P,'R',.9,.5);}else armsP(P,'shrug');}});
+ // seller watches the walkers, then points at her new price
+ pose(seller,'head',0,QS?.5:0,0);relaxArms(seller);if(inB(t,Wn('raises'),31.5))armsP(seller,'clip',false);
+ relaxArms(landlord);if(inB(t,Wn('landlord'),31.5))armsP(landlord,'clip',false);
+ // lobby manager holds the print order
+ relaxArms(manager);armsP(manager,'clip');
+ for(const P of[pm,seller,landlord,manager,...Q4])P.g.updateMatrixWorld(true);
+ manager.BN['wristR'].getWorldPosition(tmp);manager.BN['wristL'].getWorldPosition(tmp2);clip.position.copy(tmp).add(tmp2).multiplyScalar(.5).add(V3(0,.12,.06));clip.lookAt(camP);clip.visible=inB(t,42.1,47.7);
+ pm.BN['finger3-1R'].getWorldPosition(tmp);pmFan.position.copy(tmp).add(tmp2.set(0,.05,0));pmFan.lookAt(camP);pmFan.visible=fanOn&&!(act==='shrug');
+ headOf(pm).getWorldPosition(tmp);pmPrice.position.copy(tmp).add(tmp2.set(0,.34,0));pmPrice.lookAt(camP);pmPrice.material=priceMode===2?GREYP:GREEN;
+ pmPrice.scale.setScalar(priceMode===0?0:(priceMode===2?.45:.62));
+ if(QS||QP)Q4.forEach(P=>{P.BN['finger3-1R'].getWorldPosition(tmp);P.fan.position.copy(tmp).add(tmp2.set(0,.05,0));P.fan.lookAt(camP);P.fan.visible=!(QP&&t>=Wn('nobody'));
+   headOf(P).getWorldPosition(tmp);P.price.position.copy(tmp).add(tmp2.set(0,.34,0));P.price.lookAt(camP);P.price.material=QP&&t>=Wn('nobody')?GREYP:GREEN;P.price.scale.setScalar(.62);P.price.visible=true;});
+ qq.style.opacity=t>=Wn('million',6)?1:0;
+}
 // ================= LIGHTS / CAMERA / POST =================
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,200);
 const sun=new THREE.DirectionalLight(0xffe0b8,1.5);sun.position.set(-9,7,5);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
@@ -244,15 +400,40 @@ const SHOTS=[   // [t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture] - each cu
  [0,1.06,   [PX,1.9,7.4],[PX-.25,1.8,-1.6],46,         [PX-.05,1.88,6.9],[PX-.25,1.78,-1.6],45, .001],   // "Why can't the government just" - frontal, centred
  [1.06,1.72,[PX-.35,1.6,1.9],[PRX,1.05,-1.0],40,       [PX-.55,1.5,1.45],[PRX,1.05,-1.0],38,    .003],    // "print a million" - the printer
  [1.72,2.56,[PX+.25,1.55,2.3],[PRX,1.3,-.3],42,        [PX+.15,1.6,2.05],[PRX,1.4,-.3],40,      .0028],   // "dollars for every" - first pickup
- [2.56,99,  [PX+2.6,1.9,5.6],[PX-.6,1.35,-.4],46,      [PX+2.9,2.2,6.4],[PX-.6,1.35,-.4],46,    .0012]];  // "person ... rich?" - wide over Mike's shoulder
+ [2.56,4.53,[PX+2.6,1.9,5.6],[PX-.6,1.35,-.4],46,      [PX+2.9,2.2,6.4],[PX-.6,1.35,-.4],46,    .0012],
+ // ---- story (t0,t1,pos0,look0,fov0,pos1,look1,fov1,aperture)
+ [4.53,6.15,  [PX+.5,1.62,5.3],[PX+.5,1.55,3.5],38,      [PX+.5,1.6,4.7],[PX+.5,1.56,3.5],36,       .004],   // Let's do the math - Mike turns to us
+ [6.15,9.2,   [SX+.5,1.35,1.6],[SX,1.0,-6],48,           [SX,6.5,4.2],[SX,.6,-6.5],52,              .0008],  // 342 million people - crane up over the crowd
+ [9.2,12.85,  [SX-3.2,2.4,2.4],[SX,1.9,-4],50,           [SX-2.4,3.2,4.2],[SX,2.2,-4],52,           .0008],  // a million each = $342 TRILLION
+ [12.85,16.1, [SX-2.6,.55,2.4],[SX,2.6,-3.2],52,         [SX+2.0,.65,2.6],[SX,2.8,-3.2],52,         .0008],  // two towers, low lateral dolly
+ [16.1,19.35, [SX-4.4,2.0,3.2],[SX-.5,4.0,-3.2],54,      [SX-3.4,7.0,6.4],[SX-.5,4.6,-3.2],54,      .0006],  // x15 stacking, crane up
+ [19.35,21.95,[TX-1.3,1.62,3.7],[TX-1.3,1.45,1.2],40,    [TX-1.3,1.6,3.3],[TX-1.3,1.45,1.2],38,     .004],   // the problem: stuff doesn't multiply
+ [21.95,22.75,[HX+.3,1.9,5.6],[HX,1.7,-2.4],46,          [HX+.2,1.85,5.0],[HX,1.7,-2.4],45,         .0015],   // same houses
+ [22.75,23.45,[KX+.75,1.35,.55],[KX+.55,1.15,-.2],40,    [KX+.7,1.3,.4],[KX+.55,1.15,-.2],38,       .006],   // same burgers
+ [23.45,24.85,[GX+.9,1.6,1.6],[GX,1.4,-.6],44,           [GX+.7,1.55,1.2],[GX,1.4,-.6],42,          .003],   // same gas
+ [24.85,28.0, [TX-9.4,1.6,3.7],[TX-9.6,1.3,.9],46,       [TX-6.3,1.6,3.7],[TX-6.2,1.3,.9],46,       .0015],  // everyone walks in with a million
+ [28.0,29.75, [KX+.3,1.7,3.8],[KX,1.75,-.9],46,          [KX+.2,1.7,3.3],[KX,1.8,-.9],45,           .0015],  // burger guy raises his price
+ [29.75,30.45,[HX+1.6,1.7,3.6],[HX+1.3,1.5,.3],44,       [HX+1.5,1.7,3.2],[HX+1.3,1.55,.3],43,      .002],   // then the landlord
+ [30.45,31.55,[GX+.2,1.9,3.0],[GX,1.7,-.6],46,           [GX+.1,1.9,2.6],[GX,1.75,-.6],45,          .002],   // then the gas station
+ [31.55,34.95,[TX-1.3,1.7,4.1],[TX-1.3,1.6,1.0],42,      [TX-1.3,1.66,2.9],[TX-1.3,1.6,1.0],38,     .003],   // prices climb, your million buys less
+ [34.95,40.05,[SX+2.4,1.8,4.4],[SX+.45,1.6,-1.5],48,      [SX-1.6,1.95,4.6],[SX+.45,1.7,-1.5],48,    .0012],  // Zimbabwe 100 trillion note, orbit
+ [40.05,42.12,[PX+.6,2.0,7.2],[PRX,1.2,-1.3],46,         [PX-.2,1.6,3.6],[PRX,1.1,-1.3],42,         .0015],  // what does America actually print?
+ [42.12,45.55,[1.5,1.6,1.3],[.45,1.35,-2.6],42,          [.95,1.45,.1],[.45,1.35,-2.6],40,          .003],   // the Fed's yearly order (clipboard)
+ [45.55,47.72,[-.25,1.7,-.25],[-.22,1.08,-1.95],46,      [-.22,1.62,-.5],[-.22,1.08,-1.95],44,      .003],   // worn-out cash swapped for new
+ [47.72,51.05,[SX-.7,.4,.95],[SX-.7,.15,-1.0],44,        [SX-.72,.42,.65],[SX-.7,.16,-1.0],42,      .004],   // $109-140 billion: one tiny brick
+ [51.05,53.1, [SX-1.4,.5,3.6],[SX+1.6,4.5,-3.2],56,      [SX-1.6,1.4,5.6],[SX+1.6,6,-3.2],56,       .0008],  // not 342 trillion: the giant tower
+ [53.1,56.3,  [SX+.2,1.7,4.6],[SX,1.25,-1.4],58,         [SX+.1,1.65,4.1],[SX,1.25,-1.4],56,        .0012],   // the balance scale tips to the stuff
+ [56.3,59.62, [PX,1.7,3.9],[PX,1.45,.6],46,              [PX,2.3,6.3],[PX,1.45,.6],46,              .0015],  // nobody gets richer
+ [59.62,99,   [PX+.15,1.78,2.6],[PX,1.72,.4],40,         [PX+.12,1.76,2.2],[PX,1.72,.4],38,         .004]];  // would you still take it?
+  // "person ... rich?" - wide over Mike's shoulder
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
-function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],5)-S[0])));
- if(t<5){sun.target.position.set(PX,0,0);sun.position.set(PX-9,7,5);}else{sun.target.position.set(0,0,0);sun.position.set(-9,7,5);}
+function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],62.1)-S[0])));
+ {const cx=cam.position.x>35?TX:cam.position.x>10?PX:cam.position.x<-10?SX:0;sun.target.position.set(cx,0,0);sun.position.set(cx-9,7,5);}
  const L=(a,b)=>a.map((v,i)=>v+(b[i]-v)*k);cam.position.set(...L(S[2],S[5]));const lk=V3(...L(S[3],S[6]));cam.fov=S[4]+(S[7]-S[4])*k;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
  bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=S[8];}
 await loaded;
 const cap=document.getElementById('cap');window.missingBones=[];
-window.renderAt=t=>{setCam(t);animate(t);setCam(t);animate(t);
+window.renderAt=t=>{setCam(t);animate(t);story(t);setCam(t);animate(t);story(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';

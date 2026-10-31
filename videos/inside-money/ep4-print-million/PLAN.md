@@ -21,3 +21,9 @@
 - Voice: Kokoro am_liam, speed 1.10, max_gap 0.04, ONE take -> vo.wav/vo.mp3, **62.10 s**, 198 words = 3.2 words/s. Real silence 3.3 s total (17 pauses, longest 0.25 s) = 5 % vs Zack #2's 14 %. Whisper word times: words_raw.json (it overstates gaps; use silencedetect). lines.txt = the 18 spoken lines.
 - Chatterbox tried and cancelled by the user (nothing left installed). Keep Kokoro. ElevenLabs connector is not enabled in this session.
 - NEXT: the user approves the voice -> build ep4.html (timeline from vo.timings.json + words_raw.json) -> 5-s hook preview -> approval -> full render.
+
+## UPDATE: FULL v1 RENDERED (2026-10-31)
+- render-kit/ep4-print-million.mp4 (62.1 s, M3, ~2 min render) + ep4-print-million-phone.mp4 here. Mix: mix_ep4.py (whoosh on every cut, boom on $342T / Zimbabwe / not 342T, ting on key numbers, cash on prices).
+- ep4.html = hook (plaza: podium official + MONEY PRINTER + walking queue + Mike) then story(t): STAGE at x=-30 (pawn crowd 342M, $342T, towers 23T vs 342T, x15 stack, Zimbabwe note, tiny $109-140B brick vs giant tower, balance scale), STREET at x=50 (burger kiosk, house FOR RENT, gas pump; PRICE/RENT/GAS + red arrows), LOBBY (Fed 2026 print order clipboard, worn-out vs new cash), PLAZA end (everyone has a million -> grey prices, YES or NO?).
+- 23 hard cuts, each on a spoken line/word (SHOTS table). Captions fixed: math / way / meet.
+- Known weak spots: tower shot (13-16 s) Mike's back blocks the centre and $23T label sits low; faces have no expressions; poses (shock/shrug) are approximate.
