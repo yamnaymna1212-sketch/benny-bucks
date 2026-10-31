@@ -31,3 +31,13 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 - Every character looks DIFFERENT: face, skin tone, hair, body, clothes. Bank staff dressed by role (research 2026-10-31): teller = business-professional shirt/blouse, often no jacket, name badge; manager/officer = suit or blazer + tie/pumps; security guard = uniform + cap/badge; back office = business casual.
 - Extra real-world props for realism (counter glass, rope stanchions, pens on chains, deposit slips, ATM, wall clock, plants, flag, brand-free signage).
 - Captions in this style: 2-3 words, white bold lowercase-ish, low-centre (~y 75%).
+
+## Zack D. Films #2: zack-02-slow-pauses.mp4 (the "missing dollar" riddle, 50.7 s, 720x1280, 29.97 fps) — measured 2026-10-31
+- Voice: calm, neutral storyteller, matter-of-fact. 112 words in 50 s = **2.24 words/s**; mean word length 0.38 s.
+- **Weak point (user feedback): too many pauses, not fast.** 11 gaps > 0.25 s (8 > 0.5 s, typical 0.7-0.86 s between sentences), 7.0 s of silence = 14 % of the video.
+- Cuts: ~10 scene cuts in 50 s (1.5, 4.2, 12.5, 16.7, 18.3, 18.8, 30.6, 32.5, 33.3, 42.1 s) = one cut every ~5 s, slower than Zack #1 (cut every 1.5-2.5 s).
+- Visuals (user screenshots): floating 3D price per spoken amount (red $9, green glowing $5, glowing bills in hand), 2-3 word caption low-centre, DoF, over-shoulder + close-ups.
+## Our targets for EP4 (copy the style, FIX the weak point)
+- Keep: calm confident narrator tone, 2-3 word low caption, floating glowing 3D prices, shot types.
+- Beat him: **3.2-3.4 words/s, pauses <= 0.12 s inside a sentence and <= 0.2 s between sentences (max_gap 0.05)**, a visual change/cut every 2-3 s, never a static shot.
+- Never clone a real person's voice; use a Kokoro American male voice with the same calm tone.
