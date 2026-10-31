@@ -21,7 +21,8 @@ put(S['money'],0.0,.22)                   # the press running
 put(S['whoosh'],1.62,.3)                  # cut 1: press -> Mike close
 put(S['cash-register'],W('million')+.05,.32)   # price pops on the word
 put(S['whoosh'],2.5,.32)                  # cut 2: Mike -> the crowd
-for i in range(0,13,3):put(S['pop'],2.62+i*.06,.18)   # crowd prices popping in
+put(S['cash-register'],1.97,.25)          # the hand-over
+for i in range(3):put(S['pop'],2.66+i*.12,.2)   # served people's prices pop in
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep4_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep4_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep4.wav'],check=True);print('ok',DUR)

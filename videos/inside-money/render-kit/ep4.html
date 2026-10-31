@@ -7,7 +7,7 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 </style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap">a million dollars</div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
-// EP4 scene: timeline-driven (timeline_ep4.json). Hook = 3 hard-cut shots: flag+$1,000,000 / Mike close / crowd of 14 each holding a million.
+// EP4 scene: timeline-driven (timeline_ep4.json). Hook = 3 hard cuts, one story: Mike watches a government official print money (shot 1), hand it to a person (shot 2), everyone holds a million (shot 3).
 // node stills.mjs ep4-look.html 0      (query: cam=over|wide)
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
@@ -146,13 +146,13 @@ function curl(P,side,v,thumb=v*.6){for(const [n,b] of Object.entries(P.BN)){cons
 function person(name,x,z,ry,sc=1){const g=skClone(SRC[name]);g.position.set(x,0,z);g.rotation.y=ry;g.scale.setScalar(sc);scene.add(g);
  const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest,sc,ph:Math.random()*6.28,name};}
 const mike=person('mike',0,-.2,.2),teller=person('teller',-.75,-2.6,.15),manager=person('manager',.5,-2.85,-.3),guard=person('guard',-3.1,-3.15,.45);
-// crowd: 13 more people in rows, every one different look, each holding a million
-const crowd=[],names=['seller','landlord','printer','guard','teller','manager'];let ci=0,sdd=3;const rr=()=>{sdd=(sdd*16807)%2147483647;return sdd/2147483647;};
-const PX=20;                                      // the plaza (hook) lives at x=20, away from the lobby
-for(const [z,xs] of[[-.1,[-2.1,-.7,.7,2.1]],[.9,[-2.8,-1.4,0,1.4,2.8]],[1.9,[-2.1,-.7,.7,2.1]]])for(const x of xs){
- crowd.push(person(names[ci++%6],PX+x+(rr()-.5)*.25,z+(rr()-.5)*.3,(rr()-.5)*.5,.94+rr()*.12));}
-const pm=person('mike',PX+1.25,3.0,Math.PI-.5);   // plaza Mike: watches the press in shot 1, faces us in shot 2
-const everyone=[mike,teller,manager,guard,pm,...crowd];
+const PX=20;   // the plaza (hook) lives at x=20, away from the lobby
+// HOOK CAST (few elements, one clear story): a government official prints money and hands it out; Mike watches.
+const gov=person('manager',PX+.55,-.95,Math.PI/2);                 // official faces +x (toward the people)
+const rec=person('printer',PX+1.32,-.95,-Math.PI/2);                // the person receiving
+const served=[person('landlord',PX+2.25,-.15,-.35),person('teller',PX+3.0,-.6,-.2),person('guard',PX+3.7,.2,-.45)];
+const pm=person('mike',PX+2.55,2.4,-2.55);                        // Mike watches from the front-right
+const everyone=[mike,teller,manager,guard,gov,rec,pm,...served];
 // ================= PLAZA: U.S. GOVERNMENT building + money press + bill rain (hook, readable with no sound) =================
 add(B(34,.2,34),pbr('concrete_pavement',12,12,{roughness:.9}),PX,-.1,0,scene,false);
 {const mar=pbr('marble_01',3,2,{roughness:.4});const G=new THREE.Group();G.position.set(PX,0,-6.2);scene.add(G);
@@ -163,10 +163,10 @@ add(B(34,.2,34),pbr('concrete_pavement',12,12,{roughness:.9}),PX,-.1,0,scene,fal
  const tri=new THREE.Shape();tri.moveTo(-6.8,0);tri.lineTo(6.8,0);tri.lineTo(0,1.6);tri.closePath();add(new THREE.ExtrudeGeometry(tri,{depth:1.2,bevelEnabled:false}),mar,0,5.94,-.4,G);
  add(new THREE.CylinderGeometry(2.3,2.4,1.4,64),mar,0,8.1,-1.6,G);add(new THREE.SphereGeometry(2.45,64,32,0,Math.PI*2,0,Math.PI/2),M(0xf2efe8,.35),0,8.8,-1.6,G);
  txt3('U.S. GOVERNMENT',.46,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5}),0,5.24,.86,G);}
-const press=new THREE.Group();press.position.set(PX,0,-2.6);scene.add(press);const rollers=[];
+const press=new THREE.Group();press.position.set(PX-.7,0,-2.6);press.scale.set(1,.82,1);scene.add(press);const rollers=[];
 {const metal=M(0x2e4a3c,.35,.6),steel=M(0xa9b0b6,.25,1),dark=M(0x1b1f22,.4,.5);
  add(B(3.7,.2,2.1),dark,0,.1,0,press);add(RB(3.4,1.5,1.8,.08),metal,0,.95,0,press);
- for(const sx of[-1.62,1.62])add(RB(.26,1.25,1.7,.04),metal,sx,2.0,0,press);
+ add(RB(.26,1.25,1.7,.04),metal,-1.62,2.0,0,press);
  for(let i=0;i<4;i++){const r=add(new THREE.CylinderGeometry(.22,.22,3.0,32),steel,0,1.95,-.6+i*.4,press);r.rotation.z=Math.PI/2;rollers.push(r);}
  const lt=tex(1024,160,x=>{x.fillStyle='#14233f';x.fillRect(0,0,1024,160);x.strokeStyle='#c9a54a';x.lineWidth=10;x.strokeRect(8,8,1008,144);x.fillStyle='#fff';x.font='800 88px Mont';x.textAlign='center';x.fillText('U.S. MONEY PRINTER',512,114);});
  add(new THREE.PlaneGeometry(2.7,.42),new THREE.MeshStandardMaterial({map:lt,roughness:.5}),0,1.22,.905,press,false);
@@ -174,45 +174,46 @@ const press=new THREE.Group();press.position.set(PX,0,-2.6);scene.add(press);con
  add(B(2.0,.06,1.3),steel,0,1.62,1.45,press);}                               // output tray (bills shoot out from here)
 const sheetT=tex(1024,872,x=>{for(let r=0;r<4;r++)for(let c=0;c<2;c++)x.drawImage(billT.image,c*512,r*218,512,218);});
 const sheet=add(new THREE.PlaneGeometry(1.2,1.0),new THREE.MeshStandardMaterial({map:sheetT,roughness:.7,emissive:0x35ff80,emissiveMap:sheetT,emissiveIntensity:.25}),0,0,0,scene,false);sheet.rotation.x=-Math.PI/2;
-const NBR=230,rain=new THREE.InstancedMesh(new THREE.PlaneGeometry(BW*1.9,BH*1.9),(()=>{const m=billM.clone();m.emissiveMap=billT;m.emissiveIntensity=.45;return m;})(),NBR);rain.frustumCulled=false;scene.add(rain);
-const RN=[...Array(NBR)].map((_,i)=>({ph:i/NBR*3.4,ox:(rr()-.5)*1.6,vx:(rr()-.5)*6,vy:3+rr()*2.4,vz:1.5+rr()*3.6,rx:rr()*6,ry:rr()*6,sp:2+rr()*6}));
-const dmy=new THREE.Object3D();
-function rainAt(t){const LIFE=3.4,k=1.1,g=4.2;RN.forEach((b,i)=>{const tau=(t+b.ph)%LIFE,f=(1-Math.exp(-k*tau))/k;
-  let y=1.75+b.vy*f-(g/k)*(tau-f);const lay=y<.02;if(lay)y=.02;
-  dmy.position.set(PX+b.ox+b.vx*f,y,-1.2+b.vz*f);if(lay)dmy.rotation.set(-Math.PI/2,0,b.ry);else dmy.rotation.set(b.rx+tau*b.sp,b.ry+tau*b.sp*.6,tau*b.sp*.3);
-  dmy.updateMatrix();rain.setMatrixAt(i,dmy.matrix);});rain.instanceMatrix.needsUpdate=true;
- const st=(t%.55)/.55;sheet.position.set(PX,1.67,-2.6+.6+st*1.0);for(const r of rollers)r.rotation.x=-t*9;}
-// ---- bills + floating prices (shared geometry, per-person mesh)
+// stack of glowing $10,000 bundles growing on the press tray = "printing a LOT of money"
+const brickM=[M(0xc9d0b8,.9),M(0xc9d0b8,.9),new THREE.MeshStandardMaterial({map:billT,roughness:.8,emissive:0x35ff80,emissiveMap:billT,emissiveIntensity:.35}),M(0xc9d0b8,.9),M(0xc9d0b8,.9),M(0xc9d0b8,.9)];
+const brickG=new THREE.BoxGeometry(BW*1.6,.035,BH*1.6),stack=[];
+for(let i=0;i<30;i++){const m=add(brickG,brickM,PX-.7+(i%3-1)*BW*1.65,1.37+Math.floor(i/6)*.036,-1.35+(Math.floor(i/3)%2)*BH*1.7,scene,true);m.rotation.y=(i*.37%1-.5)*.12;stack.push(m);}
+// ---- bills + floating prices
 const priceGeo=(()=>{const g=new TextGeometry('$1,000,000',{font,size:.1,depth:.022,curveSegments:8,bevelEnabled:true,bevelThickness:.0035,bevelSize:.0025,bevelSegments:3});g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);return g;})();
 const glowMat=(c,i=1.6)=>[new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(i*1.3),toneMapped:false}),new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(.35),roughness:.4,emissive:c,emissiveIntensity:.25})];
 const GREEN=glowMat(0x22ff6a,2.0);
 const headOf=P=>P.BN['head']||P.BN['neck01'];
-for(const P of everyone){P.fan=fan(5,.5);scene.add(P.fan);P.price=new THREE.Mesh(priceGeo,GREEN);scene.add(P.price);P.price.scale.setScalar(0);P.fan.visible=false;}
-// big price in front of the flag (shot 1: the contrast is readable in the first frame)
-const flagPrice=new THREE.Mesh(priceGeo,GREEN);flagPrice.position.set(PX,3.25,-2.4);scene.add(flagPrice);flagPrice.scale.setScalar(0);   // big $1,000,000 over the press
-const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};   // overshoot pop-in
+for(const P of[gov,rec,...served]){P.fan=fan(5,.5);scene.add(P.fan);P.price=new THREE.Mesh(priceGeo,GREEN);scene.add(P.price);P.price.scale.setScalar(0);}
+const stackPrice=new THREE.Mesh(priceGeo,GREEN);stackPrice.position.set(PX-.7,2.05,-1.3);scene.add(stackPrice);stackPrice.scale.setScalar(0);
+const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const tmp=V3(),tmp2=V3();let camP=V3();
+const HA=JSON.parse(Q.get('ha')||'[1.25,0,0.35]'),HL=JSON.parse(Q.get('hl')||'[0.25,0,0]');   // reach-forward arm (tuned with stills)
+const relaxArms=P=>{pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01L',0,0,0);pose(P,'lowerarm01R',0,0,0);};
 function animate(t){
- const s1=t<1.68,s3=t>=2.56;rainAt(t);pm.g.rotation.y=s1?Math.PI-.5:.3;
- // flag waving
- {const fg=FG,p=fg.attributes.position,o=FG0;for(let i=0;i<p.count;i++){const u=(o[i*3]+.65)/1.3;p.setZ(i,Math.sin(u*Math.PI*2.75-t*5)*.07*u);}p.needsUpdate=true;fg.computeVertexNormals();}
- for(const P of[teller,manager,guard]){pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01L',0,0,0);pose(P,'lowerarm01R',0,0,0);
-  pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);}
- for(const P of[mike,pm,...crowd]){const w=Math.sin(t*6+P.ph),w2=Math.sin(t*4.3+P.ph*1.7);
-  pose(P,'upperarm01L',AD[0]+.05*w2,AD[1],-AD[2]);pose(P,'lowerarm01L',0,0,0);
-  pose(P,'upperarm01R',.85+.14*w,0,.72);pose(P,'lowerarm01R',.75+.1*w2,0,0);pose(P,'spine03',.02*Math.sin(t*2.2+P.ph),0,0);pose(P,'head',.04*w2,.06*w,0);
-  if(P===pm&&s1){pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01R',0,0,0);pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);}
-  curl(P,'L',.35);curl(P,'R',.9,.5);}
+ const s1=t<1.68,s3=t>=2.56,GIVE=1.95;   // the hand-over happens inside shot 2
+ const st=(t%.55)/.55;sheet.position.set(PX-.7,1.38,-2.6+.6+st*1.0);for(const r of rollers)r.rotation.x=-t*9;
+ const nS=Math.min(30,Math.floor(6+t*16));stack.forEach((m,i)=>m.visible=i<nS);
+ for(const P of everyone){relaxArms(P);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);}
+ // official reaches out with the money, the receiver reaches back
+ const g=Math.min(1,Math.max(0,(t-1.5)/.4));
+ pose(gov,'upperarm01R',AD[0]+(HA[0]-AD[0])*g,HA[1]*g,AD[2]+(HA[2]-AD[2])*g);pose(gov,'lowerarm01R',HL[0]*g,0,0);curl(gov,'R',.9,.5);
+ pose(rec,'upperarm01R',AD[0]+(HA[0]-AD[0])*g,HA[1]*g,AD[2]+(HA[2]-AD[2])*g);pose(rec,'lowerarm01R',HL[0]*g,0,0);curl(rec,'R',.9,.5);
+ // served people hold their million up, a little celebration bob
+ for(const P of served){const w=Math.sin(t*6+P.ph);pose(P,'upperarm01R',.85+.14*w,0,.72);pose(P,'lowerarm01R',.75,0,0);curl(P,'R',.9,.5);pose(P,'head',0,.06*w,0);}
+ pose(pm,'head',-.05,0,0);
  for(const P of everyone)P.g.updateMatrixWorld(true);
- for(const P of[mike,pm,...crowd]){const f=P.BN['finger3-1R'];if(!f)continue;f.getWorldPosition(tmp);P.fan.position.copy(tmp).add(tmp2.set(0,.04*P.sc,.03));P.fan.scale.setScalar(P.sc);P.fan.lookAt(camP);P.fan.visible=!(P===pm&&s1)&&P!==mike;
-  headOf(P).getWorldPosition(tmp);P.price.position.copy(tmp).add(tmp2.set(0,.34*P.sc,0));P.price.lookAt(camP);}
- mike.price.position.set(.04,1.9,.05);mike.price.lookAt(camP);
- // price pops: Mike on the word "million", flag price at the start, crowd staggered after the cut
- const tm=Wd('million')??2.0;
- flagPrice.scale.setScalar(t<1.68?pop(t,tm,.3)*1.9:0);flagPrice.lookAt(camP);
- mike.price.scale.setScalar(0);
- pm.price.scale.setScalar(t>=1.68?pop(t,1.74,.25)*(s3?.72:.42):0);
- crowd.forEach((P,i)=>P.price.scale.setScalar(s3?pop(t,2.62+i*.06,.25)*.72:0));
+ const hand=P=>{P.BN['finger3-1R'].getWorldPosition(tmp);return tmp;};
+ // the fan of bills: in the official's hand until GIVE, then in the receiver's hand
+ gov.fan.visible=t<GIVE;rec.fan.visible=t>=GIVE;
+ gov.fan.position.copy(hand(gov)).add(tmp2.set(0,.04,0));gov.fan.lookAt(camP);
+ rec.fan.position.copy(hand(rec)).add(tmp2.set(0,.04,0));rec.fan.lookAt(camP);
+ for(const P of served){P.fan.position.copy(hand(P)).add(tmp2.set(0,.04,.03));P.fan.lookAt(camP);P.fan.visible=s3;P.g.visible=s3;}
+ for(const P of[rec,...served]){headOf(P).getWorldPosition(tmp);P.price.position.copy(tmp).add(tmp2.set(0,.34,0));P.price.lookAt(camP);}
+ const tm=Wd('million')??1.38;
+ stackPrice.scale.setScalar(s1?pop(t,tm,.3)*1.5:0);stackPrice.lookAt(camP);
+ rec.price.scale.setScalar(t>=GIVE?pop(t,GIVE+.05,.25)*(s3?.7:.55):0);
+ served.forEach((P,i)=>P.price.scale.setScalar(s3?pop(t,2.66+i*.12,.25)*.7:0));
+ gov.price.scale.setScalar(0);
 }
 // ================= LIGHTS / CAMERA / POST =================
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,200);
@@ -226,9 +227,9 @@ comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.18,1.3));
 const bokeh=new BokehPass(scene,cam,{focus:3,aperture:.004,maxblur:.006});comp.addPass(bokeh);comp.addPass(new OutputPass());
 // hard-cut shots: [t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture]
 const SHOTS=[
- [0,1.68,   [PX+1.7,1.75,6.9],[PX+.15,2.0,-2.4],47,  [PX+1.4,1.8,5.8],[PX+.15,2.0,-2.4],45, .0012],
- [1.68,2.56,[PX+1.6,1.62,4.65],[PX+1.38,1.52,3.0],40, [PX+1.55,1.6,4.35],[PX+1.38,1.54,3.0],39, .004],
- [2.56,99,  [PX,2.3,7.6],[PX,1.3,-.5],48,           [PX,3.3,9.2],[PX,1.35,-.5],48,          .0014]];
+ [0,1.68,   [PX+3.1,2.45,4.9],[PX+.45,2.0,-2.2],46,   [PX+2.85,2.35,4.4],[PX+.45,1.95,-2.2],44, .0012],
+ [1.68,2.56,[PX+1.0,1.62,1.75],[PX+.95,1.45,-.95],40,  [PX+.98,1.6,1.5],[PX+.95,1.45,-.95],38,   .003],
+ [2.56,99,  [PX+1.9,1.85,5.3],[PX+1.7,1.35,-.6],44,    [PX+1.9,2.45,6.3],[PX+1.7,1.35,-.6],44,   .0015]];
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
 function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[2];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],5)-S[0])));
  if(t<5){sun.target.position.set(PX,0,0);sun.position.set(PX-9,7,5);}else{sun.target.position.set(0,0,0);sun.position.set(-9,7,5);}
