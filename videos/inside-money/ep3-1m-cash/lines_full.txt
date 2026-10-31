@@ -1,4 +1,4 @@
-If you walk into a bank and ask for $1 million in cash, right now, will they hand it over?|0.28
+If you walk into a bank and ask for one million dollars in cash, right now, will they hand it over?|0.28
 Mike tries it. The teller opens his drawer. Not even close.|0.28
 He checks the vault too. Still not enough.|0.28
 His account says one million dollars. But the cash? It isn't in this building.|0.28

@@ -21,7 +21,7 @@ def put(sig,t,g,dur=None):
     i=int(max(0,t)*SR);j=min(N,i+len(sig))
     if i<N:out[i:j]+=sig[:j-i]*g
 S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','slap','cash-register','pop','boom','notif','horn','money','shock']}
-put(S['ting'],0.0,.45);put(S['whoosh'],0.05,.35);put(S['slap'],1.72,.55);put(S['ting'],W('$1')+.05,.5) if any(x['w']=='$1' for x in WD) else None
+put(S['ting'],0.0,.45);put(S['whoosh'],0.05,.35);put(S['slap'],1.72,.55);put(S['ting'],W('one')+.05,.5)
 put(S['whoosh'],2.1,.3)
 put(S['whoosh'],4.7,.3)                       # crane over the counter
 put(S['pop'],5.75,.5)                         # drawer opens
