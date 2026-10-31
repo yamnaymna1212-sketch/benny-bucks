@@ -16,3 +16,8 @@
 - Every key number = floating 3D price in meaning colour: GREEN money ($1,000,000), RED problem ($342 TRILLION, price tags rising), YELLOW key fact (x15, 4-5 billion bills).
 - Bills glow green in hands; each character keeps its own look (Mike casual blue tee, teller striped blouse, manager suit+tie+glasses, guard navy polo, press operator, seller, landlord).
 - Real props: US flag (50 stars), marble, walnut wainscot, vault door, TELLER signs, services board, ATM, stanchions.
+
+## UPDATE (voice done, 2026-10-31)
+- Voice: Kokoro am_liam, speed 1.10, max_gap 0.04, ONE take -> vo.wav/vo.mp3, **62.10 s**, 198 words = 3.2 words/s. Real silence 3.3 s total (17 pauses, longest 0.25 s) = 5 % vs Zack #2's 14 %. Whisper word times: words_raw.json (it overstates gaps; use silencedetect). lines.txt = the 18 spoken lines.
+- Chatterbox tried and cancelled by the user (nothing left installed). Keep Kokoro. ElevenLabs connector is not enabled in this session.
+- NEXT: the user approves the voice -> build ep4.html (timeline from vo.timings.json + words_raw.json) -> 5-s hook preview -> approval -> full render.
