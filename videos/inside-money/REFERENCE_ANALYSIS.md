@@ -24,3 +24,10 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 
 ## Pool sheet re-check (references/inside-money/analysis/pool-sheet.jpg)
 - Stylised-real (toon-ish clean geometry), cutaway earth 2/3 of frame, white arrows, rounded white 1-word caption centred ~y 52%. This level IS reachable in the Three.js render-kit.
+
+## USER STYLE RULE 2026-10-31 (from Zack screenshots: references/inside-money/analysis/zack-glow-*.png)
+- Every IMPORTANT thing the viewer must notice gets a SPECIAL GLOW: bloom + emissive rim in a meaning colour — GREEN = money/gain, RED = cost/problem/danger, YELLOW = key number/warning, WHITE = neutral highlight. Examples: red 3D "$9" over a head, green glowing "$5" next to the bills, bills themselves glowing in the hand.
+- Prices float as BIG 3D extruded text (bevelled, slightly tilted, soft shadow) next to the object/person they belong to, whenever a price is spoken.
+- Every character looks DIFFERENT: face, skin tone, hair, body, clothes. Bank staff dressed by role (research 2026-10-31): teller = business-professional shirt/blouse, often no jacket, name badge; manager/officer = suit or blazer + tie/pumps; security guard = uniform + cap/badge; back office = business casual.
+- Extra real-world props for realism (counter glass, rope stanchions, pens on chains, deposit slips, ATM, wall clock, plants, flag, brand-free signage).
+- Captions in this style: 2-3 words, white bold lowercase-ish, low-centre (~y 75%).

@@ -1,0 +1,192 @@
+{
+  "mike": {
+    "role": "hero, ordinary young American, casual so he stands out from staff",
+    "body": {
+      "gender": 1.0,
+      "age": 0.45,
+      "muscle": 0.6,
+      "weight": 0.5,
+      "height": 0.55,
+      "race": {
+        "caucasian": 0.8,
+        "african": 0.05,
+        "asian": 0.15
+      }
+    },
+    "skin": "young_caucasian_male2",
+    "hair": "short02",
+    "eyebrows": "eyebrow001",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "male_casualsuit04",
+      "shoes02"
+    ],
+    "tex_override": {
+      "male_casualsuit04_diffuse": "textures/mike_tee_nologo.png"
+    }
+  },
+  "teller": {
+    "role": "bank teller: business-professional blouse/shirt, no jacket, name badge (badge added in three.js)",
+    "body": {
+      "gender": 0.0,
+      "age": 0.4,
+      "muscle": 0.45,
+      "weight": 0.45,
+      "height": 0.5,
+      "race": {
+        "african": 0.9,
+        "caucasian": 0.1,
+        "asian": 0.0
+      }
+    },
+    "skin": "young_african_female",
+    "hair": "ponytail01",
+    "eyebrows": "eyebrow010",
+    "eyelashes": "eyelashes02",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "female_elegantsuit01",
+      "toigo_flats"
+    ]
+  },
+  "manager": {
+    "role": "branch manager: dark suit + tie, older, grey hair, glasses",
+    "body": {
+      "gender": 1.0,
+      "age": 0.75,
+      "muscle": 0.45,
+      "weight": 0.62,
+      "height": 0.6,
+      "race": {
+        "caucasian": 1.0,
+        "african": 0.0,
+        "asian": 0.0
+      }
+    },
+    "skin": "middleage_caucasian_male",
+    "hair": "short03",
+    "eyebrows": "eyebrow005",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_male_suit_tie_and_jacket",
+      "kwnet_at_optical_glasses",
+      "shoes03"
+    ]
+  },
+  "guard": {
+    "role": "security guard: polo + cargo pants (recoloured navy in three.js), cap + badge + belt added in three.js, big build",
+    "body": {
+      "gender": 1.0,
+      "age": 0.6,
+      "muscle": 0.85,
+      "weight": 0.75,
+      "height": 0.58,
+      "race": {
+        "african": 1.0,
+        "caucasian": 0.0,
+        "asian": 0.0
+      }
+    },
+    "skin": "middleage_african_male",
+    "hair": "short01",
+    "eyebrows": "eyebrow007",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "namuhekam_male_polo_shirt",
+      "cortu_cargo_pants",
+      "toigo_ankle_boots_male"
+    ]
+  },
+  "printer": {
+    "role": "money-press operator (Bureau of Engraving and Printing): work clothes, safety glasses",
+    "body": {
+      "gender": 0.0,
+      "age": 0.6,
+      "muscle": 0.5,
+      "weight": 0.55,
+      "height": 0.4,
+      "race": {
+        "asian": 1.0,
+        "caucasian": 0.0,
+        "african": 0.0
+      }
+    },
+    "skin": "middleage_asian_female",
+    "hair": "elvs_reverse_french_braid_bun",
+    "eyebrows": "eyebrow003",
+    "eyelashes": "eyelashes03",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_basic_tucked_t-shirt",
+      "cortu_cargo_pants",
+      "spamrakuen_tbm_glasses_frames_01",
+      "toigo_ankle_boots_female"
+    ]
+  },
+  "seller": {
+    "role": "burger seller / shop worker",
+    "body": {
+      "gender": 0.0,
+      "age": 0.35,
+      "muscle": 0.5,
+      "weight": 0.6,
+      "height": 0.45,
+      "race": {
+        "caucasian": 1.0,
+        "african": 0.0,
+        "asian": 0.0
+      }
+    },
+    "skin": "toigo_light_skin_female_ginger",
+    "hair": "toigo_blunt_bob",
+    "eyebrows": "eyebrow011",
+    "eyelashes": "eyelashes04",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "female_sportsuit01",
+      "toigo_ballet_flats"
+    ]
+  },
+  "landlord": {
+    "role": "landlord: older man, hat, jacket",
+    "body": {
+      "gender": 1.0,
+      "age": 0.9,
+      "muscle": 0.4,
+      "weight": 0.7,
+      "height": 0.45,
+      "race": {
+        "caucasian": 0.6,
+        "asian": 0.0,
+        "african": 0.4
+      }
+    },
+    "skin": "old_caucasian_male",
+    "hair": "short04",
+    "eyebrows": "eyebrow012",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_suit_with_dinner_jacket",
+      "fedora01",
+      "shoes03"
+    ]
+  }
+}
