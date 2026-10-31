@@ -239,29 +239,62 @@ function arrowUp(c,s=1){const sh=new THREE.Shape();sh.moveTo(-.09,0);sh.lineTo(.
  const m=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.06,bevelEnabled:true,bevelSize:.01,bevelThickness:.01}),glowMat(c,1.1));m.geometry.translate(0,-.22,0);m.scale.setScalar(0);scene.add(m);m.userData.s=s;return m;}
 const showAt=(m,t,t0,t1,s=1)=>{m.scale.setScalar(t>=t0&&t<t1?pop(t,t0,.3)*s:0);};
 const face=m=>m.lookAt(camP);
-// ---------- STAGE (numbers studio) ----------
+// ---------- STAGE: outdoor "explainer" square (real sky, flags, a real US map, real cash towers) ----------
 const SX=-30;
-add(new THREE.BoxGeometry(30,16,34),new THREE.MeshStandardMaterial({color:0x0d1320,roughness:.95,side:THREE.BackSide}),SX,7.9,-4,scene,false);
-{const f=add(new THREE.CircleGeometry(14.5,72),new THREE.MeshStandardMaterial({color:0x1b2433,roughness:.32,metalness:.25}),SX,.005,-4,scene,false);f.rotation.x=-Math.PI/2;f.castShadow=false;}
-for(let i=0;i<4;i++){const L=new THREE.PointLight(0xdfe8ff,14,24,1.5);L.position.set(SX-6+i*4,8.5,-2);scene.add(L);}
-const NP=640,pawnMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6,emissive:GRN,emissiveIntensity:0});
-const pawnB=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.12,.38,4,10),pawnMat,NP),pawnH=new THREE.InstancedMesh(new THREE.SphereGeometry(.11,14,10),pawnMat,NP);
-{const d=new THREE.Object3D(),c=new THREE.Color();for(let i=0;i<NP;i++){const r=Math.floor(i/32),k=i%32;d.position.set(SX-7.75+k*.5+(r%2)*.25,.31,-2.4-r*.55);d.updateMatrix();pawnB.setMatrixAt(i,d.matrix);
- d.position.y=.78;d.updateMatrix();pawnH.setMatrixAt(i,d.matrix);c.setHSL(.05+rr()*.6,.25,.3+rr()*.35);pawnB.setColorAt(i,c);pawnH.setColorAt(i,c);}}
-pawnB.castShadow=pawnH.castShadow=true;scene.add(pawnB,pawnH);
-const T342M=big('342,000,000 PEOPLE',.24,YEL),T342T=big('$342 TRILLION',.42,RED);
-const stripeT=tex(64,256,x=>{for(let i=0;i<32;i++){x.fillStyle=i%2?'#d8e0c8':'#93ad87';x.fillRect(0,i*8,64,8);}x.fillStyle='#c79a2c';x.fillRect(26,0,12,256);});stripeT.wrapS=stripeT.wrapT=THREE.RepeatWrapping;
-function tower(w,h,c,glow){const t2=stripeT.clone();t2.repeat.set(1,h/.25);t2.needsUpdate=true;const g=new THREE.BoxGeometry(w,h,w);g.translate(0,h/2,0);
- return add(g,new THREE.MeshStandardMaterial({map:t2,color:c,roughness:.7,emissive:c,emissiveIntensity:glow}),0,0,0,scene,true);}
-const towRed=tower(1.6,9,0xff8a80,.12);towRed.position.set(SX+1.6,0,-3.2);
-const H23=9*23/342;const tow23=[...Array(15)].map((_,i)=>{const o=tower(1.6,H23,0xb8f5c4,.12);o.position.set(SX-1.6,i*H23,-3.2);return o;});
-const L23=big('$23 TRILLION',.22,YEL),L342=big('$342 TRILLION',.3,RED),X15=big('x15',.6,YEL);
-const tinyBrick=add(new THREE.BoxGeometry(BW*1.6,.03,BH*1.6),brickM,SX-.7,.015,-1.0,scene,true);const L140=big('$109-140 BILLION',.038,GRN);
+add(B(30,.2,30),pbr('concrete_pavement',10,10,{roughness:.85}),SX,-.1,-3,scene,false);
+// US flags (real 10:19 ratio, 50 stars, waving)
+const flagT=tex(1140,600,x=>{const FW=1140,FH=600;for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*FH/13,FW,FH/13+1);}
+ const cw=FW*.4,chh=FH*7/13;x.fillStyle='#3c3b6e';x.fillRect(0,0,cw,chh);x.fillStyle='#fff';
+ const star=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr2=k%2?r*.4:r;x.lineTo(cx+Math.cos(a)*rr2,cy+Math.sin(a)*rr2);}x.closePath();x.fill();};
+ for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++)star(cw/12*(2*c+1+(r%2)),chh/10*(r+1),chh*.0616*1.6);});
+const flags=[];
+function makeFlag(x,y,z,w,dir=1){const h=w*10/19,g=new THREE.PlaneGeometry(w,h,40,14),o=Float32Array.from(g.attributes.position.array);
+ const m=add(g,new THREE.MeshPhysicalMaterial({map:flagT,roughness:.7,sheen:1,sheenRoughness:.5,side:THREE.DoubleSide}),x+dir*w/2,y-h/2,z,scene,true);m.scale.x=dir;
+ add(new THREE.CylinderGeometry(w*.018,w*.024,y+.08,12),M(0xdedede,.3,.8),x,(y+.08)/2,z);add(new THREE.SphereGeometry(w*.035,16,12),GOLD,x,y+.1,z);flags.push({g,o,w});return m;}
+function waveFlags(t){for(const f of flags){const p=f.g.attributes.position;for(let i=0;i<p.count;i++){const u=(f.o[i*3]+f.w/2)/f.w;p.setZ(i,Math.sin(u*Math.PI*2.6-t*5)*.055*f.w*u);}p.needsUpdate=true;f.g.computeVertexNormals();}}
+makeFlag(SX-4.2,5.2,-8.5,2.0,1);makeFlag(SX+4.2,5.2,-8.5,2.0,-1);            // stage backdrop
+makeFlag(PX-2.5,4.3,-4.3,1.5,1);makeFlag(PX+2.5,4.3,-4.3,1.5,-1);            // hook: flags in front of the government building
+// real US map (lower 48, US Census state outlines, public domain) lying on the square, every state a slightly different tone
+const GEO=await (await fetch('dl/geo/us-states.json')).json();
+const MK=.11,LON0=-96,LAT0=38,CL=Math.cos(LAT0*Math.PI/180),MZ=-2.6;
+const mapX=lo=>(lo-LON0)*CL*MK,mapZ=la=>-(la-LAT0)*MK;
+const mapG=new THREE.Group();mapG.position.set(SX,0,MZ);scene.add(mapG);const rings=[];
+for(const f of GEO.features){if(/Alaska|Hawaii|Puerto/.test(f.properties.name))continue;const P=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;
+ for(const poly of P){const ring=poly[0];rings.push(ring);const sh=new THREE.Shape(ring.map(([lo,la])=>new THREE.Vector2(mapX(lo),(la-LAT0)*MK)));
+  const h=.06+rr()*.03,g=new THREE.ExtrudeGeometry(sh,{depth:h,bevelEnabled:false});g.rotateX(-Math.PI/2);
+  const m=new THREE.Mesh(g,[new THREE.MeshStandardMaterial({color:new THREE.Color().setHSL([.0,.08,.14,.3,.55,.6][Math.floor(rr()*6)],.42,.58+rr()*.1),roughness:.7}),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6})]);
+  m.castShadow=m.receiveShadow=true;mapG.add(m);}}
+const inRing=(r,lo,la)=>{let c=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const [xi,yi]=r[i],[xj,yj]=r[j];if((yi>la)!==(yj>la)&&lo<(xj-xi)*(la-yi)/(yj-yi)+xi)c=!c;}return c;};
+const onMap=(lo,la)=>rings.some(r=>inRing(r,lo,la));
+// people pop up out of the map (real characters, small), more of them in the east
+const minis=[];{const nm=['landlord','teller','guard','printer','manager','seller'];let n=0;while(minis.length<46&&n<4000){n++;const lo=-124+57*Math.sqrt(rr()),la=26+23*rr();if(!onMap(lo,la))continue;
+ const P=person(nm[minis.length%6],SX+mapX(lo),MZ+mapZ(la),(rr()-.5)*.6,.3);P.lo=lo;minis.push(P);}}
+const miniBills=new THREE.InstancedMesh(new THREE.PlaneGeometry(BW*1.6,BH*1.6),(()=>{const m=billM.clone();m.emissiveMap=billT;m.emissiveIntensity=.7;return m;})(),minis.length);miniBills.frustumCulled=false;scene.add(miniBills);
+makeFlag(SX+mapX(-77),1.05,MZ+mapZ(38.9),.5,1);                              // a flag planted on Washington, D.C.
+const T342M=big('342,000,000 PEOPLE',.24,YEL),T342T=big('$342 TRILLION',.36,RED);
+// real cash towers: $10,000 bundles stacked on wooden pallets (342T = 75 layers = 9 m, 23T = 5 layers)
+const stripe2=tex(64,64,x=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#e6ead9':'#a9bd9c';x.fillRect(0,i*8,64,8);}x.fillStyle='#c79a2c';x.fillRect(27,0,10,64);});
+const sideM=new THREE.MeshStandardMaterial({map:stripe2,roughness:.8}),topM=new THREE.MeshStandardMaterial({map:billT,roughness:.8});
+const TBz=[.75,.12,.32],LAYERS=75;
+function cashTower(cx,cz,nx,nz,layers){const per=nx*nz,im=new THREE.InstancedMesh(new THREE.BoxGeometry(...TBz),[sideM,sideM,topM,sideM,sideM,sideM],per*layers);im.castShadow=im.receiveShadow=true;
+ const d=new THREE.Object3D();let i=0;for(let l=0;l<layers;l++)for(let a2=0;a2<nx;a2++)for(let b2=0;b2<nz;b2++){d.position.set(cx+(a2-(nx-1)/2)*(TBz[0]+.012),.14+TBz[1]/2+l*TBz[1],cz+(b2-(nz-1)/2)*(TBz[2]+.012));d.rotation.y=(rr()-.5)*.03;d.updateMatrix();im.setMatrixAt(i++,d.matrix);}
+ scene.add(im);const pal=add(B(nx*(TBz[0]+.012)+.12,.14,nz*(TBz[2]+.012)+.12),M(0x9c7a4f,.85),cx,.07,cz);im.userData={per,pal};return im;}
+const towRed=cashTower(SX+1.3,-3.2,2,4,LAYERS),tow23=cashTower(SX-1.3,-3.2,2,4,LAYERS);
+const H23=.14+5*TBz[1];
+const L23=big('$23 TRILLION',.3,YEL),L342=big('$342 TRILLION',.45,RED,1.5),X15=big('x15',.7,YEL);
+function towersAt(t,on4,on14){towRed.visible=towRed.userData.pal.visible=on4||on14;tow23.visible=tow23.userData.pal.visible=on4;
+ const k=t<Wn('15')?0:Math.min(1,(t-Wn('15'))/2.2);const lay=Math.round(5+70*k);tow23.count=tow23.userData.per*lay;return .14+lay*TBz[1];}
+const tinyBrick=add(new THREE.BoxGeometry(BW*1.6,.03,BH*1.6),brickM,SX-.35,.015,-1.6,scene,true);const L140=big('$109-140 BILLION',.038,GRN);
+function stageMap(t,on){mapG.visible=on;const t0=Wn('342')-.15,tb=Wn('million',2);
+ minis.forEach((P,i)=>{P.g.visible=on;if(!on)return;const k=pop(t,t0+(P.lo+124)/57*1.2,.35);P.g.position.y=-.6+.68*k;relaxArms(P);pose(P,'head',0,.2*Math.sin(t*2+P.ph),0);});
+ miniBills.visible=on&&t>=tb;if(miniBills.visible){for(const P of minis)P.g.updateMatrixWorld(true);
+  minis.forEach((P,i)=>{const d=dmy2;d.position.copy(P.g.position).add(V3(0,.62+.03*Math.sin(t*4+i),0));d.lookAt(camP);d.rotateZ(.2*Math.sin(t*3+i));d.scale.setScalar(Math.min(1,pop(t,tb+i*.012,.25)));d.updateMatrix();miniBills.setMatrixAt(i,d.matrix);});miniBills.instanceMatrix.needsUpdate=true;}}
+const dmy2=new THREE.Object3D();
 // Zimbabwe note (generic design, no portrait, not a reproduction)
 const zimT=tex(1400,600,x=>{const g=x.createLinearGradient(0,0,1400,600);g.addColorStop(0,'#c9d9c2');g.addColorStop(1,'#e3d6a9');x.fillStyle=g;x.fillRect(0,0,1400,600);
  x.strokeStyle='#5a4a2a';x.lineWidth=14;x.strokeRect(18,18,1364,564);x.fillStyle='#3e4a2c';x.textAlign='center';x.font='800 78px Mont';x.fillText('ZIMBABWE',700,130);
  x.font='800 116px Mont';x.fillText('100 000 000 000 000',700,330);x.font='800 58px Mont';x.fillText('ONE HUNDRED TRILLION DOLLARS',700,440);x.font='800 44px Mont';x.fillText('2008',1240,540);});
-const zim=add(new THREE.PlaneGeometry(2.2,.95),new THREE.MeshStandardMaterial({map:zimT,roughness:.7,side:THREE.DoubleSide,emissive:0xffffff,emissiveMap:zimT,emissiveIntensity:.08}),SX+.15,1.75,-1.7,scene,false);
+const zim=add(new THREE.PlaneGeometry(2.2,.95),new THREE.MeshStandardMaterial({map:zimT,roughness:.7,side:THREE.DoubleSide,emissive:0xffffff,emissiveMap:zimT,emissiveIntensity:.08}),SX,1.75,-1.7,scene,false);
 const T100T=big('100,000,000,000,000',.15,YEL);
 // balance scale: money (left) vs the things you can buy (right)
 const scaleG=new THREE.Group();scaleG.position.set(SX,0,-1.4);scene.add(scaleG);const beam=new THREE.Group();beam.position.y=1.7;scaleG.add(beam);const plates=[];
@@ -305,8 +338,8 @@ const climb=[arrowUp(RED,1.4),arrowUp(RED,1.1),arrowUp(RED,1.6)];
 const clipT=tex(512,680,x=>{x.fillStyle='#f6f3ea';x.fillRect(0,0,512,680);x.fillStyle='#14233f';x.fillRect(0,0,512,110);x.fillStyle='#fff';x.font='800 40px Mont';x.textAlign='center';
  x.fillText('FEDERAL RESERVE',256,52);x.font='800 30px Mont';x.fillText('2026 PRINT ORDER',256,94);x.fillStyle='#14233f';x.font='800 40px Mont';x.fillText('NEW NOTES',256,220);
  x.fillStyle='#0f7a3a';x.font='800 64px Mont';x.fillText('3.8 - 5.1',256,320);x.fillText('BILLION',256,395);x.fillStyle='#55606e';x.font='800 30px Mont';x.fillText('to replace worn-out',256,500);x.fillText('cash + meet demand',256,545);});
-const clip=new THREE.Group();scene.add(clip);add(B(.3,.4,.012),M(0x7a5230,.6),0,0,0,clip);add(new THREE.PlaneGeometry(.27,.36),new THREE.MeshStandardMaterial({map:clipT,roughness:.8}),0,0,.007,clip,false);
-const T45=big('4-5 BILLION NEW BILLS A YEAR',.05,YEL);
+const clip=new THREE.Group();scene.add(clip);add(B(.36,.48,.012),M(0x7a5230,.6),0,0,0,clip);add(new THREE.PlaneGeometry(.33,.44),new THREE.MeshStandardMaterial({map:clipT,roughness:.8}),0,0,.007,clip,false);
+const T45=big('4-5 BILLION NEW BILLS A YEAR',.038,YEL);
 const worn=new THREE.Group();worn.position.set(-.55,TOP+.005,-1.95);scene.add(worn);
 {const wm=new THREE.MeshStandardMaterial({map:billT,color:0x8d8a7a,roughness:1,side:THREE.DoubleSide});for(let i=0;i<14;i++){const b=add(new THREE.PlaneGeometry(BW,BH,4,2),wm,(rr()-.5)*.3,.01+i*.004,(rr()-.5)*.18,worn,false);b.rotation.set(-Math.PI/2+(rr()-.5)*.5,0,rr()*3);}}
 const fresh=[...Array(4)].map((_,i)=>add(brickG,brickM,.05+(i%2)*.17,TOP+.026+Math.floor(i/2)*.051,-1.95,scene,true));
@@ -323,16 +356,15 @@ function story(t){
  const vis=(o,v)=>{o.visible=v;};
  // stage props visible only in their beats
  const st2=inB(t,6.0,12.85),st4=inB(t,12.85,19.3),st11=inB(t,34.9,40.0),st14=inB(t,47.7,53.05),st15=inB(t,53.05,56.3);
- vis(pawnB,st2);vis(pawnH,st2);pawnMat.emissiveIntensity=t>=Wn('million',2)-.05&&t<12.85?.55:0;
- vis(towRed,st4||st14);tow23.forEach((o,i)=>vis(o,st4&&(i===0||t>=Wn('15')+i*.12)));
+ stageMap(t,st2);const top23=towersAt(t,st4,st14);waveFlags(t);
  vis(zim,st11);vis(tinyBrick,st14);vis(scaleG,st15);
- showAt(T342M,t,Wn('342')-.02,9.2,1);T342M.position.set(SX,2.7,-2.6);face(T342M);
- showAt(T342T,t,Wn('342',1),12.85,1);T342T.position.set(SX,3.4,-3.6);face(T342T);
- showAt(L23,t,Wn('23'),19.3,1);L23.position.set(SX-1.6,(t>=Wn('15')?9.2:H23+.3),-2.4);face(L23);
- showAt(L342,t,13.0,19.3,1);L342.position.set(SX+1.6,9.35,-2.4);face(L342);if(st14){L342.scale.setScalar(t>=Wn('not',0)?pop(t,Wn('342',2),.3):0);}
- showAt(X15,t,Wn('15'),19.3,1);X15.position.set(SX,5.2,-1.8);face(X15);
- showAt(T100T,t,Wn('100',1)-.05,40.0,1);T100T.position.set(SX+.15,2.6,-1.7);face(T100T);
- showAt(L140,t,Wn('140')-.4,53.05,1);L140.position.set(SX-.7,.16,-1.0);face(L140);
+ showAt(T342M,t,Wn('342')-.02,9.2,1);T342M.position.set(SX,1.7,-1.4);face(T342M);
+ showAt(T342T,t,Wn('342',1),12.85,1);T342T.position.set(SX,2.2,-1.6);face(T342T);
+ showAt(L23,t,Wn('23'),19.3,1);L23.position.set(SX-1.3,top23+.3,-1.9);face(L23);
+ showAt(L342,t,13.0,19.3,1);L342.position.set(SX+1.3,9.5,-1.9);face(L342);if(st14){L342.scale.setScalar(t>=Wn('not',0)?pop(t,Wn('342',2),.3):0);}
+ showAt(X15,t,Wn('15'),19.3,1);X15.position.set(SX,5.0,-2.2);face(X15);
+ showAt(T100T,t,Wn('100',1)-.05,40.0,1);T100T.position.set(SX,2.55,-1.7);face(T100T);
+ showAt(L140,t,Wn('140')-.4,53.05,1);L140.position.set(SX-.35,.16,-1.6);face(L140);
  showAt(LMON,t,53.2,56.3);showAt(LSTF,t,53.2,56.3);if(st15){plates[0].getWorldPosition(tmp);LMON.position.copy(tmp).add(V3(0,-.2,0));plates[1].getWorldPosition(tmp);LSTF.position.copy(tmp).add(V3(0,-.12,0));}face(LMON);face(LSTF);
  beam.rotation.z=st15?-.32*Math.min(1,Math.max(0,(t-Wn('things'))/.6)):0;for(const pl of plates)pl.rotation.z=-beam.rotation.z;
  // street signs
@@ -346,18 +378,18 @@ function story(t){
  // red arrows climbing around Mike ("prices keep climbing")
  climb.forEach((a,i)=>{const on=inB(t,31.55,34.9);a.scale.setScalar(on?pop(t,31.6+i*.25,.3)*a.userData.s:0);a.position.set(TX-1.3+[-.95,.95,-1.25][i],.7+((t-31.6-i*.25)*.55%1.4),.8);face(a);});
  // lobby: clipboard, worn vs new
- showAt(T45,t,Wn('4')-.05,45.5);T45.position.set(.45,1.98,-2.3);face(T45);
+ showAt(T45,t,Wn('4')-.05,45.5);T45.position.set(.5,2.42,-2.4);face(T45);
  showAt(LWORN,t,Wn('worn'),47.7);LWORN.position.set(-.42,TOP+.14,-1.9);face(LWORN);showAt(LNEW,t,Wn('worn')+.35,47.7);LNEW.position.set(.13,TOP+.16,-1.9);face(LNEW);
  // ---- MIKE across the sets
  let mx=null,mz=0,mr=0,act='relax',fanOn=false,priceMode=0;   // priceMode 0 none,1 green,2 grey
  if(inB(t,4.45,6.1)){mx=PX+.5;mz=3.5;mr=.6*Math.max(0,1-(t-4.6)/.5);act='relax';}
- else if(inB(t,6.1,12.85)){mx=SX;mz=-.9;mr=Math.PI;act=t>=Wn('342',1)?'shock':'relax';}
- else if(inB(t,12.85,19.3)){mx=SX;mz=-1.0;mr=Math.PI*.85;act=t>=Wn('15')?'shock':'relax';}
+ else if(inB(t,6.1,12.85)){mx=SX+2.9;mz=.3;mr=Math.PI+.55;act=t>=Wn('342',1)?'shock':'relax';}
+ else if(inB(t,12.85,19.3)){mx=SX;mz=-2.0;mr=0;act=t>=Wn('15')?'shock':'relax';}
  else if(inB(t,19.3,21.9)){mx=TX-1.3;mz=1.2;mr=0;act=t>=Wn('stuff')?'shrug':'relax';}
  else if(inB(t,31.5,34.9)){mx=TX-1.3;mz=1.0;mr=.15;act='hold';fanOn=true;priceMode=t>=Wn('less')?2:1;}
- else if(inB(t,34.9,40.0)){mx=SX+1.65;mz=-.8;mr=-.75;act=t>=Wn('100',1)?'shock':'relax';}
+ else if(inB(t,34.9,40.0)){mx=SX+1.2;mz=-.6;mr=-.75;act=t>=Wn('100',1)?'shock':'relax';}
  else if(inB(t,40.0,42.1)){const k=(t-40.0)/2.1;mx=PX+1.8-1.4*k;mz=3.4-2.0*k;mr=Math.atan2(-1.4,-2.0);act='walk';}
- else if(inB(t,47.7,53.05)){mx=SX-1.2;mz=-.4;mr=.5;act=t>=Wn('not')?'shock':'relax';}
+ else if(inB(t,47.7,53.05)){mx=SX-1.1;mz=-1.3;mr=.4;act=t>=Wn('not')?'shock':'relax';}
  else if(inB(t,53.05,56.3)){mx=SX-1.9;mz=-.9;mr=.9;act='relax';}
  else if(inB(t,56.3,59.6)){mx=PX+.2;mz=.9;mr=0;act=t>=Wn('nobody')?'shrug':'hold';fanOn=true;priceMode=t>=Wn('nobody')?2:1;}
  else if(t>=59.6){mx=PX;mz=.4;mr=0;act='hold';fanOn=true;priceMode=1;}
@@ -377,7 +409,7 @@ function story(t){
  // lobby manager holds the print order
  relaxArms(manager);armsP(manager,'clip');
  for(const P of[pm,seller,landlord,manager,...Q4])P.g.updateMatrixWorld(true);
- manager.BN['wristR'].getWorldPosition(tmp);manager.BN['wristL'].getWorldPosition(tmp2);clip.position.copy(tmp).add(tmp2).multiplyScalar(.5).add(V3(0,.12,.06));clip.lookAt(camP);clip.visible=inB(t,42.1,47.7);
+ manager.BN['wristR'].getWorldPosition(tmp);manager.BN['wristL'].getWorldPosition(tmp2);clip.position.copy(tmp).add(tmp2).multiplyScalar(.5);manager.g.getWorldDirection(tmp2);clip.position.addScaledVector(tmp2,.1).add(V3(0,.13,0));clip.quaternion.copy(manager.g.quaternion);clip.visible=inB(t,42.1,47.7);
  pm.BN['finger3-1R'].getWorldPosition(tmp);pmFan.position.copy(tmp).add(tmp2.set(0,.05,0));pmFan.lookAt(camP);pmFan.visible=fanOn&&!(act==='shrug');
  headOf(pm).getWorldPosition(tmp);pmPrice.position.copy(tmp).add(tmp2.set(0,.34,0));pmPrice.lookAt(camP);pmPrice.material=priceMode===2?GREYP:GREEN;
  pmPrice.scale.setScalar(priceMode===0?0:(priceMode===2?.45:.62));
@@ -403,10 +435,8 @@ const SHOTS=[   // [t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture] - each cu
  [2.56,4.53,[PX+2.6,1.9,5.6],[PX-.6,1.35,-.4],46,      [PX+2.9,2.2,6.4],[PX-.6,1.35,-.4],46,    .0012],
  // ---- story (t0,t1,pos0,look0,fov0,pos1,look1,fov1,aperture)
  [4.53,6.15,  [PX+.5,1.62,5.3],[PX+.5,1.55,3.5],38,      [PX+.5,1.6,4.7],[PX+.5,1.56,3.5],36,       .004],   // Let's do the math - Mike turns to us
- [6.15,9.2,   [SX+.5,1.35,1.6],[SX,1.0,-6],48,           [SX,6.5,4.2],[SX,.6,-6.5],52,              .0008],  // 342 million people - crane up over the crowd
- [9.2,12.85,  [SX-3.2,2.4,2.4],[SX,1.9,-4],50,           [SX-2.4,3.2,4.2],[SX,2.2,-4],52,           .0008],  // a million each = $342 TRILLION
- [12.85,16.1, [SX-2.6,.55,2.4],[SX,2.6,-3.2],52,         [SX+2.0,.65,2.6],[SX,2.8,-3.2],52,         .0008],  // two towers, low lateral dolly
- [16.1,19.35, [SX-4.4,2.0,3.2],[SX-.5,4.0,-3.2],54,      [SX-3.4,7.0,6.4],[SX-.5,4.6,-3.2],54,      .0006],  // x15 stacking, crane up
+ [6.15,12.85, [SX,4.6,4.0],[SX,.1,-2.5],50,              [SX,6.6,6.6],[SX,.5,-2.5],50,              .0006],  // map: people pop out, then $342 TRILLION - one continuous crane
+ [12.85,19.35,[SX,.9,5.2],[SX,2.4,-3.2],52,              [SX,4.6,12.6],[SX,4.6,-3.2],52,             .0004],  // two cash towers, centred, slow crane back through x15
  [19.35,21.95,[TX-1.3,1.62,3.7],[TX-1.3,1.45,1.2],40,    [TX-1.3,1.6,3.3],[TX-1.3,1.45,1.2],38,     .004],   // the problem: stuff doesn't multiply
  [21.95,22.75,[HX+.3,1.9,5.6],[HX,1.7,-2.4],46,          [HX+.2,1.85,5.0],[HX,1.7,-2.4],45,         .0015],   // same houses
  [22.75,23.45,[KX+.75,1.35,.55],[KX+.55,1.15,-.2],40,    [KX+.7,1.3,.4],[KX+.55,1.15,-.2],38,       .006],   // same burgers
@@ -416,13 +446,12 @@ const SHOTS=[   // [t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture] - each cu
  [29.75,30.45,[HX+1.6,1.7,3.6],[HX+1.3,1.5,.3],44,       [HX+1.5,1.7,3.2],[HX+1.3,1.55,.3],43,      .002],   // then the landlord
  [30.45,31.55,[GX+.2,1.9,3.0],[GX,1.7,-.6],46,           [GX+.1,1.9,2.6],[GX,1.75,-.6],45,          .002],   // then the gas station
  [31.55,34.95,[TX-1.3,1.7,4.1],[TX-1.3,1.6,1.0],42,      [TX-1.3,1.66,2.9],[TX-1.3,1.6,1.0],38,     .003],   // prices climb, your million buys less
- [34.95,40.05,[SX+2.4,1.8,4.4],[SX+.45,1.6,-1.5],48,      [SX-1.6,1.95,4.6],[SX+.45,1.7,-1.5],48,    .0012],  // Zimbabwe 100 trillion note, orbit
+ [34.95,40.05,[SX+.25,1.75,3.9],[SX+.25,1.7,-1.7],50,     [SX+.25,1.75,3.4],[SX+.25,1.72,-1.7],50,    .001],   // Zimbabwe note, centred push-in
  [40.05,42.12,[PX+.6,2.0,7.2],[PRX,1.2,-1.3],46,         [PX-.2,1.6,3.6],[PRX,1.1,-1.3],42,         .0015],  // what does America actually print?
- [42.12,45.55,[1.5,1.6,1.3],[.45,1.35,-2.6],42,          [.95,1.45,.1],[.45,1.35,-2.6],40,          .003],   // the Fed's yearly order (clipboard)
+ [42.12,45.55,[.5,1.6,1.4],[.5,1.45,-2.8],40,            [.5,1.52,.4],[.5,1.42,-2.8],40,             .002],   // the Fed's yearly print order (clipboard), centred
  [45.55,47.72,[-.25,1.7,-.25],[-.22,1.08,-1.95],46,      [-.22,1.62,-.5],[-.22,1.08,-1.95],44,      .003],   // worn-out cash swapped for new
- [47.72,51.05,[SX-.7,.4,.95],[SX-.7,.15,-1.0],44,        [SX-.72,.42,.65],[SX-.7,.16,-1.0],42,      .004],   // $109-140 billion: one tiny brick
- [51.05,53.1, [SX-1.4,.5,3.6],[SX+1.6,4.5,-3.2],56,      [SX-1.6,1.4,5.6],[SX+1.6,6,-3.2],56,       .0008],  // not 342 trillion: the giant tower
- [53.1,56.3,  [SX+.2,1.7,4.6],[SX,1.25,-1.4],58,         [SX+.1,1.65,4.1],[SX,1.25,-1.4],56,        .0012],   // the balance scale tips to the stuff
+ [47.72,53.1, [SX-.35,.32,.4],[SX-.35,.1,-1.6],46,        [SX,3.0,11.0],[SX+.6,4.4,-3.2],54,          .0006],  // tiny brick -> reveal the 9 m tower, one move
+ [53.1,56.3,  [SX,1.55,3.5],[SX,1.3,-1.4],58,           [SX,1.5,3.15],[SX,1.3,-1.4],58,            .0012],  // balance scale, centred
  [56.3,59.62, [PX,1.7,3.9],[PX,1.45,.6],46,              [PX,2.3,6.3],[PX,1.45,.6],46,              .0015],  // nobody gets richer
  [59.62,99,   [PX+.15,1.78,2.6],[PX,1.72,.4],40,         [PX+.12,1.76,2.2],[PX,1.72,.4],38,         .004]];  // would you still take it?
   // "person ... rich?" - wide over Mike's shoulder

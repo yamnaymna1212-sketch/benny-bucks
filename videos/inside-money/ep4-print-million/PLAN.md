@@ -27,3 +27,9 @@
 - ep4.html = hook (plaza: podium official + MONEY PRINTER + walking queue + Mike) then story(t): STAGE at x=-30 (pawn crowd 342M, $342T, towers 23T vs 342T, x15 stack, Zimbabwe note, tiny $109-140B brick vs giant tower, balance scale), STREET at x=50 (burger kiosk, house FOR RENT, gas pump; PRICE/RENT/GAS + red arrows), LOBBY (Fed 2026 print order clipboard, worn-out vs new cash), PLAZA end (everyone has a million -> grey prices, YES or NO?).
 - 23 hard cuts, each on a spoken line/word (SHOTS table). Captions fixed: math / way / meet.
 - Known weak spots: tower shot (13-16 s) Mike's back blocks the centre and $23T label sits low; faces have no expressions; poses (shock/shrug) are approximate.
+
+## v2 (2026-10-31, user feedback on v1: no black background, primitive 3D, camera off-centre, flag in the hook, real elements)
+- Stage is now an OUTDOOR square (city HDRI sky, concrete, two waving US flags). Map = real US Census state outlines (dl/geo/us-states.json, public domain, git-ignored: re-download from github.com/PublicaMundi/MappingAPI data/geojson/us-states.json), 46 small real characters pop out of it, a flag on Washington D.C., glowing bills over every head on "a million dollars each".
+- Towers = instanced $10,000 bundles on wooden pallets (342T = 75 layers = 9 m; 23T = 5 layers; x15 grows the small one to 75 layers).
+- Explainer shots are centred and continuous (map 6.15-12.85, towers 12.85-19.35, tiny brick -> giant tower 47.7-53.1).
+- Hook: two US flags flank the government building steps. Lobby: clipboard held in front of the chest, text centred.
