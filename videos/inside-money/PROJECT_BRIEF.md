@@ -16,7 +16,7 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Zack glow rule: every key number floats as 3D text with a meaning colour (GREEN money, RED problem/price up, YELLOW key fact, WHITE neutral); bills glow in hands. Glow ONLY on those (bloom threshold 1.3, strength .45, radius .18, low scene lights) so the image never looks hazy.
 - Captions: 2-3 words, white, bold, centred on screen (left 60 px, width 600 px), ~74 % height.
 **Voice / pace**
-- Kokoro am_liam (user's choice), speed ~1.10, max_gap 0.04, one take, 61-65 s. Target >= 3.2 words/s, pauses <= 0.25 s (Zack's weak point = slow with 0.8 s pauses). Fix whisper caption typos (math/way/meet).
+- Kokoro am_liam (user's choice), speed ~1.10, max_gap 0.04, one take, 61-65 s. Target >= 3.2 words/s, pauses <= 0.25 s (Zack's weak point = slow with 0.8 s pauses). Fix whisper caption typos (math/way/meet). In the TTS text write every amount in words ("one million dollars", never "$1 million": Kokoro misreads symbols - EP3 hook bug 2026-10-31).
 **Process**
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
