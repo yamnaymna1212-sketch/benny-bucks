@@ -37,3 +37,9 @@ Price-gap ideas (older, optional): US ambulance vs UK/Germany; insulin vs Canada
 ## 7. EP2 status (2026-10-30) — read ep2-dig-200m/PLAN.md + SCRIPT.md
 Script v1 re-verified (see bottom of SCRIPT.md; gold $3,993.60/oz -> ~$813 B). Voice: Kokoro am_fenrir 1.18, one take, 64.2 s (vo.wav, vo.timings.json). User wants BETTER quality: animated rigged character, realistic rocks/strata, particles, voice = energetic young American with no pauses (compare am_liam / am_puck / am_michael on the hook line first). Next: hook 5-s preview only; do NOT render full before approval.
 EP2 RENDERED 2026-10-30: render-kit/ep2-dig-200m.mp4 (62.74 s, am_liam 1.15, GPU M3 ~4 min with 4x motion blur). Scene: ep2.html (bank, vault, subway 191 St, heat grade, water jets, Water Tunnel No. 3 reveal at 43.7 s = 70%). Known weak spots: 8-22 s vault/door shots without the digger; hands in front of face on the raised swing. Pinned comment: "Gold or water — which one is worth more under New York? Comment GOLD or WATER".
+
+## 8. EP3 status (2026-10-31) — read ep3-1m-cash/PLAN.md
+EP3 "$1M in cash" v2 RENDERED: render-kit/ep3-1m-cash.mp4 (62.41 s, GPU Apple M3, ~3.5 min; not in git) + phone copy ep3-1m-cash/ep3-1m-cash-phone.mp4 (in git).
+v2 = first half (4.6-33 s) rebuilt after user feedback "first half boring, same place, camera not matched to the words": now one event + one camera move per line (see PLAN.md beat table).
+Scene ep3.html (?tl=timeline_ep3_full.json), mix ep3-1m-cash/mix_ep3_full.py, render `npm run render -- ep3full`. Awaiting user review of v2. Weak spots: printer shot (gray box), plain government building, sparse Fed vault, toy-like truck, shared face model; camera may pass close to Mike's shoulder in transitions (not watched in motion).
+Pinned comment: "Would you carry $1 million in cash? Comment YES or NO".

@@ -12,3 +12,7 @@ description: Quality rules and checklist for Inside Money 3D scenes (Three.js re
 - **Audio**: voice + air bed + whoosh per camera move + riser before the reveal + boom/sub on the reveal + ting on the key number; user SFX from studio/public/sfx (rebuild with tools/import_user_sfx.py). Never silent.
 - **GPU**: render.mjs uses --use-angle=metal --enable-gpu; the log's `GPU:` line must say Apple M3, never SwiftShader.
 - **Before sending**: check one still of frame 1 (contrast readable without words), then the 5-s preview. Record what improved in this file.
+- **Learned on EP3 (2026-10-31)**: user rejected a first half that stayed in one place. Every script line needs its own on-screen event AND a camera move matched to the word (one continuous camera, no cuts): close for objects/numbers (drawer, screen, form), far/high for "building"/"government", low angle for emotion. Plan a beat table (line -> event -> camera) BEFORE coding.
+- 9:16 with fov 32 is very narrow (horizontal ~18 deg): a 1.5 m subject needs ~4.5 m distance. Animate fov per shot (FOVK) — wide (46-56) for outdoor/overview shots.
+- Flat planes (forms, signs) go invisible edge-on in chase shots: rotate them to face the camera. Check every planned shot with `node stills.mjs` contact sheets before any render.
+
