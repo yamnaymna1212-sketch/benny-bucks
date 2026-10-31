@@ -1,5 +1,26 @@
 # INSIDE MONEY — master brief (everything decided so far, 2026-10-29). Read this first in any new session.
 
+## 0. LATEST USER RULES (2026-10-31, from EP4 feedback) — these OVERRIDE older lines below (sections 2-3)
+Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start every new video from it.
+**Hook (0-5 s)**
+- Understood with NO sound in the first 1-2 s: one clear story, few elements, ordered and symmetric, nothing scattered.
+- The main character (Mike) is in the hook, watching the event (over-the-shoulder / foreground), and reacts (head turn, surprised arms).
+- Show the real actors of the topic (e.g. government = building + "U.S. GOVERNMENT" + US flags + official at a podium + money printer; people walk up, take, leave). Do NOT open on a flag alone.
+- Every title/sign fully in frame and centred; never crop a key element or its text.
+**Shots and story**
+- Every spoken line = a NEW scene, angle or action (cut on the word). Never keep the same scene for long. Cuts every 2-3 s; inside an explainer the camera may move continuously, but always centred on what is being explained, slow professional moves, nothing important cropped.
+- Characters must move: walk cycles, gestures, taking/giving, celebrating, shrugging. Every character looks different (MakeHuman cast, videos/inside-money/characters/).
+**Look**
+- NEVER a black/empty studio background. Real sets only: outdoor square with city HDRI sky, bank lobby, street with shops, government building.
+- Explanations use REAL objects, never primitives: real US map from Census GeoJSON with people popping out of it, $10,000 cash bundles stacked on wooden pallets, real flags (50 stars, 10:19, waving), real signs (price boards, FOR RENT, gas pump screen), balance scale with real props.
+- Zack glow rule: every key number floats as 3D text with a meaning colour (GREEN money, RED problem/price up, YELLOW key fact, WHITE neutral); bills glow in hands. Glow ONLY on those (bloom threshold 1.3, strength .45, radius .18, low scene lights) so the image never looks hazy.
+- Captions: 2-3 words, white, bold, centred on screen (left 60 px, width 600 px), ~74 % height.
+**Voice / pace**
+- Kokoro am_liam (user's choice), speed ~1.10, max_gap 0.04, one take, 61-65 s. Target >= 3.2 words/s, pauses <= 0.25 s (Zack's weak point = slow with 0.8 s pauses). Fix whisper caption typos (math/way/meet).
+**Process**
+- Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
+- The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
+
 ## 1. Why we changed (TikTok Studio data, last 28 days)
 - 415K views (+35%), 90% For You, 83.6% US, age 25-34 biggest; BUT net followers -424 and most penguin videos stop at 500-1,000 views.
 - Same topic (gas USA vs Iran): stick-figure/"Benny" detective script = 65K views, 27% full-watch, 29 s avg; penguin caveman "3 reasons" script = 29K, 8%. Kuwait/India penguin: 4.6K / 9.5K, 5-7% full-watch, avg 14-16 s of 65 s.
