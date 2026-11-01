@@ -14,13 +14,27 @@ b=np.cumsum(rng.standard_normal(N).astype(np.float32));b-=np.convolve(b,np.ones(
 def put(sig,t,g):
     i=int(max(0,t)*SR);j=min(N,i+len(sig))
     if i<N:out[i:j]+=sig[:j-i]*g
-S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','pop','money','boom']}
+S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','pop','money','boom','slap','wrong','notif','money-transfer','wow','aww']}
 put(S['ting'],0.0,.45)                                   # ting at 0 s (channel rule)
 put(S['cash-register'],Wn('$40,000')+.04,.32)            # $40,000 pops
 for tb in [.25,.55,.85,1.15]:put(S['pop'],tb+.45,.16)    # each bundle lands in the sofa
 put(S['money'],1.3,.15)
 put(S['whoosh'],1.12-.06,.24);put(S['whoosh'],2.68-.06,.3);put(S['whoosh'],4.4-.06,.26)   # cuts
 put(S['boom'],Wn('evasion'),.42)                          # "tax evasion"
+# ---- story SFX
+for c in [7.47,10.66,12.6,16.5,18.9,21.65,25.04,31.63,35.95,38.05,40.75,42.66,46.15,48.22,51.92,53.98,57.03,58.97]:put(S['whoosh'],c-.06,.22)
+for w in ['bank','car','vacations']:put(S['ting'],Wn(w),.25)
+put(S['money-transfer'],10.85,.3);put(S['boom'],12.66+.2,.4)          # bars slam
+put(S['boom'],Wn('75%'),.35);put(S['ting'],Wn('five'),.35)
+for k in range(3):put(S['slap'],Wn('knock')+k*.22,.22)                  # knock knock knock
+put(S['pop'],Wn('same'),.2)
+for i in range(6):put(S['cash-register' if i==0 else 'pop'],26.0+i*.5+.55,.2)
+put(S['ting'],Wn('$24,500'),.4);put(S['ting'],Wn('$7,500'),.4);put(S['cash-register'],Wn('deducts'),.3);put(S['ting'],Wn('20%'),.4)
+put(S['pop'],Wn('same',1),.25);put(S['pop'],Wn('same',2),.25)
+put(S['boom'],Wn('crime'),.4);put(S['ting'],Wn('law'),.35);put(S['ting'],Wn('avoidance'),.3)
+put(S['boom'],Wn('knock',1),.45);put(S['wrong'],Wn('knock',1)+.2,.25)
+put(S['aww'],Wn('sofa',2) if len([x for x in WD if x['w'].lower().strip('.,?')=='sofa'])>2 else 52.6,.2)
+put(S['notif'],Wn('reported'),.35);put(S['ting'],57.1,.35)
 pk=np.abs(out).max();out/=max(1,pk/.95)
 pcm=(out*32767).astype(np.int16);w=wave.open(f'{TMP}/_m5.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes(pcm.tobytes());w.close()
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/_m5.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep5.wav'],check=True);print('mix ok')
