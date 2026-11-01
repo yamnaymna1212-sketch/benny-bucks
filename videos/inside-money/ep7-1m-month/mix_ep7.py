@@ -20,6 +20,7 @@ def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next 
 for k in['fahh','pop','notif2']:S[k]=load(f'{SFX}/user-{k}.wav')
 W=lambda w,n=0:Wn(w,n)
 put(cut(S['ting'],.3,.15),0.0,.14)                                          # soft ting under the first word
+for t0 in(0.05,1.3,1.9):put(cut(S['money'],.6),t0,.12)                       # bill counter whirring
 put(cut(S['cash-register'],.7),W('$1')+.02,.26);put(cut(S['money'],.8),W('$1')+.08,.14)
 for i in range(11):put(S['pop'],W('month')+.05+i*((W('$0')-W('month')-.2)/11),.16)   # a brick lands every month
 put(cut(S['whoosh'],.8),1.35,.2)

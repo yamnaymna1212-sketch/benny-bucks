@@ -3,7 +3,7 @@
 html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #ov{position:absolute;inset:0;z-index:3;pointer-events:none}
 .cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 60px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.8),0 0 3px #000}
-</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div><div id="dayw" style="position:absolute;left:0;width:720px;top:6.5%;text-align:center;color:#fff;font:800 96px Mont,sans-serif;letter-spacing:1px;text-shadow:0 4px 10px rgba(0,0,0,.85),0 0 4px #000"><div id="day">DAY 1</div><div id="mon" style="font-size:38px;letter-spacing:6px;margin-top:-6px">JANUARY</div></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div><div id="dayw" style="display:none;position:absolute;left:0;width:720px;top:6.5%;text-align:center;color:#fff;font:800 96px Mont,sans-serif;letter-spacing:1px;text-shadow:0 4px 10px rgba(0,0,0,.85),0 0 4px #000"><div id="day">DAY 1</div></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 // EP7 "If you make $1M a month, you can still end the year with $0" (Mike) - Maple Street, DAY, Mike's living room. Built from ep6.html.
@@ -179,27 +179,34 @@ add(RB(2.28,.17,.78,.06),FAB,0,.085,.39,seat);
 const TVG=new THREE.Group();TVG.position.set(0,FY,1.9);TVG.rotation.y=Math.PI;
 add(B(1.8,.5,.45),pbr('oak_wood_planks',1,.3),-3.0,.25,-1.0,mikeH);
 add(B(1.5,.86,.05),M(0x0b0b0d,.2,.5),-3.0,1.0,-1.0,mikeH).rotation.y=.5;
-add(RB(1.2,.06,.65,.02),pbr('oak_wood_planks',1,.5),0,FY+.42,-.6,mikeH);for(const [lx,lz] of[[-.52,-.27],[.52,-.27],[-.52,.27],[.52,.27]])add(CY(.025,.025,.4,10),M(0x222222,.4,.6),lx,FY+.2,-.6+lz,mikeH,false);
+add(RB(1.2,.06,.65,.02),pbr('oak_wood_planks',1,.5),0,FY+.82,-.6,mikeH);for(const [lx,lz] of[[-.52,-.27],[.52,-.27],[-.52,.27],[.52,.27]])add(CY(.025,.025,.8,10),M(0x222222,.4,.6),lx,FY+.4,-.6+lz,mikeH,false);   // standing-height table for the bill counter
 add(CY(.02,.02,1.6,10),M(0x222222,.3,.8),-1.7,FY+.8,-3.1,mikeH);add(CY(.16,.22,.32,24,1,true),M(0xf3ecd8,.8,0,{emissive:0xffe3b0,emissiveIntensity:.22,side:THREE.DoubleSide}),-1.7,FY+1.65,-3.1,mikeH);
 add(B(1.4,.95,.04),M(0x2a1d12,.5),0,FY+1.95,-3.62,mikeH,false);add(B(1.28,.83,.02),new THREE.MeshStandardMaterial({map:tex(256,170,t=>{const gr=t.createLinearGradient(0,0,0,170);gr.addColorStop(0,'#7fb2e0');gr.addColorStop(.6,'#e8d7a8');gr.addColorStop(1,'#6b8c4a');t.fillStyle=gr;t.fillRect(0,0,256,170);}),roughness:.6}),0,FY+1.95,-3.59,mikeH,false);
 model('potted_plant_01',3.7,FY,-3.0,1.2,0,mikeH);
 
 // ================= THE TRUNK: $10,000,000 = 1,000 straps of $100s (~100 kg, ~4 cubic feet); illustrative notes =================
-const NOTE=tex(1024,436,x=>{const g=x.createLinearGradient(0,0,1024,436);g.addColorStop(0,'#e6e8d8');g.addColorStop(.5,'#d3dcc5');g.addColorStop(1,'#e0e3cf');x.fillStyle=g;x.fillRect(0,0,1024,436);
- for(let i=0;i<14000;i++){x.fillStyle=`rgba(60,80,60,${Math.random()*.06})`;x.fillRect(Math.random()*1024,Math.random()*436,1.5,1.5);}
- for(let i=0;i<120;i++){x.strokeStyle='rgba(55,85,62,.07)';x.lineWidth=1.2;x.beginPath();x.ellipse(430,218,40+i*2.2,30+i*1.3,0,0,7);x.stroke();}
- x.strokeStyle='#36523c';x.lineWidth=12;x.strokeRect(16,16,992,404);x.lineWidth=3;x.strokeRect(36,36,952,364);
- x.fillStyle='#ece9d6';x.beginPath();x.ellipse(430,218,118,148,0,0,7);x.fill();x.strokeStyle='#36523c';x.lineWidth=7;x.stroke();
- for(let i=0;i<60;i++){x.strokeStyle='rgba(54,82,60,.35)';x.lineWidth=1;x.beginPath();x.moveTo(330,90+i*4.4);x.lineTo(530,96+i*4.4);x.stroke();}
- x.fillStyle='#4f7fb5';x.fillRect(612,36,22,364);
- x.fillStyle='#b07a3c';x.font='800 150px Mont';x.textAlign='right';x.fillText('100',980,400);
- x.fillStyle='#2e4a35';x.font='800 92px Mont';x.textAlign='left';x.fillText('100',56,132);
- x.font='800 34px Mont';x.textAlign='center';x.fillText('THE UNITED STATES OF AMERICA',512,76);x.font='800 24px Mont';x.fillText('FEDERAL RESERVE NOTE',430,396);x.fillText('ONE HUNDRED DOLLARS',430,360);
- x.fillStyle='#2f6b45';x.font='800 26px Mont';x.textAlign='left';x.fillText('DN 10000000 A',62,190);});
+const NOTE=tex(1024,436,x=>{const g=x.createLinearGradient(0,0,1024,436);g.addColorStop(0,'#e7e8d6');g.addColorStop(.55,'#dde2cc');g.addColorStop(1,'#e3e2cf');x.fillStyle=g;x.fillRect(0,0,1024,436);
+ for(let i=0;i<22000;i++){x.fillStyle=`rgba(60,85,65,${Math.random()*.05})`;x.fillRect(Math.random()*1024,Math.random()*436,1.3,1.3);}
+ for(let k=0;k<3;k++)for(let i=0;i<90;i++){x.strokeStyle=`rgba(70,100,80,${.05+k*.01})`;x.lineWidth=1;x.beginPath();for(let u=0;u<=1024;u+=8){const y=60+k*140+i*1.4+Math.sin(u/40+i*.3)*10;u?x.lineTo(u,y):x.moveTo(u,y);}x.stroke();}
+ x.strokeStyle='#3d5a45';x.lineWidth=10;x.strokeRect(14,14,996,408);x.lineWidth=2;x.strokeRect(32,32,960,372);
+ for(let i=0;i<40;i++){x.strokeStyle='rgba(61,90,69,.35)';x.beginPath();x.arc(120,330,20+i*1.6,0,7);x.stroke();x.beginPath();x.arc(905,95,16+i*1.4,0,7);x.stroke();}
+ // portrait oval with an engraved generic bust (hatching)
+ x.save();x.beginPath();x.ellipse(415,212,120,150,0,0,7);x.clip();const pg=x.createRadialGradient(400,170,10,415,212,170);pg.addColorStop(0,'#eef0e2');pg.addColorStop(1,'#cfd6c0');x.fillStyle=pg;x.fillRect(290,60,260,310);
+ x.fillStyle='#5f6f5c';x.beginPath();x.ellipse(415,170,50,62,0,0,7);x.fill();x.fillStyle='#4a5a49';x.beginPath();x.ellipse(415,128,56,30,0,Math.PI,0);x.fill();
+ x.fillStyle='#3f4f40';x.beginPath();x.moveTo(300,372);x.quadraticCurveTo(320,250,415,238);x.quadraticCurveTo(510,250,530,372);x.fill();
+ for(let i=0;i<70;i++){x.strokeStyle='rgba(30,45,32,.25)';x.beginPath();x.moveTo(290,80+i*4.4);x.lineTo(545,90+i*4.4);x.stroke();}x.restore();
+ x.strokeStyle='#3d5a45';x.lineWidth=7;x.beginPath();x.ellipse(415,212,120,150,0,0,7);x.stroke();
+ // blue 3-D security ribbon with bells/100s, copper inkwell, copper 100
+ x.fillStyle='#3b6fc6';x.fillRect(628,30,26,376);x.fillStyle='rgba(255,255,255,.55)';for(let y=44;y<400;y+=34){x.font='800 14px Mont';x.fillText('100',631,y);}
+ const cg=x.createLinearGradient(740,250,830,330);cg.addColorStop(0,'#b5652c');cg.addColorStop(1,'#5f8a52');x.fillStyle=cg;x.beginPath();x.moveTo(760,250);x.quadraticCurveTo(785,215,810,250);x.lineTo(820,320);x.lineTo(750,320);x.closePath();x.fill();
+ const g2=x.createLinearGradient(820,300,990,410);g2.addColorStop(0,'#b5652c');g2.addColorStop(1,'#6f8f4f');x.fillStyle=g2;x.font='800 150px Mont';x.textAlign='right';x.fillText('100',985,405);
+ x.fillStyle='#2e4a35';x.font='800 88px Mont';x.textAlign='left';x.fillText('100',52,128);
+ x.font='800 32px Mont';x.textAlign='center';x.fillText('THE UNITED STATES OF AMERICA',512,74);x.font='800 20px Mont';x.fillText('FEDERAL RESERVE NOTE',415,400);x.fillText('ONE HUNDRED DOLLARS',740,385);
+ x.fillStyle='#2f6b45';x.font='800 24px Mont';x.textAlign='left';x.fillText('PL 21907546 B',60,190);x.textAlign='right';x.fillText('PL 21907546 B',985,190);});
 const EDGE=tex(256,64,x=>{x.fillStyle='#d9dcc8';x.fillRect(0,0,256,64);for(let i=0;i<64;i+=2){x.fillStyle=`rgba(70,90,70,${.15+Math.random()*.2})`;x.fillRect(0,i,256,1);}});
 const BAND=tex(512,128,x=>{x.fillStyle='#d6a63a';x.fillRect(0,0,512,128);x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,0,512,8);x.fillRect(0,120,512,8);x.fillStyle='#3b2706';x.font='800 64px Mont';x.textAlign='center';x.fillText('$10,000',256,88);});
 const NW=.156*1.25,NH=.066*1.25,NT=.011*2.2;   // slightly enlarged so a strap reads on a phone
-const NOTEM=new THREE.MeshStandardMaterial({map:NOTE,color:0xc2cfb0,roughness:.75,emissive:0x7dff9a,emissiveMap:NOTE,emissiveIntensity:0}),EDGEM=new THREE.MeshStandardMaterial({map:EDGE,color:0xbccaa8,roughness:.9}),BANDM=new THREE.MeshStandardMaterial({map:BAND,roughness:.55});
+const NOTEM=new THREE.MeshStandardMaterial({map:NOTE,roughness:.85}),EDGEM=new THREE.MeshStandardMaterial({map:EDGE,color:0xbccaa8,roughness:.9}),BANDM=new THREE.MeshStandardMaterial({map:BAND,roughness:.55});
 function bundle(p){const g=new THREE.Group();p.add(g);add(B(NW,NT,NH),[EDGEM,EDGEM,NOTEM,NOTEM,EDGEM,EDGEM],0,0,0,g);add(B(.03,NT+.003,NH+.003),BANDM,0,0,0,g,false);return g;}
 // ================= CAST =================
 const SRC={};const CAST={danny:['mike']};   // 'danny' key = Mike, the channel hero
@@ -231,7 +238,7 @@ const PHP={ux:0,uz:0,lx:0};   // the strap he waves while celebrating
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
 function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
- const m=add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:1.45,roughness:.35}),new THREE.MeshStandardMaterial({color:0x5a0606,roughness:.5})],0,0,0,p,false);return m;}
+ const m=add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.3,roughness:.45}),new THREE.MeshStandardMaterial({color:0x5a0606,roughness:.5})],0,0,0,p,false);return m;}
 const GRN=0x22e06a,WHT=0xffffff;
 const P10=txt3('$10,000,000',.13,GRN,scene),PN=txt3('DANNY',.1,WHT,scene);
 // ================= STORY SETS (after the hook): one world, one continuous camera, no cuts =================
@@ -260,9 +267,9 @@ function phoneMesh(){const g=new THREE.Group();scene.add(g);add(RB(.075,.15,.012
 const EARX={p:V3(),q:new THREE.Quaternion()};
 function phoneAt(P,ph,PHN){P.g.parent.updateMatrixWorld(true);earP(P,EARX);PHN.visible=true;PHN.position.copy(EARX.p);PHN.quaternion.copy(EARX.q);}
 
-const BRICKT=tex(512,512,x=>{x.fillStyle='#cfd8bf';x.fillRect(0,0,512,512);for(let r=0;r<6;r++)for(let c=0;c<2;c++){x.drawImage(NOTE.image,4+c*254,4+r*85,248,80);x.fillStyle='#d6a63a';x.fillRect(4+c*254+110,4+r*85,22,80);}});
-const BRSIDE=tex(256,256,x=>{x.fillStyle='#d9dcc8';x.fillRect(0,0,256,256);for(let i=0;i<256;i+=2){x.fillStyle=`rgba(70,90,70,${.15+Math.random()*.2})`;x.fillRect(0,i,256,1);}for(let k=0;k<4;k++){x.fillStyle='#d6a63a';x.fillRect(20+k*64,0,10,256);}});
-const BTOP=new THREE.MeshStandardMaterial({map:BRICKT,roughness:.75,emissive:0x7dff9a,emissiveMap:BRICKT,emissiveIntensity:.12}),BSID=new THREE.MeshStandardMaterial({color:0xc9d4b6,map:BRSIDE,roughness:.85});
+const BRICKT=tex(512,538,x=>{x.fillStyle='#d9ddc9';x.fillRect(0,0,512,538);for(let r=0;r<5;r++)for(let c=0;c<2;c++){const X=c*256,Y=r*107.6;x.drawImage(NOTE.image,X+2,Y+2,252,103);x.fillStyle='#c9952f';x.fillRect(X+114,Y+2,26,103);x.fillStyle='rgba(0,0,0,.18)';x.fillRect(X+2,Y+103,252,3);}});
+const BRSIDE=tex(256,256,x=>{x.fillStyle='#dfe2cf';x.fillRect(0,0,256,256);for(let i=0;i<256;i++){x.fillStyle=`rgba(80,100,80,${.08+Math.random()*.16})`;x.fillRect(0,i,256,1);}for(let k=0;k<10;k++){x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,k*25.6,256,1.5);}for(let k=0;k<2;k++){x.fillStyle='#c9952f';x.fillRect(52+k*128,0,22,256);}});
+const BTOP=new THREE.MeshStandardMaterial({map:BRICKT,roughness:.85}),BSID=new THREE.MeshStandardMaterial({map:BRSIDE,roughness:.9});
 
 
 // ================= LIGHT / POST =================
@@ -270,13 +277,14 @@ const sun=new THREE.DirectionalLight(0xa9bfff,.9);
 sun.position.set(-30,40,30);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-40,right:40,top:30,bottom:-30,near:1,far:140});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;scene.add(sun);scene.add(sun.target);
 const RL=new THREE.PointLight(0xffd9a8,10,10,1.5);RL.position.set(MX-1.7,FY+1.7,MZ-2.7);scene.add(RL);   // floor lamp
-const CL=new THREE.PointLight(0xfff0d0,12,11,1.3);CL.position.set(MX+.8,FY+2.5,MZ+.2);scene.add(CL);   // ceiling light
+const CL=new THREE.PointLight(0xfff0d0,8,11,1.3);
+const MK=new THREE.SpotLight(0xfff3e2,14,9,.5,.8,1.2);MK.position.set(MX+1.6,FY+2.8,MZ+2.0);MK.target.position.set(MX,FY+.5,MZ-.1);MK.castShadow=true;scene.add(MK);scene.add(MK.target);   // soft key light on the moneyCL.position.set(MX+.8,FY+2.5,MZ+.2);scene.add(CL);   // ceiling light
 const RK=new THREE.SpotLight(0xdfe6ff,8,14,.8,.7,1.3);RK.position.set(MX+2.0,2.1,MZ+6.0);RK.target.position.set(MX,.9,MZ-2.6);scene.add(RK);scene.add(RK.target);
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,500);
 const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
-comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.35,.18,1.3));comp.addPass(new OutputPass());
+comp.addPass(new OutputPass());
 // colour grade (sRGB): contrast, saturation, gentle vignette
-comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.12},sat:{value:1.28},vig:{value:.32}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.06},sat:{value:1.1},vig:{value:.24}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
  fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
 
 // ================= DAY =================
@@ -288,12 +296,12 @@ const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0
 const toW=(lx,ly,lz)=>V3(MX+lx,ly,MZ+lz);
 // camera keys [t, pos(house-local), look(house-local), fov]; Catmull-Rom through them = no cuts, ever
 const KEYS=[
- [0,   [0,2.6,4.6],  [0,1.2,-.8],50],     // the whole living room, Mike with his phone, DAY 1
- [1.5, [.2,2.15,3.4],[0,1.3,-.9],48],     // money keeps landing every month
- [2.6, [.1,1.8,2.45],[0,1.45,-1.1],44],   // DAY 365: everything gone, $0
- [3.6, [.45,1.95,2.7],[0,1.4,-1.0],46],   // back to DAY 1: meet Mike
- [5.2, [-.3,1.75,2.25],[0,1.3,-.9],44],
- [7.5, [-.4,1.7,2.1],[0,1.3,-.9],43]];
+ [0,   [.5,2.6,5.0], [.5,1.15,-.8],50],    // the living room: Mike runs cash through a bill counter
+ [1.5, [.55,2.2,4.0],[.5,1.2,-.8],48],     // a $1M brick drops onto the pile every month
+ [2.6, [.5,2.0,3.3], [.5,1.25,-.85],48],   // the $12M block vanishes: $0
+ [3.6, [.6,2.05,3.5],[.45,1.3,-.9],48],    // meet Mike
+ [5.2, [.4,1.9,3.2], [.45,1.25,-.9],47],
+ [7.5, [.35,1.85,3.1],[.45,1.25,-.9],46]];
 const herm=(t,arr)=>{let i=0;while(i<arr.length-2&&t>=arr[i+1][0])i++;const a=arr[Math.max(0,i-1)],b=arr[i],c=arr[i+1],d=arr[Math.min(arr.length-1,i+2)];
  const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2;
  const m=(p,q,v)=>(b===p&&c===q)?0:0;return {b,c,a,d,h,h00,h10,h01,h11};};
@@ -307,32 +315,44 @@ function setCam(t){const P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
 const wR=V3();
-// ================= HOOK: a big DAY counter, a $1M brick lands every month on the coffee table, then DAY 365 = $0 =================
-const DAYD=document.getElementById('day'),MOND=document.getElementById('mon'),DAYW=document.getElementById('dayw');
-const MONTHS=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'],CUM=[0,31,59,90,120,151,181,212,243,273,304,334,365];
-const tA=Wd('a'),tM=Wd('month'),tS=Wd('still'),tZ=Wd('$0'),tMeet=Wd('meet'),tLand=Wd('lands'),t1=Wd('$1');
-function dayAt(t){if(t>=tMeet-.1)return 1;if(t>=tZ)return 365;if(t<tA)return 1;if(t<tS)return Math.round(1+29*sm(tA,tM+.3,t));return Math.round(30+335*sm(tS,tZ,t));}
-// $1M = 100 straps of $100s: a brick of 2 x 5 straps x 10 high (real ratio, x1.25 like ep6)
-const BRK=[];for(let i=0;i<12;i++){const m=add(B(.4,.15,.42),[BSID,BSID,BTOP,BSID,BSID,BSID],0,0,0,mikeH);m.userData.home=V3(i%2?.21:-.21,FY+.45+.076+Math.floor(i/2)*.152,-.6);m.scale.setScalar(.001);BRK.push(m);}
+// ================= HOOK: Mike runs cash through a bill counter; every month another $1M brick drops onto the pile; then $0 =================
+const DAYD=document.getElementById('day'),DAYW=document.getElementById('dayw');
+const CUM=[0,31,59,90,120,151,181,212,243,273,304,334,365];
+const tA=Wd('a'),tM=Wd('month'),tS=Wd('still'),tZ=Wd('$0'),tMeet=Wd('meet'),tLand=Wd('lands'),t1=Wd('$1'),tD20=Wd('20');
+function dayAt(t){if(t>=tZ)return 365;if(t<tA)return 1;if(t<tS)return Math.round(1+29*sm(tA,tM+.3,t));return Math.round(30+335*sm(tS,tZ,t));}   // hidden clock: the DAY counter only shows once he starts acting
+// ---- the bill counter on the coffee table: hopper at the back, tray at the front, LED total ----
+const MCH=new THREE.Group();MCH.position.set(-.3,FY+.85,-.7);mikeH.add(MCH);
+{const body=M(0x2b2e33,.45,.3),grey=M(0x9aa0a6,.4,.6);add(RB(.34,.2,.3,.03),body,0,.1,0,MCH);const hp=add(B(.22,.012,.16),grey,0,.235,-.1,MCH);hp.rotation.x=-.5;
+ add(B(.22,.012,.12),grey,0,.05,.2,MCH);for(const s of[-1,1])add(B(.01,.05,.12),grey,s*.11,.07,.2,MCH);add(B(.3,.004,.02),M(0x111111,.3),0,.205,.08,MCH,false);}
+const LEDC=document.createElement('canvas');LEDC.width=512;LEDC.height=128;const LEDT=new THREE.CanvasTexture(LEDC);LEDT.colorSpace=THREE.SRGBColorSpace;
+add(new THREE.PlaneGeometry(.27,.068),new THREE.MeshBasicMaterial({map:LEDT,toneMapped:false}),0,.15,.151,MCH,false);
+function led(v,red){const x=LEDC.getContext('2d');x.fillStyle='#0b0e0b';x.fillRect(0,0,512,128);x.fillStyle=red?'#ff3a2a':'#4dff74';x.font='800 82px Mont';x.textAlign='right';x.fillText('$'+Math.round(v).toLocaleString('en-US'),496,96);LEDT.needsUpdate=true;}
+const FLY=[];for(let i=0;i<9;i++){const m=add(new THREE.PlaneGeometry(NW,NH),new THREE.MeshStandardMaterial({map:NOTE,roughness:.85,side:THREE.DoubleSide}),0,0,0,MCH,false);m.visible=false;FLY.push(m);}
+// ---- $1M = 100 straps of $100s: a brick of 2 x 5 straps, 10 high (real ratio, x1.25 like ep6); the pile grows on the floor in front of the table ----
+const HOMES=[];for(let l=0;l<3;l++)for(const z of[-.53,-.95])for(const x of[.85,1.25])HOMES.push([x,l,z]);   // a neat $12M block on the floor beside the table
+const BRK=HOMES.map(([x,l,z])=>{const m=add(B(.39,.152,.41),[BSID,BSID,BTOP,BSID,BSID,BSID],0,0,0,mikeH);m.userData.home=V3(x,FY+.077+l*.153,z);m.scale.setScalar(.001);return m;});
 const tOn=BRK.map((m,i)=>{if(i===0)return t1;for(let t=0;t<tZ;t+=.01)if(dayAt(t)>CUM[i])return t;return tZ;});
-const POOF=add(new THREE.SphereGeometry(1,24,16),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false}),MX,1.5,MZ-.6,scene,false);
-popT('$1,000,000',.11,GRN,toW(0,1.12,.2),t1,tS);popT('$12,000,000',.11,GRN,toW(0,1.12,.2),tS+.25,tZ-.05);popT('$0',.3,RED,toW(0,1.25,-.3),tZ,tMeet-.2);
-popT('MIKE',.12,WHT,toW(0,2.3,-1.35),Wd('mike'),6.0);popT('+$1,000,000',.12,GRN,toW(0,1.75,-.45),tLand,7.0);
-function animate(t){updPops(t);const D=danny;relax(D);idle(D,t);D.g.position.set(0,FY,-1.35);D.g.rotation.y=0;
- const d=dayAt(t),lost=t>=tZ&&t<tMeet-.1;
- DAYD.textContent='DAY '+d;let mi=0;while(mi<11&&d>CUM[mi+1])mi++;MOND.textContent=MONTHS[mi];DAYW.style.color=lost?'#ff3b3b':'#ffffff';
- DAYW.style.transform=`scale(${1+.06*Math.min(1,Math.abs(dayAt(t)-dayAt(t-.04)))})`;
- const joy=(t>t1+.05&&t<tZ)||(t>tLand&&t<tLand+.9);
- arm(D,'R',AD[0]+1.0,AD[2]-.3,1.65);curl(D,'R',.7);pose(D,'head',.22,0,0);face(D,{smile:.7});
- if(joy){wave(D,'L',t);D.g.position.y+=Math.abs(Math.sin(t*7))*.05;face(D,{smile:1,jaw:.12});pose(D,'head',-.05,.15*Math.sin(t*3),0);}
- if(lost){const k=sm(tZ,tZ+.2,t);arm(D,'R',AD[0]+1.0-.6*k,AD[2]-.3,1.65-1.0*k);face(D,{smile:0,jaw:.25*k});pose(D,'head',-.12*k,0,0);pose(D,'spine03',.12*k,0,0);}
- mikeH.updateMatrixWorld(true);danny.BN.wristR.getWorldPosition(wR);PHONE.visible=true;PHONE.position.copy(wR).add(V3(0,.07,.05));const hd=V3();danny.BN.head.getWorldPosition(hd);PHONE.lookAt(hd);
- BRK.forEach((m,i)=>{let s=0,off=0;if(t<tMeet-.1){s=pop(t,tOn[i],.2)*(1-sm(tZ,tZ+.18,t));off=(1-sm(tOn[i],tOn[i]+.18,t))*.6;}else if(i===0){s=pop(t,tLand,.22);off=(1-sm(tLand,tLand+.2,t))*.8;}
-  m.position.copy(m.userData.home);m.position.y+=off;m.scale.setScalar(Math.max(.001,s));});
- BTOP.emissiveIntensity=.12+.25*(joy?1:0);
- POOF.material.opacity=0;POOF.scale.setScalar(.3+.8*sm(tZ,tZ+.35,t));POOF.visible=POOF.material.opacity>.01;}
+const TRAY=V3(-.3,FY+.91,-.48);
+const REACH={L:{ux:0,uz:0,lx:0},R:{ux:0,uz:0,lx:0}};
+function solveReach(P,sd,tgt){const w=V3(),res={ux:0,uz:0,lx:0};let best=1e9;for(let ux=-.5;ux<=2.0;ux+=.1)for(let uz=-1.5;uz<=1.8;uz+=.1)for(let lx=0;lx<=2.4;lx+=.12){
+ pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);P.g.updateMatrixWorld(true);P.BN['wrist'+sd].getWorldPosition(w);const d=w.distanceTo(tgt);if(d<best){best=d;Object.assign(res,{ux,uz,lx});}}return res;}
+popT('$1,000,000',.085,GRN,toW(1.0,1.25,-.6),t1,tS);popT('$12,000,000',.085,GRN,toW(.95,1.5,-.6),tS+.25,tZ-.05);popT('$0',.26,RED,toW(.9,1.2,-.5),tZ,tMeet-.2);
+popT('MIKE',.12,WHT,toW(0,2.3,-1.05),Wd('mike'),6.0);popT('+$1,000,000',.085,GRN,toW(.85,1.3,-.6),tLand+.35,7.0);
+function total(t){if(t>=tMeet-.1)return 1e6*sm(tLand,tLand+.45,t);if(t>=tZ)return 0;if(t<t1)return 1e6*sm(0,t1+.05,t);return 1e6*(1+11*sm(tA,tZ-.12,t));}
+function animate(t){updPops(t);const D=danny;relax(D);idle(D,t);D.g.position.set(0,FY,-1.05);D.g.rotation.y=0;PHONE.visible=false;HAND.visible=false;
+ const lost=t>=tZ&&t<tMeet-.1,v=total(t),counting=total(t+.05)>v+1;
+ DAYW.style.display=t>=tD20-.15?'block':'none';DAYD.textContent='DAY 20';   // the day counter starts with his first spending day (story)
+ led(v,lost);
+ // feeding the counter with both hands; a happy bounce while the pile grows; shock at $0
+ for(const sd of['L','R']){const r=REACH[sd];arm(D,sd,r.ux+.05*Math.sin(t*9+(sd==='L'?0:2)),r.uz,r.lx);}curl(D,'L',.3);curl(D,'R',.3);pose(D,'spine03',.14,0,0);pose(D,'head',.32,0,0);face(D,{smile:.8});
+ if(counting&&!lost){D.g.position.y+=Math.abs(Math.sin(t*6))*.025;face(D,{smile:1,jaw:.08});}
+ if(lost){const k=sm(tZ,tZ+.2,t);for(const sd of['L','R']){const r=REACH[sd];arm(D,sd,r.ux*(1-k)+AD[0]*k,r.uz*(1-k)+AD[2]*k,r.lx*(1-k)+.2*k);}face(D,{smile:0,jaw:.25*k});pose(D,'head',.38-.5*k,0,0);pose(D,'spine03',.1*k,0,0);}
+ FLY.forEach((m,i)=>{m.visible=counting&&!lost;if(!m.visible)return;const u=((t*7+i/FLY.length)%1);m.position.set(.01*Math.sin(i*3),.26-.2*u+.08*Math.sin(u*Math.PI),-.12+.34*u);m.rotation.set(-Math.PI/2+.5*(1-u),0,0);});
+ BRK.forEach((m,i)=>{let s=0,k=1;const a=t<tMeet-.1?tOn[i]:(i===0?tLand+.35:1e9);s=t>=a?1:0;if(t<tMeet-.1)s*=1-sm(tZ,tZ+.18,t);k=sm(a,a+.25,t);
+  m.position.copy(TRAY).lerp(m.userData.home,k);m.position.y+=.25*Math.sin(Math.PI*k);m.scale.setScalar(Math.max(.001,s*(.3+.7*k)));});}
 
-await loaded;await Promise.all(Object.values(MODELS));
+await loaded;
+{relax(danny);danny.g.position.set(0,FY,-1.05);pose(danny,'spine03',.14,0,0);mikeH.updateMatrixWorld(true);REACH.R=solveReach(danny,'R',MCH.localToWorld(V3(-.02,.27,-.08)));REACH.L=solveReach(danny,'L',MCH.localToWorld(V3(.13,.22,.02)));relax(danny);}await Promise.all(Object.values(MODELS));
 /*SOLVE*/
 const cap=document.getElementById('cap'),FLASHDIV=document.getElementById('fl');window.missingBones=[];
 window.renderAt=t=>{setCam(t);animate(t);
