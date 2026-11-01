@@ -12,6 +12,9 @@ for a,b in zip(W,W[1:]):
     if a['w']=='it.' and b['w']=='will':b['w']="We'll"   # whisper hears "We'll" as "will"
     if a['w']=='Rick' and b['w']=='screams':a['w']='Rick,'
     if a['w']=='Tara' and b['w']=='whispers':a['w']='Tara,'
+    if a['w']=='Comment' and b['w'].lower().startswith('bank'):b['w']='BANK'
+for a,b in zip(W,W[1:]):
+    if a['w']=='or' and b['w'].lower()=='dreams':b['w']='DREAMS'
 ch=[];cur=[]
 for i,w in enumerate(W):
     cur.append(w);end=w['w'][-1] in '.,?!'
@@ -19,7 +22,7 @@ for i,w in enumerate(W):
         ch.append({'t':' '.join(x['w'].strip('.,') for x in cur),'s':cur[0]['s'],'e':cur[-1]['e']});cur=[]
 if cur:ch.append({'t':' '.join(x['w'].strip('.,') for x in cur),'s':cur[0]['s'],'e':cur[-1]['e']})
 import subprocess
-dur=float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0','ep6-found-10m/vo.wav'],capture_output=True,text=True).stdout)+.3
+dur=float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0','ep6-found-10m/vo.wav'],capture_output=True,text=True).stdout)+.3-.45   # video starts .45 s into the scene (T0 in ep6.html): the first word right after the ting
 # line starts: first word of each spoken line, matched in order
 n=lambda x:x.lower().strip('.,?')
 L=[[n(w) for w in l.split()[:2]] for l in open('ep6-found-10m/lines.txt') if l.strip()];starts=[];j=0

@@ -8,7 +8,7 @@ def load(p):
 tl=json.load(open(f'{RK}/timeline_ep6.json'));WD=tl['words'];DUR=tl['dur']
 def Wn(w,n=0):
     k=[x['s'] for x in WD if x['w'].lower().strip('?.,!')==w.lower()];return k[min(n,len(k)-1)]
-voice=load('ep6-found-10m/vo.wav');N=int(DUR*SR);out=np.zeros(N,np.float32);out[:min(N,len(voice))]+=voice[:N]
+voice=load('ep6-found-10m/vo.wav');N=int((DUR+.45)*SR);out=np.zeros(N,np.float32);out[:min(N,len(voice))]+=voice[:N]   # timeline dur is video time (scene minus T0)
 rng=np.random.default_rng(6)
 b=np.cumsum(rng.standard_normal(N).astype(np.float32));b-=np.convolve(b,np.ones(4800)/4800,'same');b/=np.abs(b).max();out+=b*.05
 def put(sig,t,g):
@@ -18,9 +18,10 @@ S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','slap'
 def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next beat
     n=int(dur*SR);x=sig[:n].copy();f=int(min(fade,dur/2)*SR);x[-f:]*=np.linspace(1,0,f);return x
 for k in['fahh','pop']:S[k]=load(f'{SFX}/user-{k}.wav')
-HIT=.5   # shovel hits the trunk (= ep6.html HIT)
-put(S['ting'],0.0,.4)
-for t0 in(.0,.25):put(cut(S['slap'],.18),t0,.16)                           # shovel digs (pre-roll before the voice)
+HIT=.68   # shovel hits the trunk (= ep6.html HIT)
+T0=.45   # the video starts here (= ep6.html T0): ting, then the first word at once
+put(S['ting'],T0,.4)
+for t0 in(T0,T0+.15):put(cut(S['slap'],.18),t0,.16)                           # shovel digs (pre-roll before the voice)
 put(S['slap'],HIT-.02,.4);put(S['boom'],HIT,.32)                           # clink on the trunk, lid bursts open
 put(cut(S['cash-register'],.9),Wn('$10')+.05,.3);put(cut(S['money'],1.0),Wn('$10')+.12,.16)
 put(cut(S['whoosh'],.9),1.75,.28)                                          # rise out of the shaft
@@ -52,8 +53,11 @@ put(cut(S['money-transfer'],1.0),W('$3.65'),.3);put(cut(S['wrong'],.45),W('state
 put(cut(S['cash-register'],.7),W('$6.35'),.3);put(cut(S['yeah'],.8),W('$6.35')+.3,.22)
 put(S['ting'],W('rich'),.3);put(S['ting'],W('legal'),.3)
 put(S['boom'],W('tara',1)-.02,.34);put(cut(S['fahh'],1.0,.25),W('tara',1)+.02,.3)                       # the regret
-for w,n in(('rick',1),('tara',2),('danny',4)):put(S['pop'],W(w,n),.3)
+put(S['pop'],W('bank',3),.3);put(cut(S['cash-register'],.7),W('bank',3)+.05,.22)
+put(S['pop'],W('dreams'),.3);put(cut(S['wow'],.6),W('dreams')+.05,.22)
+put(S['pop'],W('comment'),.25)
 put(S['ting'],W('follow'),.3)
+out=out[int(T0*SR):]
 pk=np.abs(out).max();out/=max(1,pk/.95)
 pcm=(out*32767).astype(np.int16);w=wave.open(f'{TMP}/_m6.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes(pcm.tobytes());w.close()
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/_m6.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep6.wav'],check=True);print('mix ok')

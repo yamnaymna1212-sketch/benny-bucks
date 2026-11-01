@@ -249,7 +249,7 @@ function relax(P){for(const b of Object.values(P.BN))b.quaternion.copy(P.rest.ge
 function face(P,{jaw=0,smile=0}={}){pose(P,'jaw',jaw,0,0);for(const sd of['L','R']){pose(P,'risorius03'+sd,0,0,(sd==='L'?1:-1)*smile*.35);pose(P,'risorius02'+sd,0,0,(sd==='L'?1:-1)*smile*.35);}}
 function armsUp(P,k){pose(P,'upperarm01L',AD[0]+.25*k,0,-AD[2]+2.05*k);pose(P,'upperarm01R',AD[0]+.25*k,0,AD[2]-2.05*k);pose(P,'lowerarm01L',.35*k,0,0);pose(P,'lowerarm01R',.35*k,0,0);}
 const danny=person('danny',PIT.x-.05,PIT.y,PIT.z-.78,.6,mikeH);
-const HIT=.5;   // the shovel clinks on the trunk, the dirt flies, the lid opens
+const HIT=.68;const T0=.45;   // video t=0 is scene .45: the first word starts right after the ting   // the shovel clinks on the trunk, the dirt flies, the lid opens
 const SHOV=new THREE.Group();SHOV.scale.setScalar(.7);mikeH.add(SHOV);add(CY(.022,.022,1.3,10),M(0x8a5a2a,.6),0,.55,0,SHOV,false);add(B(.3,.04,.04),M(0x8a5a2a,.6),0,1.2,0,SHOV,false);add(B(.26,.34,.02),M(0x8f949a,.3,.9),0,-.28,0,SHOV);
 const MOUND=add(new THREE.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),pbr('dirt',1.5,1.5,0x8a6a4a),PIT.x,PIT.y+.5,PIT.z+.15,mikeH);MOUND.scale.set(.78,.34,.52);
 const DIRT=[];{const gm=new THREE.IcosahedronGeometry(.028,0),mm=new THREE.MeshStandardMaterial({color:0x4a3220,roughness:1});for(let i=0;i<60;i++){const m=add(gm,mm,0,0,0,mikeH,false);m.visible=false;DIRT.push({m,a:Math.random(),vx:(Math.random()-.5)*1.6,vy:2.6+Math.random()*1.8,vz:-1.4-Math.random()*1.4,burst:i>=34});}}
@@ -324,16 +324,16 @@ const POOF=add(new THREE.SphereGeometry(1,24,16),new THREE.MeshBasicMaterial({co
 // ---- Tara's dream bubble: mini mansion, mini Ferrari (colour picker), mini jet ----
 PROF.sports={b:[[-2.25,.3],[2.3,.3],[2.35,.55],[2.0,.72],[.6,.84],[-.25,1.18],[-1.3,1.16],[-2.15,.86],[-2.3,.6]],g:[[.42,.88],[-.22,1.12],[-1.2,1.1],[-1.7,.9]],w:1.95};
 VG.sports={b:ext(PROF.sports.b,PROF.sports.w-.16,.08),g:ext(PROF.sports.g,PROF.sports.w-.1,.05)};
-const BUB=new THREE.Group();BUB.position.set(.6,2.3,-2.3);taraH.add(BUB);BUB.visible=false;
+const BUB=new THREE.Group();BUB.position.set(.1,2.55,-2.3);taraH.add(BUB);BUB.visible=false;
 add(new THREE.SphereGeometry(.78,40,24),new THREE.MeshBasicMaterial({color:0xfff4fa,transparent:true,opacity:.07,depthWrite:false}),0,0,0,BUB,false);
 const DOTS=[.07,.05,.035].map((r,i)=>add(new THREE.SphereGeometry(r,16,10),new THREE.MeshPhysicalMaterial({color:0xffffff,transparent:true,opacity:.3,depthWrite:false}),-.75+i*.0,-.55-i*.0,0,taraH,false));
-const MANS=new THREE.Group();BUB.add(MANS);MANS.position.set(-.22,-.25,-.1);MANS.scale.setScalar(.13);
+const MANS=new THREE.Group();BUB.add(MANS);MANS.position.set(0,-.24,0);MANS.scale.setScalar(.1);
 {add(B(4,2.2,2.4),M(0xf6f2ea,.6),0,1.1,0,MANS);add(B(1.6,1.6,1.6),M(0xf6f2ea,.6),-2.6,.8,.2,MANS);add(B(1.6,1.6,1.6),M(0xf6f2ea,.6),2.6,.8,.2,MANS);
  const rf=add(new THREE.ConeGeometry(2.9,1.2,4),M(0xc9a54a,.35,.8),0,2.8,0,MANS);rf.rotation.y=Math.PI/4;rf.scale.set(1,1,.62);
  for(const x of[-1.2,-.4,.4,1.2])add(CY(.12,.12,2.1,12),M(0xffffff,.5),x,1.05,1.45,MANS);add(B(3.0,.15,.5),M(0xffffff,.5),0,2.15,1.45,MANS);
  for(const x of[-1.5,-.5,.5,1.5])for(const y of[.7,1.6])add(B(.4,.5,.05),M(0xffd27a,.3,0,{emissive:0xffc45a,emissiveIntensity:1.2}),x,y,1.22,MANS,false);
  add(B(3,.05,1.2),M(0x2ec4ff,.1,0,{emissive:0x1a8fd0,emissiveIntensity:.6}),0,.03,2.6,MANS,false);}
-const FER=vehicle('sports',0xd40000,0,0,0);BUB.add(FER);FER.position.set(.12,-.42,.25);FER.rotation.y=-.5;FER.scale.setScalar(.13);const FERM=FER.children[0].material;
+const FER=vehicle('sports',0xd40000,0,0,0);BUB.add(FER);FER.position.set(0,-.55,.12);FER.scale.setScalar(.13);const FERM=FER.children[0].material;
 const JET=new THREE.Group();BUB.add(JET);JET.scale.setScalar(.12);
 {const wm=M(0xf4f6f8,.3,.4);const f=add(CY(.28,.24,3.2,20),wm,0,0,0,JET);f.rotation.z=Math.PI/2;add(new THREE.SphereGeometry(.28,16,10),wm,1.6,0,0,JET);add(B(.6,.05,3.4),wm,.1,-.05,0,JET);add(B(.4,.7,.05),wm,-1.5,.35,0,JET);add(B(.35,.04,1.2),wm,-1.5,.05,0,JET);
  for(let i=0;i<6;i++)add(B(.12,.08,.02),M(0x1b2433,.3),.9-i*.38,.1,.27,JET,false);}
@@ -430,8 +430,8 @@ const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0
 const toW=(lx,ly,lz)=>V3(MX+lx,ly,MZ+lz);
 // camera keys [t, pos(house-local), look(house-local), fov]; Catmull-Rom through them = no cuts, ever
 const KEYS=[
- [0,   [1.9,2.7,.95],[1.9,-2.6,.3],58],       // straight down a deep shaft: Danny digs at the bottom, dirt flies up
- [.6,  [1.9,1.6,1.0], [1.9,-2.6,.25],54],     // sinking toward him as the shovel clinks
+ [.45, [1.9,2.7,.95],[1.9,-2.6,.3],58],       // straight down a deep shaft: Danny digs at the bottom, dirt flies up
+ [.95, [1.9,1.6,1.0], [1.9,-2.6,.25],54],     // sinking toward him as the shovel clinks
  [1.35,[1.9,.9,1.15], [1.9,-2.0,.15],52],     // lid open, cash glowing, "$10,000,000"
  [2.25,[3.4,2.9,3.4], [1.5,-.8,-.3],52],      // rise out: the hole in his living-room floor ("under his house")
  [3.0, [2.0,2.4,1.7], [1.9,-2.0,0],52],       // back over the rim: he jumps for joy
@@ -440,15 +440,15 @@ const KEYS=[
  [5.6, [1.84,1.25,1.43],[1.9,-1.27,-.05],43],  // hold on Danny + name
  [6.45,Wk(-14,4.2,1.5),Wk(-25,1.6,-7.0),50],         // out of his house, along Maple St to Rick's
  [7.2, Wk(-26.2,2.0,-6.6),Wk(-26.5,1.3,-10.8),46],   // Rick in bed, phone, screams
- [8.7, Wk(-26.3,1.75,-7.6),Wk(-26.5,1.45,-10.8),44],
- [9.15,Wk(-25.8,2.4,-3.0),Wk(-22,2.0,-1.5),48],
+ [8.1, Wk(-26.3,1.75,-7.6),Wk(-26.5,1.45,-10.8),44],
+ [8.95,Wk(-17.5,4.5,5.0),Wk(-10.5,1.5,-.5),50],     // SWAT on the word
  [9.75,Wk(-19,6,4.5),Wk(-9.5,2.5,-1),50],            // his nightmare: helicopter + SWAT on Danny's lawn
  [10.9,Wk(-14.5,3.6,6.5),Wk(-9.5,1.8,-.8),50],
  [11.75,Wk(-1,5.6,6.6),Wk(7,1.6,-6),50],             // poof, on to Tara's
  [12.5,Wk(10.8,2.0,-6.6),Wk(10.6,1.45,-10.8),46],    // Tara whispers
- [13.6,Wk(11.0,2.15,-7.2),Wk(11.0,2.0,-10.3),46],    // dream bubble: mansion, Ferrari, jet
- [15.4,Wk(11.1,2.25,-7.6),Wk(11.1,2.2,-10.3),45],
- [16.6,Wk(11.2,2.3,-8.0),Wk(11.1,2.25,-10.3),44],    // picking the Ferrari colour
+ [13.6,Wk(11.1,2.35,-7.0),Wk(11.1,2.4,-10.3),46],    // dream bubble: mansion, Ferrari, jet
+ [15.4,Wk(11.1,2.4,-7.2),Wk(11.1,2.42,-10.3),46],
+ [16.6,Wk(11.1,2.3,-7.8),Wk(11.1,2.25,-10.3),44],    // picking the Ferrari colour
  [17.4,Wk(10.4,2.4,-6.6),Wk(10.0,1.9,-10),48],
  [18.6,Wk(-4.9,1.9,-1.6),Wk(-5.9,1.5,-4.9),46],      // Danny listens to both
  [20.6,Wk(-5.3,1.8,-2.5),Wk(-5.9,1.65,-4.9),42],     // thinks one second
@@ -481,8 +481,9 @@ const KEYS=[
  [55.0,Wk(-7.4,2.1,12.4),Wk(-7.3,1.3,8.8),46],
  [56.6,Wk(-6.95,2.1,12.8),Wk(-6.95,1.45,8.9),50],       // telling Tara
  [58.4,Wk(-7.6,2.8,15.8),Wk(-7.6,1.4,8.9),48],       // Rick, Tara or Danny?
- [60.6,Wk(-7.6,4.5,16.5),Wk(-7.6,1.4,8.5),50],
- [63.0,Wk(-7.6,8.5,20.5),Wk(-7.6,1.2,8),52]];
+ [60.6,Wk(-7.4,3.0,16.4),Wk(-7.4,1.6,8.9),50],
+ [63.0,Wk(-7.3,4.2,17.2),Wk(-7.3,1.4,8.6),52],
+ [65.6,Wk(-7.6,9.5,22.5),Wk(-7.6,1.2,8),52]];
 const herm=(t,arr)=>{let i=0;while(i<arr.length-2&&t>=arr[i+1][0])i++;const a=arr[Math.max(0,i-1)],b=arr[i],c=arr[i+1],d=arr[Math.min(arr.length-1,i+2)];
  const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2;
  const m=(p,q,v)=>(b===p&&c===q)?0:0;return {b,c,a,d,h,h00,h10,h01,h11};};
@@ -534,7 +535,7 @@ function animate(t){world(t);updPops(t);if(t>=6.95){story(t);return;}relax(danny
 // ================= STORY ANIMATION (t >= 6.95) =================
 // floating labels after the hook (RED problem, GREEN money, YELLOW key fact, WHITE neutral)
 popT('RICK',.12,RED,V3(-26.5,2.45,-10.9),Wd('rick'),11.0);popT('SWAT',.2,RED,V3(-9.6,2.6,1.2),Wd('swat'),11.0);
-popT('TARA',.12,YEL,V3(10.5,2.45,-10.9),Wd('tara'),15.9);
+popT('TARA',.12,YEL,V3(9.95,1.85,-10.6),Wd('tara'),15.9);
 popT('RICK',.08,RED,V3(-6.5,2.12,-4.9),Wd('listens'),19.3);popT('TARA',.08,YEL,V3(-5.3,2.12,-4.9),Wd('both'),19.3);popT('1 SEC',.12,YEL,V3(-5.15,1.95,-4.6),Wd('one'),21.0);
 popT('100 KG',.12,WHT,V3(-20.2,1.7,21.0),Wd('kilos'),26.9);popT('$100 BILLS',.1,GRN,V3(-20.4,1.45,21.4),Wd('dollar'),26.9);
 popT('$10,000+',.1,YEL,V3(-21,1.75,25.0),Wd('$10,000'),32.6);popT('1 ROUTINE FORM',.07,WHT,V3(-21,1.56,25.0),Wd('one',1),32.8);
@@ -542,7 +543,7 @@ popT('IRS',.16,RED,V3(-12.3,1.95,3.7),Wd('irs'),40.3);popT('TREASURE',.12,YEL,V3
 popT('1964',.1,WHT,V3(-12.6,1.75,-.5),Wd('couple'),45.0);popT('$4,467',.12,GRN,V3(-11.6,1.95,-.4),Wd('$4,000'),46.0);popT('PAY TAX',.14,RED,V3(-11.3,2.25,-.3),Wd('pay'),46.2);
 popT('$10,000,000',.13,GRN,V3(-8.2,1.6,8.2),Wd('$10',1),48.4);popT('-$3,650,000',.12,RED,V3(-9.6,1.3,8.2),Wd('$365'),51.0);popT('+ STATE TAX',.09,YEL,V3(-7.1,2.3,8.6),Wd('state'),52.4);
 popT('$6,350,000',.13,GRN,V3(-7.6,2.45,8.6),Wd('$635'),54.2);popT('RICH',.11,GRN,V3(-8.5,2.4,9.0),Wd('rich'),56.0);popT('LEGAL',.11,GRN,V3(-6.7,2.4,9.0),Wd('legal'),56.0);
-popT('RICK',.12,RED,V3(-8.9,2.25,9.0),Wd('rick',1),63);popT('TARA',.12,YEL,V3(-6.3,2.15,9.0),Wd('tara',2),63);popT('DANNY',.12,GRN,V3(-7.6,2.25,9.0),Wd('danny',4),63);
+popT('LEGAL PATH',.09,GRN,V3(-7.6,2.55,9.0),Wd('path'),59.3);popT('BANK',.2,GRN,V3(-7.6,2.35,9.0),Wd('bank',3),66);popT('DREAMS',.18,YEL,V3(-6.4,2.25,9.0),Wd('dreams'),66);
 
 const _w=V3(),_q=new THREE.Quaternion();
 const atW=(P,bone,off,obj)=>{P.BN[bone].getWorldPosition(_w);obj.position.copy(_w).add(off);};
@@ -591,7 +592,8 @@ function story(t){
  else{placeD(-7.6,.1,9.0,0);
   if(t>Wd('$635')&&t<Wd('still')+.6){const k=sm(Wd('$635'),Wd('$635')+.25,t);armsUp(D,k);D.g.position.y+=Math.abs(Math.sin((t-52.84)*6.5))*.1*k;face(D,{smile:1,jaw:.1});}
   if(t>Wd('tara',1)-.05&&t<57.4){pose(D,'upperarm01R',PHP.ux,0,PHP.uz);pose(D,'lowerarm01R',PHP.lx+.25,0,0);pose(D,'head',.3,0,0);face(D,{smile:0,jaw:.05});}   // facepalm
-  if(t>59.1)wave(D,'R',t+.3);}
+  if(t>Wd('bank',3)&&t<Wd('comment'))arm(D,'R',AD[0]+.3,AD[2]-2.2,.2);   // BANK: hand up
+  if(t>Wd('comment'))wave(D,'R',t+.3);}
  if(t>=22.2&&t<23.6){}else if(walking<0){for(const sd of['L','R']){pose(D,'upperleg01'+sd,0,0,0);}}
  // trunk lid stays closed after the hook
  // ---------- Rick (bed, west house): screams into the phone ----------
@@ -614,9 +616,9 @@ function story(t){
  if(t<16.0){pose(tara,'upperarm01R',TPH.ux,0,TPH.uz);pose(tara,'lowerarm01R',TPH.lx,0,0);curl(tara,'R',.75);taraH.updateMatrixWorld(true);phoneAt(tara,1,PT_);
   const wh=sm(Wd('whispers')-.1,Wd('whispers')+.15,t);arm(tara,'L',AD[0]+1.1*wh,AD[2]-.85*wh,2.0*wh);pose(tara,'head',.0,.25*wh,.12*wh);}
  else{PT_.visible=false;arm(tara,'L',AD[0]+1.35,AD[2]-.9,.25);curl(tara,'L',.7,.2);pose(tara,'upperarm01R',AD[0]+.2,0,AD[2]-.1);pose(tara,'head',-.2,-.25,0);}
- {const b=sm(Wd('keep')-.1,Wd('keep')+.25,t)*(1-sm(17.9,18.2,t));BUB.visible=b>.01;BUB.scale.setScalar(Math.max(.001,b));for(let i=0;i<3;i++){DOTS[i].visible=b>.01;DOTS[i].position.set(-.5+i*.3,1.9+i*.17,-2.8+i*.15);}
-  MANS.scale.setScalar(.13*pop(t,Wd('mansion'),.3)+.0001);FER.scale.setScalar(.13*pop(t,Wd('ferrari'),.3)*(1+.35*sm(16.1,16.5,t))+.0001);FER.rotation.y=-.5+t*.6;
-  JET.visible=t>Wd('fly');const a=t*1.8;JET.position.set(Math.cos(a)*.52,.32+.05*Math.sin(a*2),Math.sin(a)*.52);JET.rotation.y=-a-Math.PI/2;JET.scale.setScalar(.12*pop(t,Wd('fly'),.3)+.0001);
+ {const b=sm(Wd('keep')-.1,Wd('keep')+.25,t)*(1-sm(17.9,18.2,t));BUB.visible=b>.01;BUB.scale.setScalar(Math.max(.001,b));for(let i=0;i<3;i++){DOTS[i].visible=b>.01;DOTS[i].position.set(-.62-i*.05,2.12+i*.18,-2.85+i*.15);}
+  MANS.scale.setScalar(.1*pop(t,Wd('mansion'),.3)+.0001);FER.scale.setScalar(.13*pop(t,Wd('ferrari'),.3)*(1+.35*sm(16.1,16.5,t))+.0001);FER.rotation.y=.12*Math.sin(t*1.2);
+  JET.visible=t>Wd('fly');JET.position.set(.04*Math.sin(t*1.5),.42+.03*Math.sin(t*2.2),0);JET.rotation.set(0,0,.06*Math.sin(t*1.8));JET.scale.setScalar(.17*pop(t,Wd('fly'),.3)+.0001);
   const cols=[0xd40000,0xffc61a,0x1f5fd4,0xff4fa8];let ci=0;for(const [j,w] of[[1,'picking'],[2,'color'],[3,'ferrari']])if(t>=Wd(w,w==='ferrari'?1:0))ci=j;FERM.color.setHex(cols[ci]);}
  // ---------- bank: teller, manager, form, certificate, photos, coffee ----------
  relax(teller);idle(teller,t,1);face(teller,{smile:t>Wd('smiles')-.3?1:.3,jaw:t>29.5&&t<31.5?.05+.04*Math.sin(t*9):0});
@@ -653,9 +655,9 @@ function story(t){
   m.scale.setScalar(sc);});
  // ---------- finale: Tara arrives, Rick arrives, three of them vote ----------
  relax(taraF);idle(taraF,t,3);{const u=sm(55.3,56.5,t);taraF.g.visible=t>55.2;taraF.g.position.set(-3+(-6.3+3)*u,t>55.2?.1:-50,9.0);taraF.g.rotation.y=u<.98?-Math.PI/2:0;if(u>0&&u<.98)walk(taraF,t,.42);
-  face(taraF,{smile:1,jaw:.05});if(u>=.98&&t<59)arm(taraF,'R',AD[0]+1.3,AD[2]-.6,.3);if(t>59.1)wave(taraF,'L',t+.7);}
+  face(taraF,{smile:1,jaw:.05});if(u>=.98&&t<Wd('dreams'))arm(taraF,'R',AD[0]+1.3,AD[2]-.6,.3);if(t>Wd('dreams')&&t<Wd('comment'))armsUp(taraF,1);if(t>Wd('comment'))wave(taraF,'L',t+.7);}
  relax(rickF);idle(rickF,t,4);{const u=sm(57.2,58.0,t);rickF.g.visible=t>57.1;rickF.g.position.set(-12+(-8.9+12)*u,t>57.1?.1:-50,9.0);rickF.g.rotation.y=u<.98?Math.PI/2:0;if(u>0&&u<.98)walk(rickF,t,.42);
-  face(rickF,{smile:.2,jaw:.08});if(t>59.1)wave(rickF,'L',t+1.4);}
+  face(rickF,{smile:.2,jaw:.08});if(t>Wd('comment'))wave(rickF,'L',t+1.4);}
 }
 function turnTo(P,ry,k){}
 
@@ -668,7 +670,7 @@ await loaded;await Promise.all(Object.values(MODELS));
 for(const [n,P] of[['rick',rick],['tara',tara]]){relax(P);P.g.position.y=0;P.g.updateMatrixWorld(true);const w=V3(),o=V3();P.BN.upperleg01L.getWorldPosition(w);P.g.getWorldPosition(o);HIP[n]=w.y-o.y;P.g.position.y=FY+.6-HIP[n];}
 const RPH=solveEar(rick,()=>sitBed(rick)),TPH=solveEar(tara,()=>sitBed(tara));
 const cap=document.getElementById('cap'),FLASHDIV=document.getElementById('fl');window.missingBones=[];
-window.renderAt=t=>{setCam(t);animate(t);
+window.renderAt=t=>{t+=T0;setCam(t);animate(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
