@@ -182,7 +182,7 @@ add(B(1.5,.86,.05),M(0x0b0b0d,.2,.5),-3.0,1.0,-1.0,mikeH).rotation.y=.5;
 add(RB(1.2,.06,.65,.02),pbr('oak_wood_planks',1,.5),0,FY+.82,-.6,mikeH);for(const [lx,lz] of[[-.52,-.27],[.52,-.27],[-.52,.27],[.52,.27]])add(CY(.025,.025,.8,10),M(0x222222,.4,.6),lx,FY+.4,-.6+lz,mikeH,false);   // standing-height table for the bill counter
 add(CY(.02,.02,1.6,10),M(0x222222,.3,.8),-1.7,FY+.8,-3.1,mikeH);add(CY(.16,.22,.32,24,1,true),M(0xf3ecd8,.8,0,{emissive:0xffe3b0,emissiveIntensity:.22,side:THREE.DoubleSide}),-1.7,FY+1.65,-3.1,mikeH);
 add(B(1.5,.95,.05),M(0x3a2414,.6),0,FY+1.95,-3.62,mikeH,false);add(B(1.38,.83,.02),new THREE.MeshStandardMaterial({roughness:.85,map:tex(760,456,t=>{   // rustic wooden American flag, the classic living-room picture
- for(let i=0;i<13;i++){t.fillStyle=i%2?'#efe6d2':'#9e2a2b';t.fillRect(0,i*456/13,760,456/13+1);}t.fillStyle='#22345a';t.fillRect(0,0,304,245);t.fillStyle='#efe6d2';
+ for(let i=0;i<13;i++){t.fillStyle=i%2?'#cfc6b2':'#7d4440';t.fillRect(0,i*456/13,760,456/13+1);}t.fillStyle='#34405a';t.fillRect(0,0,304,245);t.fillStyle='#cfc6b2';
  for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++){const cx=26+c*50+(r%2?25:0),cy=20+r*25.5;t.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?3.6:9;t.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a));}t.fill();}
  for(let i=0;i<6;i++){t.fillStyle='rgba(40,25,10,.35)';t.fillRect(0,i*76,760,3);}for(let i=0;i<9000;i++){t.fillStyle=`rgba(60,40,20,${Math.random()*.12})`;t.fillRect(Math.random()*760,Math.random()*456,2,1);}})}),0,FY+1.95,-3.585,mikeH,false);
 model('potted_plant_01',3.7,FY,-3.0,1.2,0,mikeH);
@@ -285,7 +285,7 @@ const MK=new THREE.SpotLight(0xfff3e2,14,9,.5,.8,1.2);MK.position.set(MX+1.6,FY+
 const RK=new THREE.SpotLight(0xdfe6ff,8,14,.8,.7,1.3);RK.position.set(MX+2.0,2.1,MZ+6.0);RK.target.position.set(MX,.9,MZ-2.6);scene.add(RK);scene.add(RK.target);
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,500);
 const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
-comp.addPass(new OutputPass());
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.55,.25,1.25));comp.addPass(new OutputPass());
 // colour grade (sRGB): contrast, saturation, gentle vignette
 comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.06},sat:{value:1.1},vig:{value:.24}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
  fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
@@ -338,23 +338,29 @@ const HOMES=[];for(let l=0;l<3;l++)for(const z of[-.53,-.95])for(const x of[.85,
 const BRK=HOMES.map(([x,l,z])=>{const m=add(B(.39,.152,.41),[BSID,BSID,BTOP,BSID,BSID,BSID],0,0,0,mikeH);m.userData.home=V3(x,FY+.077+l*.153,z);m.scale.setScalar(.001);return m;});
 const tOn=BRK.map((m,i)=>{if(i===0)return t1;for(let t=0;t<tZ;t+=.01)if(dayAt(t)>CUM[i])return t;return tZ;});
 const TRAY=V3(0,FY+.91,-.5);
+const NUM1=txt3('$1,000,000',.1,0x0fb24a,scene),NUM0=txt3('$0',.22,0xff2020,scene);for(const m of[NUM1,NUM0])m.material[0].emissiveIntensity=2.2;   // the price glows
+for(const m of[NUM1,NUM0]){m.geometry.computeBoundingBox();const bb=m.geometry.boundingBox;m.userData.cx=(bb.min.x+bb.max.x)/2;m.userData.cy=(bb.min.y+bb.max.y)/2;}
+function centre(m,s,up){m.visible=s>.01;if(!m.visible)return;const d=V3(),r=V3(1,0,0).applyQuaternion(cam.quaternion),u=V3(0,1,0).applyQuaternion(cam.quaternion);cam.getWorldDirection(d);
+ m.position.copy(cam.position).addScaledVector(d,2.2).addScaledVector(r,-m.userData.cx*s).addScaledVector(u,up-m.userData.cy*s);m.quaternion.copy(cam.quaternion);m.scale.setScalar(s);}   // exactly centred on screen
 const FX=new THREE.PointLight(0xffefc8,0,5,1.5);FX.position.copy(toW(1.05,1.9,-.2));scene.add(FX);const FXR=new THREE.PointLight(0xff2a1a,0,7,1.4);FXR.position.copy(toW(.5,2.0,.2));scene.add(FXR);   // event lights: money lands / $0
 const REACH={L:{ux:0,uz:0,lx:0},R:{ux:0,uz:0,lx:0}};
 function solveReach(P,sd,tgt){const w=V3(),res={ux:0,uz:0,lx:0};let best=1e9;for(let ux=-.5;ux<=2.0;ux+=.1)for(let uz=-1.5;uz<=1.8;uz+=.1)for(let lx=0;lx<=2.4;lx+=.12){
  pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);P.g.updateMatrixWorld(true);P.BN['wrist'+sd].getWorldPosition(w);const d=w.distanceTo(tgt);if(d<best){best=d;Object.assign(res,{ux,uz,lx});}}return res;}
-popT('$1,000,000',.12,0x19d45c,toW(.6,1.62,-.6),t1+.05,tZ-.05);popT('$0',.3,RED,toW(.55,1.5,-.55),tZ,tMeet-.2);
-popT('MIKE',.12,WHT,toW(0,2.3,-1.05),Wd('mike'),6.0);popT('$1,000,000',.12,0x19d45c,toW(.6,1.62,-.6),tLand+.4,7.0);
+
+popT('MIKE',.12,WHT,toW(0,2.3,-1.05),Wd('mike'),6.0);
 function total(t){if(t>=tMeet-.1)return 1e6*sm(tLand,tLand+.45,t);if(t>=tZ)return 0;if(t<t1)return 1e6*sm(0,t1+.05,t);return 1e6*(1+11*sm(tA,tZ-.12,t));}
-function animate(t){updPops(t);const D=danny;relax(D);idle(D,t);D.g.position.set(0,FY,-1.05);D.g.rotation.y=0;PHONE.visible=false;HAND.visible=false;
+function animate(t){updPops(t);const D=danny;relax(D);idle(D,t);D.g.position.set(0,FY,-1.05);D.g.rotation.y=0;PHONE.visible=false;
  const lost=t>=tZ&&t<tMeet-.1,v=total(t),counting=total(t+.05)>v+1;
- DAYW.style.display=t>=tMeet-.1?'block':'none';DAYD.textContent='DAY 1';   // the DAY counter starts right after the hook (story: DAY 1 -> DAY 365)
+ DAYW.style.display='block';DAYD.textContent='DAY 1';   // the DAY counter starts right after the hook (story: DAY 1 -> DAY 365)
  led(v,lost);
  // feeding the counter with both hands; a happy bounce while the pile grows; shock at $0
- for(const sd of['L','R']){const r=REACH[sd];arm(D,sd,r.ux+.05*Math.sin(t*9+(sd==='L'?0:2)),r.uz,r.lx);}curl(D,'L',.45);curl(D,'R',.45);pose(D,'spine03',.14,0,0);pose(D,'head',.32,0,0);face(D,{smile:.8});
+ for(const sd of['L','R'])arm(D,sd,AD[0]+.5+.05*Math.sin(t*9+(sd==='L'?0:2)),AD[2]-.12,1.1+.08*Math.sin(t*9+(sd==='L'?1:3)));curl(D,'L',.45);curl(D,'R',.45);pose(D,'spine03',.14,0,0);pose(D,'head',.32,0,0);face(D,{smile:.8});
  if(counting&&!lost){D.g.position.y+=Math.abs(Math.sin(t*6))*.025;face(D,{smile:1,jaw:.08});}
- if(lost){const k=sm(tZ,tZ+.2,t);for(const sd of['L','R']){const r=REACH[sd];arm(D,sd,r.ux*(1-k)+AD[0]*k,r.uz*(1-k)+AD[2]*k,r.lx*(1-k)+.2*k);}face(D,{smile:0,jaw:.25*k});pose(D,'head',.38-.5*k,0,0);pose(D,'spine03',.1*k,0,0);}
+ if(lost){const k=sm(tZ,tZ+.2,t);for(const sd of['L','R'])arm(D,sd,AD[0]+.5*(1-k),AD[2]-.12*(1-k),1.1*(1-k)+.15*k);face(D,{smile:0,jaw:.25*k});pose(D,'head',.38-.5*k,0,0);pose(D,'spine03',.1*k,0,0);}
+ centre(NUM1,pop(t,t1+.05,.3)*(1-sm(tZ-.12,tZ,t))+pop(t,tLand+.4,.3),.12);centre(NUM0,pop(t,tZ,.3)*(1-sm(tMeet-.3,tMeet-.1,t)),.1);
+ mikeH.updateMatrixWorld(true);{const a=V3(),b=V3();danny.BN.wristL.getWorldPosition(a);danny.BN.wristR.getWorldPosition(b);HAND.visible=!lost;HAND.position.copy(a).add(b).multiplyScalar(.5).add(V3(0,.03,.05));HAND.rotation.set(0,0,0);}   // the cash stack in his hands
  FLY.forEach((m,i)=>{m.visible=counting&&!lost;if(!m.visible)return;const u=((t*7+i/FLY.length)%1);m.position.set(.01*Math.sin(i*3),.26-.2*u+.08*Math.sin(u*Math.PI),-.12+.34*u);m.rotation.set(-Math.PI/2+.5*(1-u),0,0);});
- {let f=0;for(const a of tOn)if(t>=a)f=Math.max(f,Math.exp(-(t-a)*5));if(t>=tLand+.35)f=Math.max(f,Math.exp(-(t-tLand-.35)*4));if(t>=tZ&&t<tMeet)f=0;FX.intensity=9*f;FXR.intensity=t>=tZ&&t<tMeet?14*Math.exp(-(t-tZ)*2.2):0;}
+ {let f=0;for(const a of tOn)if(t>=a)f=Math.max(f,Math.exp(-(t-a)*5));if(t>=tLand+.35)f=Math.max(f,Math.exp(-(t-tLand-.35)*4));if(t>=tZ&&t<tMeet)f=0;FX.intensity=5*f;FXR.intensity=t>=tZ&&t<tMeet?14*Math.exp(-(t-tZ)*2.2):0;}
  BRK.forEach((m,i)=>{let s=0,k=1;const a=t<tMeet-.1?tOn[i]:(i===0?tLand+.35:1e9);s=t>=a?1:0;if(t<tMeet-.1)s*=1-sm(tZ,tZ+.18,t);k=sm(a,a+.25,t);
   m.position.copy(TRAY).lerp(m.userData.home,k);m.position.y+=.25*Math.sin(Math.PI*k);m.scale.setScalar(Math.max(.001,s*(.3+.7*k)));});}
 
