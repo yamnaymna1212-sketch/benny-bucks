@@ -33,6 +33,19 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - World = a whole American neighbourhood (Maple Street), never a lone house on grass. Template: render-kit/ep5.html (day) and ep6.html (night + pit).
 - Run render commands FROM render-kit (cd first); `npm run` fails elsewhere. Stills sheet helper: render-kit/sheet.sh / sheet6.sh.
 - Idea format that works: two characters (or two friends) with opposite outcomes from the same money (EP5), or a naive honest hero finds money and the law/tax twist (EP6). Idea list verified 2026-11-01 (see ep6 chat): FDIC $250k split banks; Social Security 62 vs 70 (70% vs 124%); tax refund = free loan to IRS ($3,571 avg 2026 to Mar 20); 401(k) match free money; credit-card minimum payment ($1,000 -> ~$1,775 in 71 months at 22.15% APR, min = max($25, interest+1%)).
+**EP6 feedback rules (user 2026-11-01) - ALWAYS apply, the user must never have to repeat them**
+- Hero: the channel hero is ALWAYS Mike (cast mike.glb, blue tee + jeans), whatever the story calls him (EP6: Danny). Never reuse another cast model as the hero. Friends/staff = other cast members.
+- Hook timing: the video starts right after the 'ting': first word at t=0 (no silent pre-roll), the action already moving in frame 1. Scene time = video time + T0 (.45 s) so the first SFX can sit before the voice.
+- Hook content: show the ACTUAL action the sentence promises (EP6: digging in a deep shaft, dirt flying, the clink, trunk opens on 'ten million'); the treasure must be readable (heaped $100 straps, glow only on the key money + floating number); a lit, readable room even at night (never a dark murky image); no hazy/bloomed whites.
+- Smoothness: no lag / jerks / flicker. Camera = monotone Hermite through keys (never Catmull-Rom overshoot); soil/wall boxes inset so they never z-fight; hide any position jump (teleport) by looking away or leaving frame, never on screen.
+- Phone in hand = flat on the ear with the right-arm solver (solveEar), never at the shoulder.
+- Voice must be clear and human: Kokoro am_liam speed 1.0, max_gap .26 (natural pauses at sentence ends, ~0.5 s max), every word audible, never rushed/merged; then fill pauses with SFX; keep 61-65 s by CUTTING sentences, not by speeding up.
+- Sync visuals to words: every noun the voice says appears ON that word (SWAT team appears on 'SWAT', helicopter on 'helicopter'); camera moves never feel like cuts (fly, don't jump).
+- SFX: every event has a sound; long SFX are trimmed (cut()) so they never bleed into the next word; joy SFX ONLY inside the joy words; regret = boom + fahh; story beats get whoosh/pop/ting/cash.
+- Imagination bubbles (dream/fear): the objects (house, car, plane) are centred, stacked in order, side-on, big and clear, no spinning, with the speaker in frame.
+- No dead moments: nobody stands frozen, something appears/moves every ~2 s; filler beats get SFX or pops.
+- CTA: ask a choice between two ACTIONS in plain words ('take the legal path and give it to the bank, or enjoy it and live your dreams?') and 'Comment A or B' with two floating one-word signs (BANK/DREAMS), not character names.
+- Time honesty: say how long a build really takes; a new set of scenes (not a copy of a template) is a big job: offer to do it in stages.
 **Process**
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
