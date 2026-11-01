@@ -8,6 +8,9 @@ for w in raw:
 for a,b in zip(W,W[1:]):
     if a['w'].lower()=='comment' and b['w'].lower().startswith('spend'):b['w']='SPEND'
     if a['w']=='or' and b['w'].lower().startswith('keep') and W.index(b)>len(W)-12:b['w']='KEEP'
+for i in range(len(W)-1):
+    if W[i]['w']=='Watch' and W[i+1]['w']=='his':W[i]['w']='Watches,';W[i]['e']=W[i+1]['e'];W[i+1]['w']='__drop__'
+W=[w for w in W if w['w']!='__drop__']
 W[0]['s']=0.0
 ch=[];cur=[]
 for w in W:

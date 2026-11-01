@@ -44,6 +44,7 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - SFX: every event has a sound; long SFX are trimmed (cut()) so they never bleed into the next word; joy SFX ONLY inside the joy words; regret = boom + fahh; story beats get whoosh/pop/ting/cash.
 - Imagination bubbles (dream/fear): the objects (house, car, plane) are centred, stacked in order, side-on, big and clear, no spinning, with the speaker in frame.
 - No dead moments: nobody stands frozen, something appears/moves every ~2 s; filler beats get SFX or pops.
+- Story after the hook (user 2026-11-01, 'never say it again'): the moment the hero is introduced, CHANGE place + action + event (never stay in the hook's room). The hero lives the story through many places; places/events change only by the usual continuous camera move (same filming style, no classic cuts), so the viewer feels one shot while scenes, events and locations change.
 - CTA: ask a choice between two ACTIONS in plain words ('take the legal path and give it to the bank, or enjoy it and live your dreams?') and 'Comment A or B' with two floating one-word signs (BANK/DREAMS), not character names.
 - Time honesty: say how long a build really takes; a new set of scenes (not a copy of a template) is a big job: offer to do it in stages.
 **Process**

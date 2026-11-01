@@ -27,6 +27,25 @@ put(cut(S['whoosh'],.8),1.35,.2)
 put(S['boom'],W('$0')-.02,.34);put(cut(S['fahh'],.9,.25),W('$0')+.02,.3)    # DAY 365: $0
 put(cut(S['whoosh'],.6),W('meet')-.15,.2);put(S['ting'],W('mike'),.3)
 put(cut(S['notif'],.5),W('lands'),.3);put(cut(S['cash-register'],.7),W('lands')+.08,.24)
+# ---------- story SFX: every event has a sound, trimmed so nothing bleeds over the next word ----------
+for k in['wow','yeah','horn','wrong','shock','money-transfer','notif2','slap']:S[k]=load(f'{SFX}/user-{k}.wav')
+for t0 in(3.55,25.85,37.0,40.0,41.9,47.8,50.6):put(cut(S['whoosh'],.8),t0,.2)           # camera flights between places
+put(cut(S['yeah'],.7),W('rich'),.2);put(S['pop'],W('rich')+.1,.25)                          # the pallet appears
+put(cut(S['horn'],.4),W('irs')-.25,.2);put(S['boom'],W('irs'),.28)                         # IRS pulls up
+put(cut(S['cash-register'],.7),W('12'),.24);put(cut(S['money-transfer'],1.0),W('$4.7'),.3);put(cut(S['wrong'],.5),W('$4.7')+.4,.2)
+put(cut(S['wrong'],.5),W('$4'),.22);put(cut(S['whoosh'],.6),14.5,.18)                        # 4 of 10 bills fly off
+put(S['pop'],W('texas'),.3);put(cut(S['cash-register'],.7),W('$7.3'),.26)
+put(cut(S['horn'],.5),W('$400,000')-.2,.24);put(S['pop'],W('$400,000'),.25);put(cut(S['horn'],.4),W('second'),.2);put(S['pop'],W('second'),.22)
+put(cut(S['cash-register'],.7),W('$100,000'),.26);put(cut(S['whoosh'],1.2),W('jet'),.3)
+for w in('watches','chains','shoes'):put(S['pop'],W(w),.25)
+put(cut(S['wow'],.6),W('bro')-.1,.22)
+put(cut(S['cash-register'],.7),W('dinner'),.24);put(cut(S['yeah'],.7),W('birthday'),.22)
+for w in('insurance','staff','security','bills'):put(cut(S['notif'],.4),W(w),.24)
+put(cut(S['wrong'],.5),W('yellow'),.24);put(S['boom'],W('red'),.26)
+put(cut(S['wrong'],.6),W('declined'),.3);put(S['boom'],W('$0',1),.32);put(cut(S['fahh'],1.0,.25),W('$0',1)+.03,.3)
+put(S['ting'],W('$12'),.25);put(S['boom'],W('zero'),.25)
+for i,w in enumerate(('lose','money','spent')):put(S['pop'],W(w,1 if w=='money' else 0),.22)
+put(S['ting'],W('keep'),.3);put(S['pop'],W('spend'),.28);put(S['pop'],W('keep',1),.28);put(S['ting'],W('follow'),.3)
 pk=np.abs(out).max();out/=max(1,pk/.95)
 pcm=(out*32767).astype(np.int16);w=wave.open(f'{TMP}/_m6.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes(pcm.tobytes());w.close()
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/_m6.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep7.wav'],check=True);print('mix ok')
