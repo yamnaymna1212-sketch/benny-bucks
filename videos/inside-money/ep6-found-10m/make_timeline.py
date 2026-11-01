@@ -4,10 +4,14 @@ raw=json.load(open('ep6-found-10m/words_raw.json'))
 W=[]
 for w in raw:
     t=w['w']
-    if W and (t.startswith(',') or t.startswith('-') or t=='%'):W[-1]['w']+=t;W[-1]['e']=w['e'];continue
+    if W and (t.startswith(',') or t.startswith('-') or t=='%' or (t.startswith('.') and W[-1]['w'].startswith('$'))):W[-1]['w']+=t;W[-1]['e']=w['e'];continue
     W.append({'w':t,'s':w['s'],'e':w['e']})
-FIX={'401k':'401(k)'}
+FIX={'401k':'401(k)','Screams':'screams','Whispers':'whispers','Keep':'keep','It':'it.'}
 for w in W:w['w']=FIX.get(w['w'],w['w'])
+for a,b in zip(W,W[1:]):
+    if a['w']=='it.' and b['w']=='will':b['w']="We'll"   # whisper hears "We'll" as "will"
+    if a['w']=='Rick' and b['w']=='screams':a['w']='Rick,'
+    if a['w']=='Tara' and b['w']=='whispers':a['w']='Tara,'
 ch=[];cur=[]
 for i,w in enumerate(W):
     cur.append(w);end=w['w'][-1] in '.,?!'

@@ -85,4 +85,5 @@ Pinned comment: "Would you carry $1 million in cash? Comment YES or NO".
 EP5 "The sofa vs the plan" (tax evasion vs legal avoidance, US version) FULL v1 rendered: render-kit/ep5-tax-sofa.mp4 (61.6 s) + ep5-tax-sofa/ep5-tax-sofa-phone.mp4. New look: a whole American suburb (Maple Street) with cutaway houses, clear blue sky, colour grade + MSAA. Awaiting user review.
 
 ## 10. EP6 status (2026-11-01) - read ep6-found-10m/PLAN.md
-EP6 'He finds $10 million under his house' (Danny): script 247 words, one-take voice 64.6 s, hook scene + 5-s preview v1 done; awaiting hook feedback, story not built yet.
+EP6 'He finds $10 million under his house' (Danny = Mike): hook v3 approved; full story built in ep6.html (Rick's bedroom + helicopter/SWAT nightmare, Tara's dream bubble, pickup drive at sunrise, hollow FIRST NATIONAL BANK lobby, IRS letter, 1964 piano, tax stairs + ten $1M bricks, vote line-up). Voice 62.7 s (speed 1.0, natural pauses). Full render + phone copy + PUBLISH.md: see ep6-found-10m/PLAN.md.
+Lessons: Danny/hero is ALWAYS mike.glb; camera uses monotone Hermite (no overshoot); hide position jumps by panning away (bank exit); labels above heads, never behind people; joy SFX only inside joy words (cut()).
