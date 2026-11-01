@@ -33,7 +33,7 @@ US everything (house types, flags, cars, bus, mailboxes, dollars), living street
 - Style change vs EP1-4 (plaza/lobby): confirm with user first (TOKEN GUARD).
 - Next: user OK -> voice (Kokoro one take) -> assets -> look stills -> 5-s hook preview -> approval -> full render.
 
-## STATUS 2026-11-01: FULL v1 RENDERED
+## STATUS 2026-11-01: FULL v2 RENDERED (one-take voice 61.2 s, flying camera, idle motion; v1 voice kept in v1/, scene authored on v1 timing and remapped per line)
 - render-kit/ep5-tax-sofa.mp4 (61.6 s, Apple M3, not in git) + ep5-tax-sofa/ep5-tax-sofa-phone.mp4 (crf 26, in git).
 - Scene render-kit/ep5.html (Maple Street: Mike cutaway x=-9, Dana cutaway + garage office x=11, bank/travel/gas across the street), mix ep5-tax-sofa/mix_ep5.py, timeline render-kit/timeline_ep5.json (make_timeline.py), render `npm run render -- ep5` FROM render-kit.
 - Cast: mike, printer (= Dana), teller (= food-bank volunteer), guard + manager (= IRS agents). Rebuild GLBs: blender -b --python characters/make_cast.py -- mike printer teller guard manager.
