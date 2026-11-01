@@ -33,5 +33,16 @@ for f in L:
         k=j
         while n(W[k+1]['w'])!=f[1]:k+=1
     starts.append(W[k]['s']);j=k+1
-json.dump({'dur':round(dur,2),'lines':starts,'words':W,'chunks':ch},open('render-kit/timeline_ep6.json','w'),indent=0)
+# TIME WARP: the scene (camera keys, animation, SFX) is designed on the DESIGN timeline (ep6-found-10m/design_timeline.json line starts).
+# The voice is re-recorded (continuous take) so real line starts move: map design<->real piecewise-linearly and store words/chunks in DESIGN time.
+des=json.load(open('ep6-found-10m/design_timeline.json'))['lines']
+anch=[(0.0,0.0),(.45,.45)]+[(d,r) for d,r in zip(des[1:],starts[1:]) if r>.5]
+anch.append((des[-1]+8,starts[-1]+8))
+def r2d(t):
+    for (d0,r0),(d1,r1) in zip(anch,anch[1:]):
+        if t<=r1:return d0+(t-r0)*(d1-d0)/(r1-r0)
+    return anch[-1][0]+t-anch[-1][1]
+for w in W:w['s']=round(r2d(w['s']),3);w['e']=round(r2d(w['e']),3)
+for c in ch:c['s']=round(r2d(c['s']),3);c['e']=round(r2d(c['e']),3)
+json.dump({'dur':round(dur,2),'lines':[round(r2d(x),3) for x in starts],'words':W,'chunks':ch,'warp':[[round(d,3),round(r,3)] for d,r in anch]},open('render-kit/timeline_ep6.json','w'),indent=0)
 print(len(W),len(ch),round(dur,2),starts);print([c['t'] for c in ch[:12]])

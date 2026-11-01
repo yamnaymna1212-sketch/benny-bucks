@@ -11,8 +11,13 @@ def Wn(w,n=0):
 voice=load('ep6-found-10m/vo.wav');N=int((DUR+.45)*SR);out=np.zeros(N,np.float32);out[:min(N,len(voice))]+=voice[:N]   # timeline dur is video time (scene minus T0)
 rng=np.random.default_rng(6)
 b=np.cumsum(rng.standard_normal(N).astype(np.float32));b-=np.convolve(b,np.ones(4800)/4800,'same');b/=np.abs(b).max();out+=b*.05
+WARP=tl['warp']
+def d2r(t):
+    for (d0,r0),(d1,r1) in zip(WARP,WARP[1:]):
+        if t<=d1:return r0+(t-d0)*(r1-r0)/(d1-d0)
+    return WARP[-1][1]+t-WARP[-1][0]
 def put(sig,t,g):
-    i=int(max(0,t)*SR);j=min(N,i+len(sig))
+    i=int(max(0,d2r(t))*SR);j=min(N,i+len(sig))
     if i<N:out[i:j]+=sig[:j-i]*g
 S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','slap','money','boom','wow','yeah','notif']}
 def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next beat

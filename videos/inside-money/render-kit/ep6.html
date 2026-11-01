@@ -670,7 +670,8 @@ await loaded;await Promise.all(Object.values(MODELS));
 for(const [n,P] of[['rick',rick],['tara',tara]]){relax(P);P.g.position.y=0;P.g.updateMatrixWorld(true);const w=V3(),o=V3();P.BN.upperleg01L.getWorldPosition(w);P.g.getWorldPosition(o);HIP[n]=w.y-o.y;P.g.position.y=FY+.6-HIP[n];}
 const RPH=solveEar(rick,()=>sitBed(rick)),TPH=solveEar(tara,()=>sitBed(tara));
 const cap=document.getElementById('cap'),FLASHDIV=document.getElementById('fl');window.missingBones=[];
-window.renderAt=t=>{t+=T0;setCam(t);animate(t);
+const WARP=TLN.warp;const r2d=t=>{for(let i=0;i<WARP.length-1;i++){const [d0,r0]=WARP[i],[d1,r1]=WARP[i+1];if(t<=r1)return d0+(t-r0)*(d1-d0)/(r1-r0);}const L=WARP[WARP.length-1];return L[0]+t-L[1];};   // real scene time -> design time (the scene is designed on the design timeline)
+window.renderAt=t=>{t=r2d(t+T0);setCam(t);animate(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
