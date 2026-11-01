@@ -17,6 +17,13 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Captions: 2-3 words, white, bold, centred on screen (left 60 px, width 600 px), ~74 % height.
 **Voice / pace**
 - Kokoro am_liam (user's choice), speed ~1.10, max_gap 0.04, one take, 61-65 s. Target >= 3.2 words/s, pauses <= 0.25 s (Zack's weak point = slow with 0.8 s pauses). Fix whisper caption typos (math/way/meet). In the TTS text write every amount in words ("one million dollars", never "$1 million": Kokoro misreads symbols - EP3 hook bug 2026-10-31).
+**Publish kit (RULE, user 2026-11-01): every episode ships ep<N>/PUBLISH.md with the same 6 items**
+- Caption/title: the hook as a claim or question + 1-2 emoji + the vote question (<= 100 chars of text), written for Americans.
+- 3 alt titles (A/B tests): number-first, 'why' question, character/story angle.
+- 7-9 hashtags in this order: topic tags (3) + #moneyexplained #personalfinance #howmoneyworks (always) + #usa. Never banned/misleading tags (no #fyp spam, no #investing/#getrich promises).
+- Poll (2 options with emoji) + pinned comment = the same binary question (SOFA/PLAN style: one word to type).
+- Description footer: 'Education only, not tax advice' (money topics), AI-generated label ON (synthetic voice), illustrative-money note.
+- Before posting: list every number to re-check + its source site. Template = ep4-print-million/PUBLISH.md and ep5-tax-sofa/PUBLISH.md.
 **Process**
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
