@@ -24,6 +24,15 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Poll (2 options with emoji) + pinned comment = the same binary question (SOFA/PLAN style: one word to type).
 - Description footer: 'Education only, not tax advice' (money topics), AI-generated label ON (synthetic voice), illustrative-money note.
 - Before posting: list every number to re-check + its source site. Template = ep4-print-million/PUBLISH.md and ep5-tax-sofa/PUBLISH.md.
+**EP5/EP6 feedback rules (user 2026-11-01) - apply to every new episode**
+- Voice: ONE continuous Kokoro take (join all lines into one string, 'text|0'), no pauses (max_gap 0.1, longest pause <= 0.15 s); measure 61-65 s. Per-line takes sound choppy: user rejected them.
+- Camera: NEVER hard cuts. One continuous move that flies from the end of a scene into the next (exit a cutaway house through its open front first); no static shot > 2 s; something moves/pops every ~2 s.
+- Characters must always move: idle breathing/sway/head turns + gesture with the words; no frozen poses.
+- Hook = ONE short, instantly understood, contradictory sentence (user's own wording, only fix grammar). Payoff for any hook promise must appear at the end.
+- Money must look real (straps with coloured bands, real size ratio, $100 vs $20 chosen so the amount physically fills the scene). Floating numbers never cropped; light/colour grade strong (contrast 1.12, sat 1.28, MSAA x4).
+- World = a whole American neighbourhood (Maple Street), never a lone house on grass. Template: render-kit/ep5.html (day) and ep6.html (night + pit).
+- Run render commands FROM render-kit (cd first); `npm run` fails elsewhere. Stills sheet helper: render-kit/sheet.sh / sheet6.sh.
+- Idea format that works: two characters (or two friends) with opposite outcomes from the same money (EP5), or a naive honest hero finds money and the law/tax twist (EP6). Idea list verified 2026-11-01 (see ep6 chat): FDIC $250k split banks; Social Security 62 vs 70 (70% vs 124%); tax refund = free loan to IRS ($3,571 avg 2026 to Mar 20); 401(k) match free money; credit-card minimum payment ($1,000 -> ~$1,775 in 71 months at 22.15% APR, min = max($25, interest+1%)).
 **Process**
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
@@ -74,3 +83,6 @@ Pinned comment: "Would you carry $1 million in cash? Comment YES or NO".
 
 ## 9. EP5 status (2026-11-01) - read ep5-tax-sofa/PLAN.md
 EP5 "The sofa vs the plan" (tax evasion vs legal avoidance, US version) FULL v1 rendered: render-kit/ep5-tax-sofa.mp4 (61.6 s) + ep5-tax-sofa/ep5-tax-sofa-phone.mp4. New look: a whole American suburb (Maple Street) with cutaway houses, clear blue sky, colour grade + MSAA. Awaiting user review.
+
+## 10. EP6 status (2026-11-01) - read ep6-found-10m/PLAN.md
+EP6 'He finds $10 million under his house' (Danny): script 247 words, one-take voice 64.6 s, hook scene + 5-s preview v1 done; awaiting hook feedback, story not built yet.
