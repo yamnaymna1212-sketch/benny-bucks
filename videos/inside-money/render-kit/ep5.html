@@ -19,11 +19,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 await document.fonts.load('800 60px Mont');
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
 const scene=new THREE.Scene();
 const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
 scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.9;
@@ -52,7 +53,7 @@ street(0,7.5,420,true);street(0,-41.5,420,true);street(46,-17,90,false);street(-
 for(let i=0;i<9;i++){add(B(.5,.006,3),M(0xf4f4f0,.7),43.4+i*.9-3.6,.095,7.5,scene,false);}   // crosswalk at the corner
 // ================= HOUSES =================
 // cut=true: ground-floor front wall removed (cutaway); facing +z by default (ry=Math.PI faces -z)
-const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',rc:0xb9b9b9,sh:0x2f3f4f,inner:0xd7ccb6},
+const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',rc:0xb9b9b9,sh:0x2f3f4f,inner:0xa3b39f},
  {siding:'white_planks_clean',col:0xe2d6bd,roof:'roof_07',rc:0xc79b84,sh:0x2b5a41,inner:0xece4d4},
  {siding:'white_planks_clean',col:0xf2f2ee,roof:'grey_roof_tiles',rc:0x8d929a,sh:0x1f2f55,inner:0xeae6dc},
  {siding:'red_brick',col:0xc9a596,roof:'grey_roof_tiles',rc:0x7d7f86,sh:0x1c1c1c,inner:0xe6dccb},
@@ -61,7 +62,7 @@ const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',
 function house(x,z,ry,o,cut=false,flip=1){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const W=9,D=7.5,H1=2.9,H2=2.7,y0=.46+H1+.3+H2;
  const sid=pbr(o.siding,o.siding==='red_brick'?3:4,2,o.col),wall=pbr('plastered_wall',3,1.2,o.inner),rs=pbr(o.roof,5,3,o.rc),trim=M(0xe9e6df,.7);
  add(B(W+.6,.5,D+.6),pbr('concrete_pavement',4,3),0,.15,0,g);
- if(cut){add(B(W,.12,D),pbr('oak_wood_planks',5,4),0,.46,0,g,false);
+ if(cut){add(B(W,.12,D),pbr('oak_wood_planks',5,4,0xc29466),0,.46,0,g,false);
   add(B(W,H1,.2),wall,0,.46+H1/2,-D/2,g);add(B(.2,H1,D),wall,-W/2,.46+H1/2,0,g);add(B(.2,H1,D),wall,W/2,.46+H1/2,0,g);
   add(B(W,.12,.06),M(0xffffff,.5),0,.58,-D/2+.13,g,false);
   for(const s of[-1,1])add(B(.3,H1,.3),sid,s*(W/2-.05),.46+H1/2,D/2-.1,g);}            // cut faces: show the wall thickness
@@ -145,10 +146,14 @@ vehicle('sedan',0xb0322e,-40,11.0,0);vehicle('suv',0x3b4a3a,5,11.2,Math.PI);vehi
 const irs=vehicle('suv',0x0b0c0f,-40,5.6,0,'IRS');
 // ================= MIKE'S LIVING ROOM (house-local, floor top y=.52) =================
 const FY=.52;
-add(B(4.2,.03,3.0),M(0xb8a888,.95),0,FY+.015,-.6,mikeH,false);                       // beige rug
+const RUG=tex(512,384,x=>{x.fillStyle='#24344f';x.fillRect(0,0,512,384);x.strokeStyle='#c9b98f';x.lineWidth=10;x.strokeRect(22,22,468,340);x.lineWidth=3;x.strokeRect(44,44,424,296);
+ for(let i=0;i<9000;i++){x.fillStyle=`rgba(255,255,255,${Math.random()*.05})`;x.fillRect(Math.random()*512,Math.random()*384,2,2);}
+ x.strokeStyle='#8a3b32';x.lineWidth=6;for(let k=0;k<5;k++){x.beginPath();x.moveTo(256,92+k*10);x.lineTo(380-k*10,192);x.lineTo(256,292-k*10);x.lineTo(132+k*10,192);x.closePath();x.stroke();}});
+add(B(4.2,.03,3.0),new THREE.MeshStandardMaterial({map:RUG,roughness:.95}),0,FY+.015,-.6,mikeH,false);   // navy rug
 add(B(4.25,.025,3.05),M(0x6d5a44,.95),0,FY+.005,-.6,mikeH,false);
 // modern American sofa (slate fabric) with a lift-up seat (storage underneath)
-const FAB=new THREE.MeshPhysicalMaterial({color:0x56626e,roughness:.92,sheen:1,sheenRoughness:.6,sheenColor:0xaab4be});
+const WEAVE=tex(256,256,x=>{x.fillStyle='#808080';x.fillRect(0,0,256,256);for(let i=0;i<256;i+=2){x.fillStyle=`rgba(0,0,0,${.06+Math.random()*.06})`;x.fillRect(0,i,256,1);x.fillStyle=`rgba(255,255,255,${.04+Math.random()*.05})`;x.fillRect(i,0,1,256);}});WEAVE.wrapS=WEAVE.wrapT=THREE.RepeatWrapping;WEAVE.repeat.set(6,6);WEAVE.colorSpace=THREE.NoColorSpace;
+const FAB=new THREE.MeshPhysicalMaterial({color:0x4a5868,roughness:.95,roughnessMap:WEAVE,bumpMap:WEAVE,bumpScale:.6,sheen:1,sheenRoughness:.55,sheenColor:0x9aa8b8});
 const sofa=new THREE.Group();sofa.position.set(0,FY,-2.6);mikeH.add(sofa);
 add(RB(2.5,.36,.95,.06),FAB,0,.26,0,sofa);add(RB(2.5,.62,.24,.08),FAB,0,.66,-.38,sofa);
 for(const s of[-1,1])add(RB(.22,.6,.95,.07),FAB,s*1.36,.36,0,sofa);
@@ -162,16 +167,32 @@ const TVG=new THREE.Group();TVG.position.set(0,FY,1.9);TVG.rotation.y=Math.PI;
 add(B(1.8,.5,.45),pbr('oak_wood_planks',1,.3),-3.0,.25,-1.0,mikeH);
 add(B(1.5,.86,.05),M(0x0b0b0d,.2,.5),-3.0,1.0,-1.0,mikeH).rotation.y=.5;
 add(RB(1.2,.06,.65,.02),pbr('oak_wood_planks',1,.5),0,FY+.42,-.6,mikeH);for(const [lx,lz] of[[-.52,-.27],[.52,-.27],[-.52,.27],[.52,.27]])add(CY(.025,.025,.4,10),M(0x222222,.4,.6),lx,FY+.2,-.6+lz,mikeH,false);
-add(CY(.02,.02,1.6,10),M(0x222222,.3,.8),-1.7,FY+.8,-3.1,mikeH);add(CY(.16,.22,.32,24,1,true),M(0xf3ecd8,.8,0,{emissive:0xffe3b0,emissiveIntensity:.5,side:THREE.DoubleSide}),-1.7,FY+1.65,-3.1,mikeH);
+add(CY(.02,.02,1.6,10),M(0x222222,.3,.8),-1.7,FY+.8,-3.1,mikeH);add(CY(.16,.22,.32,24,1,true),M(0xf3ecd8,.8,0,{emissive:0xffe3b0,emissiveIntensity:.22,side:THREE.DoubleSide}),-1.7,FY+1.65,-3.1,mikeH);
 add(B(1.4,.95,.04),M(0x2a1d12,.5),0,FY+1.95,-3.62,mikeH,false);add(B(1.28,.83,.02),new THREE.MeshStandardMaterial({map:tex(256,170,t=>{const gr=t.createLinearGradient(0,0,0,170);gr.addColorStop(0,'#7fb2e0');gr.addColorStop(.6,'#e8d7a8');gr.addColorStop(1,'#6b8c4a');t.fillStyle=gr;t.fillRect(0,0,256,170);}),roughness:.6}),0,FY+1.95,-3.59,mikeH,false);
 model('potted_plant_01',3.7,FY,-3.0,1.2,0,mikeH);
 // $100 bundles: $10,000 each (100 notes), shown slightly enlarged so they read on a phone
-const BT=tex(512,220,x=>{x.fillStyle='#b9cba3';x.fillRect(0,0,512,220);x.fillStyle='#7fa268';x.fillRect(14,14,484,192);x.fillStyle='#e3ead6';x.beginPath();x.ellipse(256,110,70,86,0,0,7);x.fill();
- x.fillStyle='#2f5130';x.font='800 64px Mont';x.fillText('100',30,80);x.fillText('100',382,198);x.font='800 26px Mont';x.textAlign='center';x.fillText('THE UNITED STATES OF AMERICA',256,40);});
-const BAND=tex(128,256,x=>{x.fillStyle='#e9c46a';x.fillRect(0,0,128,256);x.fillStyle='#5a3d0a';x.font='800 34px Mont';x.save();x.translate(64,128);x.rotate(-Math.PI/2);x.textAlign='center';x.fillText('$10,000',0,12);x.restore();});
-const BMS=[M(0xc8d4b4,.9),M(0xc8d4b4,.9),new THREE.MeshStandardMaterial({map:BT,roughness:.65}),new THREE.MeshStandardMaterial({map:BT,roughness:.65}),M(0xc8d4b4,.9),M(0xc8d4b4,.9)];
-function bundle(p){const g=new THREE.Group();p.add(g);add(B(.46,.075,.2),BMS,0,0,0,g);add(B(.1,.08,.205),new THREE.MeshStandardMaterial({map:BAND,roughness:.6}),0,0,0,g,false);return g;}
-const BUN=[0,1,2,3].map(()=>bundle(mikeH));
+// $100 notes in $10,000 straps (100 notes; mustard strap = the real Fed colour for $100s). Illustrative note: no portrait, no security features.
+const NOTE=tex(1024,436,x=>{const g=x.createLinearGradient(0,0,1024,436);g.addColorStop(0,'#e6e8d8');g.addColorStop(.5,'#d3dcc5');g.addColorStop(1,'#e0e3cf');x.fillStyle=g;x.fillRect(0,0,1024,436);
+ for(let i=0;i<14000;i++){x.fillStyle=`rgba(60,80,60,${Math.random()*.06})`;x.fillRect(Math.random()*1024,Math.random()*436,1.5,1.5);}
+ for(let i=0;i<120;i++){x.strokeStyle='rgba(55,85,62,.07)';x.lineWidth=1.2;x.beginPath();x.ellipse(430,218,40+i*2.2,30+i*1.3,0,0,7);x.stroke();}
+ x.strokeStyle='#36523c';x.lineWidth=12;x.strokeRect(16,16,992,404);x.lineWidth=3;x.strokeRect(36,36,952,364);
+ x.fillStyle='#ece9d6';x.beginPath();x.ellipse(430,218,118,148,0,0,7);x.fill();x.strokeStyle='#36523c';x.lineWidth=7;x.stroke();
+ for(let i=0;i<60;i++){x.strokeStyle='rgba(54,82,60,.35)';x.lineWidth=1;x.beginPath();x.moveTo(330,90+i*4.4);x.lineTo(530,96+i*4.4);x.stroke();}
+ x.fillStyle='#4f7fb5';x.fillRect(612,36,22,364);for(let k=0;k<12;k++){x.fillStyle='#e9eef6';x.font='800 20px Mont';x.fillText('100',612,62+k*30);}
+ x.fillStyle='#b07a3c';x.font='800 150px Mont';x.textAlign='right';x.fillText('100',980,400);
+ x.fillStyle='#2e4a35';x.font='800 92px Mont';x.textAlign='left';x.fillText('100',56,132);
+ x.font='800 34px Mont';x.textAlign='center';x.fillText('THE UNITED STATES OF AMERICA',512,76);x.font='800 24px Mont';x.fillText('FEDERAL RESERVE NOTE',430,396);
+ x.fillStyle='#2f6b45';x.font='800 26px Mont';x.textAlign='left';x.fillText('MK 40000000 A',62,190);x.textAlign='right';x.fillText('MK 40000000 A',980,190);
+ x.fillStyle='#2f6b45';x.beginPath();x.arc(800,140,46,0,7);x.fill();x.fillStyle='#e6e8d8';x.beginPath();x.arc(800,140,30,0,7);x.fill();});
+const EDGE=tex(256,64,x=>{x.fillStyle='#d9dcc8';x.fillRect(0,0,256,64);for(let i=0;i<64;i+=2){x.fillStyle=`rgba(70,90,70,${.15+Math.random()*.2})`;x.fillRect(0,i,256,1);}});
+const BAND=tex(512,128,x=>{x.fillStyle='#d6a63a';x.fillRect(0,0,512,128);x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,0,512,8);x.fillRect(0,120,512,8);x.fillStyle='#3b2706';x.font='800 64px Mont';x.textAlign='center';x.fillText('$10,000',256,88);});
+const NW=.31,NH=.133,NT=.028;
+const NOTEM=new THREE.MeshStandardMaterial({map:NOTE,color:0xa4c294,roughness:.82}),EDGEM=new THREE.MeshStandardMaterial({map:EDGE,color:0xbccaa8,roughness:.9}),BANDM=new THREE.MeshStandardMaterial({map:BAND,roughness:.55});
+function bundle(p){const g=new THREE.Group();p.add(g);add(B(NW,NT,NH),[EDGEM,EDGEM,NOTEM,NOTEM,EDGEM,EDGEM],0,0,0,g);
+ const bd=add(B(.075,NT+.004,NH+.004),[BANDM,BANDM,BANDM,BANDM,BANDM,BANDM],0,0,0,g,false);return g;}
+// the $40,000 brick Mike carries: 4 straps stacked
+const BRICK=new THREE.Group();mikeH.add(BRICK);for(let i=0;i<4;i++){const b=bundle(BRICK);b.position.y=i*(NT+.002);b.rotation.y=(i%2?.03:-.02);}
+const BUN=[];
 // ================= CAST =================
 const SRC={};for(const n of['mike']){const g=(await new GLTFLoader().loadAsync(`dl/models/cast/${n}.glb`)).scene;
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
@@ -183,28 +204,31 @@ const AD=[0.12,0,0.72];
 function curl(P,side,v,thumb=v*.6){for(const [n] of Object.entries(P.BN)){const m=n.match(/^finger(\d)-(\d)(L|R)$/);if(!m||m[3]!==side)continue;const k=(m[1]==='1'?thumb:v)*(m[2]==='1'?.7:1);pose(P,n,k,0,0);}}
 function person(name,x,y,z,ry,p=scene){const g=skClone(SRC[name]);g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
  const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest};}
-const mike=person('mike',1.25,FY,-1.15,-2.2,mikeH);
+const mike=person('mike',.05,FY,-1.3,Math.PI,mikeH);   // faces the sofa
 // ================= FLOATING 3D NUMBERS (Zack glow: RED problem) =================
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
 function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
- const m=add(g,new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:2.3,roughness:.4}),0,0,0,p,false);return m;}
-const P40=txt3('$40,000',.3,0xff2a2a,mikeH);P40.position.set(0,FY+1.85,-2.5);
+ const m=add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:1.45,roughness:.35}),new THREE.MeshStandardMaterial({color:0x5a0606,roughness:.5})],0,0,0,p,false);return m;}
+const P40=txt3('$40,000',.36,0xff1e1e,scene);
 // ================= LIGHT / POST =================
 const sun=new THREE.DirectionalLight(0xfff1dc,3.0);sun.position.set(-30,40,30);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-40,right:40,top:30,bottom:-30,near:1,far:140});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;scene.add(sun);scene.add(sun.target);
-const RL=new THREE.PointLight(0xfff0d8,14,11,1.5);RL.position.set(MX+.5,3.0,MZ-.5);scene.add(RL);
-const RK=new THREE.SpotLight(0xfff4e6,12,12,.7,.7,1.4);RK.position.set(MX+2.5,3.0,MZ+4.5);RK.target.position.set(MX,.9,MZ-2.6);scene.add(RK);scene.add(RK.target);
+const RL=new THREE.PointLight(0xfff0d8,5,11,1.5);RL.position.set(MX+.5,1.6,MZ+1.8);scene.add(RL);
+const RK=new THREE.SpotLight(0xfff4e6,12,12,.7,.7,1.4);RK.position.set(MX+2.0,2.1,MZ+6.0);RK.target.position.set(MX,.9,MZ-2.6);scene.add(RK);scene.add(RK.target);
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,500);
-const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
-comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.18,1.3));comp.addPass(new OutputPass());
+const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.35,.18,1.3));comp.addPass(new OutputPass());
+// colour grade (sRGB): contrast, saturation, gentle vignette
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.12},sat:{value:1.28},vig:{value:.32}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
 // ================= TIMELINE =================
 const TLN=await (await fetch('timeline_ep5.json')).json(),CH=TLN.chunks;
 const toW=(lx,ly,lz)=>V3(MX+lx,ly,MZ+lz);   // Mike's house local -> world (house not rotated)
 // shots: [t0,t1, pos0,look0,fov0, pos1,look1,fov1]; each cut lands on a word
 const SHOTS=[
- [0,1.12,   toW(2.9,1.95,1.25).toArray(),toW(-.1,.95,-2.55).toArray(),52, toW(2.55,1.9,.85).toArray(),toW(-.1,.95,-2.55).toArray(),50],   // over Mike's shoulder: bundles into the sofa
- [1.12,2.68,toW(-3.4,1.65,.9).toArray(),toW(.45,1.0,-1.85).toArray(),48,   toW(-3.1,1.6,.6).toArray(),toW(.45,1.0,-1.85).toArray(),46],    // low front angle: Mike's nervous face, seat closes
+ [0,1.12,   toW(2.6,1.85,.55).toArray(),toW(.3,1.5,-2.0).toArray(),56,  toW(2.35,1.8,.3).toArray(),toW(.3,1.45,-2.0).toArray(),54],   // side 3/4: Mike bends and puts the cash in the sofa
+ [1.12,2.68,toW(-2.45,1.5,-1.45).toArray(),toW(.45,1.15,-1.75).toArray(),52,  toW(-2.3,1.5,-1.5).toArray(),toW(.45,1.15,-1.75).toArray(),50],   // from the sofa's end: Mike's face as he shuts the seat
  [2.68,4.4, toW(0,1.9,6.2).toArray(),toW(0,1.6,-2).toArray(),48,         toW(4,5.5,19).toArray(),toW(1,2.6,-3).toArray(),50],           // pull out of the cutaway: the house in the street, IRS drives by
  [4.4,99,   toW(-.5,10.5,24.5).toArray(),toW(0,2.2,3).toArray(),50,         toW(0,11.2,25.5).toArray(),toW(0,2.2,3).toArray(),50]];        // the whole street
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
@@ -213,23 +237,30 @@ function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1]
  const c=cam.position;sun.target.position.set(c.x,0,c.z-10);sun.position.set(c.x-30,40,c.z+20);}
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
-const TB=[.2,.5,.8,1.1];   // bundle throw times
+const SB=1,LB=-1,KB=1;   // bend directions (spine forward, hip flex, knee)
+const wL=V3(),wR=V3(),tv=V3();
+const REST=V3(0,FY+.47,-2.52);   // brick resting in the sofa storage
 function animate(t){
- // seat: open 0..2.05, slams shut on "sofa" (2.12)
- seat.rotation.x=-1.05*(1-sm(1.95,2.15,t));
- // bundles: from Mike's hands to the storage cavity (arc), then rest inside
- const hand=V3(.85,FY+1.0,-1.45),dst=i=>V3(-.8+i*.53,FY+.5+(i%2)*.02,-2.55);
- BUN.forEach((b,i)=>{const k=sm(TB[i],TB[i]+.38,t);const a=hand.clone().lerp(dst(i),k);a.y+=Math.sin(k*Math.PI)*.35;
-  b.position.copy(a);b.rotation.set(0,.25*i+k*1.2,k<1?Math.sin(k*9)*.4:0);b.visible=t>=TB[i]-.15||t<0;});
- // Mike: arms forward (tossing) 0..1.4, then nervous look left/right, hands up
- const toss=1-sm(1.35,1.6,t);const flick=TB.reduce((s,tb)=>s+Math.max(0,1-Math.abs(t-tb-.12)/.15),0);
- pose(mike,'upperarm01R',AD[0]+(.95+.25*flick-AD[0])*toss,0,AD[2]-.15*toss);pose(mike,'lowerarm01R',(.55-.3*flick)*toss,0,0);
- pose(mike,'upperarm01L',AD[0]+(.75-AD[0])*toss,0,-AD[2]+.1*toss);pose(mike,'lowerarm01L',.7*toss,0,0);curl(mike,'R',.6*toss);curl(mike,'L',.5*toss);
- const look=sm(1.5,1.75,t)*(1-sm(3.9,4.2,t));pose(mike,'head',-.08*toss+.05*look,.55*look*Math.sin((t-1.5)*4.2),0);pose(mike,'neck01',.1*toss,0,0);
- pose(mike,'spine01',.18*toss,0,0);
- if(t>1.6){const sh=sm(1.6,1.9,t);pose(mike,'upperarm01L',AD[0]+.3*sh,0,-AD[2]+.25*sh);pose(mike,'lowerarm01L',1.1*sh,0,0);pose(mike,'upperarm01R',AD[0]+.3*sh,0,AD[2]-.25*sh);pose(mike,'lowerarm01R',1.1*sh,0,0);}
- // $40,000 pops on "$40,000" (0.26) and stays over the sofa
- const s4=pop(t,.26,.32);P40.scale.setScalar(Math.max(.001,s4));P40.rotation.y=.12*Math.sin(t*1.6);P40.position.y=FY+1.85+.04*Math.sin(t*2.2);
+ // seat: open at the start, Mike pushes it shut on "sofa" (2.12)
+ seat.rotation.x=-1.05*(1-sm(1.8,2.1,t));
+ // body: hold at chest -> bend down into the sofa -> release (0.85) -> straighten -> bend again to push the seat -> nervous look around
+ const b1=sm(.2,.75,t)*(1-sm(.95,1.4,t)),b2=sm(1.45,1.8,t)*(1-sm(2.1,2.5,t)),bend=Math.max(b1,b2*.7);
+ for(const n of['spine01','spine02','spine03'])pose(mike,n,SB*.32*bend,0,0);
+ pose(mike,'upperleg01L',LB*.35*bend,0,0);pose(mike,'upperleg01R',LB*.35*bend,0,0);pose(mike,'lowerleg01L',KB*.45*bend,0,0);pose(mike,'lowerleg01R',KB*.45*bend,0,0);
+ const holding=t<.85;
+ if(t<1.45){const k=holding?1:1-sm(.85,1.2,t);   // both hands on the brick, elbows open as he lowers it
+  pose(mike,'upperarm01R',AD[0]+(.85-AD[0])*k+.25*b1,0,AD[2]-.08*k);pose(mike,'upperarm01L',AD[0]+(.85-AD[0])*k+.25*b1,0,-AD[2]+.08*k);
+  pose(mike,'lowerarm01R',(.8-.55*b1)*k,0,0);pose(mike,'lowerarm01L',(.8-.55*b1)*k,0,0);curl(mike,'R',.35*k);curl(mike,'L',.35*k);}
+ else if(t<2.4){const r=b2;pose(mike,'upperarm01R',AD[0]+.95*r,0,AD[2]-.1*r);pose(mike,'lowerarm01R',.15*r,0,0);pose(mike,'upperarm01L',AD[0],0,-AD[2]);pose(mike,'lowerarm01L',0,0,0);curl(mike,'R',0);curl(mike,'L',0);}
+ else{const sh=sm(2.4,2.7,t);pose(mike,'upperarm01L',AD[0]+.35*sh,0,-AD[2]+.25*sh);pose(mike,'lowerarm01L',1.2*sh,0,0);pose(mike,'upperarm01R',AD[0]+.35*sh,0,AD[2]-.25*sh);pose(mike,'lowerarm01R',1.2*sh,0,0);curl(mike,'R',.3*sh);curl(mike,'L',.3*sh);}
+ const look=sm(2.25,2.5,t);pose(mike,'head',.25*bend,.6*look*Math.sin((t-2.25)*4.5),0);
+ // the brick: glued between his hands while held, then settles in the sofa
+ mikeH.updateMatrixWorld(true);mike.BN.wristL.getWorldPosition(wL);mike.BN.wristR.getWorldPosition(wR);
+ const mid=mikeH.worldToLocal(wL.clone().add(wR).multiplyScalar(.5));mid.z-=.06;mid.y-=.03;
+ if(holding)BRICK.position.copy(mid);else{const k=sm(.85,1.0,t);BRICK.position.copy(mid.lerp(REST,k));if(t>1.0)BRICK.position.copy(REST);}
+ BRICK.rotation.set(0,0,0);BRICK.visible=t<1.95||t<0?true:(t<1.95);
+ // $40,000: big, centred above the sofa, always facing the camera
+ const s4=pop(t,.26,.32);P40.scale.setScalar(Math.max(.001,s4));P40.position.copy(toW(-.05,FY+1.95+.03*Math.sin(t*2.2),-2.45));P40.lookAt(cam.position);P40.visible=!(t>=1.12&&t<2.68);   // never cropped: hidden in the side shot
  // IRS SUV drives by on "IRS" (2.88), passes Mike's house, slows to a stop at the end of the hook
  const ix=-40+Math.min(t-2.4,2.4)*11+Math.max(0,t-4.8)*2;irs.position.x=t<2.4?-40:Math.min(MX+.5,ix);irs.position.z=5.6;
 }
