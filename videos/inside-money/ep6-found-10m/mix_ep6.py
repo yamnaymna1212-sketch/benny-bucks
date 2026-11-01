@@ -25,9 +25,8 @@ def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next 
 for k in['fahh','pop']:S[k]=load(f'{SFX}/user-{k}.wav')
 HIT=.68   # shovel hits the trunk (= ep6.html HIT)
 T0=.45   # the video starts here (= ep6.html T0): ting, then the first word at once
-put(S['ting'],T0,.4)
-for t0 in(T0,T0+.15):put(cut(S['slap'],.18),t0,.16)                           # shovel digs (pre-roll before the voice)
-put(S['slap'],HIT-.02,.4);put(S['boom'],HIT,.32)                           # clink on the trunk, lid bursts open
+put(cut(S['ting'],.3,.15),T0,.14)   # soft ting UNDER the first word (the voice must stay clear)                           # shovel digs (pre-roll before the voice)
+put(cut(S['slap'],.3),HIT-.02,.22);put(cut(S['boom'],.7,.3),HIT,.2)                           # clink on the trunk, lid bursts open
 put(cut(S['cash-register'],.9),Wn('$10')+.05,.3);put(cut(S['money'],1.0),Wn('$10')+.12,.16)
 put(cut(S['whoosh'],.9),1.75,.28)                                          # rise out of the shaft
 put(cut(S['wow'],.55),Wn('so')-.05,.22)                                    # joy, ONLY inside "so happy"
