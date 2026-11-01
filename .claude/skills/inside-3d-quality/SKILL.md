@@ -28,3 +28,8 @@ Template: `videos/inside-money/render-kit/ep4.html` (+ `ep4-print-million/PLAN.m
 - Eyes must be built with MAKESKIN (procedural eyes export as glowing white).
 - JSON query params must use `0.2`, not `.2`.
 - The stage must not overlap the lobby walls (lobby spans x -5..5).
+
+## Learned on EP3 (still valid)
+- **Learned on EP3 (2026-10-31)**: user rejected a first half that stayed in one place. Every script line needs its own on-screen event AND a camera move matched to the word (EP4 later replaced this with a cut on every line): close for objects/numbers (drawer, screen, form), far/high for "building"/"government", low angle for emotion. Plan a beat table (line -> event -> camera) BEFORE coding.
+- 9:16 with fov 32 is very narrow (horizontal ~18 deg): a 1.5 m subject needs ~4.5 m distance. Animate fov per shot (FOVK) — wide (46-56) for outdoor/overview shots.
+- Flat planes (forms, signs) go invisible edge-on in chase shots: rotate them to face the camera. Check every planned shot with `node stills.mjs` contact sheets before any render.
