@@ -32,3 +32,12 @@ US everything (house types, flags, cars, bus, mailboxes, dollars), living street
 - Needs NEW assets (houses/cars/props) -> render-kit/assets.mjs must download CC0 packs (candidates: Kenney City/Car kits, Quaternius, Poly Haven models; verify licence + availability before use) or build procedural houses with real textures.
 - Style change vs EP1-4 (plaza/lobby): confirm with user first (TOKEN GUARD).
 - Next: user OK -> voice (Kokoro one take) -> assets -> look stills -> 5-s hook preview -> approval -> full render.
+
+## STATUS 2026-11-01: FULL v1 RENDERED
+- render-kit/ep5-tax-sofa.mp4 (61.6 s, Apple M3, not in git) + ep5-tax-sofa/ep5-tax-sofa-phone.mp4 (crf 26, in git).
+- Scene render-kit/ep5.html (Maple Street: Mike cutaway x=-9, Dana cutaway + garage office x=11, bank/travel/gas across the street), mix ep5-tax-sofa/mix_ep5.py, timeline render-kit/timeline_ep5.json (make_timeline.py), render `npm run render -- ep5` FROM render-kit.
+- Cast: mike, printer (= Dana), teller (= food-bank volunteer), guard + manager (= IRS agents). Rebuild GLBs: blender -b --python characters/make_cast.py -- mike printer teller guard manager.
+- Assets: node assets5.mjs (Poly Haven CC0, clear-sky HDRI kloofendal_43d_clear_puresky saved as dl/kloofendal_clear_4k.hdr).
+- Money: $40,000 = 20 straps of $20s ($2,000, violet strap). Illustrative notes (no portrait / security features).
+- Known weak spots: faces mostly static (jaw/smile bones only); DANA DESIGN CO. sign slightly cropped at the end of line 12; characters small in some lawn shots.
+- Pinned comment: "Team SOFA or Team PLAN? Comment one." On-screen/description: "Education only, not tax advice". Re-check 401(k)/IRA/QBI numbers on irs.gov before posting.

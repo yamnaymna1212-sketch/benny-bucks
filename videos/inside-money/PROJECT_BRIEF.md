@@ -64,3 +64,6 @@ EP3 "$1M in cash" v2 RENDERED: render-kit/ep3-1m-cash.mp4 (62.41 s, GPU Apple M3
 v2 = first half (4.6-33 s) rebuilt after user feedback "first half boring, same place, camera not matched to the words": now one event + one camera move per line (see PLAN.md beat table).
 Scene ep3.html (?tl=timeline_ep3_full.json), mix ep3-1m-cash/mix_ep3_full.py, render `npm run render -- ep3full`. Awaiting user review of v2. Weak spots: printer shot (gray box), plain government building, sparse Fed vault, toy-like truck, shared face model; camera may pass close to Mike's shoulder in transitions (not watched in motion).
 Pinned comment: "Would you carry $1 million in cash? Comment YES or NO".
+
+## 9. EP5 status (2026-11-01) - read ep5-tax-sofa/PLAN.md
+EP5 "The sofa vs the plan" (tax evasion vs legal avoidance, US version) FULL v1 rendered: render-kit/ep5-tax-sofa.mp4 (61.6 s) + ep5-tax-sofa/ep5-tax-sofa-phone.mp4. New look: a whole American suburb (Maple Street) with cutaway houses, clear blue sky, colour grade + MSAA. Awaiting user review.
