@@ -6,3 +6,5 @@
 - Avg interest rate on interest-bearing debt 3.531% (2026-09-30, Treasury avg_interest_rates) - not used in script.
 - Rollover mechanism: Cato "overrated debt ceiling"; Krugman: governments must service, not necessarily pay off (secondary sources).
 TODO before final: re-check "last year" wording = FY2025; confirm CBO 101%/99% on cbo.gov (403 from fetch); Social Security trust fund is part of intragovernmental holdings (verify on fiscaldata).
+- Foreign holdings of Treasuries $9.353T (April 2026, Treasury TIC via tradingeconomics/mondovisione). 9.353/40.594 = 23% foreign -> ~77% domestic (public + Fed + intragov) -> "about three out of every four dollars ... inside America".
+- Script v3 line "people holding a lot of that debt are people like you": via banks, pension funds, Social Security trust fund (intragov $7.88T). Framed "a lot", not "most", to stay exact.

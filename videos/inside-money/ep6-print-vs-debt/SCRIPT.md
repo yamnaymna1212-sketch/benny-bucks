@@ -19,3 +19,7 @@ Rule: NEVER answer the hook early. The real answer (trust) lands at ~85%. Each s
 | 52-60 | MAIN PAYOFF | 13-14 | trust: lenders' belief, interest rises if doubt | - |
 | 60-65 | Loop | 15 | vote question -> back to hook | comments |
 Audio/visual re-hooks: ting on every number, riser before each gap line, boom on "not owed to a villain" and "trust".
+
+## v3 (2026-11-02) - one causal chain, answer ONLY at the end
+Spine: printing hurts YOUR dollars (micro) -> who is owed? (gap) -> 3 of 4 dollars inside America (micro) -> bonds -> is it ever paid back? (gap) -> replaced, never paid (reversal ~55%) -> can't shrink: -$1.8T, $970B interest (pressure) -> BACK to the printing press (loop A reopened ~80%) -> 'who gets paid in weaker dollars?' (held 0.2 s) -> banks, pensions, Social Security -> FINAL REVEAL ~92%: the lenders are people like you (= the $119K share in line 2: you owe it AND you're owed it). Then vote.
+Every line starts with So / But / Because / And / Which -> chain, not list. Hook number (line 2) pays off in the last reveal.
