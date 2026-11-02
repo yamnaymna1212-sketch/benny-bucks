@@ -29,3 +29,4 @@ Idea = the user's: a naive, honest guy digs under his house at 3 AM, finds a tru
 - Cutaway: NOTCH clipping box (world planes) removes lawn/floor/fence in front of the pit during the hook only (t<6.9); EARTH block with a soil face, dark topsoil band, stones, a blue groundwater layer; HOOKL spotlight on the face; pit front wall hidden in the hook. Camera: wide (house on top, pit, trunk, water) -> push in on the hit -> Danny big in frame.
 - HIT = "$10" word (shovel clinks, lid opens, cash glows stronger, big green 3D "$10M" over the trunk). mix_ep6.py hook SFX re-anchored (joy SFX removed: no joy words in the new line).
 - Preview: ep6-found-10m/hook-preview-5s-v4.mp4. WAIT for approval before the full render.
+- Full render with hook v4 (2026-11-02): render-kit/ep6-found-10m.mp4 64.34 s (M3), phone copy ep6-found-10m-phone.mp4 (crf 26, 28.6 MB).
