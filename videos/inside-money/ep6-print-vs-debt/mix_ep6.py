@@ -15,18 +15,17 @@ b=np.cumsum(rng.standard_normal(N).astype(np.float32));b-=np.convolve(b,np.ones(
 def put(sig,t,g):
     i=int(max(0,t)*SR);j=min(N,i+len(sig))
     if i<N:out[i:j]+=sig[:j-i]*g
-S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','pop','money','boom']}
-# ---- hook (0-5 s)
+S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','pop','money','boom','money-transfer']}
+# ---- hook (0-5 s): Mike hits the button, the press roars, cash showers; fly to the map; Japan lights up; number
 put(S['ting'],0.0,.45)                     # ting at 0 s (channel rule)
-put(S['money'],0.0,.2)                     # the press running
+put(S['pop'],0.14,.35)                     # the red button
+put(S['money'],0.3,.32);put(S['money'],1.3,.25)   # the press + cash shower
 put(S['cash-register'],Wn('print'),.3)     # "print money"
-put(S['whoosh'],2.55,.3)                   # camera tilts up to the debt board
-put(S['boom'],Wn('debt'),.5)               # "...pay off its DEBT?"
-put(S['ting'],Wn('$40.6'),.45)             # key number
-# worker drops cash on the pile (cycle 2.6 s, drop at u=.54, offset 1.0 s: see worker() in ep6.html)
-for c in range(30):
-    t=c*2.6+.54*2.6-1.0
-    if 0<t<5.2:put(S['pop'],t,.14)
+put(S['whoosh'],2.55,.4)                   # camera flies to the world map
+put(S['boom'],Wn('debt'),.45)              # "...pay off its DEBT?"
+put(S['pop'],Wn('japan'),.3)               # Japan lights up
+put(S['money-transfer'],Wn('owed'),.25)    # cash flows along the arc
+put(S['ting'],Wn('$1'),.45)                # key number
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep6_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep6_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep6.wav'],check=True);print('ok',DUR)

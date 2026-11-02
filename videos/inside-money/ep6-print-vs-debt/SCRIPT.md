@@ -23,3 +23,9 @@ Audio/visual re-hooks: ting on every number, riser before each gap line, boom on
 ## v3 (2026-11-02) - one causal chain, answer ONLY at the end
 Spine: printing hurts YOUR dollars (micro) -> who is owed? (gap) -> 3 of 4 dollars inside America (micro) -> bonds -> is it ever paid back? (gap) -> replaced, never paid (reversal ~55%) -> can't shrink: -$1.8T, $970B interest (pressure) -> BACK to the printing press (loop A reopened ~80%) -> 'who gets paid in weaker dollars?' (held 0.2 s) -> banks, pensions, Social Security -> FINAL REVEAL ~92%: the lenders are people like you (= the $119K share in line 2: you owe it AND you're owed it). Then vote.
 Every line starts with So / But / Because / And / Which -> chain, not list. Hook number (line 2) pays off in the last reveal.
+
+## v4 (2026-11-02, user feedback on hook v1) - source of truth = lines.txt
+- Hook line without "U.S.": "Why can the government print money, but still can't pay off its debt?"
+- New lines 2-3: "Japan alone is owed more than one trillion dollars. China and others are owed trillions more." (sets up the "foreign villain" guess that line ~7 breaks: 3 of 4 dollars are owed inside America).
+- Voice: lines.txt = 8 sentence-group takes (each group one Kokoro call, cut only at sentence ends), am_liam speed 1.0, max_gap .08 -> 64.6 s, 240 words.
+  Lesson: ONE Kokoro call with the whole script gets compressed/choppy (53 s at speed 1.0); sentence groups sound natural.

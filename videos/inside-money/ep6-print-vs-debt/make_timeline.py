@@ -10,8 +10,8 @@ for x in W:
     ws.append({'w':w,'s':x['s'],'e':x['e']})
 ch,cur=[],[]
 for i,x in enumerate(ws):
-    cur.append(x);end=re.search(r'[.?!,]$',x['w'])
-    if len(cur)==3 or (end and len(cur)>=2) or (end and len(cur)==1 and len(x['w'])>6):
+    cur.append(x);end=re.search(r'[.?!]$',x['w']);com=x['w'].endswith(',')
+    if len(cur)==3 or end or (com and len(cur)>=2):
         ch.append({'t':' '.join(c['w'] for c in cur).rstrip(','),'s':cur[0]['s'],'e':cur[-1]['e']});cur=[]
 if cur:ch.append({'t':' '.join(c['w'] for c in cur),'s':cur[0]['s'],'e':cur[-1]['e']})
 dur=round(ws[-1]['e']+.5,2)

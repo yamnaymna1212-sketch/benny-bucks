@@ -12,3 +12,7 @@
 1. User feedback on hook v1 -> fix in one batch.
 2. Build story 5-65 s (one continuous camera flying between places, Mike acts every line), story SFX, stills per beat, full render, phone copy < 30 MB, PUBLISH.md.
 3. Re-check the debt figure (fiscaldata debt_to_penny) on render day.
+
+## UPDATE hook v2 (2026-11-02, after user feedback on v1)
+User v1 feedback: pale fake building, black board pointless, big number pointless, nobody runs the printer, Mike/people without a role, hook unclear, static camera, choppy boring voice, no big printing scene, drop "U.S." from the voice; camera should go government man printing -> map of a country America owes.
+v2: real U.S. Capitol shape (white dome + peristyle + wings) in daylight, Mike runs the MONEY PRINTER (red button -> celebrates in a cash fountain -> cash mountain -> shrugs on "can't pay off"), camera flies (monotone spline, no overshoot) to a Natural Earth world map: Japan lights up, cash arc Japan -> America, "$1.1 TRILLION". No other people. Preview: hook-preview-5s-v2.mp4. Waiting for approval.

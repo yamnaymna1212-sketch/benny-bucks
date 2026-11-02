@@ -8,3 +8,8 @@
 TODO before final: re-check "last year" wording = FY2025; confirm CBO 101%/99% on cbo.gov (403 from fetch); Social Security trust fund is part of intragovernmental holdings (verify on fiscaldata).
 - Foreign holdings of Treasuries $9.353T (April 2026, Treasury TIC via tradingeconomics/mondovisione). 9.353/40.594 = 23% foreign -> ~77% domestic (public + Fed + intragov) -> "about three out of every four dollars ... inside America".
 - Script v3 line "people holding a lot of that debt are people like you": via banks, pension funds, Social Security trust fund (intragov $7.88T). Framed "a lot", not "most", to stay exact.
+## v4 additions (2026-11-02)
+- "Japan alone is owed more than one trillion dollars": Japan = largest foreign holder of U.S. Treasuries, $1,116.7B end of June 2026 (Treasury TIC; FRED FORTREASPOS42609; primerates.com June 2026 summary). On screen "$1.1 TRILLION".
+- "China and others are owed trillions more": total foreign holdings $9.30T June 2026 (same TIC release) -> others = ~$8.2T.
+- Map: Natural Earth 110m countries (public domain), render-kit/assets/world-110m.json.
+- Dropped (not used): "2022 inflation hit over nine percent" (BLS: 9.1% y/y June 2022) - would imply printing alone caused it.
