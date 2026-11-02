@@ -1,14 +1,13 @@
 Why can the U.S. government print money, but still can't pay off its debt?|0.2
-Your share of it? About one hundred nineteen thousand dollars. And the real answer isn't what you think.|0.15
-First, the obvious question. Why not just print it?|0.15
-Because every new dollar makes the old ones worth less, and prices go up.|0.15
-But printing isn't the real problem. Who they owe is.|0.15
-That forty point six trillion dollars? It's not owed to a villain.|0.15
+Your share of that debt? About one hundred nineteen thousand dollars.|0.15
+Most people say, just print it.|0.12
+But every new dollar makes the old ones worth less, and prices go up.|0.15
+And you probably picture the debt as money owed to some villain. It's not.|0.15
 It's owed to banks, pension funds, investors, even Social Security's trust fund.|0.15
 Each one is a Treasury bond. A loan that pays interest.|0.12
-So what happens when a bond comes due? This is where it gets strange.|0.18
+So what happens when a bond comes due? This part is strange.|0.18
 The government doesn't pay with cash. It sells a new bond, and uses that money to pay off the old one.|0.15
-It's called rolling over. And it never stops.|0.15
+So the debt never really gets paid. It gets replaced.|0.15
 But borrowing has a bill. Last year, interest alone cost nine hundred seventy billion dollars.|0.18
 And it still spent one point eight trillion more than it took in.|0.15
 So what decides if this can go on? Not the printing press.|0.18

@@ -1,5 +1,11 @@
 # EP6 script v2 (structure-first). Source of truth = lines.txt. Facts = facts.md
-## Framework (sources: SCRIPT_STRUCTURE.md 7 beats + web, 2026-11-02)
+## Evidence base (web research 2026-11-02; creator-blog level, NOT controlled studies)
+- Veritasium: open with a common misconception, say the wrong answer first, then take it apart; layered mysteries (UQ pressbooks curiosity-gap chapter; Sci. American; Muller's PhD = physics-education research).
+- Loewenstein 1994 information-gap theory (Golman & Loewenstein, CMU): curiosity peaks when the viewer has a guess but is unsure; gap not too big/small -> we plant a guess ('just print it') then break it.
+- MrBeast leaked memo (authenticity disputed): first minute is most fragile, match the title promise, re-engagement checkpoints, DON'T signal the end early -> CTA only in the last 3 s.
+- Short-form: open loop in first ~3 s, close it last; Hook-Gap-Micro payoff-New gap-Main payoff (creatorlab); Hormozi Hook/Retain/Reward. Overt loops get seen through -> loops are phrased as concrete questions, not 'wait for the answer'.
+- Completion drives distribution (vendor claims, thresholds vary 25-70%): test our own completion in TikTok Studio after EP6.
+## Framework
 Hook -> Gap -> Micro-payoff -> New gap -> ... -> Main payoff LAST -> Loop (creator-lab "Hook Gap Payoff"; Hormozi Hook/Retain/Reward; MrBeast stacked loops;
 open loop in first ~3 s and closed LAST; hook/context/payoff/loop). Caveat: sources are creator blogs, heuristics not proven stats; "re-hook every 10 s" is untested.
 Rule: NEVER answer the hook early. The real answer (trust) lands at ~85%. Each stage gives a small reward AND opens the next question.
