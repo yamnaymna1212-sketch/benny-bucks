@@ -23,15 +23,13 @@ S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','slap'
 def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next beat
     n=int(dur*SR);x=sig[:n].copy();f=int(min(fade,dur/2)*SR);x[-f:]*=np.linspace(1,0,f);return x
 for k in['fahh','pop']:S[k]=load(f'{SFX}/user-{k}.wav')
-HIT=.68   # shovel hits the trunk (= ep6.html HIT)
+HIT=Wn('$10')-.05   # shovel hits the trunk on "$10 million" (= ep6.html HIT)
 T0=.45   # the video starts here (= ep6.html T0): ting, then the first word at once
 put(cut(S['ting'],.3,.15),T0,.14)   # soft ting UNDER the first word (the voice must stay clear)                           # shovel digs (pre-roll before the voice)
 put(cut(S['slap'],.3),HIT-.02,.22);put(cut(S['boom'],.7,.3),HIT,.2)                           # clink on the trunk, lid bursts open
 put(cut(S['cash-register'],.9),Wn('$10')+.05,.3);put(cut(S['money'],1.0),Wn('$10')+.12,.16)
 put(cut(S['whoosh'],.9),1.75,.28)                                          # rise out of the shaft
-put(cut(S['wow'],.55),Wn('so')-.05,.22)                                    # joy, ONLY inside "so happy"
-put(cut(S['yeah'],Wn('something')-Wn('happy')-.05,.15),Wn('happy'),.24)
-put(cut(S['whoosh'],.7),Wn('does')-.1,.2)                                  # camera dips to his face
+put(cut(S['whoosh'],.7),Wn('did')-.1,.2)                                   # camera dips to his face
 put(S['boom'],Wn('regret')-.02,.34);put(cut(S['fahh'],1.15,.25),Wn('regret')+.02,.3)   # regret: boom + fahh fills the pause
 put(S['pop'],Wn('danny'),.25);put(S['ting'],Wn('danny')+.03,.18)
 # ---------- story SFX (every event gets a sound; long SFX trimmed so nothing bleeds into the next beat) ----------
