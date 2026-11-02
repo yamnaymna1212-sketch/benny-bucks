@@ -16,3 +16,10 @@
 ## UPDATE hook v2 (2026-11-02, after user feedback on v1)
 User v1 feedback: pale fake building, black board pointless, big number pointless, nobody runs the printer, Mike/people without a role, hook unclear, static camera, choppy boring voice, no big printing scene, drop "U.S." from the voice; camera should go government man printing -> map of a country America owes.
 v2: real U.S. Capitol shape (white dome + peristyle + wings) in daylight, Mike runs the MONEY PRINTER (red button -> celebrates in a cash fountain -> cash mountain -> shrugs on "can't pay off"), camera flies (monotone spline, no overshoot) to a Natural Earth world map: Japan lights up, cash arc Japan -> America, "$1.1 TRILLION". No other people. Preview: hook-preview-5s-v2.mp4. Waiting for approval.
+
+## FULL v1 RENDERED (2026-11-02)
+- User on hook v2: Mike + press centred, cash clearly coming out, U.S. GOVERNMENT + one U.S. flag on the Capitol, no side flags -> then build the whole video. Done.
+- render-kit/ep6-print-vs-debt.mp4 (64.68 s, GPU Apple M3, not in git) + ep6-print-vs-debt-phone.mp4 here (7.6 MB). Mix: mix_ep6.py (full story SFX).
+- Sets (one continuous camera, monotone spline KN in ep6.html): PLAZA x=0 (press, cash piles, booths BANKS/PENSION FUNDS/SOCIAL SECURITY at x 3.5-6.5), WORLD MAP X0=60 (Japan, China/Canada/Taiwan/India arcs, $40.6T tower on the US, villain red, 3 of 4 bills), BANK LOBBY LX=-50 (EP4 lobby: bond, interest coins, DUE, new lender pays old, REPLACED loop), BUDGET SCALE x=-30 (TAKES IN vs SPENDS, $1.8T more, $970B interest).
+- Story beat times: const T in ep6.html (from whisper words). Floating texts have a dark backing panel for contrast.
+- Known weak spots: ~0.5 s flights over lawn at 28.0-28.9 and 50.0-50.4; WHO IS OWED? cropped while the camera rises (~21 s); faces have no expressions; the 4-bills beat (~27 s) frames the US low.

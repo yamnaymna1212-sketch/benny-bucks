@@ -64,7 +64,7 @@ function bundle(x,y,z,r=0){const g=new THREE.Group();g.position.set(x,y,z);g.rot
 const TLN=await (await fetch('timeline_ep6.json')).json(),WD=TLN.words,CH=TLN.chunks;
 const Wd=w=>WD.find(x=>x.w.toLowerCase().replace(/[^a-z$0-9]/g,'')===w)?.s;
 const gl=new GLTFLoader(),SRC={};
-for(const n of['mike']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
+for(const n of['mike','manager','landlord','teller','seller','guard']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
   if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
@@ -88,14 +88,15 @@ function armL(P,u,l){pose(P,'upperarm01L',u[0],-u[1],-u[2]);pose(P,'lowerarm01L'
 const mix3=(a,b,k)=>a.map((v,i)=>v+(b[i]-v)*k),cl=(x)=>Math.min(1,Math.max(0,x)),sm=x=>{x=cl(x);return x*x*(3-2*x);};
 const glowMat=(c,i=1.6)=>[new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(i*1.3),toneMapped:false}),new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(.35),roughness:.4,emissive:c,emissiveIntensity:.25})];
 function big(str,size,c,i=1.1){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:8,bevelEnabled:true,bevelThickness:size*.03,bevelSize:size*.02,bevelSegments:3});
- g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,glowMat(c,i));m.scale.setScalar(0);scene.add(m);return m;}
+ g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,glowMat(c,i));m.scale.setScalar(0);scene.add(m);
+ const bw=g.boundingBox.max.x-g.boundingBox.min.x+size*.7,bk=new THREE.Mesh(new THREE.PlaneGeometry(bw,size*1.45),new THREE.MeshBasicMaterial({color:0x05080a,transparent:true,opacity:.5,depthWrite:false}));bk.position.set(0,size*.36,-size*.08);m.add(bk);return m;}
 // ================= CAPITOL PLAZA (hook part 1): the real U.S. Capitol shape (white dome, peristyle, wings), lawn, the money press =================
 const lawnT=tex(512,512,x=>{x.fillStyle='#4f7d34';x.fillRect(0,0,512,512);for(let i=0;i<9000;i++){const g=60+Math.random()*70;x.fillStyle=`rgba(${g*.5|0},${g+40|0},${g*.35|0},.35)`;x.fillRect(Math.random()*512,Math.random()*512,2,3);}
  for(let i=0;i<8;i++){x.fillStyle=i%2?'rgba(255,255,255,.035)':'rgba(0,0,0,.035)';x.fillRect(0,i*64,512,64);}});lawnT.wrapS=lawnT.wrapT=THREE.RepeatWrapping;lawnT.repeat.set(10,10);
 add(new THREE.PlaneGeometry(140,140).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({map:lawnT,roughness:.95}),0,0,-20,scene,false);
 add(B(9,.04,60),pbr('concrete_pavement',3,20,{roughness:.85}),0,.02,-6,scene,false);             // central walk to the Capitol
 add(B(16,.05,9),pbr('concrete_pavement',6,3,{roughness:.85}),0,.025,0,scene,false);              // plaza where the press stands
-const CW=M(0xe9e6de,.55);const CWd=M(0xd6d1c5,.6);const WIN=M(0x2a2f36,.3,.2);
+const CW=M(0xd4d0c6,.55);const CWd=M(0xc2bdb1,.6);const WIN=M(0x2a2f36,.3,.2);
 const CZ0=-34;
 function colRow(G,n,x0,dx,z,h,r=.32){for(let i=0;i<n;i++){const x=x0+i*dx;add(new THREE.CylinderGeometry(r,r*1.1,h,24),CW,x,h/2+.4,z,G);add(B(r*2.6,.3,r*2.6),CW,x,.25,z,G);add(B(r*2.6,.3,r*2.6),CW,x,h+.55,z,G);}}
 {const G=new THREE.Group();G.position.set(0,0,CZ0);scene.add(G);
@@ -129,34 +130,33 @@ function makeFlag(x,y,z,w,dir=1,map=flagT,ratio=10/19){const h=w*ratio,g=new THR
  const m=add(g,new THREE.MeshPhysicalMaterial({map,roughness:.7,sheen:1,sheenRoughness:.5,side:THREE.DoubleSide}),x+dir*w/2,y-h/2,z,scene,true);m.scale.x=dir;
  const pole=add(new THREE.CylinderGeometry(w*.018,w*.024,y+.08,12),M(0xdedede,.3,.8),x,(y+.08)/2,z);add(new THREE.SphereGeometry(w*.035,16,12),GOLD,x,y+.1,z);const f={g,o,w,m,pole};flags.push(f);return f;}
 function waveFlags(t){for(const f of flags){const p=f.g.attributes.position;for(let i=0;i<p.count;i++){const u=(f.o[i*3]+f.w/2)/f.w;p.setZ(i,Math.sin(u*Math.PI*2.6-t*5)*.055*f.w*u);}p.needsUpdate=true;f.g.computeVertexNormals();}}
-makeFlag(-4.2,5.6,-4.5,2.0,1);makeFlag(4.2,5.6,-4.5,2.0,-1);
-// ---- the money press (big, front-facing), Mike runs it from a control stand with a red button
-const PRZ=-1.9,rollers=[];
-{const metal=M(0x2e4a3c,.35,.6),steel=M(0xa9b0b6,.25,1),dark=M(0x1b1f22,.4,.5);const G=new THREE.Group();G.position.set(-.25,0,PRZ);G.scale.setScalar(.8);scene.add(G);
- add(B(3.0,.16,2.0),dark,0,.08,0,G);add(RB(2.8,1.5,1.8,.08),metal,0,.9,0,G);
- for(let i=0;i<4;i++){const r=add(new THREE.CylinderGeometry(.16,.16,2.5,32),steel,0,1.85,-.6+i*.4,G);r.rotation.z=Math.PI/2;rollers.push(r);}
- for(const sx of[-1.35,1.35])add(RB(.14,.8,1.7,.03),metal,sx,1.85,0,G);
+txt3('U.S. GOVERNMENT',.78,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5}),0,7.62,CZ0+8.42);
+makeFlag(0,13.6,CZ0+5.6,3.4,1);                       // one big U.S. flag on top of the Capitol portico
+// ---- the money press: centred, low, front output slot; Mike stands right behind it and hits the red button on top
+const PRZ=-1.6,rollers=[];
+{const metal=M(0x2e4a3c,.35,.6),steel=M(0xa9b0b6,.25,1),dark=M(0x1b1f22,.4,.5);const G=new THREE.Group();G.position.set(0,0,PRZ);scene.add(G);
+ add(B(2.7,.12,1.6),dark,0,.06,0,G);add(RB(2.5,.95,1.4,.06),metal,0,.6,0,G);
+ add(B(1.7,.2,.06),dark,0,.86,.71,G);                                                    // output slot
+ for(let i=0;i<2;i++){const r=add(new THREE.CylinderGeometry(.07,.07,1.6,24),steel,0,.81+i*.1,.66,G);r.rotation.z=Math.PI/2;rollers.push(r);}
+ for(const sx of[-1.2,1.2])add(RB(.12,.4,1.3,.02),metal,sx,1.25,0,G);
  const lt=tex(1024,180,x=>{x.fillStyle='#14233f';x.fillRect(0,0,1024,180);x.strokeStyle='#c9a54a';x.lineWidth=10;x.strokeRect(8,8,1008,164);x.fillStyle='#fff';x.font='800 96px Mont';x.textAlign='center';x.fillText('MONEY PRINTER',512,126);});
- add(new THREE.PlaneGeometry(2.2,.39),new THREE.MeshStandardMaterial({map:lt,roughness:.5}),0,1.05,.905,G,false);
- const ch=add(B(.9,.06,1.3),steel,-1.75,1.1,.75,G);ch.rotation.z=.45;                                    // chute to the cash mountain
- for(let i=0;i<6;i++){const c=i%2?0xff3b30:0x35ff80;add(new THREE.SphereGeometry(.035,12,8),M(c,.3,0,{emissive:c,emissiveIntensity:3}),-1.0+i*.14,.45,.905,G,false);}}
-const STX=1.25,STZ=.15;   // control stand
-add(RB(.5,1.0,.45,.04),M(0x30353c,.35,.6),STX,.5,STZ);add(B(.56,.05,.5),M(0x9aa2aa,.25,1),STX,1.02,STZ);
-const btn=add(new THREE.CylinderGeometry(.09,.1,.07,32),M(0xd01010,.3,0,{emissive:0xff1a10,emissiveIntensity:.6}),STX,1.08,STZ);
-const pm=person('mike',STX,-.42,-.2);        // Mike behind the stand, facing us
-// printed sheets flying up out of the rollers and showering onto the mountain
+ add(new THREE.PlaneGeometry(1.9,.33),new THREE.MeshStandardMaterial({map:lt,roughness:.5}),0,.42,.705,G,false);
+ for(let i=0;i<6;i++){const c=i%2?0xff3b30:0x35ff80;add(new THREE.SphereGeometry(.03,12,8),M(c,.3,0,{emissive:c,emissiveIntensity:3}),-1.05+i*.1,.2,.705,G,false);}
+ add(new THREE.CylinderGeometry(.2,.22,.06,32),M(0x9aa2aa,.25,1),0,1.1,-.45,G);}
+const btn=add(new THREE.CylinderGeometry(.1,.11,.07,32),M(0xd01010,.3,0,{emissive:0xff1a10,emissiveIntensity:.6}),0,1.19,PRZ-.45);
+const pm=person('mike',0,PRZ-1.0,0);          // Mike right behind the press, facing us
+// printed bills shoot out of the slot toward us and rain onto two piles
 const billFly=(()=>{const m=billM.clone();m.emissiveMap=billT;m.emissiveIntensity=.45;return m;})();
-const NF=420,fly=new THREE.InstancedMesh(new THREE.PlaneGeometry(BW*2.2,BH*2.2),billFly,NF);fly.frustumCulled=false;scene.add(fly);
-const FL=[...Array(NF)].map((_,i)=>({t0:i*.0068,vx:-.5-Math.random()*1.1,vy:3.0+Math.random()*1.6,vz:.5+Math.random()*1.3,sp:V3(Math.random()*9,Math.random()*9,Math.random()*9)}));
+const NF=300,fly=new THREE.InstancedMesh(new THREE.PlaneGeometry(BW*2.2,BH*2.2),billFly,NF);fly.frustumCulled=false;scene.add(fly);
+const FL=[...Array(NF)].map((_,i)=>{const sd=i%2?1:-1;return {t0:i*.0038,x0:(Math.random()-.5)*1.4,vx:sd*(.7+Math.random()*1.1),vy:1.1+Math.random()*1.1,vz:1.1+Math.random()*1.0,sp:V3(Math.random()*9,Math.random()*9,Math.random()*9)};});
 const dmy=new THREE.Object3D();
-// cash mountain (left of the press): $10,000 bricks in a growing cone
-const MX=-1.45,MZ=.35,NB=1500;const brickG2=new THREE.BoxGeometry(.31,.1,.14);
+const NB=1600;const brickG2=new THREE.BoxGeometry(.31,.1,.14);
 const brickMs=[M(0xc9d0b8,.9),M(0xc9d0b8,.9),new THREE.MeshStandardMaterial({map:billT,roughness:.8,emissive:0x35ff80,emissiveMap:billT,emissiveIntensity:.3}),M(0xc9d0b8,.9),M(0xc9d0b8,.9),M(0xc9d0b8,.9)];
 const strT=tex(64,64,x=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#dfe6cf':'#9fb592';x.fillRect(0,i*8,64,8);}x.fillStyle='#c79a2c';x.fillRect(27,0,10,64);});
 const stM=new THREE.MeshStandardMaterial({map:strT,roughness:.8});brickMs[0]=brickMs[1]=brickMs[4]=brickMs[5]=stM;
 const mtn=new THREE.InstancedMesh(brickG2,brickMs,NB);mtn.castShadow=mtn.receiveShadow=true;scene.add(mtn);
 {let i=0,sd=7;const r=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};const P=[];
- for(let k=0;k<NB;k++){const a=r()*Math.PI*2,rad=Math.sqrt(r())*1.35,h=Math.max(0,1.15*(1-rad/1.35))*(.7+r()*.3);P.push([MX+Math.cos(a)*rad,.05+h*r(),MZ+Math.sin(a)*rad,r()*3,(r()-.5)*.3]);}
+ for(let k=0;k<NB;k++){const cx=k%2?1.55:-1.55,a=r()*Math.PI*2,rad=Math.sqrt(r())*1.0,h=Math.max(0,1.0*(1-rad/1.0))*(.7+r()*.3);P.push([cx+Math.cos(a)*rad,.05+h*r(),.55+Math.sin(a)*rad,r()*3,(r()-.5)*.3]);}
  P.sort((a,b)=>a[1]-b[1]);for(const p of P){dmy.position.set(p[0],p[1],p[2]);dmy.rotation.set(p[4],p[3],p[4]*.5);dmy.updateMatrix();mtn.setMatrixAt(i++,dmy.matrix);}mtn.count=0;}
 // ================= WORLD MAP (hook part 2): Natural Earth countries (public domain), Pacific-centred, lying on the ground at X0 =================
 const X0=60,KM=.2,MAPZ=0;
@@ -181,28 +181,233 @@ const NA=40,arcB=new THREE.InstancedMesh(new THREE.PlaneGeometry(BW*4,BH*4),bill
 function animate(t){
  for(const r of rollers)r.rotation.x=-t*12;waveFlags(t);
  // Mike: presses the button (0.1-0.6), celebrates while the cash flies (0.7-1.7), then "can't pay off" -> arms drop, shrug
- const P=pm;relaxArms(P);for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);curl(P,'L',.35);curl(P,'R',.35);
- const tPress=.12,tUp=.7,tC=Wn('cant'),tD=Wn('debt');
+ const P=pm,tPress=.12;if(t<3.0){relaxArms(P);for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);curl(P,'L',.35);curl(P,'R',.35);
+ const tUp=.7,tC=Wn('cant'),tD=Wn('debt');
  const press=sm((t-tPress)/.2)*(1-sm((t-.55)/.15)),up=sm((t-tUp)/.25)*(1-sm((t-tC)/.3)),shrug=sm((t-tC-.1)/.3);
  armR(P,mix3([AD[0],0,AD[2]],[1.15,0,.25],press),.25*press);
- if(up>0){const w=Math.sin(t*9)*.12;armR(P,mix3([AD[0],0,AD[2]],[-.1,0,-2.1+w],up),.45*up);armL(P,mix3([AD[0],0,AD[2]],[-.1,0,-2.1-w],up),.45*up);curl(P,'L',.2);curl(P,'R',.2);}
+ if(up>0){const w=Math.sin(t*9)*.12;armR(P,mix3([AD[0],0,AD[2]],[.2,0,-1.1+w],up),.35*up);armL(P,mix3([AD[0],0,AD[2]],[.2,0,-1.1-w],up),.35*up);curl(P,'L',.2);curl(P,'R',.2);}
  if(shrug>0){armR(P,mix3([AD[0],0,AD[2]],[.35,0,.3],shrug),1.2*shrug);armL(P,mix3([AD[0],0,AD[2]],[.35,0,.3],shrug),1.2*shrug);}
  pose(P,'head',-.12*up+.08*shrug,.35*up*Math.sin(t*2.2)-.2*press,.12*shrug);pose(P,'spine03',-.08*up,.0,0);pose(P,'neck01',-.08*up,0,0);
  P.g.position.y=.05*Math.abs(Math.sin(t*6))*up;    // little hops of joy
- btn.position.y=1.08-.03*press;
- // flying bills: launched after the button press, land on the mountain
+ btn.position.y=1.19-.03*press;}
+ // flying bills: launched after the button press, out of the slot, land on the piles (faster on "print forty trillion")
  const on=t>tPress+.15;
- FL.forEach((f,i)=>{const T=1.4,age=((t-tPress-.15-f.t0)%T+T)%T,alive=on&&t-tPress-.15>=f.t0;dmy.position.set(-.25+f.vx*age,1.6+f.vy*age-3.6*age*age,PRZ+f.vz*age);
-  if(dmy.position.y<.2)dmy.position.y=-5;if(!alive)dmy.position.y=-5;dmy.rotation.set(f.sp.x+t*4,f.sp.y+t*3,f.sp.z);dmy.scale.setScalar(1);dmy.updateMatrix();fly.setMatrixAt(i,dmy.matrix);});fly.instanceMatrix.needsUpdate=true;
- mtn.count=Math.min(NB,Math.floor(on?500+(t-tPress)*420:450));
+ const act=x=>x<3.2||(x>13.85&&x<16.2)||(x>51.45&&x<53.6);
+ FL.forEach((f,i)=>{const T=1.15,age=((t-tPress-.15-f.t0)%T+T)%T,alive=on&&t-tPress-.15>=f.t0&&act(t-age);dmy.position.set(f.x0+f.vx*age,.86+f.vy*age-3.6*age*age,PRZ+.75+f.vz*age);
+  if(dmy.position.y<.15||!alive)dmy.position.y=-5;dmy.rotation.set(f.sp.x+t*4,f.sp.y+t*3,f.sp.z);dmy.updateMatrix();fly.setMatrixAt(i,dmy.matrix);});fly.instanceMatrix.needsUpdate=true;
+ mtn.count=Math.min(NB,Math.floor(on?600+(t-tPress)*420:550));
  // map: Japan lights up on "Japan", the loan arc draws, cash flows along it, the number pops on "$1"
  const tJ=Wn('japan'),tO=Wn('owed'),t1=Wn('$1');const jk=sm((t-tJ)/.3);
- C['Japan'].mats[0].emissive.setHex(0xffb000);C['Japan'].mats[0].emissiveIntensity=.55*jk;C['Japan'].mats[0].color.lerpColors(C['Japan'].c0??=C['Japan'].mats[0].color.clone(),new THREE.Color(0xffd23a),jk);C['Japan'].g.position.y=.25*jk;
- LJP.scale.setScalar(pop(t,tJ+.05,.3));LJP.position.set(JP[0]+1.4,.5,JP[1]+.9);LJP.lookAt(camP);
+ C['Japan'].mats[0].emissive.setHex(0xffb000);C['Japan'].mats[0].emissiveIntensity=.55*jk;C['Japan'].mats[0].color.lerpColors(C['Japan'].c0,new THREE.Color(0xffd23a),jk);C['Japan'].g.position.y=.25*jk;
+ LJP.scale.setScalar(t<10.6?pop(t,tJ+.05,.3):0);LJP.position.set(JP[0]+1.4,.5,JP[1]+.9);LJP.lookAt(camP);
  const ak=sm((t-tO)/1.2);arcG.setDrawRange(0,Math.floor(ak*120)*8*6);arc.visible=ak>0;
  for(let i=0;i<NA;i++){const u=((t-tO)*.35+i/NA)%1;const ok=t>tO&&u<ak;arcC.getPoint(u,dmy.position);if(!ok)dmy.position.y=-9;dmy.lookAt(camP);dmy.rotateZ(Math.sin(i+t*3)*.4);dmy.updateMatrix();arcB.setMatrixAt(i,dmy.matrix);}arcB.instanceMatrix.needsUpdate=true;
- T11.scale.setScalar(pop(t,t1,.32));T11.position.set(JP[0]+.9,2.75+.05*Math.sin(t*3),JP[1]+.6);T11.lookAt(camP);
+ T11.scale.setScalar(t<10.6?pop(t,t1,.32):0);T11.position.set(JP[0]+.9,2.75+.05*Math.sin(t*3),JP[1]+.6);T11.lookAt(camP);
  P.g.updateMatrixWorld(true);
+}
+// ================= BANK LOBBY (story 28-41 s): the EP4 lobby, moved to LX =================
+const LX=-50,nLob0=scene.children.length;
+// ================= LOBBY =================
+add(B(10,.2,16),pbr('marble_01',5,8,{roughness:.62}),0,-.1,2,scene,false);
+add(B(10,.1,16),tint(pbr('painted_plaster_wall',5,8),0xeee6d8),0,3.75,2,scene,false);
+add(B(10.4,3.9,.3),tint(pbr('painted_plaster_wall',5,2),0xe4d6bd),0,1.9,-4.4);
+add(B(.3,3.9,16),tint(pbr('painted_plaster_wall',8,2),0xe4d6bd),5.1,1.9,2);
+add(B(10.4,.14,.05),M(0x3a2a1a,.4),0,.07,-4.24,scene,false);add(B(.05,.14,16),M(0x3a2a1a,.4),4.94,.07,2,scene,false);   // skirting
+add(B(10.4,.1,.08),M(0xf3ecdf,.6),0,3.62,-4.22,scene,false);                                                            // crown moulding
+for(let z=-3.6;z<9;z+=2.4)add(B(.16,3.8,.16),M(0x2a2018,.35,.9),-5,1.9,z);
+add(B(.2,.14,16),M(0x2a2018,.35,.9),-5,.07,2);add(B(.2,.14,16),M(0x2a2018,.35,.9),-5,3.7,2);
+for(let z=-3;z<9;z+=3)for(const x of[-2,2])add(RB(1.6,.05,.5,.02),M(0xffffff,.3,0,{emissive:0xfff2dc,emissiveIntensity:.7}),x,3.68,z,scene,false);
+// classical columns
+for(const [x,z] of[[-3.6,-.2],[3.6,-.2]]){const cm=pbr('marble_01',1,3,{roughness:.3});add(new THREE.CylinderGeometry(.24,.27,3.4,40),cm,x,1.85,z);
+ add(B(.7,.15,.7),cm,x,.075,z);add(B(.7,.15,.7),cm,x,3.6,z);}
+txt3('FIRST NATIONAL BANK',.2,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5}),0,3.05,-4.22);
+// ---- wall detail: walnut wainscot + pilasters, hanging TELLER signs, services board, vault door (bank signals)
+{const wood=M(0x4a2c18,.38,0,{clearcoat:1});add(B(10.4,1.15,.06),wood,0,.575,-4.22,scene,false);add(B(10.4,.06,.1),M(0x2e1a0d,.3),0,1.16,-4.2,scene,false);
+ for(let x=-4.6;x<=4.6;x+=1.15)add(B(.9,.82,.02),M(0x5a3720,.35,0,{clearcoat:1}),x,.58,-4.18,scene,false);
+ for(const x of[-3,-.9,.9,3])add(B(.28,1.55,.08),tint(pbr('marble_01',.3,1.1,{roughness:.3}),0xf1ebe0),x,1.97,-4.2,scene,false);
+ const st=tex(512,128,x=>{x.fillStyle='#14233f';x.fillRect(0,0,512,128);x.strokeStyle='#c9a54a';x.lineWidth=8;x.strokeRect(6,6,500,116);x.fillStyle='#fff';x.font='800 78px Mont';x.textAlign='center';x.fillText('TELLER',256,94);});
+ for(const sx of[-2.9,2.9]){add(B(.8,.2,.03),new THREE.MeshStandardMaterial({map:st,roughness:.5}),sx,2.55,-2.1,scene,false);
+  for(const d of[-.3,.3])add(new THREE.CylinderGeometry(.006,.006,1.1,8),GOLD,sx+d,3.2,-2.1,scene,false);}
+ const sv=tex(512,512,x=>{x.fillStyle='#0f2340';x.fillRect(0,0,512,512);x.strokeStyle='#c9a54a';x.lineWidth=10;x.strokeRect(12,12,488,488);x.fillStyle='#c9a54a';x.font='800 50px Mont';x.textAlign='center';
+  x.fillText('SERVICES',256,96);x.fillStyle='#fff';x.font='800 40px Mont';['CHECKING','SAVINGS','MORTGAGES','LOANS','SAFE DEPOSIT'].forEach((t,i)=>x.fillText(t,256,180+i*66));});
+ add(B(.8,.8,.04),new THREE.MeshStandardMaterial({map:sv,roughness:.45}),-.1,1.9,-4.17,scene,false);add(B(.86,.86,.03),GOLD,-.1,1.9,-4.19,scene,false);
+ const steel=M(0x9aa2aa,.22,1);const vd=add(new THREE.CylinderGeometry(.95,.95,.25,96),steel,2.35,1.55,-4.05);vd.rotation.x=Math.PI/2;
+ add(new THREE.TorusGeometry(1.0,.1,24,96),M(0x6c747c,.3,1),2.35,1.55,-4.12,scene,false);
+ for(let i=0;i<10;i++){const a=i/10*Math.PI*2;add(new THREE.CylinderGeometry(.05,.05,.1,16),M(0xc6ccd2,.18,1),2.35+Math.cos(a)*.72,1.55+Math.sin(a)*.72,-3.9,scene,false).rotation.x=Math.PI/2;}
+ const wh=add(new THREE.TorusGeometry(.22,.025,12,48),M(0xd8dde2,.15,1),2.35,1.55,-3.88,scene,false);
+ for(let i=0;i<3;i++){const sp=add(B(.5,.03,.03),M(0xd8dde2,.15,1),2.35,1.55,-3.88,scene,false);sp.rotation.z=i*Math.PI/3;}}
+// ---- US flag on a pole (50 stars, 13 stripes, real 10:19 ratio, cloth folds)
+{const FW=1140,FH=600;const ft=tex(FW,FH,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*FH/13,FW,FH/13+1);}
+  const cw=FW*.4,chh=FH*7/13;x.fillStyle='#3c3b6e';x.fillRect(0,0,cw,chh);x.fillStyle='#fff';
+  const star=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?r*.4:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}x.closePath();x.fill();};
+  for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++)star(cw/12*(2*c+1+(r%2)),chh/10*(r+1),chh*.0616*1.6);
+  // fabric shading
+  for(let i=0;i<FW;i+=2){const s=Math.sin(i/FW*Math.PI*5.5);x.fillStyle=`rgba(0,0,0,${.12*Math.max(0,s)})`;x.fillRect(i,0,2,FH);}});
+ const fg=new THREE.PlaneGeometry(1.3,.68,60,20);const pp=fg.attributes.position;
+ for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.65)/1.3,v=pp.getY(i);pp.setZ(i,Math.sin(u*Math.PI*2.75)*.07*u);pp.setY(i,v-u*u*.22);}fg.computeVertexNormals();
+ globalThis.FG=fg;globalThis.FG0=Float32Array.from(fg.attributes.position.array);const fl=add(fg,new THREE.MeshPhysicalMaterial({map:ft,roughness:.7,sheen:1,sheenRoughness:.5,sheenColor:0xffffff,side:THREE.DoubleSide}),-2.05+.67,2.6,-3.9,scene,true);
+ add(new THREE.CylinderGeometry(.022,.022,3.1,16),M(0x5a3a1e,.4),-2.05,1.45,-3.9);add(new THREE.SphereGeometry(.06,24,16),GOLD,-2.05,3.0,-3.9);
+ add(new THREE.CylinderGeometry(.16,.2,.08,32),GOLD,-2.05,.04,-3.9);}
+// ---- wall clock, ATM, plants, deposit stand
+{const ct=tex(256,256,x=>{x.fillStyle='#fbf8f0';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.fillStyle='#222';x.font='800 30px Mont';x.textAlign='center';x.textBaseline='middle';
+  for(let h=1;h<=12;h++){const a=h/12*Math.PI*2-Math.PI/2;x.fillText(h,128+Math.cos(a)*96,128+Math.sin(a)*96);}
+  x.strokeStyle='#111';x.lineCap='round';const hand=(a,l,w)=>{x.lineWidth=w;x.beginPath();x.moveTo(128,128);x.lineTo(128+Math.cos(a)*l,128+Math.sin(a)*l);x.stroke();};hand(-1.1,55,9);hand(.45,85,5);});
+ const c=add(new THREE.CylinderGeometry(.32,.32,.05,48),[M(0x222222,.3,.8),new THREE.MeshStandardMaterial({map:ct,roughness:.4}),M(0x222222)],2.6,3.0,-4.22,scene,false);c.rotation.x=Math.PI/2;}
+{const atm=new THREE.Group();atm.position.set(4.85,0,1.4);atm.rotation.y=-Math.PI/2;scene.add(atm);
+ add(RB(.8,1.75,.5,.04),M(0x30353c,.35,.6),0,.875,0,atm);add(B(.82,.32,.52),M(0x0f5aa6,.4,.2),0,1.6,0,atm);
+ const at=tex(256,64,x=>{x.fillStyle='#0f5aa6';x.fillRect(0,0,256,64);x.fillStyle='#fff';x.font='800 44px Mont';x.textAlign='center';x.fillText('ATM',128,48);});
+ add(new THREE.PlaneGeometry(.5,.12),new THREE.MeshBasicMaterial({map:at}),0,1.62,.262,atm,false);
+ add(new THREE.PlaneGeometry(.34,.24),M(0x0a1a12,.2,0,{emissive:0x2c8a52,emissiveIntensity:.8}),0,1.25,.252,atm,false);
+ add(B(.3,.2,.06),M(0x9aa0a6,.3,.8),0,.95,.28,atm);}
+function plant(x,z){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);add(new THREE.CylinderGeometry(.24,.18,.5,32),M(0x2b2b2b,.45,.3),0,.25,0,g);
+ const lm=M(0x2f6b2a,.55,0,{side:THREE.DoubleSide});for(let i=0;i<26;i++){const l=add(new THREE.SphereGeometry(.18,10,6),lm,0,0,0,g);l.scale.set(.25,1,.06);
+  const a=i*2.4,r=.05+i*.004;l.position.set(Math.cos(a)*r,.75+i*.025,Math.sin(a)*r);l.rotation.set(Math.sin(a)*.6,a,Math.cos(a)*.6);}}
+plant(-4.4,-3.6);plant(4.4,-3.6);
+for(const x of[-3.2,-1.6,1.6,3.2]){add(new THREE.CylinderGeometry(.035,.045,.95,24),GOLD,x,.475,3.4);add(new THREE.CylinderGeometry(.14,.16,.04,32),GOLD,x,.02,3.4);}
+for(const [a,b] of[[-3.2,-1.6],[1.6,3.2]]){const c=new THREE.CatmullRomCurve3([V3(a,.88,3.4),V3((a+b)/2,.7,3.4),V3(b,.88,3.4)]);add(new THREE.TubeGeometry(c,24,.025,10),M(0x7a0f1c,.6),0,0,0);}
+// teller counter
+const CZ=-1.85,TOP=1.07;
+add(B(7.6,1.0,.95),pbr('marble_01',4,.6),0,.5,CZ);add(B(7.9,.07,1.12),pbr('granite_tile',5,1),0,TOP-.035,CZ);
+add(B(7.6,.06,.06),GOLD,0,.95,CZ+.48,scene,false);
+for(const x of[-2.3,0,2.3])add(B(1.3,.75,.02),new THREE.MeshPhysicalMaterial({color:0xcfe6f0,transmission:.95,roughness:.03,thickness:.02,ior:1.5,transparent:true,opacity:.25}),x+(x?0:1.6),TOP+.4,CZ-.35,scene,false);
+// pen on a chain + deposit slips on the counter
+add(new THREE.CylinderGeometry(.006,.006,.14,12),M(0x1a1a1a,.3,.5),.55,TOP+.008,CZ+.3).rotation.set(0,0,Math.PI/2);
+for(let i=0;i<4;i++)add(B(.16,.002,.08),M(0xf2efe4,.9),.85+i*.003,TOP+.002+i*.002,CZ+.3,scene,false);
+const LBG=new THREE.Group();scene.add(LBG);for(const o of scene.children.slice(nLob0,-1))LBG.attach(o);LBG.position.x=LX;
+for(const [x,z] of[[0,.4],[0,-2.6],[2.5,-2.6],[-2.5,-1],[0,2.5]]){const L=new THREE.PointLight(0xffe6c4,4,9,1.4);L.position.set(LX+x,3.2,z);scene.add(L);}
+// ================= STORY (3-65 s): one camera flies between the plaza, the world map, the bank lobby and the budget scale =================
+const T={china:5.78,others:6.32,debt2:8.38,d406:9.0,share:11.08,s119:11.74,print2:13.96,t40:14.48,pocket:17.12,less:17.7,problem:19.34,owes:21.14,you1:21.84,villain:23.18,four:25.6,america:27.0,
+ bond:29.48,interest:30.96,due:32.58,back1:33.82,notr:34.26,lenders:35.7,old:37.6,paid:39.42,replaced:40.46,shrink:41.58,more:43.4,spends:43.82,s18:45.28,tr18:46.06,interest2:47.38,s970:48.26,
+ printing:50.6,print3:51.54,pay3:52.84,weaker:54.18,banks:54.95,pension:55.4,social:56.3,debt5:59.38,you5:60.4,america2:61.1,over:63.04};
+const inB=(t,a,b)=>t>=a&&t<b;
+const showAt=(m,t,t0,t1,s=1)=>{m.scale.setScalar(t>=t0&&t<t1?pop(t,t0,.3)*s:0);};
+const face=m=>m.lookAt(camP);
+const hand=(P,s='R')=>{const v=V3();P.BN['wrist'+s].getWorldPosition(v);return v;};
+const PSX={hold:[[.85,0,.72],[.75]],give:[[1.25,0,.55],[.35]],shrug:[[.35,0,.3],[1.2]],head:[[-.3,0,-1.6],[2.3]]};
+function arms(P,k,both=true){const [u,l]=PSX[k];armR(P,u,l[0]);if(both)armL(P,u,l[0]);}
+function idle(P,t){relaxArms(P);for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);pose(P,'head',0,0,0);}
+function walkLegs(P,ph,amp){pose(P,'upperleg01L',-amp*Math.sin(ph),0,0);pose(P,'upperleg01R',amp*Math.sin(ph),0,0);pose(P,'lowerleg01L',amp*1.3*Math.max(0,Math.cos(ph)),0,0);pose(P,'lowerleg01R',amp*1.3*Math.max(0,-Math.cos(ph)),0,0);}
+const arrowSh=(()=>{const sh=new THREE.Shape();sh.moveTo(-.09,0);sh.lineTo(.09,0);sh.lineTo(.09,.22);sh.lineTo(.2,.22);sh.lineTo(0,.45);sh.lineTo(-.2,.22);sh.lineTo(-.09,.22);sh.closePath();return sh;})();
+function arrow(c){const m=new THREE.Mesh(new THREE.ExtrudeGeometry(arrowSh,{depth:.06,bevelEnabled:true,bevelSize:.01,bevelThickness:.01}),glowMat(c,1.1));m.geometry.translate(0,-.22,0);m.scale.setScalar(0);scene.add(m);return m;}
+// ---------- map extras
+const lonP=(lo,la)=>[X0+lonX(lo),latZ(la)];
+const SRC2={China:lonP(104,35),Canada:lonP(-105,57),Taiwan:lonP(121,23.7),India:lonP(79,22)};
+const arcY=glowMat(YEL,1.0)[0],arcR=glowMat(RED,1.2)[0],arcY0=arc.material;
+const arcs2=Object.entries(SRC2).map(([nm,p],i)=>{const c=new THREE.QuadraticBezierCurve3(V3(p[0],.3,p[1]),V3((p[0]+US[0])/2,4+Math.abs(p[0]-US[0])*.15,(p[1]+US[1])/2),V3(US[0],.3,US[1]));
+ const g=new THREE.TubeGeometry(c,100,.05,8);const m=add(g,arcY,0,0,0,scene,false);return {nm,g,m,i};});
+for(const o of Object.values(C))o.c0=o.mats[0].color.clone();
+function tintC(nm,col,k,em=.5){const o=C[nm];if(!o)return;o.mats[0].color.lerpColors(o.c0,new THREE.Color(col),k);o.mats[0].emissive.setHex(col);o.mats[0].emissiveIntensity=em*k;}
+const LCN=big('CHINA',.3,WHT,1.0);
+const TW=6,TD=4,TLAY=60,towG=new THREE.BoxGeometry(.6,.1,.26);const tower=new THREE.InstancedMesh(towG,brickMs,TW*TD*TLAY);tower.castShadow=true;tower.frustumCulled=false;scene.add(tower);
+{let i=0;for(let l=0;l<TLAY;l++)for(let a=0;a<TW;a++)for(let b=0;b<TD;b++){dmy.position.set(US[0]+(a-(TW-1)/2)*.62,.27+l*.1,US[1]+(b-(TD-1)/2)*.28);dmy.rotation.set(0,(Math.sin(i*7.1))*.03,0);dmy.updateMatrix();tower.setMatrixAt(i++,dmy.matrix);}tower.count=0;}
+const T406=big('$40.6 TRILLION',.42,RED,1.5);
+const greyBill=new THREE.MeshStandardMaterial({map:billT,color:0x8a8a84,roughness:.9,side:THREE.DoubleSide});
+const bigBills=[0,1,2,3].map(i=>{const m=billM.clone();m.emissiveMap=billT;m.emissiveIntensity=.2;const b=add(new THREE.PlaneGeometry(1.7,.72),m,0,0,0,scene,false);b.userData.m=m;b.scale.setScalar(0);return b;});
+const T3of4=big('3 OF 4 DOLLARS',.42,YEL,1.4),LIN=big('OWED INSIDE AMERICA',.26,GRN,1.2);
+// ---------- plaza extras
+const T119=big('$119,000',.2,RED,1.5),LSH=big('YOUR SHARE',.11,YEL,1.3),T40=big('$40 TRILLION',.24,GRN,1.4),LWHO=big('WHO IS OWED?',.95,YEL,1.4);
+const pocketBill=fan(1,.6);scene.add(pocketBill);const downA=arrow(RED);const LLESS=big('BUYS LESS',.08,RED,1.3);
+// booths: who holds the debt (paid in weaker dollars)
+const boothSign=(txt,bg)=>tex(1024,280,x=>{x.fillStyle=bg;x.fillRect(0,0,1024,280);x.strokeStyle='#c9a54a';x.lineWidth=14;x.strokeRect(10,10,1004,260);x.fillStyle='#fff';x.font='800 110px Mont';x.textAlign='center';x.fillText(txt,512,182,960);});
+const BOOTHS=[['BANKS','#14233f','teller',3.55,T.weaker+.05],['PENSION FUNDS','#4a2a66','seller',5.0,T.pension],['SOCIAL SECURITY','#7a1f1f','guard',6.45,T.social]].map(([txt,bg,who,x,t0])=>{
+ const G=new THREE.Group();G.position.set(x,0,-1.4);scene.add(G);add(RB(1.25,1.0,.55,.04),M(new THREE.Color(bg).getHex(),.5,.1),0,.5,0,G);add(B(1.3,.05,.62),M(0x9aa2aa,.25,1),0,1.02,0,G);
+ add(new THREE.PlaneGeometry(1.3,.355),new THREE.MeshStandardMaterial({map:boothSign(txt,bg),roughness:.5}),0,2.25,0,G,false);for(const sx of[-.6,.6])add(new THREE.CylinderGeometry(.02,.02,1.3,8),GOLD,sx,1.6,-.02,G);
+ const P=person(who,x,-1.95,0);const f=fan(5,0);f.traverse(o=>{if(o.isMesh)o.material=greyBill;});scene.add(f);G.scale.setScalar(0);return {G,P,f,t0,x};});
+const LPLY=big('PEOPLE LIKE YOU',.36,YEL,1.4);
+const SA=big('A: PAY IT OFF',.22,GRN,1.3),SB=big('B: ROLL IT OVER',.22,YEL,1.3);
+// ---------- lobby extras: bond certificate, interest coins, DUE, new/old lender, rollover loop
+const certT=tex(768,512,x=>{x.fillStyle='#f4ecd2';x.fillRect(0,0,768,512);x.strokeStyle='#2f5a3a';x.lineWidth=18;x.strokeRect(14,14,740,484);x.lineWidth=4;x.strokeRect(40,40,688,432);
+ x.fillStyle='#1d3d29';x.textAlign='center';x.font='800 64px Mont';x.fillText('U.S. TREASURY',384,140);x.font='800 92px Mont';x.fillText('BOND',384,250);x.font='800 40px Mont';x.fillText('A LOAN TO THE GOVERNMENT',384,330);x.fillText('PAYS INTEREST',384,390);});
+const mkCert=()=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(.36,.24),new THREE.MeshStandardMaterial({map:certT,roughness:.7,side:THREE.DoubleSide,emissive:0xffffff,emissiveMap:certT,emissiveIntensity:.25}));scene.add(m);return m;};
+const cert=mkCert(),cert2=mkCert();const cashA=fan(5,.5),cashB=fan(5,.5);scene.add(cashA);scene.add(cashB);
+const coins=[...Array(6)].map(()=>{const c=add(new THREE.CylinderGeometry(.03,.03,.006,24),M(0xd4a640,.25,1,{emissive:0x553300,emissiveIntensity:.4}),0,0,0,scene,false);return c;});
+const LINT=big('+ INTEREST',.07,GRN,1.3),LDUE=big('DUE',.14,RED,1.5),LNEW=big('NEW LENDER',.065,WHT,1.0),LOLD=big('OLD LENDER',.065,WHT,1.0),LREP=big('REPLACED',.1,YEL,1.3);
+const loop=new THREE.Group();scene.add(loop);const loopR=new THREE.Group();loop.add(loopR);add(new THREE.TorusGeometry(.22,.025,12,64,Math.PI*1.6),glowMat(YEL,1.2)[0],0,0,0,loopR,false);
+{const cn=add(new THREE.ConeGeometry(.06,.12,16),glowMat(YEL,1.2)[0],.22,0,0,loopR,false);cn.rotation.z=Math.PI;}loop.scale.setScalar(0);
+const lman=person('manager',LX+.4,-2.55,0),lnew=person('landlord',LX-3.2,-.95,Math.PI/2);
+// ---------- budget scale in front of the Capitol (TAKES IN vs SPENDS)
+const SCX=-30;const scaleG=new THREE.Group();scaleG.position.set(SCX,0,0);scaleG.scale.setScalar(1.0);scene.add(scaleG);const beam=new THREE.Group();beam.position.y=1.7;scaleG.add(beam);const plates=[];
+{add(B(9,.05,6),pbr('concrete_pavement',3,2),0,.025,0,scaleG,false);add(new THREE.CylinderGeometry(.05,.07,1.7,24),GOLD,0,.85,0,scaleG);add(new THREE.CylinderGeometry(.35,.4,.08,32),GOLD,0,.04,0,scaleG);add(RB(2.6,.06,.08,.02),GOLD,0,0,0,beam);
+ for(const sx of[-1.25,1.25]){const pl=new THREE.Group();pl.position.set(sx,0,0);beam.add(pl);add(new THREE.CylinderGeometry(.005,.005,.6,6),M(0x333333),0,-.3,0,pl);add(new THREE.CylinderGeometry(.42,.38,.04,40),GOLD,0,-.62,0,pl);plates.push(pl);}
+ for(let i=0;i<4;i++)add(brickG2,brickMs,((i%2)-.5)*.32,-.55+Math.floor(i/2)*.1,0,plates[0]);for(let i=0;i<6;i++)add(brickG2,brickMs,((i%2)-.5)*.32,-.55+Math.floor(i/2)*.1,0,plates[1]);}
+const intStack=new THREE.Group();plates[1].add(intStack);for(let i=0;i<4;i++)add(brickG2,brickMs,((i%2)-.5)*.32,Math.floor(i/2)*.1,0,intStack);
+const LTAK=big('TAKES IN',.1,WHT,1.0),LSPN=big('SPENDS',.1,RED,1.3),T18=big('$1.8 TRILLION MORE',.24,RED,1.5),T970=big('INTEREST: $970 BILLION',.18,RED,1.5);
+let tilt0=0;
+function story(t){
+ // ===== map: China + others light up, arcs to America; the whole-debt tower; the villain guess (red); 3 of 4 dollars inside America
+ const vil=sm((t-T.you1)/.4)*(1-sm((t-T.four+.4)/.4));
+ const ck=sm((t-T.china)/.3),ok=sm((t-T.others)/.4);
+ tintC('China',vil>0?RED:0xffb000,vil>0?vil:ck,.5);for(const n of['Canada','Taiwan','India'])tintC(n,vil>0?RED:0xffb000,vil>0?vil:ok*.85,.4);
+ if(vil>0)tintC('Japan',RED,vil,.5);
+ tintC('United States of America',GRN,sm((t-T.america)/.5)*(1-sm((t-28.2)/.3)),.35);
+ LCN.scale.setScalar(t<10.6?pop(t,T.china+.05,.3):0);LCN.position.set(SRC2.China[0],.6,SRC2.China[1]+1.6);face(LCN);
+ arcs2.forEach(a=>{const k=sm((t-(a.nm==='China'?T.china:T.others+a.i*.12))/.9);a.m.visible=(k>0&&t<10.6)||vil>0;a.m.material=vil>0?arcR:arcY;a.g.setDrawRange(0,vil>0?Infinity:Math.floor(k*100)*8*6);});
+ if(vil>0){arc.visible=true;arc.material=arcR;arcG.setDrawRange(0,Infinity);}else{arc.material=arcY0;if(t>10.6)arc.visible=false;}
+ arcB.visible=t<10.6;
+ tower.count=t>=T.debt2&&t<10.7?TW*TD*Math.round(TLAY*sm((t-T.debt2)/1.5)):0;
+ showAt(T406,t,T.d406,10.7);T406.position.set(US[0],7.0,US[1]+.5);face(T406);
+ bigBills.forEach((b,i)=>{const on=inB(t,T.four,28.3);b.scale.setScalar(on?pop(t,T.four+i*.08,.3):0);const k=sm((t-T.america)/.8);const x0=US[0]+(i-1.5)*1.85;
+  if(i<3){b.position.set(x0,3.2-2.4*k,US[1]);b.material.emissiveIntensity=.2+.8*k;}else{b.position.set(x0+(JP[0]+3-x0)*k,3.2-.6*k,US[1]+(JP[1]-US[1])*k);b.material=k>.3?greyBill:b.userData.m;}face(b);});
+ showAt(T3of4,t,T.four+.2,28.3);T3of4.position.set(US[0],5.0,US[1]);face(T3of4);showAt(LIN,t,T.america+.1,28.3);LIN.position.set(US[0],4.3,US[1]);face(LIN);
+ // ===== plaza: your share, print 40 trillion, the dollar in your pocket, who is owed?
+ showAt(T119,t,T.s119,13.3);T119.position.set(0,2.32,PRZ-1.0);face(T119);showAt(LSH,t,T.share,13.3);LSH.position.set(0,2.62,PRZ-1.0);face(LSH);
+ showAt(T40,t,T.t40,15.9);T40.position.set(0,2.95,PRZ);face(T40);
+ showAt(LWHO,t,T.problem+.4,21.8);LWHO.position.set(0,9.7,CZ0+17);face(LWHO);
+ if(t<3.0){for(const b of BOOTHS){b.G.scale.setScalar(0);b.P.g.visible=false;b.f.visible=false;}lnew.g.visible=false;cert.visible=cert2.visible=cashA.visible=cashB.visible=pocketBill.visible=false;coins.forEach(c=>c.visible=false);intStack.visible=false;return;}
+ // ===== Mike
+ const P=pm;const inLobby=inB(t,28.0,41.1),atScale=inB(t,41.1,50.0);idle(P,t);
+ if(inLobby){P.g.position.set(LX+.4,0,-.95);P.g.rotation.y=Math.PI;}
+ else if(atScale){P.g.position.set(SCX,0,1.7);P.g.rotation.y=0;}
+ else{P.g.position.set(0,0,PRZ-1.0);P.g.rotation.y=0;}
+ btn.position.y=1.19;
+ if(inB(t,3,13.3)){if(t>=T.s119){const k=sm((t-T.s119)/.25);armR(P,mix3([AD[0],0,AD[2]],PSX.head[0],k),2.3*k);armL(P,mix3([AD[0],0,AD[2]],PSX.head[0],k),2.3*k);pose(P,'head',-.1*k,0,0);}}
+ else if(inB(t,13.3,15.9)){const pr=sm((t-T.print2+.25)/.2)*(1-sm((t-T.print2-.3)/.2));armR(P,mix3([AD[0],0,AD[2]],[1.15,0,.25],pr),.25*pr);
+  const up=sm((t-T.print2-.4)/.25);if(up>0){const w=Math.sin(t*9)*.12;armR(P,mix3([AD[0],0,AD[2]],[-.1,0,-2.1+w],up),.45*up);armL(P,mix3([AD[0],0,AD[2]],[-.1,0,-2.1-w],up),.45*up);P.g.position.y=.05*Math.abs(Math.sin(t*6))*up;}btn.position.y=1.19-.03*pr;}
+ else if(inB(t,15.9,18.3)){arms(P,'hold',false);curl(P,'R',.9,.5);if(t>T.less+.2)armL(P,PSX.shrug[0],1.2*sm((t-T.less-.2)/.3));pose(P,'head',.1,0,0);}
+ else if(inLobby){
+  if(inB(t,28.4,29.3))arms(P,'give',false);else if(inB(t,29.6,37.4)||inB(t,38.2,40.2)){arms(P,'hold',false);curl(P,'R',.9,.5);}
+  if(inB(t,37.4,38.2))arms(P,'give',false);if(inB(t,38.0,41.1)){armL(P,PSX.hold[0],.75);curl(P,'L',.9,.5);}}
+ else if(atScale){if(t>=T.tr18&&t<T.s970)arms(P,'shrug');if(t>=T.s970)arms(P,'head');pose(P,'head',0,t<T.tr18?.4*Math.sin(t*1.3):0,0);}
+ else if(inB(t,50,53.0)){const pr=sm((t-T.print3+.25)/.2)*(1-sm((t-T.print3-.3)/.2));armR(P,mix3([AD[0],0,AD[2]],[1.15,0,.25],pr),.25*pr);btn.position.y=1.19-.03*pr;}
+ else if(inB(t,53.0,60.9)){pose(P,'head',0,-.6,0);if(t>T.you5-.6)arms(P,'shrug');}
+ else if(t>=60.9){const lk=t<62.2?.25:t<63.3?-.25:0;pose(P,'head',-.15,lk*sm((t-61.2)/.3),0);if(t>63.3)arms(P,'shrug');}
+ pocketBill.visible=inB(t,15.9,18.3);
+ // ===== lobby actors
+ idle(lman,t);idle(lnew,t);
+ if(inB(t,28.6,29.9))arms(lman,'give',false);
+ if(inB(t,T.notr-.1,34.9))pose(lman,'head',0,.35*Math.sin((t-T.notr)*16),0);
+ if(inB(t,35.6,36.4))arms(lman,'give',false);if(inB(t,36.4,37.3))arms(lman,'hold',false);if(inB(t,37.3,38.1))arms(lman,'give',false);if(inB(t,40.1,40.8))arms(lman,'give',false);
+ {const k=sm((t-34.9)/.75);lnew.g.position.set(LX-3.2+2.6*k,0,-.95);lnew.g.rotation.y=k<1?Math.PI/2:Math.PI;if(k>0&&k<1)walkLegs(lnew,t*7.5,.42);
+  if(inB(t,35.6,36.3))arms(lnew,'give',false);if(t>=40.5){arms(lnew,'hold',false);curl(lnew,'R',.9,.5);}lnew.g.visible=t<45;}
+ // ===== booths
+ BOOTHS.forEach(b=>{const k=pop(t,b.t0-.2,.35);b.G.scale.setScalar(t>=b.t0-.2?k:0);b.P.g.visible=t>=b.t0-.1;idle(b.P,t);
+  if(t>=b.t0){arms(b.P,'hold',false);curl(b.P,'R',.9,.5);}if(t>=T.debt5){pose(b.P,'head',-.05,0,0);arms(b.P,'shrug');}});
+ showAt(LPLY,t,T.debt5+.3,60.9);LPLY.position.set(3.2,3.1,-1.4);face(LPLY);
+ showAt(SA,t,T.america2+.1,99);SA.position.set(0,3.25,PRZ-1.0);face(SA);showAt(SB,t,T.america2+.9,99);SB.position.set(0,2.82,PRZ-1.0);face(SB);
+ // ===== scale
+ const tilt=t<T.spends?0:t<T.tr18?-.12:t<T.interest2?-.26:-.38;tilt0+=(tilt-tilt0)*.25;if(!atScale)tilt0=tilt;beam.rotation.z=tilt0;for(const pl of plates)pl.rotation.z=-beam.rotation.z;
+ intStack.visible=t>=T.interest2;intStack.position.y=-.45+3*(1-sm((t-T.interest2)/.45));
+ for(const P2 of[pm,lman,lnew,...BOOTHS.map(b=>b.P)])P2.g.updateMatrixWorld(true);
+ plates[0].getWorldPosition(tmp);showAt(LTAK,t,T.more-.2,50);LTAK.position.copy(tmp).add(V3(0,-.95,.5));face(LTAK);
+ plates[1].getWorldPosition(tmp);showAt(LSPN,t,T.spends-.1,50);LSPN.position.copy(tmp).add(V3(0,-.95,.5));face(LSPN);
+ showAt(T18,t,T.s18,50);T18.position.set(SCX,3.05,0);face(T18);showAt(T970,t,T.s970-.1,50);T970.position.set(SCX,2.6,0);face(T970);
+ // ===== hand-held props
+ const hR=Q=>hand(Q,'R'),hL=Q=>hand(Q,'L'),lerpP=(a,b,k)=>a.clone().lerp(b,sm(k));
+ BOOTHS.forEach(b=>{b.f.visible=t>=b.t0;if(b.f.visible){b.f.position.copy(hR(b.P)).add(V3(0,.05,0));face(b.f);}});
+ if(pocketBill.visible){pocketBill.position.copy(hR(pm)).add(V3(0,.06,0));face(pocketBill);const k=sm((t-T.less)/.4);pocketBill.scale.setScalar(1.6-.6*k);pocketBill.traverse(o=>{if(o.isMesh){o.userData.m??=o.material;o.material=k>.5?greyBill:o.userData.m;}});}
+ showAt(downA,t,T.less,18.3,.6);if(t>=T.less&&t<18.3){downA.position.copy(hR(pm)).add(V3(.34,.05,0));downA.lookAt(camP);downA.rotateZ(Math.PI);}
+ showAt(LLESS,t,T.less,18.3);LLESS.position.copy(hR(pm)).add(V3(0,.34,0));face(LLESS);
+ cashA.visible=inB(t,28.0,29.7);if(cashA.visible){cashA.position.copy(lerpP(hR(pm),hR(lman),(t-28.7)/.4));face(cashA);}
+ cert.visible=inB(t,29.4,40.6);if(cert.visible){cert.position.copy(t<40.1?lerpP(hR(lman),hR(pm),(t-29.4)/.35):lerpP(hR(pm),hR(lman),(t-40.1)/.35)).add(V3(0,.1,0));face(cert);}
+ cashB.visible=inB(t,35.2,41.1);if(cashB.visible){const p=t<37.3?lerpP(hR(lnew),hR(lman),(t-35.8)/.4):lerpP(hR(lman),hL(pm),(t-37.4)/.4);cashB.position.copy(p).add(V3(0,.05,0));face(cashB);}
+ cert2.visible=inB(t,40.2,41.1);if(cert2.visible){cert2.position.copy(lerpP(hR(lman),hR(lnew),(t-40.3)/.35)).add(V3(0,.1,0));face(cert2);}
+ coins.forEach((c,i)=>{const t0=T.interest+i*.12,on=inB(t,t0,34.0);c.visible=on;if(on){const k=Math.min(1,(t-t0)/.5);c.position.copy(cert.position).add(V3((i-2.5)*.05,.45*(1-k*k)+.02,.02));c.rotation.set(Math.PI/2,0,t*8);}});
+ showAt(LINT,t,T.interest,T.due);LINT.position.copy(cert.position).add(V3(0,.3,0));face(LINT);
+ showAt(LDUE,t,T.due,34.9);LDUE.position.copy(cert.position).add(V3(0,.25,.02));face(LDUE);
+ showAt(LNEW,t,T.lenders,40.9);LNEW.position.copy(lnew.g.position).add(V3(0,2.05,0));face(LNEW);
+ showAt(LOLD,t,T.old-.2,40.9);LOLD.position.copy(pm.g.position).add(V3(0,2.05,0));face(LOLD);
+ loop.scale.setScalar(t>=T.paid&&t<41.1?pop(t,T.paid,.3):0);loop.position.set(LX-.1,2.15,-1.4);face(loop);loopR.rotation.z=-t*4;
+ showAt(LREP,t,T.replaced,41.1);LREP.position.set(LX-.1,2.55,-1.4);face(LREP);
 }
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,200);
 const sun=new THREE.DirectionalLight(0xfff0dc,2.2);sun.position.set(-9,12,8);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
@@ -215,16 +420,53 @@ const bokeh=new BokehPass(scene,cam,{focus:3,aperture:.004,maxblur:.006});comp.a
 renderer.toneMappingExposure=1.1;scene.environmentIntensity=.8;scene.backgroundIntensity=.8;
 scene.add(new THREE.HemisphereLight(0xe6efff,0x6a5638,.9));
 // ONE continuous camera: knots [t, pos, look, fov]; smooth (Catmull-Rom) through all of them, never a cut
+const LX0=-50,SC0=-30;
 const KN=[
- [0.0, [.45,1.85,4.9],[.15,1.95,-2.4],50],      // Mike at the press, cash fountain + mountain behind, the Capitol on top: understood with no sound
- [1.4, [.55,1.8,4.5],[.5,1.85,-2.4],49],        // slow push while the cash flies
- [2.55,[1.0,1.9,3.9],[1.1,1.55,-.6],46],        // "can't pay off its debt" - in on Mike's shrug
- [2.78,[16,7,6.5],[48,0,-2],48],
- [3.05,[40,9.5,6.5],[52,0,-1.8],47],            // fly to the world map (short, lands on the subject)
- [3.45,[51.9,6.0,3.6],[52.0,.3,-1.8],46],       // "Japan" lights up, centred
- [4.5, [52.8,6.6,4.8],[52.8,1.2,-1.8],47],      // the loan arc leaves Japan, "$1.1 TRILLION"
- [5.6, [54.0,7.8,6.8],[54.0,1.2,-2.2],48],
- [7.4, [56,15,13],[56,.5,-2.5],50]];            // pull back: China and others
+ [0.0, [0,1.95,5.7],[0,1.6,-1.6],50],            // HOOK: Mike + the press centred, cash shooting out, Capitol + U.S. GOVERNMENT + flag behind
+ [1.4, [0,1.9,5.0],[0,1.65,-1.6],49],
+ [2.55,[0,1.8,4.1],[0,1.6,-2.2],46],             // Mike shrugs on "can't pay off"
+ [2.78,[16,7,6.5],[48,0,-2],48],                 // fly to the world map
+ [3.05,[40,9.5,6.5],[52,0,-1.8],47],
+ [3.45,[51.9,6.0,3.6],[52.0,.3,-1.8],46],        // Japan
+ [4.5, [52.8,6.6,4.8],[52.8,1.2,-1.8],47],       // $1.1 TRILLION
+ [5.6, [53.5,9,8],[53.5,1,-2],48],
+ [7.4, [49,13,10],[49,0,-1.5],50],               // China + others, arcs to America
+ [8.6, [70,11,9],[75,1.5,-2.2],48],              // to America: the whole debt tower rises
+ [10.2,[76.4,8.5,16],[76.4,4.4,-2.2],50],         // $40.6 TRILLION
+ [10.62,[40,9,8],[5,1.6,-1.6],50],               // fly back to the plaza
+ [11.1,[0,1.9,3.9],[0,1.75,-2.2],46],            // Mike: your share $119,000
+ [13.3,[0,1.95,4.4],[0,1.85,-2.2],47],
+ [14.6,[0,2.4,6.2],[0,1.9,-1.0],50],             // print forty trillion: big fountain
+ [15.9,[.1,1.75,3.3],[0,1.65,-2.4],44],          // the dollar in your pocket
+ [18.0,[.1,1.75,3.0],[0,1.7,-2.4],43],
+ [18.8,[0,3.4,4],[0,6.5,-25],50],                // rise to the Capitol: "who the government owes"
+ [20.4,[0,6.5,-5],[0,8.8,-26],50],
+ [21.45,[0,8,-10],[0,9.2,-26],48],
+ [21.95,[38,15,9],[58,0,-2],50],                 // fly to the map: the foreign "villain" guess
+ [22.6,[50,15,12],[49,0,-1.5],50],
+ [24.5,[52,15,12],[51,0,-1.5],50],
+ [25.6,[76.4,8.5,10],[76.4,2.4,-2.2],50],        // 3 of 4 dollars owed inside America
+ [27.85,[76.4,8.2,9.5],[74,2.0,-2.2],50],
+ [28.35,[10,34,0],[-30,0,-2],50],                // fly over the Capitol dome to the bank
+ [28.95,[LX0+2.6,1.75,1.6],[LX0+.2,1.35,-1.8],46],   // bond: a loan that pays interest
+ [31.5,[LX0+2.2,1.7,1.2],[LX0+.2,1.4,-1.8],44],
+ [34.6,[LX0+1.4,1.8,1.9],[LX0-.2,1.4,-1.6],46],
+ [37.0,[LX0-.4,1.85,2.3],[LX0-.2,1.4,-1.7],48],      // new lender pays the old one
+ [40.8,[LX0+.2,2.1,2.7],[LX0-.1,1.7,-1.8],48],
+ [41.5,[-37,4,8],[SC0,1.6,0],50],                // out to the budget scale
+ [42.2,[SC0,2.0,7.8],[SC0,1.75,0],50],
+ [46.0,[SC0,2.0,7.3],[SC0,1.75,0],50],
+ [49.6,[SC0+.2,2.0,7.0],[SC0+.1,1.75,0],50],
+ [50.4,[-8,4.5,7],[0,1.6,-1.6],50],              // back to the printing press
+ [51.0,[0,1.95,5.3],[0,1.65,-1.6],50],
+ [53.0,[1.4,2.1,6.4],[2.0,1.6,-1.4],50],
+ [53.9,[5.0,2.0,5.2],[5.0,1.6,-1.4],54],         // banks, pension funds, Social Security
+ [57.2,[5.0,2.1,5.5],[5.0,1.6,-1.4],54],
+ [58.4,[3.2,2.8,12.0],[3.2,1.6,-1.5],52],        // people like you
+ [60.7,[3.2,2.8,12.4],[3.2,1.7,-1.5],52],
+ [61.4,[0,1.95,4.7],[0,2.1,-1.6],50],            // pay it off or roll it over?
+ [64.8,[0,1.9,4.3],[0,2.05,-1.6],49]];
+            // pull back: China and others
             // pull back: China and others
         // pull back: China and others
   // (next line: down to Mike, "your share")
@@ -235,12 +477,13 @@ const KC=[];for(const j of[1,2])for(const q of[0,1,2]){const v=KN.map(k=>k[j][q]
 function knot(t){const T=KN.map(k=>k[0]);let i=0;while(i<T.length-2&&t>=T[i+1])i++;const h=T[i+1]-T[i],u=Math.min(1,Math.max(0,(t-T[i])/h));
  const H=([v,m])=>{const u2=u*u,u3=u2*u;return (2*u3-3*u2+1)*v[i]+(u3-2*u2+u)*h*m[i]+(-2*u3+3*u2)*v[i+1]+(u3-u2)*h*m[i+1];};
  const r=KC.map(H);return [r.slice(0,3),r.slice(3,6),r[6]];}
-function setCam(t){const [p,l,fv]=knot(t);{const cx=p[0]>20?54:0;sun.target.position.set(cx,0,cx?-2:-2);sun.position.set(cx-9,12,8);}cam.position.set(...p);const lk=V3(...l);cam.fov=fv;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
+function setCam(t){const [p,l,fv]=knot(t);{sun.target.position.set(l[0],0,l[2]);sun.position.set(l[0]-9,12,l[2]+8);}cam.position.set(...p);const lk=V3(...l);cam.fov=fv;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
  bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=.0006;}
 await loaded;
 const cap=document.getElementById('cap');
-window.renderAt=t=>{setCam(t);animate(t);
+window.renderAt=t=>{setCam(t);animate(t);story(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
+
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>
