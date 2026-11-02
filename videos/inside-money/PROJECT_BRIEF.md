@@ -1,5 +1,11 @@
 # INSIDE MONEY — master brief (everything decided so far, 2026-10-29). Read this first in any new session.
 
+## 0-NEW. USER RULES 2026-11-02 (EP5 hook feedback) - OVERRIDE section 0 where they conflict
+- NO CUTS. One continuous camera that travels from one scene to the next (connected, ordered, clean). Never jump to a new shot. (Replaces "cuts every 2-3 s".)
+- Everything must be understood at a glance: few elements, one action at a time, the camera move itself explains (push in to what matters, glide to the next place).
+- The main character ACTS the story: asks, gets told NO by the banker, gets angry, reacts, celebrates. Faces + body must express emotion.
+- No glitches: no teleporting characters, no popping props, no sudden rotations; every change is animated.
+
 ## 0. LATEST USER RULES (2026-10-31, from EP4 feedback) — these OVERRIDE older lines below (sections 2-3)
 Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start every new video from it.
 **Hook (0-5 s)**
