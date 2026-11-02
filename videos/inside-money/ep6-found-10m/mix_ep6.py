@@ -31,6 +31,7 @@ put(cut(S['cash-register'],.9),Wn('$10')+.05,.3);put(cut(S['money'],1.0),Wn('$10
 put(cut(S['whoosh'],.9),1.75,.28)                                          # rise out of the shaft
 put(cut(S['whoosh'],.7),Wn('did')-.1,.2)                                   # camera dips to his face
 put(S['boom'],Wn('regret')-.02,.34);put(cut(S['fahh'],1.15,.25),Wn('regret')+.02,.3)   # regret: boom + fahh fills the pause
+put(cut(S['whoosh'],.6),Wn('house')+.12,.32);put(cut(S['whoosh'],.6),Wn('his')-.32,.28)   # white flashes in/out of Rick's nightmare (police lights)
 put(S['pop'],Wn('danny'),.25);put(S['ting'],Wn('danny')+.03,.18)
 # ---------- story SFX (every event gets a sound; long SFX trimmed so nothing bleeds into the next beat) ----------
 for k in['shock','horn','wrong','timer','money-transfer','notif2']:S[k]=load(f'{SFX}/user-{k}.wav')

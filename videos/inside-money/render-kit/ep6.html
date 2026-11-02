@@ -163,6 +163,9 @@ function vehicle(type,color,x,z,ry,label){const p=PROF[type],g=new THREE.Group()
 const PICK=vehicle('pickup',0x7d1f1f,MX+6.8,-1.4,-Math.PI/2);                       // Mike's old pickup in his driveway
 vehicle('sedan',0x2c4f7c,-27-6.8,-1.4,-Math.PI/2);vehicle('sedan',0x9a9da3,29+6.8,-1.4,-Math.PI/2);
 vehicle('sedan',0xb0322e,-40,11.0,0);vehicle('suv',0x3b4a3a,5,11.2,Math.PI);vehicle('pickup',0x1d3557,28,11.1,0);vehicle('sedan',0xe8e4da,-60,4.2,0);
+const COPS=[[-13.6,5.9,.25],[-5.4,6.3,-.3]].map(([x,z,r])=>{const g=vehicle('sedan',0xf2f2f2,x,z,r,'POLICE');g.visible=false;
+ const red=add(B(.3,.1,.5),M(0xff1a1a,.3,0,{emissive:0xff1a1a,emissiveIntensity:3}),0,1.5,-.28,g,false),blue=add(B(.3,.1,.5),M(0x1a4dff,.3,0,{emissive:0x1a4dff,emissiveIntensity:3}),0,1.5,.28,g,false);
+ const lr=new THREE.PointLight(0xff2020,0,14,1.4),lb=new THREE.PointLight(0x2050ff,0,14,1.4);lr.position.set(0,1.9,-.5);lb.position.set(0,1.9,.5);g.add(lr);g.add(lb);return {g,red,blue,lr,lb};});
 const IRSV=vehicle('suv',0x0b0c0f,-40,5.6,0,'IRS');
 // ================= MIKE'S LIVING ROOM (house-local, floor top y=.52) =================
 const FY=.52;
@@ -234,7 +237,7 @@ const GLOW=new THREE.PointLight(0xffe7a0,0,4,1.6);GLOW.position.set(0,.9,0);TRUN
 const LOOSE=[];for(let i=0;i<16;i++){const b=bundle(mikeH);b.position.set(PIT.x-.9+(i%8)*.26,PIT.y+.01+NT/2+(i>7?NT:0),PIT.z+.78-(i%3)*.12+(i>7?.2:0));b.rotation.y=i*1.3;LOOSE.push(b);}
 // ================= HOOK CUTAWAY (user 2026-11-02, "You Built It" style): the ground in front of the pit is cut away -> soil cross-section, the pit, groundwater below =================
 // NOTCH = clipping box (world) that removes lawn/floor/foundation in front of the pit face during the hook only (planes moved away after it)
-const NZ=-8+PIT.z+PIT.d/2,NOTCH=[new THREE.Plane(V3(0,0,-1),NZ+.03),new THREE.Plane(V3(-1,0,0),-9-2.6),new THREE.Plane(V3(1,0,0),9-6.4),new THREE.Plane(V3(0,1,0),-1.4),new THREE.Plane(V3(0,0,1),-(-8+14))];
+const NZ=-8+PIT.z+PIT.d/2,NOTCH=[new THREE.Plane(V3(0,0,-1),NZ+.03),new THREE.Plane(V3(-1,0,0),-9-6),new THREE.Plane(V3(1,0,0),9-9.8),new THREE.Plane(V3(0,1,0),-1.4),new THREE.Plane(V3(0,0,1),-(-8+14))];
 const EARTH=new THREE.Group();mikeH.add(EARTH);
 {const so=(w,h)=>pbr('excavated_soil_wall',Math.max(1,w/1.6),Math.max(1,h/1.6)),FZ=PIT.z+PIT.d/2,piece=(x0,x1,y0,y1,z0,z1)=>add(B(x1-x0,y1-y0,z1-z0),so(x1-x0,y1-y0),(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,EARTH,false);
  const px0=PIT.x-PIT.w/2-.09,px1=PIT.x+PIT.w/2+.09;
@@ -283,6 +286,8 @@ function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
  const m=add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:1.45,roughness:.35}),new THREE.MeshStandardMaterial({color:0x5a0606,roughness:.5})],0,0,0,p,false);return m;}
 const GRN=0x22e06a,WHT=0xffffff;
+const ARW=(()=>{const sh=new THREE.Shape();sh.moveTo(-.09,0);sh.lineTo(.09,0);sh.lineTo(.09,.22);sh.lineTo(.2,.22);sh.lineTo(0,.45);sh.lineTo(-.2,.22);sh.lineTo(-.09,.22);sh.closePath();
+ const g=new THREE.ExtrudeGeometry(sh,{depth:.05,bevelEnabled:true,bevelSize:.01,bevelThickness:.01});g.translate(0,-.45,0);g.rotateZ(Math.PI);return add(g,new THREE.MeshStandardMaterial({color:0xffd23a,emissive:0xffc400,emissiveIntensity:1.6,roughness:.4}),0,0,0,scene,false);})();   // yellow arrow icon: "it's HERE"
 const P10=txt3('$10M',.3,GRN,scene),PN=txt3('DANNY',.1,WHT,scene);
 // ================= STORY SETS (after the hook): one world, one continuous camera, no cuts =================
 const Wk=(x,y,z)=>[x+9,y,z+8];   // world -> Danny-house local (camera keys)
@@ -447,7 +452,7 @@ const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0
 const toW=(lx,ly,lz)=>V3(MX+lx,ly,MZ+lz);
 // camera keys [t, pos(house-local), look(house-local), fov]; Catmull-Rom through them = no cuts, ever
 const KEYS=[
- [.45, [1.9,1.3,12.2],[1.9,-1.25,0],54],       // CUTAWAY (You Built It style): house on top, soil cross-section, Danny digging in the pit, groundwater below
+ [.45, [1.9,2.4,15.5],[1.9,.2,0],56],      // first frame: the whole house on top + the pit + the trunk + groundwater (where he found it)       // CUTAWAY (You Built It style): house on top, soil cross-section, Danny digging in the pit, groundwater below
  [.95, [1.9,1.0,9.6], [1.9,-1.2,0],50],      // slow push while he digs
  [1.45,[1.9,-.15,6.6],[1.9,-1.75,.3],46],    // the shovel hits the trunk: lid open, cash glowing, big $10M
  [2.25,[1.9,-.85,4.4],[1.9,-1.7,.2],44],     // Danny big in frame: he jumps for joy
@@ -508,7 +513,8 @@ function hv(t,sel){const {a,b,c,d,h,h00,h10,h01,h11}=herm(t,KEYS),out=[];const A
  const tg=(dl,dr)=>dl*dr<=0?0:Math.sign(dr)*Math.min(Math.abs(dl+dr)/2,3*Math.abs(dl),3*Math.abs(dr));   // monotone tangents: never overshoots a key
  for(let j=0;j<Bv.length;j++){const d1=(C[j]-Bv[j])/h,d0=a===b?d1:(Bv[j]-A[j])/(b[0]-a[0]),d2=c===d?d1:(D[j]-C[j])/(d[0]-c[0]);
   const m0=(a===b?0:tg(d0,d1))*h,m1=(c===d?0:tg(d1,d2))*h;out.push(h00*Bv[j]+h10*m0+h01*C[j]+h11*m1);}return out;}
-function setCam(t){const P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);
+function setCam(t){if(NM(t)){const k=sm(NA,NB,t);cam.position.set(-9.4,3.6-1.0*k,13.0-3.6*k);cam.fov=50;cam.updateProjectionMatrix();cam.lookAt(-9.6,2.3-.4*k,-2.5);const c=cam.position;sun.target.position.set(c.x,0,c.z-10);sun.position.set(c.x-20,40,c.z+15);return;}
+ const P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);
  cam.position.copy(toW(...P)).add(V3(Math.sin(t*.6)*.005,Math.sin(t*.8)*.004,0));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(toW(...L));
  const c=cam.position;sun.target.position.set(c.x,0,c.z-10);sun.position.set(c.x-20,40,c.z+15);}
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
@@ -518,7 +524,7 @@ function animate(t){world(t);updPops(t);if(t>=6.95){story(t);return;}relax(danny
  if(t<6.95){for(const P of[rick,tara])relax(P);}
  const hit=Wd('finds');
  // lid bursts open on "finds", the cash glows
- LID.rotation.x=-2.25*sm(HIT,HIT+.25,t);GLOW.intensity=2.6*sm(HIT,HIT+.3,t);NOTEM.emissiveIntensity=.32*sm(HIT,HIT+.3,t);
+ LID.rotation.x=-2.25*sm(HIT,HIT+.25,t);const bl=.2+.8*(.5+.5*Math.cos((t-HIT-.3)*Math.PI*2/1.1));GLOW.intensity=3.2*sm(HIT,HIT+.3,t)*bl;NOTEM.emissiveIntensity=.42*sm(HIT,HIT+.3,t)*bl;   // the cash glows on, off, on
  // spine breathing for life
  pose(danny,'spine03',.03*Math.sin(t*1.8),0,.02*Math.sin(t*.9));
  danny.g.position.set(PIT.x-.05,PIT.y,PIT.z-.78);danny.g.rotation.y=.15;
@@ -533,7 +539,7 @@ function animate(t){world(t);updPops(t);if(t>=6.95){story(t);return;}relax(danny
   if(sd==='L'&&ph>0){const g=.15*Math.sin(t*4);ux=ux*(1-ph)+(AD[0]+.45+g)*ph;uz=uz*(1-ph)+sg*(AD[2]-.35)*ph;lx=lx*(1-ph)+(1.1+g)*ph;}
   pose(danny,'upperarm01'+sd,ux,0,uz);pose(danny,'lowerarm01'+sd,lx,0,0);}
  curl(danny,'R',.8*cel+.75*ph);
- face(danny,{jaw:.18*k*(1-cel)+cel*(.1+.06*Math.sin(t*7))+ph*(.06+.05*Math.sin(t*6)),smile:sm(.8,1.2,t)});
+ face(danny,{jaw:.34*k*(1-cel)+cel*(.1+.06*Math.sin(t*7))+ph*(.06+.05*Math.sin(t*6)),smile:1.4*sm(.8,1.2,t)});
  pose(danny,'head',.35*dg+(.25-.6*k)*(1-ph)-.45*ph,ph*-.1,ph*(.06+.03*Math.sin(t*5)));pose(danny,'neck01',-.2*k*(1-ph)-.35*ph,0,0);
  // shovel follows his hands while digging; blade dips to the trunk then throws back
  mikeH.updateMatrixWorld(true);const hr=V3();danny.BN.wristR.getWorldPosition(hr);mikeH.worldToLocal(hr);
@@ -547,6 +553,9 @@ function animate(t){world(t);updPops(t);if(t>=6.95){story(t);return;}relax(danny
  PHONE.visible=ph>.02;if(PHONE.visible){earPose();PHONE.position.copy(wR).lerp(EAR.p,ph);PHONE.quaternion.copy(EAR.q);}
  // floating labels (GREEN money, WHITE name), always facing the camera, never cropped
  const s1=pop(t,HIT+.05,.3)*(1-sm(3.0,3.3,t));P10.visible=s1>.01;P10.scale.setScalar(Math.max(.001,s1*.8));P10.position.copy(toW(PIT.x+.15,PIT.y+1.2+.03*Math.sin(t*2.4),PIT.z+.75));P10.lookAt(cam.position);
+ {const a=pop(t,.5,.3)*(1-sm(HIT+.25,HIT+.45,t));ARW.visible=a>.01;ARW.scale.setScalar(Math.max(.001,a*1.3));ARW.position.copy(toW(PIT.x+.15,PIT.y+1.35+.12*Math.abs(Math.sin(t*6)),PIT.z+.6));ARW.lookAt(cam.position);ARW.rotateZ(0);}
+ if(NM(t))nightmare(NT1+(t-NA)/(NB-NA)*(NT2-NT1));else hideNM();
+ for(const c of COPS){const on=NM(t);c.g.visible=on;const ph=Math.sin(t*Math.PI*2*3)>0;c.red.material.emissiveIntensity=ph?4:.2;c.blue.material.emissiveIntensity=ph?.2:4;c.lr.intensity=on&&ph?40:0;c.lb.intensity=on&&!ph?40:0;}
  const s2=pop(t,Wd('danny'),.3);PN.visible=s2>.01;PN.scale.setScalar(Math.max(.001,s2*.8));PN.position.copy(toW(PIT.x-.05,PIT.y+2.05,PIT.z-.45));PN.lookAt(cam.position);
 }
 // ================= STORY ANIMATION (t >= 6.95) =================
@@ -575,6 +584,18 @@ function world(t){   // night -> sunrise while he drives -> day
  // bedroom lamps switch on when Danny calls; off again in daylight
  const rl=sm(Wd('friends')-.05,Wd('friends')+.15,t)*(1-k),tl=sm(Wd('friends')+.2,Wd('friends')+.4,t)*(1-k);
  RBED.L.intensity=10*rl;RBED.shade.material.emissiveIntensity=1.4*rl;TBED.L.intensity=10*tl;TBED.shade.material.emissiveIntensity=1.4*tl;}
+function nightmare(t){
+ // ---------- SWAT + helicopter on Danny's lawn (Rick's nightmare) ----------
+ const hv=t>Wd('swat')-.2&&t<11.25,poof=sm(11.0,11.25,t);HELI.visible=t>Wd('helicopter')-.35&&t<11.25;
+ if(HELI.visible){const d=sm(Wd('helicopter')-.35,Wd('lawn')+.1,t);HELI.position.set(-9.6,16-(16-1.35)*d,-.4);HELI.rotation.set(0,.6-.6*d,.05*Math.sin(t*2));ROTOR.rotation.y=t*31;HSP.intensity=60;HELI.scale.setScalar(1-poof+.001);}
+ SWAT.forEach((s,i)=>{const on=hv;s.g.visible=on;for(const m of Object.values(s.gear))m.visible=on;if(!on){s.g.position.y=-50;return;}relax(s);
+  const u=sm(Wd('swat')-.2,Wd('lawn')+.2,t),sx=[-13.2,-9.6,-6.0][i],ex=[-11.4,-9.6,-7.8][i],x=sx+(ex-sx)*u,z=2.2-3.6*u;
+  s.g.position.set(x,.1,z);s.g.rotation.y=Math.PI;s.g.scale.setScalar(1-poof+.001);walk(s,t*1.5+i,.6*(1-sm(.9,1,u))+.05);for(const sd of['L','R'])arm(s,sd,AD[0]+1.1,AD[2]-.4,1.3);
+  s.g.updateMatrixWorld(true);const sc=1-poof+.001,hp=V3(),cp=V3(),bk=V3(Math.sin(s.g.rotation.y),0,Math.cos(s.g.rotation.y));s.BN.head.getWorldPosition(hp);s.BN.spine03.getWorldPosition(cp);
+  s.gear.h.position.copy(hp).add(V3(0,.06,0));s.gear.h.scale.setScalar(.15*sc);s.gear.v.position.copy(cp);s.gear.v.rotation.y=s.g.rotation.y;s.gear.v.scale.set(.42*sc,.48*sc,.3*sc);
+  s.gear.vl.position.copy(cp).addScaledVector(bk,-.16);s.gear.vl.rotation.y=s.g.rotation.y+Math.PI;s.gear.vl.scale.set(.34*sc,.13*sc,1);});
+ POOF.material.opacity=.6*Math.sin(Math.PI*sm(11.0,11.45,t));POOF.scale.setScalar(.5+5*sm(11.0,11.45,t));POOF.visible=POOF.material.opacity>.01;}
+function hideNM(){HELI.visible=false;POOF.visible=false;for(const s2 of SWAT){s2.g.visible=false;s2.g.position.y=-50;for(const m of Object.values(s2.gear))m.visible=false;}}
 function story(t){
  SHOV.visible=false;MOUND.visible=false;for(const d of DIRT)d.m.visible=false;HAND.visible=false;P10.visible=false;PN.visible=false;PHONE.visible=false;
  LID.rotation.x=0;GLOW.intensity=0;NOTEM.emissiveIntensity=.12;
@@ -618,16 +639,7 @@ function story(t){
  {const sc=sm(Wd('screams')-.1,Wd('screams')+.1,t);arm(rick,'L',AD[0]+.6+.5*sc*Math.abs(Math.sin(t*7)),AD[2]-1.0*sc,.8+.5*Math.sin(t*9)*sc);
   face(rick,{jaw:.12+.22*sc*(.6+.4*Math.abs(Math.sin(t*11))),smile:0});pose(rick,'head',-.05,.18*Math.sin(t*5)*sc,0);pose(rick,'spine03',-.08*sc,0,.04*Math.sin(t*3));}
  if(t<11.6){rickH.updateMatrixWorld(true);phoneAt(rick,1,PR_);}else PR_.visible=false;
- // ---------- SWAT + helicopter on Danny's lawn (Rick's nightmare) ----------
- const hv=t>Wd('swat')-.2&&t<11.25,poof=sm(11.0,11.25,t);HELI.visible=t>Wd('helicopter')-.35&&t<11.25;
- if(HELI.visible){const d=sm(Wd('helicopter')-.35,Wd('lawn')+.1,t);HELI.position.set(-9.6,16-(16-1.35)*d,-.4);HELI.rotation.set(0,.6-.6*d,.05*Math.sin(t*2));ROTOR.rotation.y=t*31;HSP.intensity=60;HELI.scale.setScalar(1-poof+.001);}
- SWAT.forEach((s,i)=>{const on=hv;s.g.visible=on;for(const m of Object.values(s.gear))m.visible=on;if(!on){s.g.position.y=-50;return;}relax(s);
-  const u=sm(Wd('swat')-.2,Wd('lawn')+.2,t),sx=[-13.2,-9.6,-6.0][i],ex=[-11.4,-9.6,-7.8][i],x=sx+(ex-sx)*u,z=2.2-3.6*u;
-  s.g.position.set(x,.1,z);s.g.rotation.y=Math.PI;s.g.scale.setScalar(1-poof+.001);walk(s,t*1.5+i,.6*(1-sm(.9,1,u))+.05);for(const sd of['L','R'])arm(s,sd,AD[0]+1.1,AD[2]-.4,1.3);
-  s.g.updateMatrixWorld(true);const sc=1-poof+.001,hp=V3(),cp=V3(),bk=V3(Math.sin(s.g.rotation.y),0,Math.cos(s.g.rotation.y));s.BN.head.getWorldPosition(hp);s.BN.spine03.getWorldPosition(cp);
-  s.gear.h.position.copy(hp).add(V3(0,.06,0));s.gear.h.scale.setScalar(.15*sc);s.gear.v.position.copy(cp);s.gear.v.rotation.y=s.g.rotation.y;s.gear.v.scale.set(.42*sc,.48*sc,.3*sc);
-  s.gear.vl.position.copy(cp).addScaledVector(bk,-.16);s.gear.vl.rotation.y=s.g.rotation.y+Math.PI;s.gear.vl.scale.set(.34*sc,.13*sc,1);});
- POOF.material.opacity=.6*Math.sin(Math.PI*sm(11.0,11.45,t));POOF.scale.setScalar(.5+5*sm(11.0,11.45,t));POOF.visible=POOF.material.opacity>.01;
+ nightmare(t);
  // ---------- Tara (bed, east house): whispers, dreams, picks the colour ----------
  relax(tara);tara.g.position.y=FY+.6-HIP.tara;sitBed(tara);face(tara,{smile:.9,jaw:.03+.03*Math.sin(t*5)});
  if(t<16.0){pose(tara,'upperarm01R',TPH.ux,0,TPH.uz);pose(tara,'lowerarm01R',TPH.lx,0,0);curl(tara,'R',.75);taraH.updateMatrixWorld(true);phoneAt(tara,1,PT_);
@@ -691,7 +703,9 @@ const WARP=TLN.warp;const r2d=t=>{for(let i=0;i<WARP.length-1;i++){const [d0,r0]
 HIT=Wd('$10')-.05;   // the shovel hits the trunk on "$10 million"
 scene.traverse(o=>{if(o.material)for(const m of[].concat(o.material)){m.clippingPlanes=NOTCH;m.clipIntersection=true;m.needsUpdate=true;}});
 const TTL=document.getElementById('ttl'),HOOK_END=Wd('his');
-window.renderAt=t=>{t=r2d(t+T0);const hk=t<6.9;NOTCH[0].constant=hk?NZ+.03:1e5;PFW.visible=!hk;EARTH.visible=hk;HOOKL.intensity=hk?70:0;TTL.style.opacity=t<HOOK_END-.05?1:0;setCam(t);animate(t);
+// after "house": a white flash into Rick's nightmare (police lights, SWAT, helicopter on the lawn), then a flash back to Danny for his name
+const NA=Wd('house')+.22,NB=Wd('his')-.22,NT1=Wd('swat')-.15,NT2=Wd('lawn')+.45;function NM(t){return t>=NA&&t<NB;}
+window.renderAt=t=>{t=r2d(t+T0);const hk=t<6.9;const nm=NM(t);NOTCH[0].constant=hk&&!nm?NZ+.03:1e5;FLASHDIV.style.opacity=Math.max(Math.exp(-Math.pow((t-NA)*9,2)),Math.exp(-Math.pow((t-NB)*9,2)))*.95;PFW.visible=!hk;EARTH.visible=hk;HOOKL.intensity=hk&&!nm?70:0;TTL.style.opacity=t<HOOK_END-.05?1:0;setCam(t);animate(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
