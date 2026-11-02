@@ -1,0 +1,8 @@
+# EP5 facts (web-checked 2026-11-02; re-verify live numbers on render day)
+- SVB: ~$42B of withdrawal requests on Thu Mar 9 2023 (California DFPI filing), bank closed Mar 10 2023 -> https://www.bloomberg.com/news/articles/2023-03-11/svb-depositors-investors-tried-to-pull-42-billion-on-thursday ; Fed's Barr testimony (2-day run $142B = 81% of deposits) -> https://www.cnbc.com/2023/03/28/svb-customers-tried-to-pull-nearly-all-deposits-in-two-days-barr-says.html
+- Reserve requirement ratios set to 0% by the Fed, announced Mar 15 2020, effective Mar 26 2020, finalized 2021 -> https://www.govinfo.gov/content/pkg/FR-2020-03-24/html/2020-05806.htm
+- FDIC limit $250,000 per depositor, per insured bank, per ownership category. ONLY secondary sources found -> CONFIRM at https://www.fdic.gov/resources/deposit-insurance/ before the script is final.
+- US bank deposits: ~$18.76T (Fed series, all commercial banks, Feb 2026, CEIC mirror) ; FDIC aggregate Q1 2026 ~$20.55T. Script uses 18.8T -> CONFIRM on FRED (DPSACBW027SBOG) on render day.
+- Currency in circulation: $2.43T (Feb 2026, FRED MBCURRCIR), $2.44T (Mar 18 2026, FRED WCURCIR) -> https://fred.stlouisfed.org/series/WCURCIR ; script says "about two point four trillion". Note: includes cash held abroad, so say "paper cash in the country" only if soft; safer line: "All the paper cash that exists" -> DECIDE when confirming.
+- Ratio 18.76 / 2.43 = 7.7 -> "about one dollar of cash for every eight in accounts" (own math; cash total also sits outside banks, simplification stated as "about").
+- Dropped (no primary source): % of deposits banks keep as cash, cost of a bank run to FDIC.
