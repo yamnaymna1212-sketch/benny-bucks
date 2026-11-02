@@ -6,3 +6,4 @@
 - Currency in circulation CONFIRMED (FRED WCURCIR): $2,484.5B, week ending 2026-10-28 -> https://fred.stlouisfed.org/series/WCURCIR ; script: "About two point five trillion" + "All the paper cash that exists" (includes cash held abroad, so no "in the country").
 - Ratio 19.77 / 2.48 = 7.97 -> "about one dollar of cash for every eight in accounts" (own math).
 - Dropped (no primary source): % of deposits banks keep as cash, cost of a bank run to FDIC.
+- Hook title rounds 19.77T -> "$20 TRILLION" and 2.48T -> "$2.5 TRILLION" (standard rounding, same sources).

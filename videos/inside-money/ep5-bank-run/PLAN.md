@@ -26,3 +26,8 @@ cd render-kit && node stills.mjs ep5.html 0.4 0.9 2.4 3.2 4.6 && npm run render 
 ```
 -> render-kit/ep5-bank-run-preview-5s.mp4 : send to the user, WAIT for approval before the full build.
 Check: vo duration 61-65 s (else adjust speed), whisper typos in words_raw.json (withdraw / FDIC).
+
+## HOOK v2 (user feedback 2026-11-02)
+- Banker behind the window + in the vault = `manager` cast (dark suit, tie, glasses), not the teller in casual clothes.
+- SERVICES board behind the banker removed.
+- Big hook title on top (Money-Stories style, readable in 1 s): "Banks: $20 TRILLION" (green) / "Cash: $2.5 TRILLION" (red) / black box "So where is it?". Shown until the word "Say" (end of the hook).
