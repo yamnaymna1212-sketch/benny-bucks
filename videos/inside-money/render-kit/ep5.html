@@ -7,7 +7,15 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 .ttl{position:absolute;left:0;width:720px;top:3.5%;text-align:center;font:800 64px/1.08 Mont,sans-serif;color:#fff;letter-spacing:-.5px;
  -webkit-text-stroke:9px #000;paint-order:stroke fill;text-shadow:0 5px 0 #000,0 8px 14px rgba(0,0,0,.6)}
 .ttl .g{color:#3dff7a}.ttl .r{color:#ff3b30}.ttl .box{display:inline-block;margin-top:12px;padding:6px 22px 10px;background:#000;border-radius:8px;font-style:italic;-webkit-text-stroke:0;text-shadow:none;font-size:54px}
-</style></head><body><canvas id="c"></canvas><div id="ov"><div class="ttl" id="ttl">Your <span class="g">$1,000</span><br>is <span class="r">NOT</span> in the vault</div><div class="cap" id="cap">Why can't you</div></div>
+/* explainer cards (icons, histogram, meters) - user 2026-11-02: explain with graphics, not only people */
+.card{position:absolute;left:50%;transform:translateX(-50%);background:rgba(10,14,22,.84);border:3px solid rgba(255,255,255,.2);border-radius:26px;padding:16px 30px 18px;color:#fff;font:800 34px Mont,sans-serif;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.55);opacity:0;white-space:nowrap}
+.card .ic{font-size:62px;line-height:1.05}.card .bg{font-size:70px;line-height:1.1}.card .sm{font-size:26px;color:#cfd6e0;letter-spacing:1px}
+.card .g{color:#3dff7a;text-shadow:0 0 16px rgba(61,255,122,.7)}.card .r{color:#ff3b30;text-shadow:0 0 16px rgba(255,59,48,.7)}.card .y{color:#ffd23a;text-shadow:0 0 16px rgba(255,210,58,.7)}
+.card .row{display:flex;align-items:center;gap:16px;justify-content:center;margin:4px 0}
+.card .hist{display:flex;align-items:flex-end;gap:56px;height:300px;justify-content:center}.card .col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.card .bar{width:130px;border-radius:12px 12px 0 0;height:0}
+.card .meter{width:470px;height:44px;background:#2a2f3a;border-radius:22px;overflow:hidden;margin:10px auto}.card .fill{height:100%;border-radius:22px}
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="ttl" id="ttl">Your <span class="g">$1,000</span><br>is <span class="r">NOT</span> in the vault</div><div id="qq" style="position:absolute;left:0;width:720px;top:16%;text-align:center;font:800 92px Mont,sans-serif;color:#ffd23a;opacity:0;text-shadow:0 0 18px rgba(255,200,40,.75),0 4px 10px rgba(0,0,0,.8)">YES or NO?</div><div class="cap" id="cap">Why can't you</div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 // EP5 scene (HOOK v4, one continuous camera): bank lobby, Mike asks for his $1,000, the open vault behind the counter is almost empty, he gets the cash, then everybody walks in. Timeline: timeline_ep5.json
@@ -149,7 +157,7 @@ const TLN=await (await fetch('timeline_ep5.json')).json(),WD=TLN.words,CH=TLN.ch
 const Wn=(w,n=0,d=0)=>{const k=WD.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$']/g,'')===w);return (k[n]||k[k.length-1]||{s:d}).s;};
 // ================= CAST (falls back to assets/guy.glb when the MakeHuman GLBs are not built, e.g. cloud stills) =================
 const gl=new GLTFLoader(),SRC={};let guy=null;
-for(const n of['mike','teller','manager','guard','printer','seller','landlord']){let g;
+for(const n of['mike','teller','manager','guard','printer','seller','landlord','crowd1','crowd2','crowd3','crowd4','crowd5','crowd6']){let g;
  try{g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;}catch(e){guy??=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;g=skClone(guy);window.castFallback=true;
   const FB={manager:0x1b2436,guard:0x24324f,landlord:0x7a4a26,teller:0x7b2d6b,printer:0x3f5a3a,seller:0xb02a2a}[n];
   if(FB)g.traverse(o=>{if(o.isMesh&&/casualsuit/i.test(o.material.name)){o.material=o.material.clone();o.material.color.set(FB);}});}
@@ -183,7 +191,7 @@ const mike=person('mike',.45,-.85,Math.PI),teller=person('manager',-.2,-2.55,.12
 {const fw=tint(pbr('painted_plaster_wall',3,2),0xe4d6bd),fr=M(0x2a2018,.35,.9),gl=new THREE.MeshPhysicalMaterial({color:0xcfe6f0,transmission:.9,roughness:.05,thickness:.02,transparent:true,opacity:.3});
  add(B(3.5,3.9,.3),fw,-3.35,1.9,8.3);add(B(3.5,3.9,.3),fw,3.35,1.9,8.3);add(B(3.2,1.0,.3),fw,0,3.35,8.3);
  for(const x of[-1.6,0,1.6])add(B(.08,2.85,.12),fr,x,1.42,8.3);add(B(3.3,.1,.14),fr,0,2.85,8.3);
- for(const s of[-1,1]){const d=add(B(1.55,2.75,.03),gl,s*2.25,1.4,7.6,scene,false);d.rotation.y=s*1.3;}}
+}
 // ---- the rush: 5 different customers stream in from the street on "Just not everybody"
 const RUSH=['landlord','teller','printer','seller'].map((n,i)=>person(n,0,12+i,Math.PI));
 // ---- glow numbers
@@ -204,43 +212,225 @@ for(let i=0;i<3;i++)add(brickG,brickM,VDX-.3+i*.3,1.5,-8.3,scene,true);   // onl
 const tmp=V3(),tmp2=V3();let camP=V3();
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
 // word anchors (real whisper times once the voice exists; estimates in the provisional timeline)
-const T_WD=Wn('withdraw',0,.52),T_FROM=Wn('from',0,1.58),T_ONCE=Wn('once?',0,2.18),T_YOU=Wn('you',1,2.85),T_JUST=Wn('just',0,3.45),T_EVERY=Wn('everybody',0,3.85);
+const T_WD=Wn('withdraw',0,.52),T_FROM=Wn('from',0,1.58),T_ONCE=Wn('once',0,2.18),T_YOU=Wn('you',1,2.85),T_JUST=Wn('just',0,3.45),T_EVERY=Wn('everybody',0,3.85);
 // smooth 0..1..0 window (no popping): ramps in at a, out at b
 const win=(t,a,b,r=.25)=>ez(cl((t-a)/r))*(1-ez(cl((t-b)/r)));
 // the rush: 4 customers walk in from the street and stop on both sides of Mike (he stays visible in the middle)
 const RP=[[-.75,9.6,-.55,.35],[1.25,10.0,1.2,.3],[-1.1,10.6,-.7,1.55],[.9,11.0,.95,1.25]];
+// ================= STORY WORLD (after the hook): same bank, a plaza + street + neighbourhood in FRONT of it; the camera just flies out the door =================
+const EXN=['crowd1','crowd2','crowd3','crowd4','crowd5','crowd6'];
+const signT=(txt,bg,fg,fs=150,w=1024,h=220)=>tex(w,h,x=>{x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=fg;x.font=`800 ${fs}px Mont`;x.textAlign='center';x.textBaseline='alphabetic';x.fillText(txt,w/2,h*.72);});
+// bank front: wall closing the west side + a big rooftop sign + FDIC plaque
+add(B(.3,3.9,16),tint(pbr('painted_plaster_wall',8,2),0xe4d6bd),-5.1,1.9,2);
+add(B(7.4,.95,.3),M(0x14233f,.5,.2),0,4.38,8.3);
+txt3('FIRST NATIONAL BANK',.42,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.38}),0,4.17,8.47);
+// sliding glass doors (open until the run, closed on "closed")
+const doorM=new THREE.MeshStandardMaterial({color:0xcfe6f0,roughness:.1,metalness:.2,transparent:true,opacity:.16,depthWrite:false}),doorF=M(0x2a2018,.35,.9);
+const doors=[-1,1].map(s=>{const g=new THREE.Group();g.position.set(s*2.65,0,8.02);scene.add(g);add(B(1.5,2.8,.03),doorM,0,1.4,0,g,false);
+ add(B(1.56,.07,.06),doorF,0,2.82,0,g,false);add(B(1.56,.07,.06),doorF,0,.04,0,g,false);add(B(.06,2.8,.06),doorF,-s*.75,1.4,0,g,false);add(B(.06,2.8,.06),doorF,s*.75,1.4,0,g,false);return g;});
+// ---- ground: plaza in front of the bank, lawns, a curb, the road, far asphalt
+add(B(200,.1,200),pbr('asphalt_02',70,70,{roughness:.9}),0,-.14,60,scene,false);
+add(B(44,.1,12.5),pbr('concrete_pavement',10,3,{roughness:.8}),0,-.04,14.75,scene,false);
+add(B(44,.16,.25),M(0xb9b6ae,.8),0,-.02,21.1,scene,false);
+add(B(44,.1,12),pbr('asphalt_02',12,3,{roughness:.9}),0,-.1,27.2,scene,false);
+for(let x=-20;x<=20;x+=5)add(B(2.4,.01,.22),M(0xe9c93a,.6),x,-.045,27.2,scene,false);
+const grass=M(0x5f9a45,.95);for(const sx of[-1,1])add(B(12,.1,9),grass,sx*7.5,-.09,25,scene,false);
+// ---- the house (left) and the bakery (right) face the plaza
+const HOUSE_X=-5.6,SHOP_X=5.9,BZ=25.5;
+{const G=new THREE.Group();G.position.set(HOUSE_X,0,BZ);G.rotation.y=Math.PI;G.scale.setScalar(1.35);scene.add(G);
+ add(B(3.6,2.5,3.0),tint(pbr('painted_plaster_wall',2,2),0xf3e9d8),0,1.25,0,G);const roof=add(new THREE.ConeGeometry(2.7,1.3,4),M(0x5b3a2a,.7),0,3.15,0,G);roof.rotation.y=Math.PI/4;
+ add(B(.8,1.7,.06),M(0x3a5a7a,.5),0,.85,1.52,G);add(B(1.3,.12,.9),M(0xcfc8b8,.8),0,.06,1.9,G);
+ for(const sx of[-1.1,1.1])add(B(.75,.8,.06),M(0x9fc6e0,.1,.3),sx,1.45,1.52,G,false);
+ add(B(.5,1.2,.5),M(0x8a4a3a,.8),1.1,3.2,-.5,G);}
+{const G=new THREE.Group();G.position.set(SHOP_X,0,BZ);G.rotation.y=Math.PI;G.scale.setScalar(1.2);scene.add(G);
+ add(B(5,3.2,3.4),tint(pbr('brick_wall_02',3,2),0xd9a98c),0,1.6,0,G);add(B(5.2,.25,3.6),M(0x3a2a1a,.6),0,3.3,0,G);
+ add(B(2.3,1.5,.06),new THREE.MeshPhysicalMaterial({color:0xcfe6f0,transmission:.9,roughness:.05,thickness:.02,transparent:true,opacity:.35}),-1.1,1.25,1.72,G,false);
+ add(B(.9,2.0,.06),M(0x3a2a1a,.5),1.5,1.0,1.72,G);
+ const aw=add(B(5.2,.08,1.3),new THREE.MeshStandardMaterial({map:tex(256,64,x=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#ffffff':'#c0141c';x.fillRect(i*32,0,32,64);}}),roughness:.8}),0,2.65,2.25,G);aw.rotation.x=.22;
+ add(new THREE.PlaneGeometry(3.4,.55),new THREE.MeshStandardMaterial({map:signT('BAKERY','#14233f','#ffcf5a',150,1024,170),roughness:.5}),0,3.0,1.74,G,false);}
+// FOR SALE -> SOLD post (flips on "house") and CLOSED -> OPEN neon (flips on "shop")
+const fsTex=[signT('FOR SALE','#ffffff','#c0141c',150,1024,420),signT('SOLD','#c0141c','#ffffff',230,1024,420)];
+const fsPost=new THREE.Group();fsPost.position.set(-2.9,0,21.8);scene.add(fsPost);add(new THREE.CylinderGeometry(.04,.04,1.9,12),M(0xdddddd,.4,.6),0,.95,0,fsPost);
+const fsFlip=new THREE.Group();fsFlip.position.y=1.55;fsPost.add(fsFlip);fsPost.rotation.y=Math.PI;
+{const a=add(new THREE.PlaneGeometry(1.3,.55),new THREE.MeshStandardMaterial({map:fsTex[0],roughness:.5,emissive:0xffffff,emissiveMap:fsTex[0],emissiveIntensity:.25}),0,0,.02,fsFlip,false);
+ const b=add(new THREE.PlaneGeometry(1.3,.55),new THREE.MeshStandardMaterial({map:fsTex[1],roughness:.5,emissive:0xffffff,emissiveMap:fsTex[1],emissiveIntensity:.5}),0,0,-.02,fsFlip,false);b.rotation.y=Math.PI;}
+const neonT=[signT('CLOSED','#10151a','#ff4a3a',150,512,220),signT('OPEN','#10151a','#3dff7a',190,512,220)];
+const neon=add(new THREE.PlaneGeometry(.9,.39),new THREE.MeshBasicMaterial({map:neonT[0],toneMapped:false}),7.1,1.6,23.4,scene,false);neon.rotation.y=Math.PI;
+// ---- neighbourhood backdrop: houses, trees, street lamps, one parked car
+const hc=[0xe9d9bd,0xc9d8e8,0xe8c9c0,0xd8e8cf,0xf0e6d2];
+for(let i=0;i<9;i++){const x=-32+i*8+((i*37)%5),G=new THREE.Group();G.position.set(x,0,40);scene.add(G);add(B(5,3.2,4),M(hc[i%5],.9),0,1.6,0,G);const r=add(new THREE.ConeGeometry(3.9,1.8,4),M(i%2?0x5b3a2a:0x3f4a55,.8),0,4.1,0,G);r.rotation.y=Math.PI/4;add(B(.9,1.7,.06),M(0x3a2a1a,.5),0,.85,2.02,G);}
+for(const x of[-15,-12.5,12.5,15]){add(new THREE.CylinderGeometry(.14,.18,2.2,10),M(0x5a3a1e,.8),x,1.1,21.9);add(new THREE.SphereGeometry(1.1,16,12),M(0x3f8a3a,.85),x,2.8,21.9);}
+for(const x of[-6.5,6.5]){add(new THREE.CylinderGeometry(.05,.07,4,10),M(0x2b2b2b,.4,.6),x,2,11.3);add(new THREE.SphereGeometry(.2,16,12),M(0xfff1c8,.3,0,{emissive:0xfff1c8,emissiveIntensity:1.2}),x,4.05,11.3,scene,false);}
+{const car=(await gl.loadAsync('dl/models/car/CarConcept.glb')).scene;car.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true;});
+ const bb=new THREE.Box3().setFromObject(car),sz=bb.getSize(new THREE.Vector3());car.scale.setScalar(4.2/Math.max(sz.x,sz.z));const b2=new THREE.Box3().setFromObject(car);car.position.set(0.2-(b2.max.x+b2.min.x)/2,.0-b2.min.y,24.6-(b2.max.z+b2.min.z)/2);car.rotation.y=Math.PI;scene.add(car);}
+// ---- people: 6 more MakeHuman characters (family at the house, shop team at the bakery, two walkers)
+const EX=EXN.map((n,i)=>person(n,[4.6,-6.5,-2.9,7.0,-4.7,3.1][i],[21.7,21.8,11.3,21.9,22.0,11.4][i],Math.PI));
+const [cr1,cr2,cr3,cr4,cr5,cr6]=EX;
+const ALLP=[mike,teller,guard,...RUSH,...EX],ALLC=[...RUSH,...EX];
+// ---- path follower: waypoints [t,x,z,fy?]; walks (leg cycle) when faster than .55 m/s, turns smoothly
+const angW=(a,b)=>{let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return a+d;};
+function buildPath(P,w,ry0){let prev=ry0,d=0;P.seg=[];P.w=w;P.ry0=ry0;
+ for(let i=0;i<w.length-1;i++){const [t0,x0,z0]=w[i],[t1,x1,z1,fy]=w[i+1],dx=x1-x0,dz=z1-z0,len=Math.hypot(dx,dz),sp=len/Math.max(.001,t1-t0);
+  let h=sp>.55?Math.atan2(dx,dz):(fy!==undefined?fy:prev);h=angW(prev,h);P.seg.push({t0,t1,x0,z0,x1,z1,sp,hp:prev,h,d0:d,len,bl:sp>.55?.3:Math.max(.3,t1-t0)});prev=h;d+=len;}}
+function evalPath(P,t){const S=P.seg,w=P.w;if(t<=w[0][0])return {x:w[0][1],z:w[0][2],ry:P.ry0,sp:0,d:0};
+ const L=S[S.length-1];if(t>=L.t1)return {x:L.x1,z:L.z1,ry:L.h,sp:0,d:L.d0+L.len};
+ const s=S.find(q=>t>=q.t0&&t<q.t1),k=(t-s.t0)/(s.t1-s.t0);return {x:s.x0+(s.x1-s.x0)*k,z:s.z0+(s.z1-s.z0)*k,ry:s.hp+(s.h-s.hp)*ez(cl((t-s.t0)/s.bl)),sp:s.sp,d:s.d0+s.len*k};}
+function follow(P,t){const r=evalPath(P,t);P.g.position.set(r.x,0,r.z);P.g.rotation.y=r.ry;
+ if(r.sp>.55){const ph=r.d*3.3,a=.42*cl(r.sp/1.6,.55,1.25);walkLegs(P,ph,a);pose(P,'upperarm01L',AD[0]+a*.7*Math.sin(ph),0,-AD[2]);pose(P,'upperarm01R',AD[0]-a*.7*Math.sin(ph),0,AD[2]);}
+ return r;}
+// stroll back and forth between A and B (1 m/s, short pauses) from t0 to t1, then hold
+function stroll(w,t0,t1,A,B2,fyEnd){let t=t0,at=0,pos=A;while(t<t1-.1){const to=at?A:B2,d=Math.hypot(to[0]-pos[0],to[1]-pos[1]),dt=Math.max(.6,d/1.0);if(t+dt>t1)break;t+=dt;w.push([t,to[0],to[1]]);pos=to;at^=1;if(t+.7<t1){t+=.7;w.push([t,pos[0],pos[1],fyEnd]);}}return pos;}
+// the queue (front to back): Mike, landlord, crowd3, teller, crowd2, printer, crowd1, seller, crowd5, crowd6, crowd4
+const QORD=[mike,RUSH[0],cr3,RUSH[1],cr2,RUSH[2],cr1,RUSH[3],cr5,cr6,cr4];
+const QS=QORD.map((_,i)=>[-.9+(i%2)*.15,10.3+i*.9]);
+const CL=[null,[-2.5,10.8],[-1.7,12.0],[-.1,10.7],[-.5,12.1],[1.0,10.2],[1.0,11.7],[2.1,10.9],[-.5,13.3],[1.9,12.6],[-1.9,13.2]];
+const AWAY=[0,-1,-1,1,-1,-1,1,1,1,-1,1,-1];   // which side each queue person walks off to after the run
+const RX=[[-.55,.35],[1.2,.3],[-.7,1.55],[.95,1.25]],RH=RP.map(([x0,z0,x1,z1])=>Math.atan2(x1-x0,z1-z0));
+const LNG=[[-4.2,10.4],[-6.0,10.9]],LTE=[[4.4,10.3],[6.0,10.9]],LPR=[[-5.4,11.3],[-4.2,11.9]],LSE=[[5.6,11.2],[4.4,11.8]];
+const lounge=[LNG,LTE,LPR,LSE];
+RUSH.forEach((P,i)=>{const door=[-.8,.8,-.8,.8][i],w=[[5.0,RX[i][0],RX[i][1]],[5.5,RX[i][0],RX[i][1],0],[8.7+i*.15,door,8.7],[10.2+i*.15,lounge[i][0][0],lounge[i][0][1]]];
+ stroll(w,w[w.length-1][0],27.6,lounge[i][0],lounge[i][1],Math.PI/2*(i%2?-1:1));const qi=QORD.indexOf(P),q=QS[qi],last=w[w.length-1];
+ w.push([Math.max(last[0]+.4,28.2+i*.1),last[1],last[2]]);w.push([30.3+qi*.12,q[0],q[1],Math.PI]);
+ const c=CL[qi];w.push([32.6+qi*.05,q[0],q[1],Math.PI]);w.push([34.4+qi*.04,c[0],c[1],Math.PI+(i-1.5)*.15]);
+ w.push([52.7+i*.12,c[0],c[1],Math.PI+(i-1.5)*.15]);const sd=AWAY[qi];w.push([58.0+i*.1,sd*14,11.6+i*.3,sd*Math.PI/2]);buildPath(P,w,RH[i]);});
+{const lw=[[cr3,[-2.9,11.3],[-1.7,11.9],Math.PI],[cr6,[3.1,11.4],[4.3,11.8],Math.PI]];
+ lw.forEach(([P,A,B2,fy])=>{const w=[[0,A[0],A[1]]];stroll(w,.5,27.6,A,B2,fy);const last=w[w.length-1],qi=QORD.indexOf(P),q=QS[qi],c=CL[qi],sd=AWAY[qi];
+  w.push([28.2,last[1],last[2]]);w.push([30.3+qi*.12,q[0],q[1],Math.PI]);w.push([32.6,q[0],q[1],Math.PI]);w.push([34.4,c[0],c[1],Math.PI]);w.push([52.8,c[0],c[1],Math.PI]);w.push([58.2,sd*14,11.8,sd*Math.PI/2]);buildPath(P,w,P.g.rotation.y);});}
+{const hold=[[cr2,-6.5,21.8,Math.PI],[cr5,-4.7,22.0,Math.PI],[cr1,4.6,21.7,Math.PI],[cr4,7.0,21.9,Math.PI]];
+ hold.forEach(([P,x,z,fy])=>{const qi=QORD.indexOf(P),q=QS[qi],c=CL[qi],sd=AWAY[qi];const w=[[0,x,z],[26.0+qi*.05,x,z,fy],[30.3+qi*.12,q[0],q[1],Math.PI],[32.6,q[0],q[1],Math.PI],[34.4,c[0],c[1],Math.PI],[52.8,c[0],c[1],Math.PI],[58.2,sd*14,11.8,sd*Math.PI/2]];buildPath(P,w,fy);});}
+{const w=[[5.0,.45,-.65,0],[5.9,.45,-.85,Math.PI+.25],[25.0,.45,-.85],[26.3,.5,3.0],[27.7,.8,8.7],[29.0,QS[0][0],QS[0][1],Math.PI],[45.7,QS[0][0],QS[0][1],Math.PI],[46.9,-.1,10.8],[48.1,0,10.8,0],[62.9,0,10.8,0]];buildPath(mike,w,0);}
+// ---- phones (Mike's shows his balance, the crowd's a bank app)
+const phScr=[tex(128,256,x=>{x.fillStyle='#0d1f15';x.fillRect(0,0,128,256);x.fillStyle='#35ff80';x.font='800 38px Mont';x.textAlign='center';x.fillText('$1,000',64,138);x.fillStyle='#9fe8bd';x.font='800 15px Mont';x.fillText('BALANCE',64,100);}),
+ tex(128,256,x=>{x.fillStyle='#16324f';x.fillRect(0,0,128,256);x.fillStyle='#fff';x.fillRect(16,30,96,16);x.fillStyle='#35a0ff';x.fillRect(16,100,96,40);x.fillStyle='#fff';x.fillRect(16,160,60,12);})];
+function makePhone(si){const g=new THREE.Group();add(RB(.075,.15,.01,.004),M(0x15171a,.3,.4),0,0,0,g,false);add(new THREE.PlaneGeometry(.065,.135),new THREE.MeshBasicMaterial({map:phScr[si],toneMapped:false}),0,0,.0056,g,false);g.visible=false;g.scale.setScalar(1.5);scene.add(g);return g;}
+const mPhone=makePhone(0),cPhones=[...RUSH,...EX].map(()=>makePhone(1));
+// ---- the story's 3D labels
+const LOBJ={};const mkL=(k,s,c,i=1.6)=>LOBJ[k]=big(s,.5,c,i);
+mkL('box','MIKE',WHT,1.0);mkL('t20','$20 TRILLION',GRN,1.9);mkL('t25','$2.5 TRILLION',YEL,1.9);mkL('r18','1 : 8',YEL,1.9);mkL('b42','$42 BILLION',RED,1.8);mkL('p81','81%',RED,1.9);mkL('f250','$250,000',YEL,1.9);
+mkL('dep','DEPOSITS',WHT,1.0);mkL('fd','FDIC',WHT,1.2);mkL('nof','NO',RED,1.6);
+// safe-deposit box with "MIKE" in the vault + a red X on "No."
+const boxT=tex(256,128,x=>{x.fillStyle='#9aa2aa';x.fillRect(0,0,256,128);x.strokeStyle='#14233f';x.lineWidth=8;x.strokeRect(6,6,244,116);x.fillStyle='#14233f';x.font='800 70px Mont';x.textAlign='center';x.fillText('MIKE',128,88);});
+const boxG=new THREE.Group();boxG.position.set(VDX,2.34,-8.2);scene.add(boxG);boxG.scale.setScalar(0);
+add(B(.62,.34,.4),M(0x8e969d,.3,.9),0,0,0,boxG);add(new THREE.PlaneGeometry(.5,.25),new THREE.MeshStandardMaterial({map:boxT,roughness:.4,metalness:.4}),0,0,.205,boxG,false);
+const redX=[0,1].map(i=>{const m=add(B(.9,.12,.05),glowMat(RED,1.6)[0],0,0,.26,boxG,false);m.rotation.z=i?-.75:.75;m.scale.setScalar(0);return m;});
+// ---- the 8 bundles that leave the vault: 4 slide bricks (hook) + 4 more on the counter
+const lendX=[...Array(4)].map((_,i)=>add(brickG,brickM,.15+(i%2-.5)*BW*1.8,TOP+.026+.102+Math.floor(i/2)*.051,-2.15,scene,true));
+const LEND=[...slide,...lendX];
+const lendCurve=j=>{const s=LEND[j].userData.s0,h=j<4,tx=h?-5.6:5.9,tz=22.6+(j%2)*.5;
+ return new THREE.CatmullRomCurve3([s,V3(.2,1.9,1.6),V3(.8,1.75,7.6),V3(tx*.35+.3,2.0,13.0),V3(tx*.85,1.7,19.5),V3(tx,1.5,tz)],false,'centripetal');};
+LEND.forEach((m,j)=>{m.userData.s0=V3(.15+(j%2-.5)*BW*1.8,TOP+.026+Math.floor((j%4)/2)*.051+(j>=4?.102:0),j<4?-1.6:-2.15);m.userData.t0=j<4?10.85+.26*j:12.45+.26*(j-4);});
+const lendC=LEND.map((_,j)=>lendCurve(j));
+// ---- cash towers on the plaza: 8 layers of deposits vs 1 layer of cash (19.77T / 2.48T = 7.97)
+const sideM=new THREE.MeshStandardMaterial({map:tex(64,64,x=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#e6ead9':'#a9bd9c';x.fillRect(0,i*8,64,8);}x.fillStyle='#c79a2c';x.fillRect(27,0,10,64);}),roughness:.8,emissive:0x2fbf6a,emissiveIntensity:.18});
+const topM=new THREE.MeshStandardMaterial({map:billT,roughness:.8,emissive:0x35ff80,emissiveMap:billT,emissiveIntensity:.45});
+const TBg=new THREE.BoxGeometry(1.15,.26,.52);TBg.translate(0,.13,0);
+function tower(cx,cz,layers){const g=new THREE.Group();g.position.set(cx,0,cz);scene.add(g);const L2=[];
+ add(B(2.7,.14,1.25),M(0x9c7a4f,.85),0,.07,0,g);
+ for(let l=0;l<layers;l++){const row=[];for(let a=0;a<2;a++)for(let b=0;b<2;b++){const m=add(TBg,[sideM,sideM,topM,sideM,sideM,sideM],(a-.5)*1.2,.14+l*.26,(b-.5)*.55,g);m.rotation.y=((l*7+a*3+b)%5-2)*.012;m.scale.y=0;row.push(m);}L2.push(row);}return {g,L2};}
+const TW20=tower(-1.9,19.5,8),TW25=tower(1.4,16.6,1);
+const tw=(T,t,t0,dt,t1)=>{T.g.visible=t>=t0&&t<t1+.45;T.L2.forEach((row,l)=>row.forEach(m=>{const k=pop(t,t0+l*dt,.22)*(1-ez(cl((t-t1)/.4)));m.scale.y=Math.max(k,.0001);m.visible=k>.002;}));};
+// ---- deposit meter (81 %) next to the door, CLOSED sign over the door, FDIC shield
+const meter=new THREE.Group();meter.position.set(3.6,0,9.7);scene.add(meter);add(B(.7,2.5,.12),M(0x14233f,.5,.3),0,1.25,0,meter);
+const fillG=new THREE.BoxGeometry(.46,2.1,.06);fillG.translate(0,1.05,0);const fillM=new THREE.MeshBasicMaterial({color:new THREE.Color(0x22ff6a).multiplyScalar(1.6),toneMapped:false});const fill=add(fillG,fillM,0,.2,.08,meter,false);
+add(new THREE.PlaneGeometry(.56,.22),new THREE.MeshStandardMaterial({map:signT('DEPOSITS','#14233f','#fff',64,256,96),roughness:.5}),0,2.6,.07,meter,false);meter.scale.setScalar(0);
+const closed=new THREE.Group();closed.position.set(.0,2.45,8.66);scene.add(closed);const clMat=new THREE.MeshBasicMaterial({map:signT('CLOSED','#c0141c','#ffffff',150,512,220),toneMapped:false,color:0xffffff});
+add(new THREE.PlaneGeometry(1.4,.6),clMat,0,-.32,0,closed,false);add(B(.02,.3,.02),M(0xdddddd,.3,.8),-.4,-.0,0,closed,false);add(B(.02,.3,.02),M(0xdddddd,.3,.8),.4,0,0,closed,false);closed.scale.setScalar(0);
+const shield=new THREE.Group();shield.position.set(0,2.55,9.0);scene.add(shield);
+{const sh=new THREE.Shape();sh.moveTo(0,.8);sh.bezierCurveTo(.28,.8,.62,.76,.8,.64);sh.lineTo(.8,.1);sh.bezierCurveTo(.8,-.38,.38,-.72,0,-.9);sh.bezierCurveTo(-.38,-.72,-.8,-.38,-.8,.1);sh.lineTo(-.8,.64);sh.bezierCurveTo(-.62,.76,-.28,.8,0,.8);
+ const g=new THREE.ExtrudeGeometry(sh,{depth:.08,bevelEnabled:true,bevelSize:.04,bevelThickness:.03,curveSegments:24});g.translate(0,0,-.04);
+ add(g,new THREE.MeshStandardMaterial({color:0xffd23a,emissive:0xffb800,emissiveIntensity:.55,roughness:.35,metalness:.3,transparent:true,opacity:.62}),0,0,0,shield,false);}
+shield.scale.setScalar(0);
+// ---- bills circulating through the neighbourhood (the economy) on "out working"
+const loop=new THREE.CatmullRomCurve3([V3(.8,1.5,9.4),V3(-3.5,2.0,14.5),V3(-5.6,1.5,21.5),V3(-3.5,2.6,16.5),V3(0,2.9,13.5),V3(3.5,2.6,16.5),V3(5.9,1.5,21.5),V3(3.5,2.0,14.5)],true,'centripetal');
+const CIRC=[...Array(14)].map(()=>add(brickG,brickM,0,0,0,scene,true));CIRC.forEach(m=>m.scale.setScalar(0));
+
+// ================= STORY ANIMATION =================
+const B1=(t,a,b)=>pop(t,a,.3)*(1-ez(cl((t-(b-.25))/.25)));   // pop in on the word, shrink out (never a hard cut)
+function storyPoses(t){
+ // ---- world props that animate on words
+ fsFlip.rotation.y=Math.PI*ez(cl((t-12.95)/.4));
+ {const op=cl((t-15.05)/.45);neon.scale.x=Math.max(.001,Math.abs(Math.cos(op*Math.PI)));neon.material.map=op>.5?neonT[1]:neonT[0];}
+ {const ck=ez(cl((t-44.5)/.6))*(1-ez(cl((t-52.7)/.7)));doors.forEach((g,i)=>g.position.x=(i?1:-1)*(2.65-1.87*ck));}
+ {const c=B1(t,44.46,49.6);closed.scale.setScalar(c);closed.rotation.x=-(1-ez(cl((t-44.46)/.5)))*1.5;}
+ {const m=B1(t,39.62,45.7);meter.scale.setScalar(m);const f=1-.81*ez(cl((t-41.7)/1.4));fill.scale.y=Math.max(.02,f);fillM.color.set(0x22ff6a).lerp(new THREE.Color(0xff2a20),1-f).multiplyScalar(1.6);}
+ {const s=B1(t,49.7,53.0);shield.scale.setScalar(.85*s*(1+.03*Math.sin(t*5)));}
+ tw(TW20,t,20.15,.22,28.8);tw(TW25,t,24.55,.2,28.8);
+ boxG.scale.setScalar(pop(t,8.7,.4));redX.forEach(m=>m.scale.setScalar(B1(t,10.36,11.6)*1/Math.max(.001,boxG.scale.x)));
+ LEND.forEach((m,j)=>{const t0=m.userData.t0;if(t<t0)return;const k=cl((t-t0)/2.0);if(k>=1){m.visible=false;return;}
+  m.position.copy(lendC[j].getPoint(ez(k)));m.rotation.set(.35*Math.sin(t*6+j),t*4+j,.25);m.scale.setScalar(1+1.6*Math.min(1,k*5)*(1-ez(cl((k-.9)/.1))));m.visible=true;});
+ CIRC.forEach((m,i)=>{const on=B1(t,53.3+i*.08,60.3);m.scale.setScalar(on*2.2);if(on>0){m.position.copy(loop.getPoint(((t-53.3)*.045+i/14)%1));m.rotation.set(.3*Math.sin(t*5+i),t*3+i,.2);m.position.y+=.08*Math.sin(t*4+i);}});
+ if(t<5.0)return;
+ // ---- banker: lets go of the shrug, takes Mike's cash, nods
+ relaxArms(teller);pose(teller,'head',0,0,0);armsP(teller,'shrug',true,1-ez(cl((t-5.0)/.5)));
+ {const gv=win(t,5.85,6.9,.3);if(gv>.001){armsP(teller,'give',false,gv);curl(teller,'R',.2);}pose(teller,'head',.12*win(t,6.6,7.6,.3),0,0);}
+ // ---- crowd
+ ALLC.forEach((P,i)=>{follow(P,t);
+  const w=win(t,33.0+.05*i,44.1,.35),s=win(t,44.3,46.2,.3),fam=(P===cr2||P===cr5)?win(t,13.0,15.4,.3):(P===cr1||P===cr4)?win(t,15.1,17.2,.3):0;
+  if(w>.001){armsP(P,'hold',false,w);curl(P,'R',.9,.5);}
+  if(s>.001)armsP(P,'shock',true,s);
+  if(fam>.001)armsP(P,'raise',true,fam);
+  if(t>=28.3&&t<33)pose(P,'head',0,.35*Math.sin(t*2+i*1.7),0);});
+ // ---- Mike
+ {const r=follow(mike,t);
+  const shk=1-ez(cl((t-5.0)/.45));if(shk>.001)armsP(mike,'shock',true,shk);
+  const g=ez(cl((t-5.5)/.45))*(1-ez(cl((t-6.4)/.4)));if(g>.001){armsP(mike,'give',false,g);curl(mike,'R',.9,.5);}
+  const w1=win(t,15.8,18.9,.35),w2=win(t,33.0,44.1,.4),s2=win(t,41.7,46.0,.3),sh3=win(t,45.9,47.3,.3),w4=win(t,48.3,53.6,.4),th=win(t,60.9,63.2,.3);
+  if(w1>.001||w2>.001||w4>.001){armsP(mike,'hold',false,Math.max(w1,w2,w4));curl(mike,'R',.9,.5);}
+  if(s2>.001)armsP(mike,'shock',true,s2);if(sh3>.001)armsP(mike,'shrug',true,sh3);if(th>.001)armsP(mike,'shrug',true,th);
+  pose(mike,'head',.14*Math.sin((t-57.2)*7)*win(t,57.2,58.8,.2)-.12*s2,0,.1*th);
+  mike.userData={w1,w2,w4};}
+}
+function storyGlow(t){
+ const lab=(m,a,b,x,y,z,s=1)=>{m.position.set(x,y,z);m.lookAt(camP);m.scale.setScalar(B1(t,a,b)*s);};
+ lab(LOBJ.t20,20.5,28.8,-1.9,3.1,19.5,.6);lab(LOBJ.t25,24.62,28.8,1.4,1.25,16.6,.5);lab(LOBJ.r18,26.64,28.8,-.2,4.3,18,1.1);
+ lab(LOBJ.b42,37.36,39.5,0,3.0,10.2,.36);lab(LOBJ.p81,41.68,45.5,3.6,3.2,10.0,.7);
+ lab(LOBJ.f250,99,99,0,3.6,9.4,.5);   // 3D $250,000 was cropped at the frame top -> shown in the FDIC card insteadlab(LOBJ.fd,49.8,53.0,0,2.6,9.16,.55);
+ // Mike's phone / the crowd's phones / the fan on the counter
+ const u=mike.userData||{},pw=Math.max(u.w1||0,u.w2||0,u.w4||0);
+ mPhone.visible=((u.w1||0)>.02||(u.w2||0)>.02);mPhone.scale.setScalar(1.5*Math.max(u.w1||0,u.w2||0));
+ if(mPhone.visible){mike.BN['finger3-1R'].getWorldPosition(tmp);mPhone.position.copy(tmp).add(tmp2.set(0,.1,0));mPhone.lookAt(camP);}
+ mPhone.children[1].material.map=(u.w2||0)>.02?phScr[1]:phScr[0];
+ ALLC.forEach((P,i)=>{const w=win(t,33.0+.05*i,44.1,.35),ph=cPhones[i];ph.visible=w>.02;ph.scale.setScalar(1.5*w);if(ph.visible){P.BN['finger3-1R'].getWorldPosition(tmp);ph.position.copy(tmp).add(tmp2.set(0,.1,0));ph.lookAt(camP);}});
+ if(t>=5.0){const s1=ez(cl((t-5.45)/.3))*(1-ez(cl((t-6.3)/.35))),s=Math.max(s1,u.w4||0);mFan.visible=s>.01;mFan.scale.setScalar(Math.max(s,.01));
+  mike.BN['finger3-1R'].getWorldPosition(tmp);const k=t<8?ez(cl((t-5.95)/.4)):0;mFan.position.copy(tmp).add(tmp2.set(0,.05,0)).lerp(tmp2.set(0,TOP+.1,-1.95),k);mFan.lookAt(camP);
+  // the "$1,000" balance over Mike: on "$1,000 in your account" and on "balance still says $1,000"
+  P1000.scale.setScalar(Math.max(B1(t,5.88,7.9),B1(t,16.72,18.9))*1.0);headOf(mike).getWorldPosition(tmp);P1000.position.copy(tmp).add(tmp2.set(0,.34,0));P1000.lookAt(camP);
+  RUSHP.forEach(m=>m.scale.setScalar(0));}
+}
+
 function animate(t){
- for(const P of[mike,teller,guard,...RUSH]){relaxArms(P);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);
+ for(const P of ALLP){relaxArms(P);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);
   for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);pose(P,'head',0,0,0);}
  // --- banker: glances back at the vault on "withdraw ... at once?", slides 4 bundles to Mike on "You can", shrugs + shakes his head on "everybody"
  const look=win(t,T_WD+.15,T_ONCE+.35,.35);pose(teller,'head',0,.75*look,0);
  const give=cl((t-T_YOU+.15)/.55),gw=Math.sin(Math.min(1,give*1.25)*Math.PI*.5)*(1-cl((t-T_JUST-.1)/.35));
  const sh=cl((t-T_EVERY)/.35);
- if(sh>0){armsP(teller,'shrug',true,ez(sh));pose(teller,'head',0,.18*Math.sin((t-T_EVERY)*9)*sh,0);}
+ if(sh>0){armsP(teller,'shrug',true,ez(sh));pose(teller,'head',0,.18*Math.sin((t-T_EVERY)*9)*sh*(1-cl((t-4.9)/.4)),0);}
  else if(gw>0){armsP(teller,'give',false,gw);curl(teller,'L',.2);curl(teller,'R',.2);}
  slide.forEach((m,i)=>{const z=-2.15+ez(give)*.55;m.position.set(.15+(i%2-.5)*BW*1.8,TOP+.026+Math.floor(i/2)*.051,z);});
  // --- Mike ACTS: asks (hand on the counter), palms up on "once?", grabs the cash + turns to us celebrating on "You can", shocked by the crowd on "everybody"
  const ask=win(t,.15,T_ONCE-.1,.3),why=win(t,T_ONCE-.1,T_YOU+.1,.25);
  const turn=ez(cl((t-T_YOU-.25)/.55)),cheer=cl((t-T_YOU-.35)/.35)*(1-cl((t-T_EVERY)/.3)),shock=ez(cl((t-T_EVERY-.05)/.3));
- mike.g.position.set(.45,0,-.85+.2*turn);mike.g.rotation.y=Math.PI*(1-turn)+.25*(1-turn);
+ if(t<5.0){mike.g.position.set(.45,0,-.85+.2*turn);mike.g.rotation.y=Math.PI*(1-turn)+.25*(1-turn);
  if(shock>0){armsP(mike,'shock',true,shock);pose(mike,'head',-.12*shock,0,0);pose(mike,'spine03',-.08*shock,0,0);}
  else if(cheer>0){armsP(mike,'raise',false,ez(cheer));curl(mike,'R',.9,.5);pose(mike,'head',-.1*cheer,0,0);}
  else if(why>0){armsP(mike,'shrug',true,why);pose(mike,'head',.05,0,.08*why);}
- else{armsP(mike,'give',false,ask*.8);pose(mike,'head',.06,0,0);}
+ else{armsP(mike,'give',false,ask*.8);pose(mike,'head',.06,0,0);}}
  const fanS=ez(cl((t-T_YOU-.05)/.25))*(1-ez(cl((t-T_EVERY-.05)/.25)));mFan.visible=fanS>.01;mFan.scale.setScalar(Math.max(fanS,.01));
  // --- guard turns smoothly to the doors when the crowd comes
  pose(guard,'head',0,.7*ez(cl((t-T_JUST)/.45)),0);
  // --- the rush: they are off-camera (in the street) until the camera pulls back, so nobody pops in
- RUSH.forEach((P,i)=>{const [x0,z0,x1,z1]=RP[i],t0=T_ONCE+i*.07,k=cl((t-t0)/(T_EVERY+.95-t0)),e=1-Math.pow(1-k,2.2);
+ RUSH.forEach((P,i)=>{if(t>=5.0)return;const [x0,z0,x1,z1]=RP[i],t0=T_ONCE+i*.07,k=cl((t-t0)/(T_EVERY+.95-t0)),e=1-Math.pow(1-k,2.2);
   const x=x0+(x1-x0)*e,z=z0+(z1-z0)*e;P.g.position.set(x,0,z);P.g.rotation.y=Math.atan2(x1-x0,z1-z0);
   if(k<1){const ph=z*3.4,a=.42*(1-ez(cl((k-.85)/.15)));walkLegs(P,ph,a);pose(P,'upperarm01L',AD[0]+a*.7*Math.sin(ph),0,-AD[2]);pose(P,'upperarm01R',AD[0]-a*.7*Math.sin(ph),0,AD[2]);}
   else pose(P,'head',0,(i%2?-.25:.25),0);});
- for(const P of[mike,teller,guard,...RUSH])P.g.updateMatrixWorld(true);
+ storyPoses(t);for(const P of ALLP)P.g.updateMatrixWorld(true);
  // --- glow placement (always facing the camera)
- headOf(mike).getWorldPosition(tmp);P1000.position.copy(tmp).add(tmp2.set(0,.34,0));P1000.lookAt(camP);P1000.scale.setScalar(pop(t,.22,.3)*1.1*(1-ez(cl((t-T_WD-.25)/.3)))+ez(cl((t-T_YOU-.3)/.3))*.9);   // fades out during the push-in (would be cropped), back after "You can"
+ headOf(mike).getWorldPosition(tmp);P1000.position.copy(tmp).add(tmp2.set(0,.34,0));P1000.lookAt(camP);if(t<5.0)P1000.scale.setScalar(pop(t,.22,.3)*1.1*(1-ez(cl((t-T_WD-.25)/.3)))+ez(cl((t-T_YOU-.3)/.3))*.9);
  RUSH.forEach((P,i)=>{headOf(P).getWorldPosition(tmp);RUSHP[i].position.copy(tmp).add(tmp2.set(0,.34,0));RUSHP[i].lookAt(camP);RUSHP[i].scale.setScalar(pop(t,T_EVERY+.55+i*.1,.25)*.8);});
  mike.BN['finger3-1R']?.getWorldPosition(tmp);mFan.position.copy(tmp).add(tmp2.set(0,.05,0));mFan.lookAt(camP);
- VAULTQ.position.set(VDX,1.55,-7.4);VAULTQ.lookAt(camP);VAULTQ.scale.setScalar(pop(t,T_ONCE,.3)*(1-ez(cl((t-T_YOU-.2)/.3))));
+ VAULTQ.position.set(VDX,1.55,-7.4);VAULTQ.lookAt(camP);VAULTQ.scale.setScalar(Math.max(pop(t,T_ONCE,.3)*(1-ez(cl((t-T_YOU-.2)/.3))),B1(t,17.95,19.4),B1(t,31.95,33.1)*((t>=31.5&&t<33.2)?2.6:1)));
+ storyGlow(t);
 }
 // ================= LIGHTS / CAMERA / POST =================
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,200);
@@ -265,13 +455,62 @@ const KEYS=[
  [T_EVERY+1.2,  [.35,2.85,6.1],[.3,1.3,-1.6],54,.0012],      // "just not everybody at the same time" - pull back + up: the crowd walks in around him
  [99,           [.35,2.9,6.3],[.3,1.3,-1.6],54,.0012]];
 const kt=KEYS.map(k=>k[0]),cP=new THREE.CatmullRomCurve3(KEYS.map(k=>V3(...k[1])),false,'centripetal'),cL=new THREE.CatmullRomCurve3(KEYS.map(k=>V3(...k[2])),false,'centripetal');
-function setCam(t){let i=0;while(i<kt.length-2&&t>=kt[i+1])i++;const k=ez(cl((t-kt[i])/(kt[i+1]-kt[i]))),u=(i+k)/(kt.length-1);
+function hookCam(t){let i=0;while(i<kt.length-2&&t>=kt[i+1])i++;const k=ez(cl((t-kt[i])/(kt[i+1]-kt[i]))),u=(i+k)/(kt.length-1);
  cam.position.copy(cP.getPoint(u));const lk=cL.getPoint(u);cam.fov=KEYS[i][3]+(KEYS[i+1][3]-KEYS[i][3])*k;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
  bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=KEYS[i][4]+(KEYS[i+1][4]-KEYS[i][4])*k;}
+
+const HOOK_T=T_EVERY+1.2;
+const SK=[[HOOK_T,[.35,2.85,6.1],[.3,1.3,-1.6],54,.0012],
+ [6.1,[1.25,1.7,1.9],[.2,1.35,-1.1],46,.0022],[8.5,[1.75,1.75,-.7],[2.35,1.5,-7.6],40,.0012],[10.5,[1.9,1.65,-2.4],[2.35,2.1,-8.2],34,.001],
+ [11.7,[.4,1.8,4.6],[.2,1.5,10.5],46,.0012],[12.9,[-.2,1.9,13.5],[-5.6,1.6,24.5],46,.0015],[14.6,[.4,1.9,13.5],[5.9,1.6,24.5],46,.0015],
+ [15.5,[1.6,1.8,4.5],[.5,1.5,-1.0],44,.0015],[16.3,[1.0,1.72,-3.2],[.45,1.5,-.85],42,.0022],[18.4,[1.8,1.7,.4],[2.3,1.45,-6],40,.0012],[20.0,[.5,1.9,8.0],[0,1.4,14],48,.0012],
+ [22.0,[.6,2.1,9.3],[-1.3,1.6,19],60,.0012],[24.7,[1.6,1.8,9.4],[.9,1.1,16.6],56,.0012],[26.8,[.2,2.8,9.2],[-.2,1.7,18],62,.0012],
+ [28.2,[.4,2.8,19.5],[-.3,1.6,12],54,.0012],[29.8,[1.8,2.6,24],[-.6,1.2,11],50,.0012],[31.7,[.5,1.7,15.5],[2.35,1.5,-8.4],30,.0008],[33.4,[-3.4,1.8,15],[.4,1.7,9.5],46,.0012],
+ [36.0,[3.2,2.0,15.5],[-.4,1.9,9.8],44,.0012],[39.5,[-1.6,2.0,17],[1.9,1.6,9.5],52,.0012],[41.8,[-.8,1.9,16],[2.5,1.9,9.5],48,.0012],
+ [44.4,[1.8,1.8,14],[0,1.6,8.8],40,.0012],[46.8,[0,1.5,14.5],[0,1.7,9.6],42,.0012],[50.6,[.5,1.9,15.2],[0,2.5,9.8],44,.0012],
+ [53.4,[-1.5,2.6,15.5],[0,1.4,9.5],50,.0012],[56.0,[0,8.2,26],[0,1.3,14],68,.0012],[59.2,[.4,2.2,19],[0,1.6,10.8],44,.0012],
+ [62.0,[.15,1.65,13.2],[0,1.65,10.6],38,.0012],[99,[.15,1.65,13.2],[0,1.65,10.6],38,.0012]];
+const SKv=SK.map(k=>({t:k[0],p:V3(...k[1]),l:V3(...k[2]),f:k[3],a:k[4]}));
+// monotone (Fritsch-Carlson) tangents per axis: smooth, no overshoot between far-apart keys (it once flew the camera into Mike)
+const tanS=(i,g)=>{const n=SKv.length;if(i===0||i===n-1)return 0;const h0=SKv[i].t-SKv[i-1].t,h1=SKv[i+1].t-SKv[i].t,d0=(g(SKv[i])-g(SKv[i-1]))/h0,d1=(g(SKv[i+1])-g(SKv[i]))/h1;
+ if(d0*d1<=0)return 0;const w1=2*h1+h0,w2=h1+2*h0;return (w1+w2)/(w1/d0+w2/d1);};
+const tanV=(i,g)=>V3(tanS(i,k=>g(k).x),tanS(i,k=>g(k).y),tanS(i,k=>g(k).z));
+function herm(i,s,h,g,v){const a=g(SKv[i]),b=g(SKv[i+1]),m0=v(i),m1=v(i+1),s2=s*s,s3=s2*s;const h00=2*s3-3*s2+1,h10=s3-2*s2+s,h01=-2*s3+3*s2,h11=s3-s2;
+ return a.clone?a.clone().multiplyScalar(h00).addScaledVector(m0,h10*h).addScaledVector(b,h01).addScaledVector(m1,h11*h):h00*a+h10*h*m0+h01*b+h11*h*m1;}
+const shadowSet=(big)=>{const sc=sun.shadow.camera,e=big?22:9,e2=big?22:6;if(sc.userData.big===big)return;sc.userData.big=big;Object.assign(sc,{left:-e,right:e,top:e2,bottom:-e2,far:big?70:40});sc.updateProjectionMatrix();sun.target.position.set(0,0,big?8:0);sun.position.set(-9,big?9:7,big?13:5);};
+function setCam(t){shadowSet(t>=10.5);
+ if(t<=HOOK_T){hookCam(t);return;}
+ let i=0;while(i<SKv.length-2&&t>=SKv[i+1].t)i++;const h=SKv[i+1].t-SKv[i].t,s=cl((t-SKv[i].t)/h);
+ const gp=k=>k.p,gl2=k=>k.l,gf=k=>k.f,ga=k=>k.a;
+ cam.position.copy(herm(i,s,h,gp,j=>tanV(j,gp)));const lk=herm(i,s,h,gl2,j=>tanV(j,gl2));
+ cam.fov=herm(i,s,h,gf,j=>tanS(j,gf));cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
+ bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=Math.max(.0004,herm(i,s,h,ga,j=>0));}
 await loaded;
-const cap=document.getElementById('cap'),ttl=document.getElementById('ttl'),HOOK_END=Wn('say',0,5.3);
-window.renderAt=t=>{setCam(t);animate(t);setCam(t);animate(t);
- let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;ttl.style.opacity=t<HOOK_END?1:0;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
+const qq=document.getElementById('qq'),cap=document.getElementById('cap'),ttl=document.getElementById('ttl'),TTL_HOOK=document.getElementById('ttl').innerHTML;let TTL_CUR=TTL_HOOK;const HOOK_END=Wn('say',0,5.3);
+window.dbg=()=>({cam:cam.position.toArray().map(v=>+v.toFixed(2)),mike:mike.g.position.toArray().map(v=>+v.toFixed(2)),ban:teller.g.position.toArray().map(v=>+v.toFixed(2))});
+// ---- explainer cards: [from, to, html, top%]; data-t = pop-in time, data-h/data-w = grow to px/% , data-d = drain from %, data-u = anim length
+const R=(...a)=>`<div class="row">${a.join('')}</div>`,S=(c,s,tt='')=>`<span class="${c}"${tt?` data-t="${tt}"`:''}>${s}</span>`,DV=(c,s,tt='')=>`<div class="${c}"${tt?` data-t="${tt}"`:''}>${s}</div>`;
+const CARDS=[
+ [5.8,8.0, R(S('ic','🏦'),`<div>${DV('sm','YOUR ACCOUNT')}${DV('bg g','$1,000',5.88)}</div>`)],
+ [9.1,10.85, R(S('ic','📦'),`<div>${DV('sm','A BOX WITH YOUR NAME?')}${DV('bg','MIKE')}</div>`,S('ic','❌',10.36))],
+ [10.9,15.65, `<div class="row" data-t="11.86">${S('ic','💵')}${S('ic','➜')}${S('ic','🏠')}${S('sm','HOME LOAN')}</div><div class="row" data-t="13.74">${S('ic','💵')}${S('ic','➜')}${S('ic','🏪')}${S('sm','BUSINESS LOAN')}</div>`],
+ [15.7,18.95, `<div class="row" data-t="16.72">${S('ic','📱')}${S('sm','BALANCE')}${S('bg g','$1,000')}${S('ic','✅')}</div><div class="row" data-t="17.82">${S('ic','💵')}${S('sm','CASH IN THE VAULT')}${S('ic','❌')}</div>`],
+ [19.0,28.7, DV('sm','U.S. BANKS')+`<div class="hist"><div class="col">${DV('bg g','$19.8T',20.5)}<div class="bar" data-t="20.2" data-h="215" data-u="1.2" style="background:linear-gradient(#3dff7a,#13924a);box-shadow:0 0 22px rgba(61,255,122,.6)"></div>${DV('sm','🏦 DEPOSITS')}</div><div class="col">${DV('bg y','$2.5T',24.62)}<div class="bar" data-t="24.55" data-h="27" style="background:linear-gradient(#ffd23a,#b8860b);box-shadow:0 0 22px rgba(255,210,58,.6)"></div>${DV('sm','💵 CASH')}</div></div>`+DV('bg y','1 : 8',26.64)],
+ [28.8,33.0, R(...[...Array(8)].map((_,i)=>S('ic','👤',(29.4+i*.24).toFixed(2))))+DV('sm','CASH IN THE VAULT')+`<div class="meter"><div class="fill" data-t="30.5" data-d="100" data-u="1.3" style="width:100%;background:#3dff7a"></div></div>`+DV('bg r','EMPTY',31.88)],
+ [33.2,39.55, DV('sm','WITHDRAWAL REQUESTS')+R(S('ic','📱'),S('ic','📱'),S('ic','📱'))+DV('bg r','$42 BILLION',37.36)+DV('sm','IN ONE DAY',38.96),19],
+ [39.6,43.9, DV('sm','DEPOSITS PULLED IN 2 DAYS')+`<div class="meter"><div class="fill" data-t="40.4" data-w="81" data-u="1.3" style="width:0;background:#ff3b30;box-shadow:0 0 18px #ff3b30"></div></div>`+DV('bg r','81%',41.68)],
+ [44.4,46.3, R(S('ic','🔒'),S('bg r','CLOSED'))+DV('sm','THE NEXT DAY',45.56)],
+ [46.4,53.25, DV('ic','🛡️',46.76)+DV('bg','FDIC',49.78)+DV('sm','INSURED UP TO',50.4)+DV('bg y','$250,000',50.72)+DV('sm','PER DEPOSITOR',52.22)],
+ [53.3,56.0, R(S('ic','🏦',53.6),S('ic','➜',53.9),S('ic','🏠',54.2),S('ic','➜',54.5),S('ic','🏪',54.8),S('ic','➜',55.1),S('ic','🏦',55.4))+DV('sm g','MONEY AT WORK',55.76)],
+ [56.06,59.9, R(S('ic','🤝'),S('bg','TRUST',57.3))+R(S('ic','👤👤👤',57.9),S('sm','NOT ALL AT ONCE',58.8))],
+ [60.0,63, R(S('ic','💵'),S('ic','➜'),S('ic','🔐'),S('bg y','?',61.36)),27]
+].map(([a,b,h,top=17])=>{const d=document.createElement('div');d.className='card';d.style.top=top+'%';d.innerHTML=h;document.getElementById('ov').appendChild(d);return {a,b,d,items:[...d.querySelectorAll('[data-t]')]};});
+function cards(t){for(const C of CARDS){const k=ez(cl((t-C.a)/.25))*(1-ez(cl((t-C.b)/.25)));C.d.style.opacity=k;C.d.style.transform=`translateX(-50%) scale(${.85+.15*k})`;
+ for(const e of C.items){const D=e.dataset,q=cl((t-+D.t)/(+D.u||.3));
+  if(D.h)e.style.height=+D.h*ez(q)+'px';else if(D.w)e.style.width=+D.w*ez(q)+'%';else if(D.d)e.style.width=+D.d*(1-ez(q))+'%';
+  else{e.style.opacity=q;e.style.transform=`scale(${.6+.4*q+Math.sin(q*Math.PI)*.15})`;}}}}
+window.renderAt=t=>{setCam(t);animate(t);setCam(t);animate(t);cards(t);
+ let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;{const tt=t<HOOK_END?TTL_HOOK:(t>=33.0&&t<39.6)?'March 2023<br><span class="g" style="font-size:54px">Silicon Valley Bank</span>':'';if(tt!==TTL_CUR){ttl.innerHTML=tt;TTL_CUR=tt;}ttl.style.opacity=tt?1:0;const qk=cl((t-61.92)/.25);qq.style.opacity=qk;qq.style.transform=`scale(${.8+.2*Math.min(1,qk*1.0)+Math.sin(qk*Math.PI)*.08})`;}const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>

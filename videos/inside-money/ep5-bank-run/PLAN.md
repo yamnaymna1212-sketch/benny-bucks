@@ -46,3 +46,9 @@ Camera spline (keys on the words): wide bank (sign + flag + open vault, Mike at 
 Fixes: Mike's zombie-arms shock pose -> hands-up (PS.shock tuned with `--q ps=...`), banker gives with one hand, seller suit recoloured mustard (blue looked like Mike), $1,000 labels fade/pop only when fully in frame, guard head turn animated, no Math.random (deterministic frames).
 NaN guard pass before bloom (a single NaN pixel made a black block at t=1.0); flag sheen + sign clearcoat removed.
 Preview rendered on the M3 in ~15 s: render-kit/ep5-bank-run-preview-5s.mp4 (not in git). WAIT for user approval before the full build.
+
+## FULL BUILD + RENDER (Mac, 2026-11-02, hook v4 approved: "go")
+Story 5-63 s built in ep5.html (plaza + street in front of the bank, one continuous camera, crowd1-6 cast), story SFX in mix_ep5.py.
+User feedback after the first full render: add explainer graphics, not only people -> 13 HTML explainer cards timed to words (icons, deposits vs cash histogram 19.8T/2.5T + 1:8, vault meter EMPTY, $42B, 81% meter, CLOSED, FDIC $250,000 card, money cycle, TRUST, end question). 3D $250,000 label was cropped -> hidden, number now in the FDIC card.
+Full render on the M3: render-kit/ep5-bank-run.mp4, 62.8 s (not in git).
+OPEN: the SVB / CLOSED beat is filmed in front of the FIRST NATIONAL BANK facade -> viewers may think Mike's bank closed; give SVB its own building before publishing (needs a re-render).

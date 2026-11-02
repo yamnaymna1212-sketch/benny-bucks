@@ -1,4 +1,4 @@
-"""EP5 mix: voice + air bed + SFX synced to words -> render-kit/mix_ep5.wav (-14 LUFS). HOOK part now; story SFX added after the hook is approved.
+"""EP5 mix: voice + air bed + SFX synced to words and to the 3D labels/camera keys of ep5.html -> render-kit/mix_ep5.wav (-14 LUFS).
 Usage (from videos/inside-money): ~/kokoro-tts/venv/bin/python ep5-bank-run/mix_ep5.py
 SFX = the user's library (studio/public/sfx/user-*.wav, rebuilt by tools/import_user_sfx.py)."""
 import json,subprocess,wave,numpy as np,tempfile,os
@@ -27,7 +27,38 @@ put(S['whoosh'],Wn('you',1)-.06,.28)                     # cut 3 -> Mike raises 
 put(S['cash-register'],Wn('can')+.02,.3)
 put(S['whoosh'],Wn('just')-.06,.3)                       # cut 4 -> the rush
 put(S['boom'],Wn('everybody'),.45)                       # the shock: everybody at once
-for i in range(5):put(S['pop'],Wn('just')+.1+i*.12,.15)  # $1,000 over each head
+for i in range(4):put(S['pop'],Wn('everybody')+.55+i*.1,.15)   # $1,000 over each customer
+# ---- STORY (times = the 3D labels / camera keys in ep5.html)
+put(S['pop'],5.88,.25)                                           # $1,000 in your account
+put(S['money'],6.0,.22)                                          # Mike hands the cash over
+put(S['pop'],8.72,.2)                                            # MIKE box in the vault
+put(S['wrong'],10.36,.3)                                         # "No." + red X
+put(S['whoosh'],10.8,.28);put(S['money'],11.0,.22)               # the bills leave the vault, out the door
+put(S['whoosh'],11.4,.22)
+put(S['cash-register'],12.95,.28)                                # house SOLD
+put(S['ting'],15.05,.3)                                          # bakery OPEN
+put(S['whoosh'],14.85,.28)                                       # camera rushes back into the bank
+put(S['pop'],16.72,.25)                                          # balance $1,000
+put(S['wrong'],17.95,.3)                                         # the cash isn't there (red ?)
+put(S['whoosh'],18.8,.3)                                         # out to the street
+for l in range(8):put(S['pop'],20.15+l*.22,.1)                   # the deposit tower grows layer by layer
+put(S['ting'],20.5,.35)                                          # $20 trillion
+put(S['pop'],24.55,.2);put(S['ting'],24.62,.3)                   # $2.5 trillion
+put(S['ting'],26.64,.3)                                          # 1 : 8
+put(S['whoosh'],28.6,.3)                                         # towers sink, the queue forms
+put(S['wrong'],31.95,.3)                                         # "the vault runs empty"
+put(S['whoosh'],32.8,.28)
+put(S['boom'],37.36,.45)                                         # $42 billion
+put(S['whoosh'],39.5,.25)
+put(S['boom'],41.68,.4)                                          # 81 %
+put(S['boom'],44.46,.5);put(S['shock'],44.5,.3)                  # CLOSED
+put(S['whoosh'],46.6,.22)
+put(S['ting'],49.7,.35)                                          # the FDIC shield
+put(S['cash-register'],50.72,.3)                                 # $250,000
+put(S['pop'],52.8,.2);put(S['money'],53.3,.25)                   # doors open, the bills circulate
+put(S['whoosh'],55.4,.3)                                         # camera rises over the neighbourhood
+put(S['whoosh'],58.9,.28)                                        # ...and drops in on Mike
+put(S['ting'],61.92,.4)                                          # YES or NO?
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep5_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep5_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep5.wav'],check=True);print('ok',DUR)

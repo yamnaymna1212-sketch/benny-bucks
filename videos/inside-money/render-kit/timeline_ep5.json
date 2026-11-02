@@ -692,13 +692,8 @@
 "e": 41.68
 },
 {
-"w": "81",
+"w": "81%",
 "s": 41.68,
-"e": 42.0
-},
-{
-"w": "%",
-"s": 42.0,
 "e": 42.56
 },
 {
@@ -727,7 +722,7 @@
 "e": 44.46
 },
 {
-"w": "close",
+"w": "closed",
 "s": 44.46,
 "e": 44.82
 },
@@ -1129,23 +1124,23 @@
 "e": 13.74
 },
 {
-"t": "business opening a",
+"t": "business opening",
 "s": 13.74,
-"e": 14.84
+"e": 14.5
 },
 {
-"t": "new shop.",
-"s": 14.84,
+"t": "a new shop.",
+"s": 14.5,
 "e": 15.32
 },
 {
-"t": "Your balance still",
+"t": "Your balance",
 "s": 15.7,
-"e": 16.4
+"e": 16.08
 },
 {
-"t": "says $1,000",
-"s": 16.4,
+"t": "still says $1,000",
+"s": 16.08,
 "e": 17.48
 },
 {
@@ -1259,28 +1254,28 @@
 "e": 34.98
 },
 {
-"t": "Silicon Valley Bank",
+"t": "Silicon Valley",
 "s": 35.2,
-"e": 36.06
+"e": 35.78
 },
 {
-"t": "customers tried to",
-"s": 36.06,
-"e": 37.0
+"t": "Bank customers",
+"s": 35.78,
+"e": 36.4
 },
 {
-"t": "pull out $42",
-"s": 37.0,
-"e": 37.76
+"t": "tried to pull",
+"s": 36.4,
+"e": 37.2
 },
 {
-"t": "billion in one",
-"s": 37.76,
-"e": 39.14
+"t": "out $42 billion",
+"s": 37.2,
+"e": 38.36
 },
 {
-"t": "day.",
-"s": 39.14,
+"t": "in one day.",
+"s": 38.36,
 "e": 39.4
 },
 {
@@ -1289,18 +1284,18 @@
 "e": 40.26
 },
 {
-"t": "customers tried to",
+"t": "customers tried",
 "s": 40.26,
-"e": 41.32
+"e": 41.16
 },
 {
-"t": "pull out 81",
-"s": 41.32,
-"e": 42.0
+"t": "to pull out",
+"s": 41.16,
+"e": 41.68
 },
 {
-"t": "% of all",
-"s": 42.0,
+"t": "81% of all",
+"s": 41.68,
 "e": 42.98
 },
 {
@@ -1309,28 +1304,33 @@
 "e": 43.32
 },
 {
-"t": "Regulators close the",
+"t": "Regulators closed",
 "s": 43.96,
-"e": 45.14
+"e": 44.82
 },
 {
-"t": "bank the next",
-"s": 45.14,
-"e": 45.72
+"t": "the bank the",
+"s": 44.82,
+"e": 45.56
 },
 {
-"t": "day.",
-"s": 45.72,
+"t": "next day.",
+"s": 45.56,
 "e": 46.02
 },
 {
-"t": "That's why deposit",
+"t": "That's why",
 "s": 46.36,
-"e": 47.02
+"e": 46.76
 },
 {
-"t": "insurance exists.",
-"s": 47.02,
+"t": "deposit insurance",
+"s": 46.76,
+"e": 47.58
+},
+{
+"t": "exists.",
+"s": 47.58,
 "e": 48.36
 },
 {
