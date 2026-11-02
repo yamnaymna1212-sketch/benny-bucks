@@ -1,16 +1,17 @@
 Why can the U.S. government print money, but still can't pay off its debt?|0.2
-That debt is about forty point six trillion dollars.|0.12
-Split it between every American, and that's about one hundred nineteen thousand dollars each.|0.15
-So why not just print the money and pay it off?|0.15
-Because printing isn't free. More dollars chasing the same stuff means higher prices.|0.15
-But here's the twist. That debt isn't owed to a villain.|0.15
-It's owed to people. Banks, pension funds, investors, even Social Security's trust fund.|0.15
-Each one is a Treasury bond: someone lent the government money, and gets paid interest.|0.15
-When a bond comes due, the government doesn't dig up cash. It sells a new bond, and pays off the old one.|0.15
-Paying everything off would take a surplus, meaning the government takes in more than it spends.|0.15
-But last year, it spent one point eight trillion dollars more than it took in.|0.15
-And the interest alone? About nine hundred seventy billion dollars. Nearly a trillion, just to borrow.|0.18
-So the real limit isn't the printing press. It's trust.|0.15
-As long as lenders believe they'll get paid, the new bonds keep selling.|0.15
-Today, the debt held by the public is about as big as everything America makes in a year.|0.15
+Your share of it? About one hundred nineteen thousand dollars. And the real answer isn't what you think.|0.15
+First, the obvious question. Why not just print it?|0.15
+Because every new dollar makes the old ones worth less, and prices go up.|0.15
+But printing isn't the real problem. Who they owe is.|0.15
+That forty point six trillion dollars? It's not owed to a villain.|0.15
+It's owed to banks, pension funds, investors, even Social Security's trust fund.|0.15
+Each one is a Treasury bond. A loan that pays interest.|0.12
+So what happens when a bond comes due? This is where it gets strange.|0.18
+The government doesn't pay with cash. It sells a new bond, and uses that money to pay off the old one.|0.15
+It's called rolling over. And it never stops.|0.15
+But borrowing has a bill. Last year, interest alone cost nine hundred seventy billion dollars.|0.18
+And it still spent one point eight trillion more than it took in.|0.15
+So what decides if this can go on? Not the printing press.|0.18
+Trust. As long as lenders believe they'll get paid, new bonds keep selling.|0.15
+If they start to doubt it, they ask for more interest.|0.15
 So should America pay it off, or keep rolling it over? Tell me in the comments.|0.15
