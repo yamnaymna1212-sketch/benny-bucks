@@ -31,3 +31,7 @@ Check: vo duration 61-65 s (else adjust speed), whisper typos in words_raw.json 
 - Banker behind the window + in the vault = `manager` cast (dark suit, tie, glasses), not the teller in casual clothes.
 - SERVICES board behind the banker removed.
 - Big hook title on top (Money-Stories style, readable in 1 s): "Banks: $20 TRILLION" (green) / "Cash: $2.5 TRILLION" (red) / black box "So where is it?". Shown until the word "Say" (end of the hook).
+
+## HOOK v3 (user feedback 2026-11-02)
+- No look-alikes: the crowd = landlord, teller, printer, seller (the banker/manager and the guard are not repeated; nobody dressed like Mike). In cloud stills each role gets its own outfit colour (faces only differ on the Mac cast).
+- Title = the video's point, not a summary: "Your $1,000 / is NOT in the vault" (green / red), 2 lines at the very top; every shot framed so the title never covers the bank sign, the vault sign, a $ number or a character.

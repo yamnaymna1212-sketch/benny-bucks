@@ -4,10 +4,10 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #ov{position:absolute;inset:0;z-index:3;pointer-events:none}
 /* Zack-style caption: 2-3 words, low centre */
 .cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 58px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.75),0 0 2px #000}
-.ttl{position:absolute;left:0;width:720px;top:5.5%;text-align:center;font:800 62px/1.1 Mont,sans-serif;color:#fff;letter-spacing:-.5px;
+.ttl{position:absolute;left:0;width:720px;top:3.5%;text-align:center;font:800 64px/1.08 Mont,sans-serif;color:#fff;letter-spacing:-.5px;
  -webkit-text-stroke:9px #000;paint-order:stroke fill;text-shadow:0 5px 0 #000,0 8px 14px rgba(0,0,0,.6)}
 .ttl .g{color:#3dff7a}.ttl .r{color:#ff3b30}.ttl .box{display:inline-block;margin-top:12px;padding:6px 22px 10px;background:#000;border-radius:8px;font-style:italic;-webkit-text-stroke:0;text-shadow:none;font-size:54px}
-</style></head><body><canvas id="c"></canvas><div id="ov"><div class="ttl" id="ttl">Banks: <span class="g">$20 TRILLION</span><br>Cash: <span class="r">$2.5 TRILLION</span><br><span class="box">So where is it?</span></div><div class="cap" id="cap">Why can't you</div></div>
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="ttl" id="ttl">Your <span class="g">$1,000</span><br>is <span class="r">NOT</span> in the vault</div><div class="cap" id="cap">Why can't you</div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 // EP5 scene (HOOK v1): bank lobby, Mike withdraws $1,000, the vault is almost empty, then everybody rushes in. Timeline: timeline_ep5.json
@@ -134,7 +134,8 @@ const Wn=(w,n=0,d=0)=>{const k=WD.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$
 const gl=new GLTFLoader(),SRC={};let guy=null;
 for(const n of['mike','teller','manager','guard','printer','seller','landlord']){let g;
  try{g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;}catch(e){guy??=(await gl.loadAsync('dl/models/guy/guy.glb')).scene;g=skClone(guy);window.castFallback=true;
-  if(n==='manager'){g.traverse(o=>{if(o.isMesh&&/casualsuit/i.test(o.material.name)){o.material=o.material.clone();o.material.color.set(0x1b2436);}});}}
+  const FB={manager:0x1b2436,guard:0x24324f,landlord:0x7a4a26,teller:0x7b2d6b,printer:0x3f5a3a,seller:0xb02a2a}[n];
+  if(FB)g.traverse(o=>{if(o.isMesh&&/casualsuit/i.test(o.material.name)){o.material=o.material.clone();o.material.color.set(FB);}});}
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
   if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
@@ -165,7 +166,7 @@ const mike=person('mike',.45,-.85,Math.PI),teller=person('manager',-.2,-2.55,.12
  for(const x of[-1.6,0,1.6])add(B(.08,2.85,.12),fr,x,1.42,8.3);add(B(3.3,.1,.14),fr,0,2.85,8.3);
  for(const s of[-1,1]){const d=add(B(1.55,2.75,.03),gl,s*2.25,1.4,7.6,scene,false);d.rotation.y=s*1.3;}}
 // ---- the rush: 5 different customers stream in from the street on "Just not everybody"
-const RUSH=['landlord','seller','printer','manager','guard'].map((n,i)=>person(n,-.35+(i%2)*.5,9+i*1.1,Math.PI));
+const RUSH=['landlord','teller','printer','seller'].map((n,i)=>person(n,-.35+(i%2)*.5,9+i*1.1,Math.PI));
 // ================= VAULT (separate set at VX): open round door, steel room, almost-empty shelves =================
 const VX=-22;
 {const steel=pbr('metal_plate',3,2,{metalness:.85,roughness:.45}),dark=M(0x30353b,.35,.9),G=new THREE.Group();G.position.set(VX,0,0);scene.add(G);
@@ -254,7 +255,7 @@ const SHOTS=[
  [0,T_WD,        [.2,1.75,2.7],[.1,2.0,-2.6],50,       [.18,1.74,2.3],[.1,1.98,-2.6],49, .0015],  // "Why can't you" - the bank, sign + flag, Mike at the window, $1,000 pops
  [T_WD,T_FROM,   [.75,1.72,.35],[.05,1.12,-2.0],40,    [.65,1.68,.1],[.05,1.12,-2.0],38, .003],   // "withdraw all your money" - over Mike's shoulder, bundles slide to him
  [T_FROM,T_YOU,  [VX,1.75,6.4],[VX,1.95,-3.0],50,      [VX,1.72,5.3],[VX,1.92,-3.0],49, .0008],  // "from the bank at once?" - the vault: open door, almost-empty shelves, red ?
- [T_YOU,T_JUST,  [.3,1.6,2.3],[.1,1.55,-.6],40,        [.25,1.6,1.95],[.1,1.55,-.6],38, .003],   // "You can." - Mike turns to us, raises the cash
+ [T_YOU,T_JUST,  [.12,1.5,3.3],[.1,1.82,-.6],48,       [.12,1.5,3.0],[.1,1.8,-.6],47,   .0025],   // "You can." - Mike turns to us, raises the cash
  [T_JUST,99,     [.62,1.75,-1.6],[-.25,1.2,5.0],52,    [.66,1.82,-1.75],[-.25,1.15,5.0],52,.0012]]; // "Just not everybody..." - over Mike's shoulder: the crowd rushes in, $1,000 each
 function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],TLN.dur)-S[0])));
  const cx=cam.position.x<-10?VX:0;sun.target.position.set(cx,0,0);sun.position.set(cx-9,7,5);
