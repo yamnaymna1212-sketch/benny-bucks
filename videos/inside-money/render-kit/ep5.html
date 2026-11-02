@@ -10,8 +10,8 @@ html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 </style></head><body><canvas id="c"></canvas><div id="ov"><div class="ttl" id="ttl">Your <span class="g">$1,000</span><br>is <span class="r">NOT</span> in the vault</div><div class="cap" id="cap">Why can't you</div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
-// EP5 scene (HOOK v1): bank lobby, Mike withdraws $1,000, the vault is almost empty, then everybody rushes in. Timeline: timeline_ep5.json
-// stills: node stills.mjs ep5.html 0.3 0.8 2.0 3.1 4.6
+// EP5 scene (HOOK v4, one continuous camera): bank lobby, Mike asks for his $1,000, the open vault behind the counter is almost empty, he gets the cash, then everybody walks in. Timeline: timeline_ep5.json
+// stills: node stills.mjs ep5.html 0.4 1.3 2.4 3.4 4.2 5.0
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
@@ -23,6 +23,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
 await document.fonts.load('800 58px Mont');
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
@@ -43,7 +44,11 @@ const tint=(m,c)=>{m.color.set(c);return m;},GOLD=M(0xc9a54a,.25,1);
 // ================= LOBBY =================
 add(B(10,.2,16),pbr('marble_01',5,8,{roughness:.62}),0,-.1,2,scene,false);
 add(B(10,.1,16),tint(pbr('painted_plaster_wall',5,8),0xeee6d8),0,3.75,2,scene,false);
-add(B(10.4,3.9,.3),tint(pbr('painted_plaster_wall',5,2),0xe4d6bd),0,1.9,-4.4);
+// back wall with a round vault doorway cut in it (VDX,VDY) -> the vault room is right behind the teller line (one continuous camera, no separate set)
+const VDX=2.35,VDY=1.55,VR=.98;
+{const s=new THREE.Shape();s.moveTo(-5.2,0);s.lineTo(5.2,0);s.lineTo(5.2,3.9);s.lineTo(-5.2,3.9);s.closePath();
+ const h=new THREE.Path();h.absarc(VDX,VDY,VR,0,Math.PI*2,true);s.holes.push(h);
+ const g=new THREE.ExtrudeGeometry(s,{depth:.3,bevelEnabled:false,curveSegments:64});add(g,tint(pbr('painted_plaster_wall',.5,.5),0xe4d6bd),0,-.05,-4.55);}
 add(B(.3,3.9,16),tint(pbr('painted_plaster_wall',8,2),0xe4d6bd),5.1,1.9,2);
 add(B(10.4,.14,.05),M(0x3a2a1a,.4),0,.07,-4.24,scene,false);add(B(.05,.14,16),M(0x3a2a1a,.4),4.94,.07,2,scene,false);   // skirting
 add(B(10.4,.1,.08),M(0xf3ecdf,.6),0,3.62,-4.22,scene,false);                                                            // crown moulding
@@ -55,19 +60,31 @@ for(const [x,z] of[[-3.6,-.2],[3.6,-.2]]){const cm=pbr('marble_01',1,3,{roughnes
  add(B(.7,.15,.7),cm,x,.075,z);add(B(.7,.15,.7),cm,x,3.6,z);}
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
 function txt3(str,size,mat,x,y,z,p=scene){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);return add(g,mat,x,y,z,p,false);}
-txt3('FIRST NATIONAL BANK',.2,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5}),0,3.05,-4.22);
+txt3('FIRST NATIONAL BANK',.2,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.38}),0,3.05,-4.22);
 // ---- wall detail: walnut wainscot + pilasters, hanging TELLER signs, services board, vault door (bank signals)
-{const wood=M(0x4a2c18,.38,0,{clearcoat:1});add(B(10.4,1.15,.06),wood,0,.575,-4.22,scene,false);add(B(10.4,.06,.1),M(0x2e1a0d,.3),0,1.16,-4.2,scene,false);
- for(let x=-4.6;x<=4.6;x+=1.15)add(B(.9,.82,.02),M(0x5a3720,.35,0,{clearcoat:1}),x,.58,-4.18,scene,false);
- for(const x of[-3,-.9,.9,3])add(B(.28,1.55,.08),tint(pbr('marble_01',.3,1.1,{roughness:.3}),0xf1ebe0),x,1.97,-4.2,scene,false);
+{const wood=M(0x4a2c18,.38,0,{clearcoat:1});
+ // wainscot split around the vault doorway (x 1.25..3.45)
+ for(const [a,b] of[[-5.2,VDX-1.15],[VDX+1.15,5.2]]){add(B(b-a,1.15,.06),wood,(a+b)/2,.575,-4.22,scene,false);add(B(b-a,.06,.1),M(0x2e1a0d,.3),(a+b)/2,1.16,-4.2,scene,false);}
+ for(let x=-4.6;x<=4.6;x+=1.15)if(Math.abs(x-VDX)>1.55)add(B(.9,.82,.02),M(0x5a3720,.35,0,{clearcoat:1}),x,.58,-4.18,scene,false);
+ for(const x of[-3,-.9,.9])add(B(.28,1.55,.08),tint(pbr('marble_01',.3,1.1,{roughness:.3}),0xf1ebe0),x,1.97,-4.2,scene,false);
  const st=tex(512,128,x=>{x.fillStyle='#14233f';x.fillRect(0,0,512,128);x.strokeStyle='#c9a54a';x.lineWidth=8;x.strokeRect(6,6,500,116);x.fillStyle='#fff';x.font='800 78px Mont';x.textAlign='center';x.fillText('TELLER',256,94);});
  for(const sx of[-2.9,2.9]){add(B(.8,.2,.03),new THREE.MeshStandardMaterial({map:st,roughness:.5}),sx,2.55,-2.1,scene,false);
   for(const d of[-.3,.3])add(new THREE.CylinderGeometry(.006,.006,1.1,8),GOLD,sx+d,3.2,-2.1,scene,false);}
- const steel=M(0x9aa2aa,.22,1);const vd=add(new THREE.CylinderGeometry(.95,.95,.25,96),steel,2.35,1.55,-4.05);vd.rotation.x=Math.PI/2;
- add(new THREE.TorusGeometry(1.0,.1,24,96),M(0x6c747c,.3,1),2.35,1.55,-4.12,scene,false);
- for(let i=0;i<10;i++){const a=i/10*Math.PI*2;add(new THREE.CylinderGeometry(.05,.05,.1,16),M(0xc6ccd2,.18,1),2.35+Math.cos(a)*.72,1.55+Math.sin(a)*.72,-3.9,scene,false).rotation.x=Math.PI/2;}
- const wh=add(new THREE.TorusGeometry(.22,.025,12,48),M(0xd8dde2,.15,1),2.35,1.55,-3.88,scene,false);
- for(let i=0;i<3;i++){const sp=add(B(.5,.03,.03),M(0xd8dde2,.15,1),2.35,1.55,-3.88,scene,false);sp.rotation.z=i*Math.PI/3;}}
+ // vault doorway ring + the thick round door, standing OPEN (65 deg on its right hinge, clear of the counter)
+ add(new THREE.TorusGeometry(VR+.04,.11,24,96),M(0x6c747c,.3,1),VDX,VDY,-4.2,scene,false);
+ const tun=new THREE.CylinderGeometry(VR,VR,.32,96,1,true);const tm=add(tun,M(0x8a9299,.3,1,{side:THREE.BackSide}),VDX,VDY,-4.4,scene,false);tm.rotation.x=Math.PI/2;
+ const hinge=new THREE.Group();hinge.position.set(VDX+VR+.02,VDY,-4.12);hinge.rotation.y=65*Math.PI/180;scene.add(hinge);
+ const steel=M(0xaab2b9,.22,1);const vd=add(new THREE.CylinderGeometry(VR-.02,VR-.02,.3,96),steel,-VR,0,.15,hinge);vd.rotation.x=Math.PI/2;
+ for(let i=0;i<12;i++){const a=i/12*Math.PI*2;add(new THREE.CylinderGeometry(.05,.05,.26,16),M(0xd0d6db,.15,1),-VR+Math.cos(a)*(VR-.12),Math.sin(a)*(VR-.12),-.02,hinge).rotation.x=Math.PI/2;}
+ add(new THREE.TorusGeometry(.24,.025,12,48),M(0xd8dde2,.15,1),-VR,0,.32,hinge,false);
+ for(let i=0;i<3;i++)add(B(.52,.03,.03),M(0xd8dde2,.15,1),-VR,0,.32,hinge,false).rotation.z=i*Math.PI/3;
+ txt3('VAULT',.13,GOLD,VDX,VDY+VR+.14,-4.22);}
+// ---- the vault room behind the doorway: steel walls, 3 levels of shelves, only 3 bundles left (most of the money is lent out)
+{const vs=pbr('metal_plate',2,1.5,{metalness:.85,roughness:.45}),G=new THREE.Group();G.position.set(VDX,0,-6.6);scene.add(G);
+ add(B(3.8,.1,4.1),M(0x30353b,.35,.9),0,-.05,0,G,false);add(B(3.8,.1,4.1),vs,0,3.2,0,G,false);
+ add(B(3.8,3.3,.12),vs,0,1.6,-2.0,G);add(B(.12,3.3,4.1),vs,-1.9,1.6,0,G);add(B(.12,3.3,4.1),vs,1.9,1.6,0,G);
+ const shelfM=M(0x4b525a,.3,.9);for(const y of[.75,1.45,2.15]){add(B(3.6,.05,.5),shelfM,0,y,-1.7,G);add(B(.5,.05,3.4),shelfM,-1.6,y,-.2,G);add(B(.5,.05,3.4),shelfM,1.6,y,-.2,G);}
+ const vl=new THREE.PointLight(0xfff0d8,5,6,1.5);vl.position.set(0,2.8,-.6);G.add(vl);}
 // ---- US flag on a pole (50 stars, 13 stripes, real 10:19 ratio, cloth folds)
 {const FW=1140,FH=600;const ft=tex(FW,FH,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*FH/13,FW,FH/13+1);}
   const cw=FW*.4,chh=FH*7/13;x.fillStyle='#3c3b6e';x.fillRect(0,0,cw,chh);x.fillStyle='#fff';
@@ -77,7 +94,7 @@ txt3('FIRST NATIONAL BANK',.2,new THREE.MeshPhysicalMaterial({color:0xffcf5a,met
   for(let i=0;i<FW;i+=2){const s=Math.sin(i/FW*Math.PI*5.5);x.fillStyle=`rgba(0,0,0,${.12*Math.max(0,s)})`;x.fillRect(i,0,2,FH);}});
  const fg=new THREE.PlaneGeometry(1.3,.68,60,20);const pp=fg.attributes.position;
  for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.65)/1.3,v=pp.getY(i);pp.setZ(i,Math.sin(u*Math.PI*2.75)*.07*u);pp.setY(i,v-u*u*.22);}fg.computeVertexNormals();
- globalThis.FG=fg;globalThis.FG0=Float32Array.from(fg.attributes.position.array);const fl=add(fg,new THREE.MeshPhysicalMaterial({map:ft,roughness:.7,sheen:1,sheenRoughness:.5,sheenColor:0xffffff,side:THREE.DoubleSide}),-2.05+.67,2.6,-3.9,scene,true);
+ globalThis.FG=fg;globalThis.FG0=Float32Array.from(fg.attributes.position.array);const fl=add(fg,new THREE.MeshStandardMaterial({map:ft,roughness:.75,side:THREE.DoubleSide})   /* sheen gave NaN black blocks through bloom at some angles */,-2.05+.67,2.6,-3.9,scene,true);
  add(new THREE.CylinderGeometry(.022,.022,3.1,16),M(0x5a3a1e,.4),-2.05,1.45,-3.9);add(new THREE.SphereGeometry(.06,24,16),GOLD,-2.05,3.0,-3.9);
  add(new THREE.CylinderGeometry(.16,.2,.08,32),GOLD,-2.05,.04,-3.9);}
 // ---- wall clock, ATM, plants, deposit stand
@@ -140,7 +157,8 @@ for(const n of['mike','teller','manager','guard','printer','seller','landlord'])
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
   if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
   if(n==='guard'&&/polo/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0x1b2a44);}
-  if(n==='guard'&&/cargo/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0x161c26);}}});SRC[n]=g;}
+  if(n==='guard'&&/cargo/i.test(o.name+mt.name)){o.material=mt.clone();o.material.color.set(0x161c26);}
+  if(n==='seller'&&/sportsuit/i.test(o.name+mt.name)){o.material=mt.clone();o.material.map=null;o.material.color.set(0xb8862c);o.material.needsUpdate=true;}}});SRC[n]=g;}   // seller: blue suit looked like Mike's tee -> mustard
 const qx=new THREE.Quaternion(),E=new THREE.Euler();
 function pose(P,n,x,y,z){const b=P.BN[n];if(!b){if(!window.missingBones.includes(n))window.missingBones.push(n);return;}b.quaternion.copy(P.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);}
 window.missingBones=[];
@@ -149,9 +167,10 @@ function curl(P,side,v,thumb=v*.6){for(const [n,b] of Object.entries(P.BN)){cons
  const k=(m[1]==='1'?thumb:v)*(m[2]==='1'?.7:1);pose(P,n,FC[0]*k,FC[1]*k,FC[2]*k*(side==='L'?-1:1));}}
 function person(name,x,z,ry,sc=1){const g=skClone(SRC[name]);g.position.set(x,0,z);g.rotation.y=ry;g.scale.setScalar(sc);scene.add(g);
  const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});
- const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest,sc,ph:Math.random()*6.28,name};}
+ const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest,sc,ph:(name.length*1.7+x*3.1+z*2.3)%6.28,name};}
 const relaxArms=P=>{pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01L',0,0,0);pose(P,'lowerarm01R',0,0,0);};
-const PS={shock:[[.35,0,-.85],[1.9,0,0]],shrug:[[.25,0,.35],[1.1,0,0]],hold:[[.85,0,.72],[.75,0,0]],give:[[1.15,0,.5],[.35,0,0]],raise:[[2.3,0,.35],[.3,0,0]]};
+const PS={shock:[[.35,1.4,-.4],[1.7,0,0]],shrug:[[.25,0,.35],[1.1,0,0]],hold:[[.85,0,.72],[.75,0,0]],give:[[1.15,0,.5],[.35,0,0]],raise:[[2.3,0,.35],[.3,0,0]]};
+if(Q.get('ps'))Object.assign(PS,JSON.parse(Q.get('ps')));   // pose tuning: stills.mjs ... --q 'ps={...}'
 function armsP(P,k,both=true,w=1){const [u,l]=PS[k],m=(a,b)=>a+(b-a)*w;
  pose(P,'upperarm01R',m(AD[0],u[0]),u[1]*w,m(AD[2],u[2]));pose(P,'lowerarm01R',l[0]*w,l[1]*w,l[2]*w);
  if(both){pose(P,'upperarm01L',m(AD[0],u[0]),-u[1]*w,m(-AD[2],-u[2]));pose(P,'lowerarm01L',l[0]*w,l[1]*w,l[2]*w);}}
@@ -166,31 +185,7 @@ const mike=person('mike',.45,-.85,Math.PI),teller=person('manager',-.2,-2.55,.12
  for(const x of[-1.6,0,1.6])add(B(.08,2.85,.12),fr,x,1.42,8.3);add(B(3.3,.1,.14),fr,0,2.85,8.3);
  for(const s of[-1,1]){const d=add(B(1.55,2.75,.03),gl,s*2.25,1.4,7.6,scene,false);d.rotation.y=s*1.3;}}
 // ---- the rush: 5 different customers stream in from the street on "Just not everybody"
-const RUSH=['landlord','teller','printer','seller'].map((n,i)=>person(n,-.35+(i%2)*.5,9+i*1.1,Math.PI));
-// ================= VAULT (separate set at VX): open round door, steel room, almost-empty shelves =================
-const VX=-22;
-{const steel=pbr('metal_plate',3,2,{metalness:.85,roughness:.45}),dark=M(0x30353b,.35,.9),G=new THREE.Group();G.position.set(VX,0,0);scene.add(G);
- add(B(12,.2,12),pbr('marble_01',6,6,{roughness:.6}),0,-.1,2,G,false);
- add(B(4.2,.06,4.6),dark,0,.03,-2.3,G,false);                                  // vault floor plate
- add(B(4.4,3.2,.25),steel,0,1.6,-4.7,G);add(B(.25,3.2,4.6),steel,-2.2,1.6,-2.4,G);add(B(.25,3.2,4.6),steel,2.2,1.6,-2.4,G);add(B(4.4,.25,4.6),steel,0,3.2,-2.4,G);
- // front wall with the round doorway (ring = wall cut look)
- const fw=tint(pbr('painted_plaster_wall',4,2),0xe4d6bd);add(B(1.25,3.4,.5),fw,-1.95,1.7,-.05,G);add(B(1.25,3.4,.5),fw,1.95,1.7,-.05,G);add(B(2.7,.6,.5),fw,0,3.1,-.05,G);add(B(2.7,.2,.5),fw,0,.1,-.05,G);
- add(new THREE.TorusGeometry(1.3,.16,24,96),M(0x8a9299,.25,1),0,1.5,.22,G,false);
- // the open door: thick steel disc swung 105 degrees on its hinge at the right edge, bolts showing
- const hinge=new THREE.Group();hinge.position.set(1.32,1.5,.3);hinge.rotation.y=-1.85;G.add(hinge);
- const d=add(new THREE.CylinderGeometry(1.25,1.25,.38,96),M(0xaab2b9,.22,1),-1.25,0,0,hinge);d.rotation.x=Math.PI/2;
- for(let i=0;i<12;i++){const a=i/12*Math.PI*2;const bl=add(new THREE.CylinderGeometry(.07,.07,.3,16),M(0xd0d6db,.15,1),-1.25+Math.cos(a)*1.08,Math.sin(a)*1.08,0,hinge);bl.rotation.z=Math.PI/2;bl.position.z=0;}
- const wh=add(new THREE.TorusGeometry(.32,.035,12,48),M(0xd8dde2,.15,1),-1.25,0,.24,hinge,false);for(let i=0;i<3;i++)add(B(.7,.04,.04),M(0xd8dde2,.15,1),-1.25,0,.24,hinge,false).rotation.z=i*Math.PI/3;
- txt3('VAULT',.26,new THREE.MeshPhysicalMaterial({color:0xffcf5a,metalness:1,roughness:.2,clearcoat:.5}),0,3.0,.22,G);
- // shelves: 3 levels on the back wall + side walls; only a few bundles left (most of the money is lent out)
- const shelfM=M(0x4b525a,.3,.9);
- for(const y of[.75,1.45,2.15]){add(B(3.6,.05,.55),shelfM,0,y,-4.3,G);add(B(.55,.05,3.2),shelfM,-1.8,y,-2.6,G);add(B(.55,.05,3.2),shelfM,1.8,y,-2.6,G);}
-
- // safe-deposit box wall left
- const bt=tex(512,512,x=>{x.fillStyle='#8e969d';x.fillRect(0,0,512,512);for(let r=0;r<8;r++)for(let c=0;c<6;c++){x.fillStyle='#a9b1b8';x.fillRect(c*85+4,r*64+4,77,56);x.fillStyle='#3a3f44';x.beginPath();x.arc(c*85+42,r*64+32,6,0,7);x.fill();}});
- add(new THREE.PlaneGeometry(3,2.2),new THREE.MeshStandardMaterial({map:bt,roughness:.4,metalness:.7}),-2.06,1.4,-2.5,G,false).rotation.y=Math.PI/2;
- const vl=new THREE.PointLight(0xfff0d8,6,7,1.5);vl.position.set(0,2.8,-2.4);G.add(vl);}
-const vTeller=person('manager',VX+.9,-1.6,-.5);
+const RUSH=['landlord','teller','printer','seller'].map((n,i)=>person(n,0,12+i,Math.PI));
 // ---- glow numbers
 const glowMat=(c,i=1.6)=>[new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(i*1.3),toneMapped:false}),new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(.35),roughness:.4,emissive:c,emissiveIntensity:.25})];
 const YEL=0xffd23a,RED=0xff2a20,GRN=0x22ff6a,WHT=0xffffff;
@@ -205,62 +200,74 @@ const brickM=[M(0xc9d0b8,.9),M(0xc9d0b8,.9),new THREE.MeshStandardMaterial({map:
 const brickG=new THREE.BoxGeometry(BW*1.7,.05,BH*1.7);
 const slide=[...Array(4)].map((_,i)=>add(brickG,brickM,0,0,0,scene,true));
 const mFan=fan(7,.55);scene.add(mFan);
-for(let i=0;i<3;i++)add(brickG,brickM,VX-.3+i*.3,1.5,-4.25,scene,true);   // only 3 bundles left on the vault shelves
+for(let i=0;i<3;i++)add(brickG,brickM,VDX-.3+i*.3,1.5,-8.3,scene,true);   // only 3 bundles left on the vault shelves
 const tmp=V3(),tmp2=V3();let camP=V3();
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
 // word anchors (real whisper times once the voice exists; estimates in the provisional timeline)
-const T_WD=Wn('withdraw',0,.52),T_FROM=Wn('from',0,1.58),T_YOU=Wn('you',1,2.85),T_JUST=Wn('just',0,3.45),T_EVERY=Wn('everybody',0,3.85);
+const T_WD=Wn('withdraw',0,.52),T_FROM=Wn('from',0,1.58),T_ONCE=Wn('once?',0,2.18),T_YOU=Wn('you',1,2.85),T_JUST=Wn('just',0,3.45),T_EVERY=Wn('everybody',0,3.85);
+// smooth 0..1..0 window (no popping): ramps in at a, out at b
+const win=(t,a,b,r=.25)=>ez(cl((t-a)/r))*(1-ez(cl((t-b)/r)));
+// the rush: 4 customers walk in from the street and stop on both sides of Mike (he stays visible in the middle)
+const RP=[[-.75,9.6,-.55,.35],[1.25,10.0,1.2,.3],[-1.1,10.6,-.7,1.55],[.9,11.0,.95,1.25]];
 function animate(t){
- for(const P of[mike,teller,guard,vTeller,...RUSH]){relaxArms(P);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);
+ for(const P of[mike,teller,guard,...RUSH]){relaxArms(P);pose(P,'spine03',.015*Math.sin(t*1.8+P.ph),0,0);curl(P,'L',.35);curl(P,'R',.35);
   for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);pose(P,'head',0,0,0);}
- // --- teller: slides 4 bundles across the counter on "withdraw", then shrugs on "everybody"
- const give=cl((t-T_WD)/.6);
- if(t<T_JUST){armsP(teller,'give',true,Math.sin(Math.min(1,give*1.2)*Math.PI*.5)*(t<T_YOU?1:cl(1-(t-T_YOU)/.3)));curl(teller,'L',.2);curl(teller,'R',.2);}
- else{armsP(teller,'shrug',true,cl((t-T_EVERY)/.3));pose(teller,'head',0,.15*Math.sin(t*5),0);}
- slide.forEach((m,i)=>{const z=-2.15+ez(give)*.55;m.position.set(.15+(i%2-.5)*BW*1.8,TOP+.026+Math.floor(i/2)*.051,z);m.visible=t<T_YOU;});
- // --- Mike: at the window, takes the money on "You can", turns to us and raises the fan; on "everybody" turns to the door, surprised
- if(t<T_YOU){mike.g.position.set(.45,0,-.85);mike.g.rotation.y=Math.PI+.25;armsP(mike,'hold',false,cl((t-T_WD-.3)/.4));pose(mike,'head',.08,0,0);}
- else if(t<T_JUST){const k=ez(cl((t-T_YOU)/.35));mike.g.position.set(.45,0,-.85+.25*k);mike.g.rotation.y=Math.PI*(1-k);armsP(mike,'raise',false,k);curl(mike,'R',.9,.5);pose(mike,'head',-.08,0,0);}
- else{const k=ez(cl((t-T_JUST)/.4)),s=cl((t-T_EVERY)/.25);mike.g.position.set(.3,0,-.6);mike.g.rotation.y=-.1;
-  pose(mike,'head',-.05,.3*(1-s),0);if(s>0)armsP(mike,'shock',true,s);else{armsP(mike,'hold',false,1-k);}curl(mike,'R',.9,.5);}
- mFan.visible=t>=T_YOU&&t<T_EVERY+.1;
- // --- guard watches the door
- pose(guard,'head',0,t>=T_JUST?.7:0,0);
- // --- vault teller looks at the shelves, then at us with a shrug
- armsP(vTeller,'shrug',true,cl((t-T_FROM-.45)/.3));pose(vTeller,'head',0,t<T_FROM+.4?-.9:0,0);
- // --- the rush: everyone walks in fast from the street towards the window
- RUSH.forEach((P,i)=>{const t0=T_JUST-.15+i*.08,k=cl((t-t0)/1.6),z0=6.2+i*1.15,z1=.75+i*.72,z=z0+(z1-z0)*ez(k);
-  P.g.position.set(-.45+(i%2)*.6,0,z);P.g.rotation.y=Math.PI;if(k>0&&k<1){walkLegs(P,z*4.2,.45);pose(P,'upperarm01L',AD[0]+.3*Math.sin(z*4.2),0,-AD[2]);pose(P,'upperarm01R',AD[0]-.3*Math.sin(z*4.2),0,AD[2]);}
-  P.g.visible=t>=T_JUST-.2;});
- for(const P of[mike,teller,guard,vTeller,...RUSH])P.g.updateMatrixWorld(true);
+ // --- banker: glances back at the vault on "withdraw ... at once?", slides 4 bundles to Mike on "You can", shrugs + shakes his head on "everybody"
+ const look=win(t,T_WD+.15,T_ONCE+.35,.35);pose(teller,'head',0,.75*look,0);
+ const give=cl((t-T_YOU+.15)/.55),gw=Math.sin(Math.min(1,give*1.25)*Math.PI*.5)*(1-cl((t-T_JUST-.1)/.35));
+ const sh=cl((t-T_EVERY)/.35);
+ if(sh>0){armsP(teller,'shrug',true,ez(sh));pose(teller,'head',0,.18*Math.sin((t-T_EVERY)*9)*sh,0);}
+ else if(gw>0){armsP(teller,'give',false,gw);curl(teller,'L',.2);curl(teller,'R',.2);}
+ slide.forEach((m,i)=>{const z=-2.15+ez(give)*.55;m.position.set(.15+(i%2-.5)*BW*1.8,TOP+.026+Math.floor(i/2)*.051,z);});
+ // --- Mike ACTS: asks (hand on the counter), palms up on "once?", grabs the cash + turns to us celebrating on "You can", shocked by the crowd on "everybody"
+ const ask=win(t,.15,T_ONCE-.1,.3),why=win(t,T_ONCE-.1,T_YOU+.1,.25);
+ const turn=ez(cl((t-T_YOU-.25)/.55)),cheer=cl((t-T_YOU-.35)/.35)*(1-cl((t-T_EVERY)/.3)),shock=ez(cl((t-T_EVERY-.05)/.3));
+ mike.g.position.set(.45,0,-.85+.2*turn);mike.g.rotation.y=Math.PI*(1-turn)+.25*(1-turn);
+ if(shock>0){armsP(mike,'shock',true,shock);pose(mike,'head',-.12*shock,0,0);pose(mike,'spine03',-.08*shock,0,0);}
+ else if(cheer>0){armsP(mike,'raise',false,ez(cheer));curl(mike,'R',.9,.5);pose(mike,'head',-.1*cheer,0,0);}
+ else if(why>0){armsP(mike,'shrug',true,why);pose(mike,'head',.05,0,.08*why);}
+ else{armsP(mike,'give',false,ask*.8);pose(mike,'head',.06,0,0);}
+ const fanS=ez(cl((t-T_YOU-.05)/.25))*(1-ez(cl((t-T_EVERY-.05)/.25)));mFan.visible=fanS>.01;mFan.scale.setScalar(Math.max(fanS,.01));
+ // --- guard turns smoothly to the doors when the crowd comes
+ pose(guard,'head',0,.7*ez(cl((t-T_JUST)/.45)),0);
+ // --- the rush: they are off-camera (in the street) until the camera pulls back, so nobody pops in
+ RUSH.forEach((P,i)=>{const [x0,z0,x1,z1]=RP[i],t0=T_ONCE+i*.07,k=cl((t-t0)/(T_EVERY+.95-t0)),e=1-Math.pow(1-k,2.2);
+  const x=x0+(x1-x0)*e,z=z0+(z1-z0)*e;P.g.position.set(x,0,z);P.g.rotation.y=Math.atan2(x1-x0,z1-z0);
+  if(k<1){const ph=z*3.4,a=.42*(1-ez(cl((k-.85)/.15)));walkLegs(P,ph,a);pose(P,'upperarm01L',AD[0]+a*.7*Math.sin(ph),0,-AD[2]);pose(P,'upperarm01R',AD[0]-a*.7*Math.sin(ph),0,AD[2]);}
+  else pose(P,'head',0,(i%2?-.25:.25),0);});
+ for(const P of[mike,teller,guard,...RUSH])P.g.updateMatrixWorld(true);
  // --- glow placement (always facing the camera)
- headOf(mike).getWorldPosition(tmp);P1000.position.copy(tmp).add(tmp2.set(0,.42,0));P1000.lookAt(camP);
- P1000.scale.setScalar(t<T_FROM?pop(t,.22,.3)*1.25:(t>=T_YOU&&t<T_JUST?.9:0));
- RUSH.forEach((P,i)=>{headOf(P).getWorldPosition(tmp);RUSHP[i].position.copy(tmp).add(tmp2.set(0,.36,0));RUSHP[i].lookAt(camP);RUSHP[i].scale.setScalar(pop(t,T_JUST+.1+i*.12,.25)*.85);});
+ headOf(mike).getWorldPosition(tmp);P1000.position.copy(tmp).add(tmp2.set(0,.34,0));P1000.lookAt(camP);P1000.scale.setScalar(pop(t,.22,.3)*1.1*(1-ez(cl((t-T_WD-.25)/.3)))+ez(cl((t-T_YOU-.3)/.3))*.9);   // fades out during the push-in (would be cropped), back after "You can"
+ RUSH.forEach((P,i)=>{headOf(P).getWorldPosition(tmp);RUSHP[i].position.copy(tmp).add(tmp2.set(0,.34,0));RUSHP[i].lookAt(camP);RUSHP[i].scale.setScalar(pop(t,T_EVERY+.55+i*.1,.25)*.8);});
  mike.BN['finger3-1R']?.getWorldPosition(tmp);mFan.position.copy(tmp).add(tmp2.set(0,.05,0));mFan.lookAt(camP);
- VAULTQ.position.set(VX,1.75,-4.0);VAULTQ.lookAt(camP);VAULTQ.scale.setScalar(t>=T_FROM&&t<T_YOU?pop(t,Wn('once?',0,2.22),.3):0);
+ VAULTQ.position.set(VDX,1.55,-7.4);VAULTQ.lookAt(camP);VAULTQ.scale.setScalar(pop(t,T_ONCE,.3)*(1-ez(cl((t-T_YOU-.2)/.3))));
 }
 // ================= LIGHTS / CAMERA / POST =================
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,200);
 const sun=new THREE.DirectionalLight(0xffe0b8,1.5);sun.position.set(-9,7,5);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-9,right:9,top:6,bottom:-6,near:1,far:40});sun.shadow.bias=-.0003;sun.shadow.normalBias=.02;scene.add(sun);scene.add(sun.target);
 scene.add(new THREE.HemisphereLight(0xdfe9ff,0x5a4630,.3));
-for(const [x,z,i] of [[0,.4,5],[0,-2.6,5],[2.5,-2.6,3],[0,2.5,5],[0,6,4]]){const L=new THREE.PointLight(0xffe6c4,i,9,1.4);L.position.set(x,3.2,z);scene.add(L);}
+for(const [x,z,i] of [[0,.4,5],[0,-1.4,5],[2.5,-2.6,3],[0,2.5,5],[0,6,4]]){const L=new THREE.PointLight(0xffe6c4,i,9,1.4);L.position.set(x,3.2,z);scene.add(L);}
 const key=new THREE.SpotLight(0xfff2e0,9,8,.5,.6,1.5);key.position.set(1.8,2.6,1.5);key.target.position.set(-.1,1.5,-2.7);scene.add(key);scene.add(key.target);
 const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+// NaN guard: one bad pixel (PBR at a grazing angle) otherwise becomes a big black block through bloom/DOF
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);bvec4 n=isnan(c);bvec4 f=isinf(c);gl_FragColor=(any(n)||any(f))?vec4(0.,0.,0.,1.):min(c,vec4(64.));}'}));
 comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.18,1.3));
 const bokeh=new BokehPass(scene,cam,{focus:3,aperture:.004,maxblur:.006});comp.addPass(bokeh);comp.addPass(new OutputPass());
-// HOOK shots, every cut on a word: [t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture]
-const SHOTS=[
- [0,T_WD,        [.2,1.75,2.7],[.1,2.0,-2.6],50,       [.18,1.74,2.3],[.1,1.98,-2.6],49, .0015],  // "Why can't you" - the bank, sign + flag, Mike at the window, $1,000 pops
- [T_WD,T_FROM,   [.75,1.72,.35],[.05,1.12,-2.0],40,    [.65,1.68,.1],[.05,1.12,-2.0],38, .003],   // "withdraw all your money" - over Mike's shoulder, bundles slide to him
- [T_FROM,T_YOU,  [VX,1.75,6.4],[VX,1.95,-3.0],50,      [VX,1.72,5.3],[VX,1.92,-3.0],49, .0008],  // "from the bank at once?" - the vault: open door, almost-empty shelves, red ?
- [T_YOU,T_JUST,  [.12,1.5,3.3],[.1,1.82,-.6],48,       [.12,1.5,3.0],[.1,1.8,-.6],47,   .0025],   // "You can." - Mike turns to us, raises the cash
- [T_JUST,99,     [.62,1.75,-1.6],[-.25,1.2,5.0],52,    [.66,1.82,-1.75],[-.25,1.15,5.0],52,.0012]]; // "Just not everybody..." - over Mike's shoulder: the crowd rushes in, $1,000 each
-function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],TLN.dur)-S[0])));
- const cx=cam.position.x<-10?VX:0;sun.target.position.set(cx,0,0);sun.position.set(cx-9,7,5);
- const L=(a,b)=>a.map((v,i)=>v+(b[i]-v)*k);cam.position.set(...L(S[2],S[5]));const lk=V3(...L(S[3],S[6]));cam.fov=S[4]+(S[7]-S[4])*k;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
- bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=S[8];}
+// HOOK = ONE continuous camera (user rule 2026-11-02: no cuts). Keys on the words: [t, pos, look, fov, aperture]; smooth spline through them.
+const KEYS=[
+ [0,            [.7,1.8,4.3],[.75,1.85,-2.6],56,.0012],   // "Why can't you" - the bank: sign + flag + open vault, Mike at the window, $1,000 pops
+ [T_FROM-.1,    [1.75,1.62,.6],[-.1,1.22,-2.4],40,.0022],     // "withdraw all your money" - push in over Mike's shoulder, he asks, the banker glances at the vault
+ [T_ONCE+.15,   [1.45,1.85,-.95],[2.6,1.45,-7.0],42,.0012],  // "from the bank at once?" - glide right, into the open vault: near-empty shelves, red ?
+ [T_YOU+.15,    [1.2,1.8,-.7],[2.3,1.5,-6.5],43,.0012],      // (slow drift while he waits)
+ [T_JUST+.15,   [.35,1.55,2.0],[.42,1.55,-.8],46,.0025],     // "You can." - swing back to Mike's face: he turns to us, raises the cash
+ [T_EVERY+1.2,  [.35,2.85,6.1],[.3,1.3,-1.6],54,.0012],      // "just not everybody at the same time" - pull back + up: the crowd walks in around him
+ [99,           [.35,2.9,6.3],[.3,1.3,-1.6],54,.0012]];
+const kt=KEYS.map(k=>k[0]),cP=new THREE.CatmullRomCurve3(KEYS.map(k=>V3(...k[1])),false,'centripetal'),cL=new THREE.CatmullRomCurve3(KEYS.map(k=>V3(...k[2])),false,'centripetal');
+function setCam(t){let i=0;while(i<kt.length-2&&t>=kt[i+1])i++;const k=ez(cl((t-kt[i])/(kt[i+1]-kt[i]))),u=(i+k)/(kt.length-1);
+ cam.position.copy(cP.getPoint(u));const lk=cL.getPoint(u);cam.fov=KEYS[i][3]+(KEYS[i+1][3]-KEYS[i][3])*k;cam.updateProjectionMatrix();cam.lookAt(lk);camP=cam.position.clone();
+ bokeh.uniforms.focus.value=cam.position.distanceTo(lk);bokeh.uniforms.aperture.value=KEYS[i][4]+(KEYS[i+1][4]-KEYS[i][4])*k;}
 await loaded;
 const cap=document.getElementById('cap'),ttl=document.getElementById('ttl'),HOOK_END=Wn('say',0,5.3);
 window.renderAt=t=>{setCam(t);animate(t);setCam(t);animate(t);

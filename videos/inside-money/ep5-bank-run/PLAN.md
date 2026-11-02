@@ -39,3 +39,10 @@ Check: vo duration 61-65 s (else adjust speed), whisper typos in words_raw.json 
 ## VOICE + TIMELINE DONE (cloud, 2026-11-02)
 Kokoro am_liam speed 1.0, max_gap 0.04, one take -> vo.wav/mp3 **62.8 s** (speed 1.10 gave 55.5 s, too short; added line 12b "eighty-one percent" from Barr testimony). words_raw.json (whisper) -> timeline_ep5.json (typos fixed: eight, $1,000, $2.5). mix_ep5.wav = hook SFX only (story SFX after hook approval).
 5-s hook preview rendered in the cloud (SwiftShader, ~20 min; the Mac M3 takes seconds): render-kit/ep5-bank-run-preview-5s.mp4.
+
+## HOOK v4 - ONE CONTINUOUS CAMERA (Mac session 2026-11-02, brief rules 0-NEW)
+No cuts, no separate vault set: the round vault door is cut into the lobby back wall behind the teller line (x=2.35) with the near-empty vault room behind it.
+Camera spline (keys on the words): wide bank (sign + flag + open vault, Mike at the window) -> push in beside Mike while he asks -> glide right into the open vault (3 bundles, red ?) on "at once?" -> swing back to Mike's face as he gets the cash and raises it on "You can" -> pull back + up while 4 different customers walk in around him on "everybody at the same time"; Mike: hands-up "whoa", banker shrugs.
+Fixes: Mike's zombie-arms shock pose -> hands-up (PS.shock tuned with `--q ps=...`), banker gives with one hand, seller suit recoloured mustard (blue looked like Mike), $1,000 labels fade/pop only when fully in frame, guard head turn animated, no Math.random (deterministic frames).
+NaN guard pass before bloom (a single NaN pixel made a black block at t=1.0); flag sheen + sign clearcoat removed.
+Preview rendered on the M3 in ~15 s: render-kit/ep5-bank-run-preview-5s.mp4 (not in git). WAIT for user approval before the full build.
