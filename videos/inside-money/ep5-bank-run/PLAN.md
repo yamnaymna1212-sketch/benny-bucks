@@ -35,3 +35,7 @@ Check: vo duration 61-65 s (else adjust speed), whisper typos in words_raw.json 
 ## HOOK v3 (user feedback 2026-11-02)
 - No look-alikes: the crowd = landlord, teller, printer, seller (the banker/manager and the guard are not repeated; nobody dressed like Mike). In cloud stills each role gets its own outfit colour (faces only differ on the Mac cast).
 - Title = the video's point, not a summary: "Your $1,000 / is NOT in the vault" (green / red), 2 lines at the very top; every shot framed so the title never covers the bank sign, the vault sign, a $ number or a character.
+
+## VOICE + TIMELINE DONE (cloud, 2026-11-02)
+Kokoro am_liam speed 1.0, max_gap 0.04, one take -> vo.wav/mp3 **62.8 s** (speed 1.10 gave 55.5 s, too short; added line 12b "eighty-one percent" from Barr testimony). words_raw.json (whisper) -> timeline_ep5.json (typos fixed: eight, $1,000, $2.5). mix_ep5.wav = hook SFX only (story SFX after hook approval).
+5-s hook preview rendered in the cloud (SwiftShader, ~20 min; the Mac M3 takes seconds): render-kit/ep5-bank-run-preview-5s.mp4.

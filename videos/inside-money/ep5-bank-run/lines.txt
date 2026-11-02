@@ -1,17 +1,18 @@
-Why can't you withdraw all your money from the bank at once?
-You can. Just not everybody at the same time.
-Say you put one thousand dollars in your account.
-Does the bank keep your bills in a box with your name? No.
-It lends your money to a family buying a house.
-And to a business opening a new shop.
-Your balance still says one thousand. But the cash isn't there.
-Banks in America hold almost twenty trillion dollars in deposits.
-All the paper cash that exists? About two point five trillion.
-That's about one dollar of cash for every eight in accounts.
-So if everyone lined up for cash on the same day, the vault runs empty.
-It's happened. In March twenty twenty-three, Silicon Valley Bank customers tried to pull out forty-two billion dollars in one day.
-Regulators closed the bank the next day.
-That's why deposit insurance exists. At an insured bank, the FDIC covers up to two hundred fifty thousand dollars per depositor.
-So the money isn't missing. It's out working in the economy.
-Banks run on trust. Most people just don't all ask at once.
-Did you think your cash was sitting in a vault? Yes or no?
+Why can't you withdraw all your money from the bank at once?|0.2
+You can. Just not everybody at the same time.|0.12
+Say you put one thousand dollars in your account.|0.12
+Does the bank keep your bills in a box with your name? No.|0.12
+It lends your money to a family buying a house.|0.12
+And to a business opening a new shop.|0.12
+Your balance still says one thousand. But the cash isn't there.|0.12
+Banks in America hold almost twenty trillion dollars in deposits.|0.12
+All the paper cash that exists? About two point five trillion.|0.12
+That's about one dollar of cash for every eight in accounts.|0.12
+So if everyone lined up for cash on the same day, the vault runs empty.|0.12
+It's happened. In March twenty twenty-three, Silicon Valley Bank customers tried to pull out forty-two billion dollars in one day.|0.12
+Over two days, customers tried to pull out eighty-one percent of all its deposits.|0.12
+Regulators closed the bank the next day.|0.12
+That's why deposit insurance exists. At an insured bank, the FDIC covers up to two hundred fifty thousand dollars per depositor.|0.12
+So the money isn't missing. It's out working in the economy.|0.12
+Banks run on trust. Most people just don't all ask at once.|0.12
+Did you think your cash was sitting in a vault? Yes or no?|0.12

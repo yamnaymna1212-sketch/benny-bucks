@@ -1,4 +1,4 @@
-# EP5 — "Why can't you withdraw all your money from the bank at once?" (v2 trimmed, hook APPROVED by user 2026-11-02)
+# EP5 — "Why can't you withdraw all your money from the bank at once?" (v3: +1 sourced line for length; voice am_liam 1.0 = 62.8 s, 2026-11-02)
 Hook = the user's line (chosen from the "Why" list). Character: Mike. Target 61-65 s (~200-214 words) -> measure after voice.
 Honest framing: you CAN take YOUR money; the limit is EVERYONE at once. Amounts written in words for the TTS.
 
@@ -14,6 +14,7 @@ Honest framing: you CAN take YOUR money; the limit is EVERYONE at once. Amounts 
 10. That's about one dollar of cash for every eight in accounts.                                   [YELLOW 1:8, one bundle vs eight]
 11. So if everyone lined up for cash on the same day, the vault runs empty.                        [queue around the block, teller shrugs, vault empty]
 12. It's happened. In March twenty twenty-three, Silicon Valley Bank customers tried to pull out forty-two billion dollars in one day.   [RED $42B, crowd + phones]
+12b. Over two days, customers tried to pull out eighty-one percent of all its deposits.   [RED 81%, deposit meter drains]  (added 2026-11-02: voice was 58.4 s, rule >= 61 s)
 13. Regulators closed the bank the next day.                                                       [CLOSED sign on doors]
 14. That's why deposit insurance exists. At an insured bank, the FDIC covers up to two hundred fifty thousand dollars per depositor.   [REVEAL ~75%: FDIC sign, shield, YELLOW $250,000]
 15. So the money isn't missing. It's out working in the economy.                                   [bills circulate: house, shop, back to bank]

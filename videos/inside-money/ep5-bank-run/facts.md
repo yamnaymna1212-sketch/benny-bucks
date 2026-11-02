@@ -7,3 +7,4 @@
 - Ratio 19.77 / 2.48 = 7.97 -> "about one dollar of cash for every eight in accounts" (own math).
 - Dropped (no primary source): % of deposits banks keep as cash, cost of a bank run to FDIC.
 - Hook title rounds 19.77T -> "$20 TRILLION" and 2.48T -> "$2.5 TRILLION" (standard rounding, same sources).
+- Barr testimony: $142B over two days = 81% of SVB deposits (year-end 2022 $175B) -> script line 12b "eighty-one percent of all its deposits" -> https://www.cnbc.com/2023/03/28/svb-customers-tried-to-pull-nearly-all-deposits-in-two-days-barr-says.html
