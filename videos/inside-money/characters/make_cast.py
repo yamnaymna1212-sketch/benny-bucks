@@ -64,6 +64,8 @@ def build(name, c):
     info["clothes"] = [find("clothes", q) for q in c["clothes"]]
     info["alternative_materials"] = {}
     info["rig"] = "default"
+    # extra shape targets (e.g. belly, round face): [{"target": "stomach-pregnant-incr", "value": .5}]
+    info["targets"] = c.get("targets", [])
     st = HumanService.get_default_deserialization_settings()
     st.update({"override_rig": "default", "override_skin_model": "ENHANCED", "subdiv_levels": 0})
     basemesh = HumanService.deserialize_from_dict(info, st)

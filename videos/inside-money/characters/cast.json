@@ -188,5 +188,49 @@
       "fedora01",
       "shoes03"
     ]
+  },
+  "trump": {
+    "role": "Trump (caricature, user ref images 2026-11-03): navy suit, white shirt, long RED tie, blond swept hair (recoloured in three.js), tan skin, big heavy build, US flag pin added in three.js",
+    "body": {
+      "gender": 1.0,
+      "age": 0.9,
+      "muscle": 0.3,
+      "weight": 1.0,
+      "height": 0.72,
+      "race": {
+        "caucasian": 1.0,
+        "african": 0.0,
+        "asian": 0.0
+      }
+    },
+    "skin": "toigo_light_skin_male_bronze",
+    "hair": "short04",
+    "eyebrows": "eyebrow001",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_male_suit_3",
+      "shoes03"
+    ],
+    "targets": [
+      {
+        "target": "stomach-pregnant-incr",
+        "value": 0.6
+      },
+      {
+        "target": "head-fat-incr",
+        "value": 0.8
+      },
+      {
+        "target": "head-round",
+        "value": 0.5
+      },
+      {
+        "target": "chin-width-incr",
+        "value": 0.4
+      }
+    ]
   }
 }
