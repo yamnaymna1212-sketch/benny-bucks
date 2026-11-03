@@ -1,0 +1,26 @@
+<!doctype html><meta charset=utf-8><title>cutout test</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style><canvas id=c></canvas>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// Test for the animated cutout character. node stills.mjs cutout-test.html 0 1 2.5 --q "talk=1&react=0"   (cheap: stills only)
+import * as THREE from 'three';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {makeCutout} from './cutout-char.js';
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
+const scene=new THREE.Scene();
+try{const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.5;}
+catch(e){scene.background=new THREE.Color(0x6f8fb0);scene.add(new THREE.HemisphereLight(0xffffff,0x445566,1.2));}
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:0x777b80,roughness:.9}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+const sun=new THREE.DirectionalLight(0xffe2bd,2.2);sun.position.set(2.5,4,3);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-3,right:3,top:3,bottom:-3});scene.add(sun);
+const ch=await makeCutout(THREE,'chars/char_cutout.png',{height:1.85});scene.add(ch.group);
+const cam=new THREE.PerspectiveCamera(32,W/H,.1,50);
+window.renderAt=t=>{
+  const talk=Number(Q.get('talk')??1),react=Number(Q.get('react')||0)||(t>3&&t<3.6?Math.sin((t-3)/.6*Math.PI):0),turn=Number(Q.get('turn')||0);
+  ch.update(t,{talk,react,turn});
+  const a=Math.sin(t*.35)*.35;cam.position.set(Math.sin(a)*4.6,1.35,Math.cos(a)*4.6);cam.lookAt(0,1.0,0);   // slow orbit = proves it is not a flat sticker
+  renderer.render(scene,cam);};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script>
