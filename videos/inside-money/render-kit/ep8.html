@@ -627,5 +627,8 @@ window.renderAt=t=>{try{return renderAt0(t);}catch(e){console.error('RENDER ERR'
 const renderAt0=t=>{setCam(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
+if(Q.get('cover')){document.getElementById('cap').style.display='none';const d=document.createElement('div');   // TikTok cover title (?cover=1)
+ d.style.cssText="position:absolute;left:0;width:720px;top:13%;text-align:center;font:800 84px/1.04 Mont,sans-serif;color:#fff;-webkit-text-stroke:12px #0c1424;paint-order:stroke fill;letter-spacing:-1px;text-shadow:0 8px 18px rgba(0,0,0,.55)";
+ d.innerHTML='CAN TARIFFS<br>REPLACE YOUR<br><span style="color:#ffd21a;font-size:90px">INCOME TAX?</span>';document.getElementById('ov').appendChild(d);}
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>
