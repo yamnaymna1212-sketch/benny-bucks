@@ -1,10 +1,10 @@
 # EP8 publish kit (TikTok, US audience)
 Caption: Trump says tariffs could replace your income tax. One number says it is a long shot 🧾📈 TAX or PRICES?
-Alt titles: $2.7 trillion vs $200 billion: the income tax math / Why tariffs can't replace your income tax (yet) / Mike's paycheck vs Trump's no-tax promise
+Alt titles: $2.7 trillion vs $200 billion: the income tax math / Why tariffs can't replace your income tax (yet) / Mike's paycheck vs Trump's tariff claim
 Hashtags: #incometax #tariffs #trump #moneyexplained #personalfinance #howmoneyworks #usa
 Poll: Would you trade your income tax for higher prices at the store? -> TAX 🧾 / PRICES 🏷️
 Pinned comment: Would you trade your income tax for higher prices at the store? Comment TAX or PRICES 👇
-Description add: Education only, not tax or political advice. The hook is comic exaggeration of a real statement (State of the Union, Feb 24 2026). Turn on the AI-generated label (synthetic voice, AI-made caricature). Illustrative money, not real currency.
+Description add: Education only, not tax or political advice. The hook quotes a real statement (State of the Union, Feb 24 2026). Turn on the AI-generated label (synthetic voice, AI-made caricature). Illustrative money, not real currency.
 Before posting, re-check (see facts.md):
 - Individual income tax receipts ~ $2.7T and customs duties ~ $195-201B, FY2025 (fiscal.treasury.gov, Combined Statement + Note 19) -> ~13x.
 - Income tax ~ half of all federal receipts (Treasury total receipts FY2025).
