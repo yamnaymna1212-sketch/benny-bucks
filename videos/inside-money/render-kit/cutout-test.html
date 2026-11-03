@@ -19,8 +19,8 @@ const ch=await makeCutout(THREE,'chars/char_cutout.png',{height:1.85});scene.add
 const cam=new THREE.PerspectiveCamera(32,W/H,.1,50);
 window.renderAt=t=>{
   const talk=Number(Q.get('talk')??1),react=Number(Q.get('react')||0)||(t>3&&t<3.6?Math.sin((t-3)/.6*Math.PI):0),turn=Number(Q.get('turn')||0);
-  ch.update(t,{talk,react,turn});
-  const a=Math.sin(t*.35)*.35;cam.position.set(Math.sin(a)*4.6,1.35,Math.cos(a)*4.6);cam.lookAt(0,1.0,0);   // slow orbit = proves it is not a flat sticker
+  const o={talk,react,turn};for(const k of ['shrug','flex','tap'])if(Q.has(k))o[k]=Number(Q.get(k));ch.update(t,o);
+  const a=Q.get('orbit')==='0'?0:Math.sin(t*.35)*.35;cam.position.set(Math.sin(a)*4.6,1.35,Math.cos(a)*4.6);cam.lookAt(0,1.0,0);   // slow orbit = proves it is not a flat sticker
   renderer.render(scene,cam);};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script>
