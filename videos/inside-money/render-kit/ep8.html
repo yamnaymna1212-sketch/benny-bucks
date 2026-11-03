@@ -25,7 +25,7 @@ await document.fonts.load('800 60px Mont');
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
 const scene=new THREE.Scene();
 const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
 scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.9;
@@ -190,7 +190,7 @@ window.missingBones=[];
 // ================= EP8 SETS: U.S. GOVERNMENT building + rally stage (north side of Maple St, x=27, front faces -z) =================
 // camera looks +z in the hook, so SCREEN RIGHT = -x.
 const GX=27,GZ=31,SY=.7;   // building centre, stage top height
-{const marble=pbr('plastered_wall',4,2,0xf6f3ec),stone=pbr('concrete_pavement',6,4,0xeeeae2),trim=M(0xffffff,.45),g=new THREE.Group();g.position.set(GX,0,GZ);scene.add(g);
+{const marble=pbr('plastered_wall',4,2,0xe6dfd2),stone=pbr('concrete_pavement',6,4,0xeeeae2),trim=M(0xffffff,.45),g=new THREE.Group();g.position.set(GX,0,GZ);scene.add(g);
  add(B(26,1.2,16),stone,0,.6,1,g);
  for(let i=0;i<5;i++)add(B(16,.24*(i+1),.5),pbr('concrete_pavement',4,.3,0xf1ede6),0,.12*(i+1),-7.25-(4-i)*.5-.25+.25,g);   // steps down to the lawn
  add(B(22,7.8,10),marble,0,1.2+3.9,2.5,g);                                   // main hall (front wall at z -2.5)
@@ -217,10 +217,11 @@ for(let i=0;i<3;i++)add(B(1.6,.23*(i+1),.35),pbr('concrete_pavement',1,.2),GX+3.
 // backdrop banner behind Trump: U.S. GOVERNMENT
 const BNT=tex(1536,256,t=>{t.fillStyle='#16224a';t.fillRect(0,0,1536,256);t.fillStyle='#b22234';t.fillRect(0,214,1536,20);t.fillStyle='#fff';t.fillRect(0,234,1536,22);
  t.font='800 150px Mont';t.textAlign='center';t.fillText('U.S. GOVERNMENT',768,165);for(const cx of[70,1466]){t.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?18:44;t.lineTo(cx+r*Math.cos(a),110+r*Math.sin(a));}t.fill();}});
-{const bp=add(new THREE.PlaneGeometry(2.9,.48),new THREE.MeshStandardMaterial({map:BNT,roughness:.6}),GX,SY+3.05,20.45,scene,false);bp.rotation.y=Math.PI;add(B(3.0,.56,.08),M(0x0e1630,.6),GX,SY+3.05,20.52);
- for(const s2 of[-1,1])add(CY(.04,.04,3.3,10),M(0xd6d9de,.3,.9),GX+s2*1.48,SY+1.65,20.55);}
+{const bk=add(B(2.3,2.0,.08),M(0x16224a,.7),GX,SY+2.4,20.52);   // navy backdrop
+ const bp=add(new THREE.PlaneGeometry(2.1,.36),new THREE.MeshStandardMaterial({map:BNT,roughness:.6}),GX,SY+3.18,20.47,scene,false);bp.rotation.y=Math.PI;
+ const fl=add(new THREE.PlaneGeometry(1.9,1.0),new THREE.MeshStandardMaterial({map:FT,roughness:.75}),GX,SY+2.35,20.47,scene,false);fl.rotation.y=Math.PI;}   // flag flat on the backdrop, canton top-left as seen by the audience
 // mic stand
-add(CY(.012,.012,1.5,8),M(0x222222,.3,.8),GX+.75,SY+.75,18.75);add(CY(.13,.13,.02,20),M(0x222222,.3,.8),GX+.75,SY+.01,18.75);{const mk=add(CY(.025,.018,.14,12),M(0x111111,.3,.6),GX+.62,SY+1.52,18.7);mk.rotation.z=1.0;}
+add(CY(.012,.012,1.5,8),M(0x222222,.3,.8),GX+.95,SY+.75,19.3);add(CY(.13,.13,.02,20),M(0x222222,.3,.8),GX+.95,SY+.01,19.3);{const mk=add(CY(.025,.018,.14,12),M(0x111111,.3,.6),GX+.85,SY+1.52,19.25);mk.rotation.z=1.0;}
 // ================= FORM 1040 (two halves; rips on 'cancel') =================
 const FORM=document.createElement('canvas');FORM.width=1024;FORM.height=1248;{const x=FORM.getContext('2d');x.fillStyle='#fbfbf7';x.fillRect(0,0,1024,1248);
  x.fillStyle='#111';x.font='800 120px Mont';x.fillText('1040',40,140);x.font='800 34px Mont';x.fillText('U.S. Individual Income Tax Return',330,78);x.font='800 26px Mont';x.fillStyle='#444';x.fillText('Department of the Treasury - Internal Revenue Service',330,122);
@@ -232,7 +233,8 @@ const FORM=document.createElement('canvas');FORM.width=1024;FORM.height=1248;{co
  x.strokeStyle='#111';x.lineWidth=10;x.strokeRect(10,10,1004,1228);}
 const TEAR=[];for(let i=0;i<=24;i++)TEAR.push([512+(i%2?28:-22)+Math.sin(i*1.7)*16,i*52]);
 function halfTex(side){return tex(1024,1248,x=>{x.beginPath();if(side<0){x.moveTo(0,0);for(const [a,b] of TEAR)x.lineTo(a,b);x.lineTo(0,1248);}else{x.moveTo(1024,0);for(const [a,b] of TEAR)x.lineTo(a,b);x.lineTo(1024,1248);}x.closePath();x.clip();x.drawImage(FORM,0,0);});}
-const FW=.82,FH=1.0;
+const FW=1.0,FH=1.22;
+const WHOLE=add(new THREE.PlaneGeometry(1.0,1.22),new THREE.MeshStandardMaterial({map:tex(1024,1248,x=>x.drawImage(FORM,0,0)),roughness:.8,side:THREE.DoubleSide}),0,0,0,scene,true);
 // each half is a full-size plane whose texture is transparent outside its half (so before the rip both make one sheet)
 const HALF=[-1,1].map(s=>{const m=add(new THREE.PlaneGeometry(FW,FH),new THREE.MeshStandardMaterial({map:halfTex(s),transparent:true,alphaTest:.5,side:THREE.DoubleSide,roughness:.8}),0,0,0,scene,true);return m;});
 // image-left (s=-1) is screen-left = world +x = Trump's RIGHT hand
@@ -242,8 +244,18 @@ function corrTex(col,label){return tex(512,512,x=>{x.fillStyle=col;x.fillRect(0,
 const CONT=[['#b5302a',0xb5302a],['#1f5fa8',0x1f5fa8],['#2f7d3c',0x2f7d3c]].map(([c,h],i)=>{const g=new THREE.Group();scene.add(g);const side=new THREE.MeshStandardMaterial({map:corrTex(c),roughness:.55,metalness:.3}),end=new THREE.MeshStandardMaterial({map:corrTex(c,'TARIFFS'),roughness:.55,metalness:.3});
  add(B(2.3,2.3,3.4),[side,side,M(h,.6,.3),M(h,.6,.3),side,end],0,1.15,0,g);g.userData.y=SY+i*2.32;return g;});
 const CX=GX-3.15,CZ=19.0;
+const DOORS=[1,-1].map(sx=>{const pv=new THREE.Group();pv.position.set(sx*1.15,0,-1.72);CONT[0].add(pv);const tx=corrTex('#b5302a','TARIFFS');tx.repeat.set(.5,1);tx.offset.set(sx>0?0:.5,0);
+ add(B(1.15,2.3,.05),new THREE.MeshStandardMaterial({map:tx,roughness:.55,metalness:.3}),-sx*.575,1.15,0,pv);return pv;});
+CONT[0].children[0].material[5]=M(0x1a1612,.9);   // dark inside behind the doors
+const MONL=new THREE.PointLight(0xfff0c0,0,6,1.5);MONL.position.set(CX,2.2,14.8);scene.add(MONL);   // soft light on the money pile
 // ================= MONEY: $10,000 straps (same notes as ep6/ep7) =================
-const STRAPS=[];for(let i=0;i<26;i++){const b=bundle(scene);b.scale.setScalar(2.2);b.visible=false;b.userData={d:i/26,x:(Math.random()-.5)*1.6,r:Math.random()*6};STRAPS.push(b);}
+const BRICKT=tex(512,538,x=>{x.fillStyle='#b7c9a4';x.fillRect(0,0,512,538);for(let r=0;r<5;r++)for(let c=0;c<2;c++){const X=c*256,Y=r*107.6;x.drawImage(NOTE.image,X+2,Y+2,252,103);x.fillStyle='#c9952f';x.fillRect(X+114,Y+2,26,103);x.fillStyle='rgba(0,0,0,.18)';x.fillRect(X+2,Y+103,252,3);}});
+const BRSIDE=tex(256,256,x=>{x.fillStyle='#c3d3b0';x.fillRect(0,0,256,256);for(let i=0;i<256;i++){x.fillStyle=`rgba(60,95,60,${.08+Math.random()*.16})`;x.fillRect(0,i,256,1);}for(let k=0;k<10;k++){x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,k*25.6,256,1.5);}for(let k=0;k<2;k++){x.fillStyle='#c9952f';x.fillRect(52+k*128,0,22,256);}});
+const BTOP=new THREE.MeshStandardMaterial({map:BRICKT,roughness:.85}),BSID=new THREE.MeshStandardMaterial({map:BRSIDE,roughness:.9});
+// $1M = 100 straps of $100s (2 x 5 straps, 10 high; x1.3 so it reads on a phone). 24 bricks pour out of the bottom container into a neat pile on the lawn
+const MB=[];{const S=1.3,bw=.39*S,bh=.152*S,bd=.41*S,lay=[[4,3],[3,2],[2,2],[2,1]];let n=0;
+ lay.forEach(([nx,nz],l)=>{for(let ix=0;ix<nx;ix++)for(let iz=0;iz<nz;iz++){const m=add(B(bw,bh,bd),[BSID,BSID,BTOP,BSID,BSID,BSID],0,0,0,scene);
+  m.userData={home:V3(CX+(ix-(nx-1)/2)*bw*1.02,bh/2+l*bh,16.05+(iz-(nz-1)/2)*bd*1.02),d:n/24};m.visible=false;MB.push(m);n++;}});}
 // ================= CAST =================
 const SRC={};const CAST={mike:['mike'],trump:['trump'],guard:['guard',{polo:0x2f6f4f,cargo:0x3b3b3b}],printer:['printer',{tucked:0xe2557f,cargo:0x2a2a33}],teller:['teller'],manager:['manager']};
 // Trump look (user reference 2026-11-03): solid navy suit, white shirt, bright red tie, blond hair, tan skin
@@ -253,7 +265,8 @@ const lum=(r,g,b)=>.3*r+.59*g+.11*b;
 function styleTrump(o,mt){const n=o.name+mt.name;
  if(/suit_?3/i.test(n)){remap(mt,(r,g,b,u,v)=>{const l=lum(r,g,b);if(u>.84&&v<.27&&r>90)return [214,18,26];if(l>150)return [246,246,250];return [17,25,60];});if(mt.normalScale)mt.normalScale.set(.25,.25);mt.roughness=.72;mt.metalness=0;mt.metalnessMap=null;mt.roughnessMap=null;mt.needsUpdate=true;}   // suit3 UV areas: tie = top-right patch (solid red, no dots); light pieces = white shirt; rest = solid navy
  if(/short04|eyebrow/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.72+.45*l;return [Math.min(255,236*k),Math.min(255,182*k),Math.min(255,82*k)];});mt.color.set(0xffffff);mt.roughness=.55;}
- if(/body/i.test(n))mt.color.setRGB(1,.8,.62);}
+ if(/body/i.test(n))mt.color.setRGB(1,.76,.55);
+ if(/high-poly/i.test(n))remap(mt,(r,g,b)=>{const l=lum(r,g,b);return (r>g+12&&r>b+12&&l<200)?[l*.45,l*.85,Math.min(255,l*1.9+40)]:[r,g,b];});}   // brown iris -> blue eyes
 const GLB={};for(const [key,[file,rec]] of Object.entries(CAST)){GLB[file]=GLB[file]||await new GLTFLoader().loadAsync(`dl/models/cast/${file}.glb`);const g=skClone(GLB[file].scene);
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material=o.material.clone();
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
@@ -278,21 +291,23 @@ function walk(P,t,amp=.4){const ph=t*7;pose(P,'upperleg01L',-amp*Math.sin(ph),0,
 function solveReach(P,sd,tgt){const w=V3(),res={ux:0,uz:0,lx:0};let best=1e9;for(let ux=-.5;ux<=2.2;ux+=.1)for(let uz=-1.5;uz<=1.8;uz+=.1)for(let lx=0;lx<=2.4;lx+=.12){
  pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);P.g.updateMatrixWorld(true);P.BN['wrist'+sd].getWorldPosition(w);const d=w.distanceTo(tgt);if(d<best){best=d;Object.assign(res,{ux,uz,lx});}}return res;}
 const TR=person('trump',GX,SY,19.25,Math.PI);
-const MIKE=person('mike',GX+.8,0,15.1,-.08);
-const CROWD=[['guard',GX-1.9,16.1,.15],['teller',GX-1.0,16.95,.05],['manager',GX+1.6,16.9,-.15],['printer',GX-2.9,16.7,.25]].map(([n,x,z,r])=>person(n,x,0,z,r));
+const MIKE=person('mike',GX+.62,0,15.8,-.08);
+const CROWD=[['guard',GX+1.7,16.2,-.15],['teller',GX-.9,16.9,.05],['manager',GX+2.6,16.9,-.2],['printer',GX+1.0,17.0,-.05]].map(([n,x,z,r])=>person(n,x,0,z,r));
 // Trump extras: blond volume on top + US flag pin (attached to bones, so they follow every pose)
 const HAIRT=tex(256,256,x=>{x.fillStyle='#d9ae55';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.strokeStyle=`rgba(${150+Math.random()*90},${100+Math.random()*70},30,${.15+Math.random()*.2})`;x.lineWidth=1+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);x.bezierCurveTo(80,y-20,170,y+15,256,y-10);x.stroke();}});
 const HAIRM=new THREE.MeshStandardMaterial({color:0xffffff,map:HAIRT,roughness:.65});
 const FLAGPIN=new THREE.MeshStandardMaterial({map:FT,roughness:.5,metalness:.2});
 function dressTrump(){relax(TR);TR.g.updateMatrixWorld(true);const h=V3();TR.BN.head.getWorldPosition(h);if(Q.get('dbg')){TR.g.traverse(o=>{if(o.isMesh&&/short04/.test(o.name)){o.geometry.computeBoundingBox();const bb=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);console.error('HAIR',JSON.stringify(bb),'HEAD',JSON.stringify(h));}});}if(Q.get('nocap'))return;
- const sw=new THREE.Mesh(new THREE.SphereGeometry(.07,32,16).rotateZ(Math.PI/2),HAIRM);sw.scale.set(HT.sx,HT.sy,HT.sz);sw.position.copy(h).add(V3(.008,HT.capY,HT.capZ));sw.rotation.set(-.42,0,.12);sw.castShadow=true;scene.add(sw);TR.BN.head.attach(sw);   // the famous front swoop: volume over the forehead
+ const hm=(geo,sc,off,rot)=>{const m=new THREE.Mesh(geo.rotateZ(Math.PI/2),HAIRM);m.scale.set(...sc);m.position.copy(h).add(V3(...off));m.rotation.set(...rot);m.castShadow=true;scene.add(m);TR.BN.head.attach(m);return m;};
+ hm(new THREE.SphereGeometry(.1,40,20),[1.02,.74,1.2],[0,.105,.012],[.28,0,0]);                    // swept-back cap over the skull, down to the ear tops
+ hm(new THREE.SphereGeometry(.07,32,16),[1.26,.5,.98],[.012,.15,-.06],[-.22,0,.12]);              // the raised front swoop (pompadour)
  const pin=new THREE.Mesh(new THREE.PlaneGeometry(.034,.019),FLAGPIN);const s=V3();TR.BN.neck01.getWorldPosition(s);pin.position.copy(s).add(V3(-.1,HT.pinY,HT.pinZ));pin.rotation.y=Math.PI;scene.add(pin);TR.BN.spine01?TR.BN.spine01.attach(pin):0;}
-const HT={capY:Number(Q.get('cy')||.118),capZ:Number(Q.get('cz')||-.04),sx:Number(Q.get('sx')||1.36),sy:Number(Q.get('sy')||.72),sz:Number(Q.get('sz')||1.5),pinY:Number(Q.get('py')||-.14),pinZ:Number(Q.get('pz')||-.13)};
-dressTrump();
+const HT={capY:Number(Q.get('cy')||.118),capZ:Number(Q.get('cz')||-.04),sx:Number(Q.get('sx')||1.5),sy:Number(Q.get('sy')||.95),sz:Number(Q.get('sz')||1.65),pinY:Number(Q.get('py')||-.14),pinZ:Number(Q.get('pz')||-.13)};
+dressTrump();TR.BN.head.scale.setScalar(Number(Q.get('hs')||1.3));TR.BN.neck01&&TR.BN.neck01.scale.setScalar(1.08);   // caricature: big head like the user's reference
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
 function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
- const m=add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.3,roughness:.45}),new THREE.MeshStandardMaterial({color:0x222222,roughness:.5})],0,0,0,p,false);return m;}
+ const m=add(g,[new THREE.MeshBasicMaterial({color:col,toneMapped:false}),new THREE.MeshBasicMaterial({color:new THREE.Color(col).multiplyScalar(.3),toneMapped:false})],0,0,0,p,false);m.material[0].emissiveIntensity=0;return m;}   // flat solid colour + dark sides: always clear
 const GRN=0x22e06a,WHT=0xffffff,RED=0xff1e1e,YEL=0xffc61a;
 const POPS=[];function popT(str,size,col,pos,t0,t1){const m=txt3(str,size,col,scene);m.material[0].emissiveIntensity=3;m.userData={pos,t0,t1};m.visible=false;POPS.push(m);return m;}
 function updPops(t){for(const m of POPS){const {pos,t0,t1}=m.userData;const s=pop(t,t0,.3)*(1-sm(t1,t1+.25,t));m.visible=s>.01;if(!m.visible)continue;m.scale.setScalar(s);m.position.copy(pos);m.position.y+=.03*Math.sin(t*2.4+t0);m.lookAt(cam.position);}}
@@ -303,30 +318,30 @@ function updC(t){for(const m of CPOPS){const u=m.userData;centre(m,pop(t,u.t0,.3
 // confetti (red / white / blue) on 'Forever'
 const CONF=[];for(let i=0;i<240;i++){const m=add(new THREE.PlaneGeometry(.09,.05),M([0xd21e2a,0xffffff,0x1f3fa8,0xffc61a][i%4],.5,0,{side:THREE.DoubleSide}),0,0,0,scene,false);m.userData={x:GX+(Math.random()-.5)*5,z:14.5+Math.random()*4.5,v:.6+Math.random()*.9,r:Math.random()*6,y0:4+Math.random()*2.5};m.visible=false;CONF.push(m);}
 // ================= LIGHT / POST =================
-const sun=new THREE.DirectionalLight(0xfff1dc,2.9);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+const sun=new THREE.DirectionalLight(0xfff1dc,3.4);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
 Object.assign(sun.shadow.camera,{left:-25,right:25,top:25,bottom:-25,near:1,far:140});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;scene.add(sun);scene.add(sun.target);
-const KEY=new THREE.SpotLight(0xfff3e2,14,16,.45,.8,1.2);KEY.position.set(GX+1.5,5.5,14.5);KEY.target.position.set(GX,1.6,19.2);scene.add(KEY);scene.add(KEY.target);   // stage key light on Trump + the form
+const KEY=new THREE.SpotLight(0xfff3e2,10,16,.45,.8,1.2);KEY.position.set(GX+1.5,5.5,14.5);KEY.target.position.set(GX,1.6,19.2);scene.add(KEY);scene.add(KEY.target);   // stage key light on Trump + the form
 const FX=new THREE.PointLight(0xffefc8,0,8,1.4);FX.position.set(GX,4.2,16.4);scene.add(FX);
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,500);
 const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
 comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);if(any(isnan(c))||any(isinf(c)))c=vec4(0.,0.,0.,1.);gl_FragColor=vec4(min(c.rgb,vec3(60.)),c.a);}'}));
 comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.5,.25,2.4));comp.addPass(new OutputPass());
-comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.06},sat:{value:1.15},vig:{value:.12}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.12},sat:{value:1.28},vig:{value:.12}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
  fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=pow(max(v,vec3(0.)),vec3(.85));v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
-scene.background=hdr;scene.environmentIntensity=1.5;scene.add(new THREE.HemisphereLight(0xf2f7ff,0xb5a58a,1.8));
+scene.background=hdr;scene.environmentIntensity=.85;scene.add(new THREE.HemisphereLight(0xf2f7ff,0x9a8a70,1.0));
 // ================= TIMELINE + ONE CONTINUOUS CAMERA (world coords) =================
 const TLN=await (await fetch('timeline_ep8.json')).json(),CH=TLN.chunks;
 const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$%(),']/g,'').replace(/[,.?]$/,'')===w);return (k[Math.min(n,k.length-1)]||{s:0}).s;};
 const tCancel=Wd('cancel'),tTax=Wd('tax'),tForever=Wd('forever'),tTariffs=Wd('tariffs'),tMoney=Wd('money'),tAmer=Wd('americans'),tNever=Wd('never');
-const KEYS=[
- [0,   [GX+.5,1.6,12.6],[GX+.05,2.3,19.2],44],    // over Mike's shoulder: Trump holds up the Form 1040 under the U.S. GOVERNMENT banner
- [tCancel,[GX+.48,1.62,13.2],[GX+.05,2.25,19.2],42],
- [tTax+.2,[GX+.42,1.7,13.9],[GX,2.2,19.2],40],        // push in on the rip
- [tForever,[GX+.38,1.75,13.5],[GX,2.35,19.2],43],     // FOREVER: confetti, arms open
- [tTariffs+.6,[GX-1.0,2.5,9.0],[GX-2.2,3.3,19.2],52], // fly back: the TARIFFS containers drop in, stacked
- [tMoney,[GX-1.1,2.45,9.4],[GX-2.2,3.1,19.2],51],
- [tNever+.3,[GX-1.2,2.35,10.2],[GX-2.1,2.4,18.8],50],  // money pours out in front of the stage
- [7.0,[GX-1.1,2.2,11.2],[GX-1.8,1.9,18.8],48]];
+const KEYS=[   // every key is centred on the subject of the spoken words, nothing important cropped
+ [0,   [GX+.35,1.75,13.0],[GX,2.35,19.2],42],       // Trump + the whole Form 1040 + U.S. GOVERNMENT backdrop + flag, Mike over the shoulder
+ [tCancel,[GX+.32,1.76,13.2],[GX,2.35,19.2],42],
+ [tTax+.2,[GX+.28,1.78,13.35],[GX,2.38,19.2],42],    // the rip: both halves stay in frame
+ [tForever,[GX+.25,1.8,13.2],[GX,2.45,19.2],43],     // FOREVER above him, confetti
+ [tTariffs+.55,[CX,3.95,8.4],[CX,3.95,CZ],48],       // the TARIFFS stack, centred and whole
+ [tMoney-.05,[CX,3.9,8.6],[CX,3.85,CZ],48],
+ [tMoney+.55,[CX,1.9,10.5],[CX,1.35,16.6],52],      // down to the open doors and the money pile, centred and whole
+ [7.0,[CX,1.85,10.8],[CX,1.3,16.6],52]];
 function hv(t,sel){let i=0;while(i<KEYS.length-2&&t>=KEYS[i+1][0])i++;const a=KEYS[Math.max(0,i-1)],b=KEYS[i],c=KEYS[i+1],d=KEYS[Math.min(KEYS.length-1,i+2)];
  const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2,out=[];const A=sel(a),Bv=sel(b),C=sel(c),D=sel(d);
  const tg=(dl,dr)=>dl*dr<=0?0:Math.sign(dr)*Math.min(Math.abs(dl+dr)/2,3*Math.abs(dl),3*Math.abs(dr));   // monotone tangents: never overshoots a key
@@ -340,8 +355,8 @@ const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
 const _w=V3(),_a=V3();
 // ---- floating words ----
-cpop('$0 TAX',.14,0x0fb24a,tTax+.05,tForever-.05,.36);cpop('FOREVER',.13,0xffc61a,tForever,tTariffs-.05,.52);
-popT('TARIFFS',.36,YEL,V3(CX+.2,SY+7.0,CZ-1.3),tTariffs,6.2);popT('$$$',.38,GRN,V3(CX+.9,1.75,15.9),tMoney+.15,6.2);
+cpop('$0 TAX',.14,0x0fb24a,tTax+.05,tForever-.05,.5);cpop('FOREVER',.13,0xffc61a,tForever,tTariffs-.05,.52);
+popT('$$$',.3,GRN,V3(CX,1.75,15.7),tMoney+.3,6.2);
 // ---- arm poses for the rip (solved once after load) ----
 const RP={grab:{L:null,R:null},spread:{L:null,R:null},open:{L:null,R:null}};
 const lerpA=(a,b,k)=>({ux:a.ux+(b.ux-a.ux)*k,uz:a.uz+(b.uz-a.uz)*k,lx:a.lx+(b.lx-a.lx)*k});
@@ -352,20 +367,21 @@ function trumpPose(t){const P=TR;relax(P);idle(P,t,1);P.g.position.set(GX,SY,19.
  else if(t<tThrow){const k=sm(tRip,tRip2,t);A={L:lerpA(RP.grab.L,RP.spread.L,k),R:lerpA(RP.grab.R,RP.spread.R,k)};}
  else{const k=sm(tThrow,tThrow+.35,t);A={L:lerpA(RP.spread.L,RP.open.L,k),R:lerpA(RP.spread.R,RP.open.R,k)};}
  setA(P,'L',A.L);setA(P,'R',A.R);
- const talk=t<tForever+.4?.06+.07*Math.abs(Math.sin(t*13)):.02;face(P,{jaw:talk,smile:t>tThrow?.9:.35});
+ const talk=t<tForever+.4?.02+.05*Math.abs(Math.sin(t*13)):0;face(P,{jaw:talk,smile:t>tThrow?.9:.6});   // closed-mouth smirk, lips move while he talks
  if(t>tForever){pose(P,'head',-.12,0,0);pose(P,'spine03',-.06,0,0);}   // chin up, proud
  if(t>tTariffs){const k=sm(tTariffs,tTariffs+.35,t);pose(P,'head',-.05,-.55*k,0);setA(P,'L',lerpA(A.L,{ux:AD[0]+1.35,uz:AD[2]-.25,lx:.15},k));}   // looks at and points to the containers (his left = screen right)
  if(t>tMoney){face(P,{jaw:.18,smile:1});}}
-const F0=V3(GX,SY+1.08,18.88),GRAB={R:V3(GX+.43,SY+1.22,18.92),L:V3(GX-.43,SY+1.22,18.92)};
+const F0=V3(GX,SY+.9,18.82),GRAB={R:V3(GX+.52,SY+1.08,18.88),L:V3(GX-.52,SY+1.08,18.88)};
 const QY=new THREE.Quaternion().setFromAxisAngle(V3(0,1,0),Math.PI),ZA=V3(0,0,1),_q=new THREE.Quaternion();
-function halfAt(i,t){const sd=i?'L':'R',s=i?-1:1,th=s*.6*sm(tRip,tRip2,t),off=F0.clone().sub(GRAB[sd]).applyAxisAngle(ZA,th);TR.BN['wrist'+sd].getWorldPosition(_w);return {p:_w.clone().add(off),th};}
+function halfAt(i,t){const sd=i?'L':'R',s=i?-1:1,th=s*.42*sm(tRip,tRip2,t),off=F0.clone().sub(GRAB[sd]).applyAxisAngle(ZA,th);TR.BN['wrist'+sd].getWorldPosition(_w);return {p:_w.clone().add(off),th};}
 function animate(t){updPops(t);updC(t);
  trumpPose(t);TR.g.updateMatrixWorld(true);
  // the Form 1040 in his hands; rips on 'cancel'; thrown away after 'tax'
  HALF.forEach((m,i)=>{const s=i?-1:1;let p,th;
-  if(t<tThrow){({p,th}=halfAt(i,t));m.visible=true;}
-  else{const dt=t-tThrow;m.visible=dt<1.4;if(!m.visible)return;const r=RP.rel[i];p=r.p.clone().add(V3(s*1.7*dt,2.4*dt-3.2*dt*dt,.9*dt));th=r.th+s*5*dt;}
+  if(t<tThrow){({p,th}=halfAt(i,t));m.visible=t>=tRip;}
+  else{const dt=t-tThrow;m.visible=dt<1.4;if(!m.visible)return;const r=RP.rel[i];p=r.p.clone().add(V3(s*.55*dt,2.6*dt-3.4*dt*dt,2.2*dt));th=r.th+s*4*dt;}
   m.position.copy(p);m.quaternion.setFromAxisAngle(ZA,th).multiply(QY);});
+ {const a=halfAt(0,0),b=halfAt(1,0);WHOLE.visible=t<tRip;WHOLE.position.copy(a.p).add(b.p).multiplyScalar(.5);WHOLE.quaternion.copy(QY);}
  // the crowd + Mike: watch, gasp at the rip, cheer on FOREVER, Mike points at the containers
  [MIKE,...CROWD].forEach((P,i)=>{relax(P);idle(P,t,i*1.3);const ch=sm(tForever,tForever+.2,t)*(1-sm(tTariffs+.3,tTariffs+.8,t));
   P.g.position.y=ch*Math.abs(Math.sin(t*7+i))*.06;
@@ -382,13 +398,14 @@ function animate(t){updPops(t);updC(t);
  CONT.forEach((g,i)=>{const t0=tTariffs+i*.28,k=Math.min(1,Math.max(0,(t-t0)/.35)),y=g.userData.y;let yy=y+14*(1-k*k);if(k>=1){const b=t-t0-.35;yy=y+Math.abs(Math.sin(b*14))*.12*Math.exp(-b*8);}
   g.visible=t>t0-.01;g.position.set(CX,yy,CZ);g.rotation.y=.12;});
  // $10,000 straps pour out of the bottom container on 'money'
- STRAPS.forEach(b=>{const u=b.userData,dt=t-tMoney-u.d*.9;b.visible=dt>0;if(!b.visible)return;const k=Math.min(1,dt/.5);
-  b.position.set(CX+u.x*.8*k,(SY+.4)*(1-k)+.06+.7*Math.sin(Math.PI*k),CZ-1.8-1.6*k);if(k>=1)b.position.y=.05+u.d*.14;b.rotation.set(k<1?t*6+u.r:0,u.r,k<1?t*4:0);});
+ const DOOR=sm(tMoney-.15,tMoney+.2,t);DOORS[0].rotation.y=-1.9*DOOR;DOORS[1].rotation.y=1.9*DOOR;
+ const SRCP=V3(CX,SY+.35,CZ-1.3);MB.forEach(m=>{const u=m.userData,t0=tMoney+.12+u.d*1.0,k=sm(t0,t0+.4,t);m.visible=t>t0;if(!m.visible)return;m.position.copy(SRCP).lerp(u.home,k);m.position.y+=.55*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*1.5,(1-k)*.8);});
+ MONL.intensity=t>tMoney?3.5*sm(tMoney,tMoney+.5,t):0;
 }
 await loaded;
 // solve the arm poses once (grab the form edges, rip apart, open-palm shrug)
 {relax(TR);TR.g.updateMatrixWorld(true);for(const sd of['L','R']){const s=sd==='R'?1:-1;RP.grab[sd]=solveReach(TR,sd,GRAB[sd]);relax(TR);
- RP.spread[sd]=solveReach(TR,sd,V3(GX+s*.78,SY+1.35,18.95));relax(TR);RP.open[sd]=solveReach(TR,sd,V3(GX+s*.72,SY+1.05,18.75));relax(TR);}
+ RP.spread[sd]=solveReach(TR,sd,V3(GX+s*.6,SY+1.25,18.9));relax(TR);RP.open[sd]=solveReach(TR,sd,V3(GX+s*.6,SY+1.0,18.68));relax(TR);}
  trumpPose(tThrow-.001);TR.g.updateMatrixWorld(true);RP.rel=[0,1].map(i=>halfAt(i,tThrow-.001));}
 await Promise.all(Object.values(MODELS));
 const cap=document.getElementById('cap');
