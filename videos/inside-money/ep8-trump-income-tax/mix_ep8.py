@@ -8,7 +8,8 @@ def load(p):
 tl=json.load(open(f'{RK}/timeline_ep8.json'));WD=tl['words'];DUR=tl['dur']
 def Wn(w,n=0):
     k=[x['s'] for x in WD if x['w'].lower().replace('.','').strip('?,!')==w.lower().replace('.','')];return k[min(n,len(k)-1)]
-voice=load('ep8-trump-income-tax/vo.wav');N=int(DUR*SR);out=np.zeros(N,np.float32);out[:min(N,len(voice))]+=voice[:N]   # timeline dur is video time (scene minus T0)
+voice=load('ep8-trump-income-tax/vo.wav');_c=int((WD[-1]['e'])*SR);voice[_c:_c+int(.06*SR)]*=np.linspace(1,0,int(.06*SR))[:len(voice[_c:_c+int(.06*SR)])];voice[_c+int(.06*SR):]=0   # cut after 'PRICES'
+N=int(DUR*SR);out=np.zeros(N,np.float32);out[:min(N,len(voice))]+=voice[:N]   # timeline dur is video time (scene minus T0)
 rng=np.random.default_rng(6)
 b=np.cumsum(rng.standard_normal(N).astype(np.float32));b-=np.convolve(b,np.ones(4800)/4800,'same');b/=np.abs(b).max();out+=b*.05
 def put(sig,t,g):
@@ -54,7 +55,8 @@ put(S['pop'],W('other'),.22);put(cut(S['wrong'],.5),W('isn\'t'),.26)
 put(cut(S['money-transfer'],.8),W('paid',1),.26);put(S['ting'],W('price'),.28)
 for i in range(3):put(S['pop'],W('higher',i),.24);put(cut(S['wrong'],.4),W('higher',i)+.12,.18)    # each price goes up
 put(cut(S['cash-register'],.7),W('pay',1),.26);put(cut(S['notif2'],.5),W('receipt'),.24)
-put(S['pop'],W('comment')-.4,.26);put(S['pop'],W('comment')-.3,.26);put(S['ting'],W('follow'),.28)
+put(cut(S['whoosh'],.5),W('would',2)-.2,.18);put(S['pop'],W('tax',7)-.1,.24);put(S['pop'],W('prices')-.1,.24)   # CTA: Mike turns to us, the 1040 and price-tag icons pop
+put(S['ting'],W('comment'),.24);put(S['pop'],W('tax',8)-.05,.28);put(S['pop'],W('prices',1)-.05,.28)
 pk=np.abs(out).max();out/=max(1,pk/.95)
 pcm=(out*32767).astype(np.int16);w=wave.open(f'{TMP}/_m8.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes(pcm.tobytes());w.close()
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/_m8.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep8.wav'],check=True);print('mix ok')

@@ -349,7 +349,7 @@ function hv(t,sel){let i=0;while(i<KEYS.length-2&&t>=KEYS[i+1][0])i++;const a=KE
   const m0=(a===b?0:tg(d0,d1))*h,m1=(c===d?0:tg(d1,d2))*h;out.push(h00*Bv[j]+h10*m0+h01*C[j]+h11*m1);}return out;}
 function setCam(t){if(Q.get('cam')){const v=Q.get('cam').split(',').map(Number);cam.position.set(v[0],v[1],v[2]);cam.fov=v[6];cam.updateProjectionMatrix();cam.lookAt(v[3],v[4],v[5]);return;}   // debug camera
  const P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);
- cam.position.set(...P).add(V3(Math.sin(t*.6)*.005,Math.sin(t*.8)*.004,0));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(...L);
+ cam.position.set(...P).add(V3(Math.sin(t*.55)*.045+Math.sin(t*1.3)*.012,Math.sin(t*.75)*.03,Math.sin(t*.4)*.04));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(...L);   // slow handheld drift: no frame is ever frozen
  const c=cam.position,f=V3();cam.getWorldDirection(f);f.y=0;f.normalize();sun.target.position.copy(c).addScaledVector(f,10).setY(0);sun.position.copy(c).addScaledVector(f,-22).add(V3(-8,40,0));}   // sun always behind the camera: subjects are front-lit
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
@@ -421,6 +421,7 @@ function brickMat(h){const a=BRICKT.clone(),b=BRSIDE.clone();a.needsUpdate=b.nee
 const TWX=9.0,SMX=12.0,TWZ=6.4,TWH=8.1,SMH=.6;
 const TOWER=add(B(1.2,TWH,1.2),brickMat(TWH),TWX,0,TWZ);TOWER.scale.set(1,.001,1);
 const SMALL=add(B(1.2,SMH,1.2),brickMat(SMH),SMX,0,TWZ);SMALL.scale.set(1,.001,1);
+const MOON=add(new THREE.SphereGeometry(.45,24,16),new THREE.MeshBasicMaterial({color:0xfff3c4,toneMapped:false}),SMX+1.6,8.6,TWZ,scene,false);MOON.scale.setScalar(.001);
 const GROWM=brickMat(TWH-SMH).map(m=>{const c=m.clone();c.transparent=true;return c;});
 const GROW=add(B(1.2,TWH-SMH,1.2),GROWM,SMX,0,TWZ);GROW.scale.set(1,.001,1);
 // ---- coffee cup + the $2,000 check ----
@@ -449,7 +450,7 @@ const XM=new THREE.Group();XM.position.set(KX+.2,3.55,KZ-1.75);scene.add(XM);for
 const IMP=person('manager',KX+1.75,.12,KZ-2.1,Math.PI+.4);
 const PAYB=bundle(scene);PAYB.scale.setScalar(2.2);PAYB.visible=false;
 // ---- MAPLE ELECTRONICS: display of TV / sneakers / car parts with price tags, a register and a receipt ----
-const DZ=16.6,PX=[-2.5,-1.1,.35],REGX=2.0;
+const DZ=16.6,PX=[-2.5,-1.1,.35],REGX=2.0,CTX=1.2,CTZ=15.1;
 for(const x of PX)add(B(.9,.85,.7),M(0xf2f2f2,.5),x,.12+.425,DZ);
 {const tv=new THREE.Group();tv.position.set(PX[0],.97,DZ);scene.add(tv);add(B(.86,.52,.06),M(0x0c0c10,.3,.4),0,.3,0,tv);add(B(.8,.46,.01),M(0x3d7be0,.3,0,{emissive:0x2f6fd8,emissiveIntensity:.7}),0,.3,-.035,tv,false);add(B(.3,.03,.18),M(0x222222,.4),0,.02,0,tv);}
 {const sn=new THREE.Group();sn.position.set(PX[1],.97,DZ);scene.add(sn);for(const s of[-1,1]){add(RB(.14,.11,.32,.05),M(0xd62828,.5),s*.11,.07,0,sn);add(B(.15,.035,.33),M(0xffffff,.5),s*.11,.02,0,sn);}}
@@ -474,7 +475,7 @@ const RECEIPT=add(new THREE.PlaneGeometry(.26,1.0),new THREE.MeshStandardMateria
 popT('MIKE',.16,WHT,V3(MX2,2.15,MZ2),T('mike'),9.6);
 popT('INCOME TAX',.24,YEL,V3(TWX,5.2,TWZ+.8),T('$27'),26.4);popT('$2.7 TRILLION',.21,GRN,V3(TWX,4.5,TWZ+.8),T('$27')+.15,26.4);
 popT('TARIFFS',.17,YEL,V3(SMX,SMH+.85,TWZ),T('tariffs',1),26.4);popT('$200 BILLION',.15,RED,V3(SMX,SMH+.45,TWZ),T('$200'),22.8);
-cpop('ONE NUMBER',.12,0xffc61a,T('one'),T('income',2)-.1,.4);cpop('13x LESS',.16,0xff1e1e,T('13'),T('replace')-.1,.25);
+cpop('ONE NUMBER',.1,0xffc61a,T('one'),T('income',2)-.1,.4);cpop('13x LESS',.16,0xff1e1e,T('13'),T('replace')-.1,.25);
 cpop('x13',.2,0xffc61a,T('grow'),T('and')-.1,.25);cpop('OVERNIGHT',.13,0xffffff,T('overnight'),T('and')-.1,.05);cpop('NO DATA',.16,0xff1e1e,T('no'),T('it\'s')-.1,.25);
 popT('MORTGAGE',.6,RED,V3(MX2,5.6,-3.2),T('mortgage'),28.5);popT('COFFEE MONEY',.11,YEL,V3(MX2+.45,1.85,MZ2+.3),T('coffee'),28.5);
 popT('GOVERNMENT MONEY',.12,WHT,V3((GVX1+GVX2)/2,2.45,GVZ),T('everything'),38.9);popT('INCOME TAX',.09,YEL,V3(GVX2,1.75,GVZ-.7),T('half'),38.9);popT('50%',.18,YEL,V3(GVX2,1.35,GVZ-.8),T('half')+.1,38.6);
@@ -482,45 +483,66 @@ popT('-50%',.2,RED,V3(GVX2,1.4,GVZ-.8),T('vanishes'),38.9);
 popT('-50% SALARY',.12,RED,V3(MX2,2.25,MZ2+.2),T('half',2),42.2);popT('BILLS',.14,RED,V3(MX2,2.6,MZ2+.2),T('bills'),42.2);
 popT('OTHER COUNTRIES',.16,WHT,V3(KX+.2,4.45,KZ-1.0),T('other'),48.4);popT('IMPORTER',.12,YEL,V3(KX+1.75,2.2,KZ-2.1),T('importer'),48.4);popT('PAYS THE TARIFF',.1,YEL,V3(KX+.8,2.55,KZ-2.1),T('importer')+.25,48.4);
 popT('HIGHER PRICE',.07,RED,V3(PX[0],1.9,DZ-.3),T('higher'),50.2);popT('HIGHER PRICE',.07,RED,V3(PX[1],1.6,DZ-.3),Tn('higher',1),51.6);popT('HIGHER PRICE',.07,RED,V3(PX[2],1.75,DZ-.3),Tn('higher',2),53.1);
-cpop('YOU STILL PAY',.12,0xff1e1e,T('pay',1),T('next')-.1,.3);
-popT('TAX',.15,YEL,V3(REGX+1.15,2.3,DZ-1.2),T('comment')-.4,66);popT('PRICES',.15,RED,V3(REGX-.1,2.3,DZ-1.2),T('comment')-.3,66);   // screen left = +x: TAX left, PRICES right
+cpop('YOU STILL PAY',.085,0xff1e1e,T('pay',1),T('next')-.1,.3);
+popT('TAX',.11,YEL,V3(CTX+.6,2.02,CTZ-.1),T('tax',8)-.05,66);popT('PRICES',.11,RED,V3(CTX-.6,2.02,CTZ-.1),T('prices',1)-.05,66);   // on the spoken words
+const ICT=add(new THREE.PlaneGeometry(.3,.37),new THREE.MeshBasicMaterial({map:tex(1024,1248,x=>x.drawImage(FORM,0,0)),side:THREE.DoubleSide,toneMapped:false}),0,0,0,scene,false);   // the 1040 icon (screen left = +x)
+const ICP=new THREE.Group();scene.add(ICP);{const g=add(new THREE.PlaneGeometry(.32,.2),new THREE.MeshBasicMaterial({map:TAGT,side:THREE.DoubleSide,toneMapped:false}),0,0,0,ICP,false);g.rotation.y=Math.PI;const a=add(ARG,[new THREE.MeshBasicMaterial({color:0xff1e1e,toneMapped:false}),new THREE.MeshBasicMaterial({color:0x6a0808,toneMapped:false})],-.21,-.08,-.02,ICP,false);a.rotation.y=Math.PI;a.scale.setScalar(.8);}   // screen left = +x: TAX left, PRICES right
 // ---- story camera keys (appended to the hook keys) ----
-KEYS.push(
+KEYS.push(   // every 1-2 s the camera moves a little (push, orbit, tilt), always centred on the subject of the words
  [T('again')+.1,[CX,1.85,10.8],[CX,1.3,16.6],52],
- [T('meet')+.05,[MX2,1.5,7.6],[MX2,1.3,MZ2],44],        // fly to Mike on his sidewalk
- [T('so',1),[MX2,1.5,7.3],[MX2,1.25,MZ2],44],                 // the INCOME TAX slice leaves his paycheck
- [T('except'),[MX2,1.6,7.4],[MX2,1.3,MZ2],46],
- [T('number')+.3,[MX2,1.6,7.5],[MX2,1.3,MZ2],46],         // 'one number': still on Mike              // he jumps for joy
- [T('income',2),[MX2-.4,2.6,13.0],[TWX,2.4,TWZ],48],
- [T('$27')+.6,[TWX+.2,4.3,17.3],[TWX,4.25,TWZ],50],        // the income tax tower rises, centred and whole
- [T('tariffs',1),[TWX+.4,4.2,17.0],[TWX,4.1,TWZ],50],
+ [T('meet')+.05,[MX2,1.5,7.6],[MX2,1.3,MZ2],44],          // fly to Mike on his sidewalk
+ [T('payday'),[MX2+.3,1.45,7.0],[MX2,1.25,MZ2],44],        // slow orbit while the INCOME TAX slice leaves the check
+ [T('so',1),[MX2-.25,1.5,6.9],[MX2,1.3,MZ2],45],
+ [T('except'),[MX2,1.6,7.4],[MX2,1.3,MZ2],46],              // he jumps for joy
+ [T('number')+.3,[MX2,1.6,6.9],[MX2,1.35,MZ2],44],          // 'one number': push in
+ [T('income',2)+.3,[MX2-.4,2.6,13.0],[TWX,2.4,TWZ],48],
+ [T('$27')+.6,[TWX+.2,4.3,17.3],[TWX,4.25,TWZ],50],         // the income tax tower rises, centred and whole
+ [T('year'),[TWX-.5,4.6,16.8],[TWX,4.35,TWZ],50],           // orbit around it
+ [T('tariffs',1)+.1,[TWX+.3,4.1,16.6],[TWX,4.0,TWZ],50],
  [T('$200')+.1,[SMX,1.5,10.4],[SMX,.75,TWZ],46],            // the small tariffs stack, centred
- [T('that\'s'),[SMX-.3,1.6,10.8],[SMX,.85,TWZ],46],
+ [T('that\'s'),[SMX-.4,1.7,11.0],[SMX,.85,TWZ],46],
  [T('13')+.3,[(TWX+SMX)/2,4.3,19.6],[(TWX+SMX)/2,4.05,TWZ],50],   // both side by side: 13x less
- [T('it\'s')-.2,[(TWX+SMX)/2,4.3,19.8],[(TWX+SMX)/2,4.05,TWZ],50],
- [T('mortgage')-.2,[MX2,2.7,10.6],[MX2,2.9,-2.2],50],       // his house (MORTGAGE) and the coffee in his hand
- [T('then'),[MX2,2.5,10.2],[MX2,2.6,-1.8],50],
- [T('tariff'),[MX2,1.85,7.4],[MX2,1.85,MZ2],46],          // the $2,000 check floats down to Mike
- [T('asked')+.1,[MX2,1.9,7.2],[MX2,1.85,MZ2],46],
- [T('he',1)+.15,[GX,2.6,15.4],[GX,2.55,19.2],46],      // fly to Trump: 'when did I do that?'
- [T('catch'),[GX,2.6,15.3],[GX,2.55,19.2],46],
+ [T('replace')+.1,[TWX+.7,3.1,14.6],[TWX,3.6,TWZ],48],      // 'replace your income tax': push on the tower
+ [T('tariffs',2)+.1,[SMX+.2,1.25,10.0],[SMX,.8,TWZ],46],    // down to the small stack
+ [T('overnight'),[SMX,3.6,16.6],[SMX,5.6,TWZ],52],          // tilt up with it as it grows x13
+ [T('and')+.1,[(TWX+SMX)/2,4.3,19.8],[(TWX+SMX)/2,4.05,TWZ],50],  // pull back: the growth turns to a ghost
+ [T('happen'),[(TWX+SMX)/2+.6,3.8,18.8],[(TWX+SMX)/2,3.9,TWZ],50],
+ [T('mortgage')-.2,[MX2,2.7,10.6],[MX2,2.9,-2.2],50],       // his house: MORTGAGE
+ [T('coffee'),[MX2+.25,1.7,6.7],[MX2+.3,1.5,MZ2],44],       // push to the coffee in his hand
+ [T('then'),[MX2,1.75,7.1],[MX2,1.7,MZ2],46],
+ [T('tariff'),[MX2-.2,1.85,7.5],[MX2,1.95,MZ2],46],         // the $2,000 check floats down
+ [T('asked')+.1,[MX2+.3,1.6,6.9],[MX2,1.7,MZ2],46],
+ [T('he',1)+.15,[GX,2.6,15.4],[GX,2.55,19.2],46],           // fly to Trump: 'when did I do that?'
+ [T('catch'),[GX+.1,2.55,15.8],[GX,2.55,19.2],46],
  [T('income',4),[(GVX1+GVX2)/2,2.0,11.4],[(GVX1+GVX2)/2,1.25,GVZ],52],   // the government's money: two blocks
- [T('vanishes')+.4,[(GVX1+GVX2)/2,2.0,11.6],[(GVX1+GVX2)/2,1.25,GVZ],52],
- [T('mike',2)+.1,[MX2,1.75,7.0],[MX2,1.45,MZ2],46],         // Mike loses half his salary, the bills rain
- [T('bills')+.4,[MX2,1.8,7.2],[MX2,1.5,MZ2],46],
- [(T('bills')+.4+T('economists'))/2,[2.5,4.6,7.6],[-3.5,2.2,KZ],54],   // high over the street: never a low pass by lamps/hydrants
- [T('economists'),[KX+.75,2.5,4.4],[KX+.75,2.3,KZ],54],       // the TARIFFS container, the globe, the importer
- [T('price'),[KX+.75,2.4,4.6],[KX+.75,2.2,KZ],54],
+ [T('half'),[GVX2,1.55,13.4],[GVX2,1.15,GVZ],48],           // push to the income tax half
+ [T('collects'),[(GVX1+GVX2)/2+.5,2.5,11.2],[(GVX1+GVX2)/2,1.3,GVZ],52],
+ [T('cancel',1)+.1,[GVX2-.3,1.6,13.5],[GVX2,1.2,GVZ],48],   // 'cancel it': on the half that vanishes
+ [T('vanishes')+.4,[(GVX1+GVX2)/2,2.2,11.2],[(GVX1+GVX2)/2,1.3,GVZ],52],
+ [T('mike',2)+.1,[MX2,1.75,7.0],[MX2,1.45,MZ2],46],         // Mike loses half his salary
+ [T('keeping'),[MX2-.3,1.9,7.6],[MX2,1.7,MZ2],47],          // the bills rain
+ [T('bills')+.4,[MX2+.2,1.8,7.2],[MX2,1.5,MZ2],46],
+ [(T('bills')+.4+T('economists'))/2,[2.5,4.6,7.6],[-3.5,2.2,KZ],54],   // high over the street, never a low pass by lamps/hydrants
+ [T('economists'),[KX+.2,3.6,7.4],[KX+.2,3.35,KZ-1.0],48],  // the globe: other countries
+ [T('isn\'t')+.2,[KX-.2,3.5,8.0],[KX+.2,3.35,KZ-1.0],48],   // red X
+ [T('it\'s',1),[KX+1.5,1.8,8.6],[KX+1.6,1.4,KZ-2.1],46],    // the importer pays
+ [T('importer')+.2,[KX+1.1,1.9,8.2],[KX+1.3,1.45,KZ-2.1],46],
+ [T('price'),[KX+.75,2.3,5.8],[KX+.75,2.0,KZ],52],          // ...and it shows up in the price tag
  [T('mike\'s')+.1,[PX[0]-.5,1.55,12.9],[PX[0]-.5,1.2,DZ],50],   // Mike + the TV
- [T('his',4)-.2,[PX[0]-.5,1.55,12.9],[PX[0]-.5,1.2,DZ],50],   // hold on Mike + the TV
- [T('his',4)+.15,[PX[1],1.45,13.9],[PX[1],1.15,DZ],42],      // the sneakers
- [T('his',5)-.2,[PX[1],1.45,13.9],[PX[1],1.15,DZ],42],
- [T('his',5)+.15,[PX[2],1.45,13.9],[PX[2],1.15,DZ],42],      // the car parts
- [T('so',4)-.25,[PX[2],1.45,13.9],[PX[2],1.15,DZ],42],
- [T('so',4)+.1,[REGX+.5,1.6,12.7],[REGX+.5,1.25,DZ],50],        // the register: you still pay
+ [T('his',4)-.2,[PX[0]-.35,1.5,13.3],[PX[0]-.5,1.2,DZ],48],
+ [T('his',4)+.15,[PX[1],1.45,13.9],[PX[1],1.15,DZ],42],     // the sneakers
+ [T('his',5)-.2,[PX[1]+.15,1.4,14.1],[PX[1],1.15,DZ],42],
+ [T('his',5)+.15,[PX[2],1.45,13.9],[PX[2],1.15,DZ],42],     // the car parts
+ [T('so',4)-.25,[PX[2]-.15,1.4,14.1],[PX[2],1.15,DZ],42],
+ [T('so',4)+.1,[REGX+.5,1.6,12.7],[REGX+.5,1.25,DZ],50],    // the register: you still pay
+ [T('pay',1),[REGX+.1,1.45,13.6],[REGX-.25,1.3,DZ],46],     // push to the screen: HIGHER
  [T('next')+.2,[REGX+.2,1.5,13.3],[REGX+.15,1.05,DZ],46],   // the receipt rolls out
- [T('would',2),[REGX+.55,1.85,11.0],[REGX+.55,1.55,DZ],52],    // TAX or PRICES
- [65.5,[REGX+.55,2.1,10.4],[REGX+.55,1.55,DZ],54]);
+ [T('receipt'),[REGX-.05,1.3,14.3],[REGX-.25,.95,DZ],44],   // down the receipt: every price has a red arrow
+ [T('would',2)+.1,[CTX,1.6,12.2],[CTX,1.45,CTZ],50],         // CTA: Mike faces the viewer
+ [T('prices'),[CTX+.15,1.55,12.5],[CTX,1.45,CTZ],50],
+ [T('comment'),[CTX,1.7,11.7],[CTX,1.6,CTZ],52],
+ [64,[CTX-.1,1.75,11.4],[CTX,1.6,CTZ],53]);
+if(Q.get('dbg'))console.error('KEYS',KEYS.map(k=>k[0].toFixed(2)).join(' '));
 // ---- story animation ----
 const Mhold=(P,lift=.55)=>{arm(P,'L',AD[0]+lift,AD[2]-.28,.55);arm(P,'R',AD[0]+lift,AD[2]-.28,.55);};
 function midHands(P,o){P.g.updateMatrixWorld(true);P.BN.wristL.getWorldPosition(_w);P.BN.wristR.getWorldPosition(_a);return _w.clone().add(_a).multiplyScalar(.5).add(o);}
@@ -541,8 +563,16 @@ function story(t){
  else if(t<T('his',4)){x=PX[0]-1.0;z=DZ-.5;ry=Math.PI/2;arm(D,'R',AD[0]+1.35,AD[2]-.2,.15);face(D,{smile:t>T('higher')?0:.6,jaw:t>T('higher')?.18:0});}
  else if(t<T('his',5)+.25){x=PX[0]-1.0;z=DZ-.5;ry=Math.PI/2;arm(D,'R',AD[0]+.6,AD[2]-.2,.4);face(D,{smile:0,jaw:.12});}   // still at the TV (out of frame for the sneakers shot)
  else{x=REGX+.95;z=DZ-.5;ry=-.75;face(D,{smile:0,jaw:.1});
-  if(t<tWould){arm(D,'R',AD[0]+.9,AD[2]-.2,.9);if(t>T('check'))pose(D,'head',.2,.2,0);}
-  else{arm(D,'L',AD[0]+.4,AD[2]-1.0,.8);arm(D,'R',AD[0]+.4,AD[2]-1.0,.8);face(D,{smile:.4});if(t>T('comment')+.5){arm(D,'R',AD[0]+.3,AD[2]-2.0,.6+.35*Math.sin(t*10));}}}
+  if(t<tWould-.1){arm(D,'R',AD[0]+.9,AD[2]-.2,.9);if(t>T('check'))pose(D,'head',.2,.2,0);}
+  else{x=CTX;z=CTZ;ry=Math.PI;face(D,{smile:.7,jaw:.05});
+   const tT=T('tax',7),tP=T('prices'),tC=T('comment'),tX=T('tax',8),tQ=T('prices',1);
+   if(t<tT-.1){arm(D,'L',AD[0]+.45,AD[2]-.85,.9);arm(D,'R',AD[0]+.45,AD[2]-.85,.9);}                 // open palms: 'would you trade...'
+   else if(t<tP-.1){arm(D,'R',AD[0]+.4,AD[2]+.75,.35);pose(D,'head',0,.35,0);}                     // gestures to the 1040 (his right = screen left)
+   else if(t<tC){arm(D,'L',AD[0]+.4,AD[2]+.75,.35);pose(D,'head',0,-.35,0);}                       // gestures to the price tag
+   else if(t<tX-.05){arm(D,'R',AD[0]+1.45,AD[2]-.25,.1);face(D,{smile:1,jaw:.12});}                // points at the viewer: 'comment'
+   else if(t<tQ-.05){arm(D,'R',AD[0]+.3,AD[2]+1.45,.3);face(D,{smile:1,jaw:.1});}                  // TAX: right hand up
+   else{arm(D,'L',AD[0]+.3,AD[2]+1.45,.3);face(D,{smile:1,jaw:.1});}                               // PRICES: left hand up
+  }}
  D.g.position.set(x,y,z);D.g.rotation.y=ry;D.g.updateMatrixWorld(true);
  // paycheck + slice
  {const on=t>tMeet-.3&&t<tSo;PAY.visible=on;SLICE.visible=on&&t<T('big')+1.2;if(on){const p=midHands(D,V3(0,.05,.12));PAY.position.copy(p);PAY.rotation.set(0,0,0);
@@ -552,6 +582,7 @@ function story(t){
   TOWER.scale.y=Math.max(.001,a*(1-off));TOWER.position.y=.08+TWH*TOWER.scale.y/2;SMALL.scale.y=Math.max(.001,b*(1-off));SMALL.position.y=.08+SMH*SMALL.scale.y/2;
   const g=sm(T('grow'),T('overnight'),t),fade=sm(T('no'),T('happen'),t);GROW.scale.y=Math.max(.001,g*(1-fade)*(1-off));GROW.position.y=.08+SMH*SMALL.scale.y+(TWH-SMH)*GROW.scale.y/2;
   GROWM.forEach(m=>{m.opacity=1-.7*sm(T('no'),T('no')+.3,t);m.color.setRGB(1,1-.6*sm(T('no'),T('no')+.3,t),1-.6*sm(T('no'),T('no')+.3,t));});}
+ MOON.scale.setScalar(Math.max(.001,pop(t,T('overnight'),.3)*(1-sm(T('no')-.1,T('no')+.2,t))));MOON.position.y=8.6+.1*Math.sin(t*2);
  // coffee cup in his right hand
  CUP.visible=t>tMort&&t<tThen;if(CUP.visible){D.BN.wristR.getWorldPosition(_w);CUP.position.copy(_w).add(V3(0,.06,.06));}
  // the $2,000 check floats down, then 'when did I do that?' poof
@@ -571,6 +602,9 @@ function story(t){
   PAYB.visible=t>t0&&t<t0+.8;if(PAYB.visible){P.BN.wristL.getWorldPosition(_w);const k=sm(t0,t0+.7,t);PAYB.position.copy(_w).lerp(V3(KX+.3,1.4,KZ-1.75),k);PAYB.position.y+=.4*Math.sin(Math.PI*k);PAYB.rotation.set(t*5,t*3,0);}}
  // price tags: arrows pop on each 'higher price'
  ARROWS.forEach((m,i)=>{const t0=Tn('higher',i);const s=pop(t,t0,.3);m.scale.setScalar(Math.max(.001,s));m.position.y=.48+(t>t0?.06*Math.sin(t*6):0);TAGS[i].material.color.set(t>t0?0xffd0d0:0xffffff);});
+ {const s1=pop(t,T('tax',7)-.1,.3),s2=pop(t,T('prices')-.1,.3);ICT.visible=s1>.01;ICP.visible=s2>.01;
+  ICT.position.set(CTX+.6,1.68+.03*Math.sin(t*3),CTZ-.1);ICT.rotation.set(0,Math.PI+.15*Math.sin(t*1.5),.08*Math.sin(t*2));ICT.scale.setScalar(Math.max(.001,s1));
+  ICP.position.set(CTX-.6,1.68+.03*Math.sin(t*3+1),CTZ-.1);ICP.rotation.set(0,.15*Math.sin(t*1.5+1),.08*Math.sin(t*2+1));ICP.scale.setScalar(Math.max(.001,s2));}
  regScreen(t>T('pay',1)?'HIGHER':'$ - - -',t>T('pay',1)?'#ff3a2a':'#4dff74');
  {const t0=T('next')+.1,on=t>t0;RECEIPT.visible=on;if(on){const k=sm(t0,t0+1.0,t);RECEIPT.scale.set(1,Math.max(.001,k),1);RECEIPT.position.set(REGX-.25,1.45-.5*k,DZ-.38);RECEIPT.rotation.set(0,Math.PI,0);RECEIPT.material.map.repeat.set(1,Math.max(.001,k));RECEIPT.material.map.offset.set(0,1-k);}}
 }
@@ -582,7 +616,8 @@ await loaded;
  trumpPose(tThrow-.001);TR.g.updateMatrixWorld(true);RP.rel=[0,1].map(i=>halfAt(i,tThrow-.001));}
 await Promise.all(Object.values(MODELS));
 const cap=document.getElementById('cap');
-window.renderAt=t=>{setCam(t);animate(t);
+window.renderAt=t=>{try{return renderAt0(t);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}};
+const renderAt0=t=>{setCam(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
 window.renderAt(Number(Q.get('t')||0));document.title='ready';
