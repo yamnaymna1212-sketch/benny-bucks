@@ -8,6 +8,10 @@ for w in raw:
 for a,b in zip(W,W[1:]):
     if a['w'].lower()=='comment' and b['w'].lower().startswith('pump'):b['w']='PUMP'
     if a['w']=='or' and b['w'].lower().startswith('tax') and W.index(b)>len(W)-12:b['w']='TAX'
+for i,w in enumerate(W):   # whisper fixes
+    if w['w']=='who,':w['w']='Who?'
+    if w['w']=='does,':w['w']='does.'
+    if w['w']=='in' and i+2<len(W) and W[i+2]['w']=='bigger':w['w']='and'
 W[0]['s']=0.0
 # CTA trimmed (user 2026-11-03): the video ends on 'Comment PUMP or TAX'
 W=W[:[i for i,w in enumerate(W) if w['w']=='TAX'][-1]+1]

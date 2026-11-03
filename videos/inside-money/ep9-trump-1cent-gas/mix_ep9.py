@@ -21,11 +21,34 @@ def cut(sig,dur,fade=.12):   # trim a long SFX so it never bleeds into the next 
 for k in['fahh','pop','notif2']:S[k]=load(f'{SFX}/user-{k}.wav')
 W=lambda w,n=0:Wn(w,n)
 put(cut(S['ting'],.3,.15),0.0,.14)                                            # soft ting under the first word
-put(cut(S['cash-register'],.6),W('cent')+.02,.24);put(S['pop'],W('cent'),.18)   # $0.01 pops
+put(cut(S['cash-register'],.6),W('cent')+.02,.2)   # one cent
 put(cut(S['whoosh'],.5),W('$4.23')-.25,.18)                                    # push toward the board
 put(S['boom'],W('$4.23'),.32);put(S['ting'],W('$4.23')+.05,.26)                # the board flips to red $4.23
 put(cut(S['fahh'],.8),W('$4.23')+.3,.2)                                        # the crowd's regret
-# ---------- story SFX: after hook approval ----------
+# ---------- story SFX: a whoosh on every camera flight, a sound on every event ----------
+for k in['wrong','shock','money-transfer','aww']:S[k]=load(f'{SFX}/user-{k}.wav')
+for w,n in[('meet',0),('oil',0),("it's",0),('who',0),('americans',0),('pay',1),('government',0),('today',0),('so',3)]:put(cut(S['whoosh'],.6),W(w,n)-.6,.2)
+put(cut(S['notif'],.35),W('says'),.2)                                          # pump screen shows $4.23
+put(S['pop'],W('cent',1)-.15,.2);put(cut(S['wow'],.5),W('dream')-.2,.14)       # the $0.01 dream bubble
+put(cut(S['wrong'],.5),W('but'),.22)                                           # bubble pops, head shake
+for w in['oil','refinery','trucks','stations']:put(S['pop'],W(w)-.05,.18)       # supply chain pops in
+put(S['ting'],W('$422'),.26)                                                    # $4.22
+put(cut(S['boom'],.5,.2),W('difference'),.2)                                    # ?
+put(cut(S['cash-register'],.6),W('$50'),.22);put(S['ting'],W('cent',2),.24)     # $50 steak -> 1 cent
+put(cut(S['cash-register'],.6),W('$50',1),.2);put(cut(S['money'],.6),W('pays'),.2)   # costs $50, pays the chef
+put(S['pop'],W('mike',1),.18)                                                   # Mike does
+put(cut(S['money-transfer'],1.0),W('fill'),.16);put(S['boom'],W('$63'),.26);put(S['ting'],W('$63')+.05,.22)   # 15 gallons, $63 hidden
+for i in range(9):put(cut(S['slap'],.2),W('burn')+i*.24,.12)                   # cans stack up
+put(S['ting'],W('136'),.26)
+for i in range(10):put(cut(S['money'],.25),W('$422',1)+i*.28,.1)               # money tower rises
+put(S['boom'],W('$570'),.32);put(cut(S['cash-register'],.7),W('$570')+.1,.2)
+put(cut(S['shock'],.8),W('catch'),.2)
+put(cut(S['aww'],.8),W('money')+.1,.2)                                         # empty safe
+put(S['pop'],W('taxes')-.1,.2);put(S['pop'],W('debt')-.1,.2);put(cut(S['aww'],.7),W('kids'),.18)
+put(cut(S['notif2'],.5),W('today'),.18);put(S['ting'],W('tax'),.26)            # TAX 50 cents slice
+put(cut(S['cash-register'],.6),W('pump',1),.2);put(cut(S['wrong'],.5),W('tax',1),.24)   # 1 cent at the pump / $4.22 on the tax bill
+put(S['pop'],W('tax',2),.22);put(S['pop'],W('pump',2),.22)                     # TAX / PUMP signs
+
 m=np.abs(out).max();out=out/m*.89
 subprocess.run(['ffmpeg','-v','error','-y','-f','f32le','-ar',str(SR),'-ac','1','-i','-','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar',str(SR),'-ac','2',f'{RK}/mix_ep9.wav'],input=out.tobytes(),check=True)
 print('mix ok',DUR)

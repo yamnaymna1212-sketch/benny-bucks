@@ -137,7 +137,7 @@ shop(56,-8,12,'FIRST NATIONAL BANK','#14335f',0);shop(70,-8,9,"JOE'S DINER",'#9b
 for(const cx of[-4,-1.3,1.3,4]){add(CY(.25,.28,4,24),M(0xf2eee6,.5),56+cx,2.2,-3.6);add(CY(.25,.28,4,24),M(0xf2eee6,.5),-20+cx,2.2,18.4);}
 // ================= STREET LIFE: trees, lamps, hydrants, parked cars =================
 const TREES=['island_tree_01','jacaranda_tree','island_tree_02'];
-for(let x=-80;x<=80;x+=13.5){if(x>-13&&x<17)continue;if(!(x+2>46&&x+2<62))model(TREES[Math.abs(Math.round(x))%2],x+2,.1,1.0,7+Math.abs(Math.sin(x))*2.5,x);if(!(x-4>10&&x-4<54))model(TREES[(Math.abs(Math.round(x))+1)%2],x-4,.1,14.2,7.5+Math.abs(Math.cos(x))*2,x+1);}
+for(let x=-80;x<=80;x+=13.5){if(x>-13&&x<17)continue;if(!(x+2>46&&x+2<62))model(TREES[Math.abs(Math.round(x))%2],x+2,.1,1.0,7+Math.abs(Math.sin(x))*2.5,x);if(!(x-4>10&&x-4<54)&&!(x-4>-35&&x-4<-24))model(TREES[(Math.abs(Math.round(x))+1)%2],x-4,.1,14.2,7.5+Math.abs(Math.cos(x))*2,x+1);}
 for(const [x,z] of[[-30,-22],[-8,-24],[14,-21],[34,-23],[-48,-24],[2,-36],[-24,-37],[26,-36]])model('jacaranda_tree',x,0,z,10+Math.abs(Math.sin(x))*3,x);
 for(let x=-75;x<=80;x+=27)model('street_lamp_01',x,.1,3.0,5.2,0);
 for(let x=-62;x<=80;x+=27){if(x===-8||x===46)continue;model('street_lamp_01',x,.1,12.0,5.2,Math.PI);}
@@ -160,7 +160,7 @@ function vehicle(type,color,x,z,ry,label){const p=PROF[type],g=new THREE.Group()
  return g;}
 const PICK=vehicle('pickup',0x7d1f1f,MX+6.8,-1.4,-Math.PI/2);                       // Mike's old pickup in his driveway
 vehicle('sedan',0x2c4f7c,-27-6.8,-1.4,-Math.PI/2);vehicle('sedan',0x9a9da3,29+6.8,-1.4,-Math.PI/2);
-vehicle('sedan',0xb0322e,-40,11.0,0);vehicle('suv',0x3b4a3a,5,11.2,Math.PI);vehicle('sedan',0xe8e4da,-60,4.2,0);
+vehicle('sedan',0xb0322e,-40,11.0,0);vehicle('suv',0x3b4a3a,-50,11.2,Math.PI);vehicle('sedan',0xe8e4da,-60,4.2,0);
 const IRSV=vehicle('suv',0x0b0c0f,-40,5.6,0,'IRS');
 // ================= MIKE'S LIVING ROOM (house-local, floor top y=.52) =================
 const NOTE=tex(1024,436,x=>{const g=x.createLinearGradient(0,0,1024,436);g.addColorStop(0,'#cddcbd');g.addColorStop(.55,'#bccfa9');g.addColorStop(1,'#c6d6b3');x.fillStyle=g;x.fillRect(0,0,1024,436);
@@ -219,18 +219,17 @@ const BNT=tex(1536,256,t=>{t.fillStyle='#16224a';t.fillRect(0,0,1536,256);t.fill
  t.font='800 150px Mont';t.textAlign='center';t.fillText('U.S. GOVERNMENT',768,165);for(const cx of[70,1466]){t.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?18:44;t.lineTo(cx+r*Math.cos(a),110+r*Math.sin(a));}t.fill();}});
 let fl;const BDC=document.createElement('canvas');BDC.width=1024;BDC.height=540;const BDT=new THREE.CanvasTexture(BDC);BDT.colorSpace=THREE.SRGBColorSpace;BDT.anisotropy=8;
 {const bk=add(B(2.3,2.0,.08),M(0x16224a,.7),GX,SY+3.1,20.52);   // navy backdrop
- const bp=add(new THREE.PlaneGeometry(2.1,.36),new THREE.MeshStandardMaterial({map:BNT,roughness:.6}),GX,SY+3.88,20.47,scene,false);bp.rotation.y=Math.PI;
+ const bp=add(new THREE.PlaneGeometry(2.1,.36),new THREE.MeshStandardMaterial({map:BNT,roughness:.6}),GX,SY+3.88,20.47,scene,false);bp.rotation.y=Math.PI;bp.visible=false;
  fl=add(new THREE.PlaneGeometry(1.9,1.0),new THREE.MeshBasicMaterial({map:BDT,toneMapped:false}),GX,SY+3.05,20.47,scene,false);fl.rotation.y=Math.PI;}
 // mic stand
-add(CY(.012,.012,1.5,8),M(0x222222,.3,.8),GX+.95,SY+.75,19.3);add(CY(.13,.13,.02,20),M(0x222222,.3,.8),GX+.95,SY+.01,19.3);{const mk=add(CY(.025,.018,.14,12),M(0x111111,.3,.6),GX+.85,SY+1.52,19.25);mk.rotation.z=1.0;}
 
 // ================= EP9 gas pump on the stage (screen right of Trump) + price board =================
-function board(price,col){const x=BDC.getContext('2d');x.fillStyle='#0b1530';x.fillRect(0,0,1024,540);x.fillStyle='#d21e2a';x.fillRect(0,0,1024,76);x.fillStyle='#fff';x.font='800 52px Mont';x.textAlign='center';x.fillText('REGULAR GAS',512,56);
- x.font='800 40px Mont';x.fillText('PER GALLON',512,508);x.fillStyle=col;x.font='800 250px Mont';x.fillText(price,512,390);x.strokeStyle='#fff';x.lineWidth=12;x.strokeRect(6,6,1012,528);BDT.needsUpdate=true;}
+function board(price,col){const x=BDC.getContext('2d');x.fillStyle='#0b1530';x.fillRect(0,0,1024,540);x.fillStyle='#d21e2a';x.fillRect(0,0,1024,76);x.fillStyle='#fff';x.font='800 52px Mont';x.textAlign='center';x.font='800 64px Mont';x.fillText('GAS',512,62);
+ x.fillStyle=col;x.font='800 290px Mont';x.fillText(price,512,400);x.strokeStyle='#fff';x.lineWidth=12;x.strokeRect(6,6,1012,528);BDT.needsUpdate=true;}
 board('$0.01','#22e06a');
 const PC2=document.createElement('canvas');PC2.width=256;PC2.height=160;const PT2=new THREE.CanvasTexture(PC2);PT2.colorSpace=THREE.SRGBColorSpace;
 function pumpScr(price,col){const x=PC2.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,160);x.fillStyle='#9fb6d0';x.font='800 28px Mont';x.textAlign='center';x.fillText('PRICE / GAL',128,36);x.fillStyle=col;x.font='800 76px Mont';x.fillText(price,128,118);PT2.needsUpdate=true;}
-pumpScr('$0.01','#4dff74');
+{const x=PC2.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,160);x.fillStyle='#e8f0ff';x.font='800 70px Mont';x.textAlign='center';x.fillText('GAS',128,105);PT2.needsUpdate=true;}   // hook pump: no second number
 const PUX=GX-1.2,PUZ=19.5;
 {const red=M(0xc8202a,.4,.2),wht=M(0xf3f3f0,.5),dk=M(0x24262b,.6,.3);
  add(B(1.0,.12,.8),dk,PUX,SY+.06,PUZ);add(RB(.78,1.8,.58,.08),red,PUX,SY+1.02,PUZ);add(B(.8,.18,.6),wht,PUX,SY+1.95,PUZ);add(B(.8,.1,.6),wht,PUX,SY+.5,PUZ);
@@ -244,14 +243,13 @@ const PENT=tex(512,512,x=>{const g=x.createRadialGradient(220,200,30,256,256,256
  x.font='800 56px Mont';x.fillText('LIBERTY',256,112);x.font='800 200px Mont';x.fillText('1¢',256,330);x.font='800 52px Mont';x.fillText('ONE CENT',256,420);
  x.fillStyle='rgba(255,220,180,.25)';x.beginPath();x.ellipse(190,170,120,60,-.6,0,7);x.fill();});
 const PENNY=new THREE.Mesh(CY(.17,.17,.025,64),[M(0xb8683a,.35,.9),new THREE.MeshStandardMaterial({map:PENT,roughness:.35,metalness:.75}),M(0x9a5530,.4,.9)]);PENNY.castShadow=true;scene.add(PENNY);PENNY.visible=false;
-const CAN=new THREE.Group();scene.add(CAN);{const red=M(0xd0242c,.35,.2),bl=M(0x18181a,.5,.3);
+const CAN=new THREE.Group();{const red=M(0xd0242c,.35,.2),bl=M(0x18181a,.5,.3);
  add(RB(.36,.46,.17,.035),red,0,.23,0,CAN);add(B(.3,.05,.18),red,0,.03,0,CAN);
  const hd=add(new THREE.TorusGeometry(.07,.016,10,20,Math.PI),bl,-.06,.46,0,CAN);
  const sp=add(CY(.022,.03,.2,16),bl,.13,.52,0,CAN);sp.rotation.z=-.7;add(CY(.04,.04,.03,16),bl,.1,.47,0,CAN);
  const lb=tex(512,320,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,512,320);x.fillStyle='#d0242c';x.fillRect(0,0,512,70);x.fillStyle='#fff';x.font='800 54px Mont';x.textAlign='center';x.fillText('GASOLINE',256,54);
   x.fillStyle='#111';x.font='800 150px Mont';x.fillText('1 GAL',256,215);x.font='800 40px Mont';x.fillText('UNLEADED',256,290);});
  const l=add(new THREE.PlaneGeometry(.27,.17),new THREE.MeshStandardMaterial({map:lb,roughness:.6}),0,.24,-.087,CAN,false);l.rotation.y=Math.PI;}
-add(B(.5,.5,.42),pbr('oak_wood_planks',1,1,0x9a7650),GX-.7,SY+.25,18.85);CAN.position.set(GX-.7,SY+.5,18.85);CAN.rotation.y=.15;   // the can sits on a wooden crate so it stays in frame
 // four real $1 bills fan out above the gas can when the price flips to $4.23
 const ONE=tex(1024,436,x=>{x.fillStyle='#d9dfcc';x.fillRect(0,0,1024,436);x.strokeStyle='#3d5a45';x.lineWidth=14;x.strokeRect(14,14,996,408);x.lineWidth=3;x.strokeRect(34,34,956,368);
  x.fillStyle='#2f4a38';x.textAlign='center';x.font='800 40px Mont';x.fillText('THE UNITED STATES OF AMERICA',512,86);x.font='800 70px Mont';x.fillText('ONE',512,380);x.font='800 26px Mont';x.fillText('FEDERAL RESERVE NOTE',512,124);
@@ -301,7 +299,7 @@ function solveReach(P,sd,tgt){const w=V3(),res={ux:0,uz:0,lx:0};let best=1e9;for
  pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);P.g.updateMatrixWorld(true);P.BN['wrist'+sd].getWorldPosition(w);const d=w.distanceTo(tgt);if(d<best){best=d;Object.assign(res,{ux,uz,lx});}}return res;}
 const TR=person('trump',GX,SY,19.25,Math.PI);
 const MIKE=person('mike',GX+.62,0,15.8,-.08);
-const CROWD=[['guard',GX+1.7,16.2,-.15],['teller',GX-.9,16.9,.05],['manager',GX+2.6,16.9,-.2],['printer',GX+1.0,17.0,-.05]].map(([n,x,z,r])=>person(n,x,0,z,r));
+const CROWD=[];   // hook = Trump + board + pump + Mike only (user 2026-11-03: no clutter)
 // Trump extras: blond volume on top + US flag pin (attached to bones, so they follow every pose)
 const HAIRT=tex(256,256,x=>{x.fillStyle='#e6bd66';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.strokeStyle=`rgba(${150+Math.random()*90},${100+Math.random()*70},30,${.15+Math.random()*.2})`;x.lineWidth=1+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);x.bezierCurveTo(80,y-20,170,y+15,256,y-10);x.stroke();}});
 const HAIRM=new THREE.MeshStandardMaterial({color:0xffffff,map:HAIRT,roughness:.65});
@@ -349,9 +347,27 @@ const KEYS=[   // every key is centred on the subject of the spoken words, nothi
  [tCent,[GX+.2,1.78,13.2],[GX-.35,2.8,19.2],43],
  [tPrice-.1,[GX+.1,1.85,13.4],[GX-.1,3.2,19.3],40],   // push toward the board
  [tPrice+.5,[GX+.15,1.9,13.1],[GX-.2,2.95,19.2],45],   // the board flips to red $4.23: whole board + Trump + Mike in frame
- [tPrice+3.0,[GX+.3,1.8,13.0],[GX-.3,2.85,19.2],46],
+ [4.35,[GX+.3,1.8,13.0],[GX-.3,2.85,19.2],46],
+ // S1 gas station: the camera flies to Mike on 'Mike'
+ [5.0,[-30.4,1.75,10.0],[-30.4,1.4,15.0],44],[Wd('says')+.2,[-30.8,1.6,11.7],[-30.9,1.45,15.3],37],[Wd('dream')-.6,[-30.2,2.0,10.7],[-30.1,2.05,14.8],42],[Wd('so')+.3,[-30.3,1.8,10.9],[-30.1,1.75,14.8],41],
+ // S2 the supply chain
+ [Wd('oil')-.1,[-19.85,2.2,5.6],[-19.85,1.5,15.6],50],[Wd('$422'),[-19.85,2.5,5.4],[-19.85,2.1,15.6],50],[Wd('difference'),[-19.85,2.4,5.9],[-19.85,1.95,15.6],49],
+ // S3 the steak
+ [Wd("it's")+.1,[-12.5,1.75,10.7],[-12.5,1.2,15.3],42],[Wd('steak')+.2,[-12.5,1.55,11.2],[-12.5,1.05,15.2],40],[Wd('$50',1),[-12.4,1.6,11.0],[-12.4,1.1,15.3],41],[Wd('chef')-.2,[-12.15,1.8,11.5],[-12.15,1.45,15.8],41],
+ // S4 'Mike does' + the 15-gallon fill-up
+ [Wd('who')+.35,[-3.6,1.7,11.0],[-3.6,1.4,14.9],42],[Wd('fill')+.1,[-3.85,1.65,11.3],[-3.9,1.45,15.2],40],[Wd('$63'),[-3.8,1.95,10.6],[-3.8,1.8,15.1],43],
+ // S5 136 billion gallons, S6 $570 billion
+ [Wd('americans')+.2,[5,2.6,5.2],[5,3.0,16.3],50],[Wd('gallons',1),[5,3.2,4.4],[5,3.6,16.3],52],
+ [Wd('pay',1)+.25,[15,2.5,7.0],[15,2.1,16.3],48],[Wd('billion',1),[15,3.1,5.6],[15,2.7,16.3],50],[Wd('and',4),[15.3,3.0,6.0],[15.3,2.6,16.3],50],
+ // S7 the rally stage: empty safe, TAXES, IOU, Mike's kids
+ [Wd('government')+.1,[GX+.25,1.9,12.7],[GX-.3,2.5,19.0],46],[Wd('taxes')-.2,[GX+.1,1.85,12.6],[GX-.05,2.2,18.8],46],[Wd('kids')-.2,[GX+.62,1.5,11.9],[GX+.62,1.15,15.6],44],
+ // S8 the gallon jug, S9 pump vs tax bill, CTA
+ [Wd('today')+.2,[35.7,1.6,9.6],[35.7,1.15,15.4],44],[Wd('tax')+.1,[35.6,1.55,10.2],[35.6,1.15,15.5],42],
+ [Wd('so',3)+.2,[40,1.7,8.8],[40,1.3,15.0],48],[Wd('pump',1),[40.1,1.65,9.0],[40.1,1.3,15.0],48],[Wd('tax',1),[39.9,1.65,9.0],[39.9,1.3,15.0],48],
+ [Wd('next')+.1,[40,1.65,11.6],[40,1.5,14.6],40],[Wd('would',2),[40.05,1.7,10.9],[40,1.55,14.6],42],[Wd('tax',2),[40,1.75,10.4],[40,1.6,14.6],44],
 ];
 
+for(let i=KEYS.length-2;i>=0;i--){const a=KEYS[i],b=KEYS[i+1];if(Math.hypot(a[1][0]-b[1][0],a[1][2]-b[1][2])>3)KEYS.splice(i+1,0,[Math.max(a[0]+.05,b[0]-.6),a[1],a[2],a[3]]);}   // hold the shot, then fly
 function hv(t,sel){let i=0;while(i<KEYS.length-2&&t>=KEYS[i+1][0])i++;const a=KEYS[Math.max(0,i-1)],b=KEYS[i],c=KEYS[i+1],d=KEYS[Math.min(KEYS.length-1,i+2)];
  const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2,out=[];const A=sel(a),Bv=sel(b),C=sel(c),D=sel(d);
  const tg=(dl,dr)=>dl*dr<=0?0:Math.sign(dr)*Math.min(Math.abs(dl+dr)/2,3*Math.abs(dl),3*Math.abs(dr));   // monotone tangents: never overshoots a key
@@ -366,7 +382,6 @@ const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k
 const _w=V3(),_a=V3();
 // ---- floating words ----
 
-cpop('$0.01',.15,0x22e06a,tCent-.05,tPrice-.2,.55);cpop('$4.23',.17,0xff1e1e,tPrice,tPrice+2.2,.55);
 const RP={};const REST={ux:AD[0],uz:AD[2],lx:0};
 const lerpA=(a,b,k)=>({ux:a.ux+(b.ux-a.ux)*k,uz:a.uz+(b.uz-a.uz)*k,lx:a.lx+(b.lx-a.lx)*k});
 const setA=(P,sd,a)=>{pose(P,'upperarm01'+sd,a.ux,0,(sd==='L'?-1:1)*a.uz);pose(P,'lowerarm01'+sd,a.lx,0,0);};
@@ -379,23 +394,172 @@ function trumpPose(t){const P=TR;relax(P);idle(P,t,1);P.g.position.set(GX,SY,19.
  const lid=Number(Q.get('lid')??-.12),lo=Number(Q.get('lo')??.08),pk=Number(Q.get('pk')??.0);
  for(const sd of['L','R']){pose(P,'orbicularis03'+sd,lid,0,0);pose(P,'orbicularis04'+sd,lo,0,0);}
  if(pk)for(const n of['oris01','oris05'])pose(P,n,pk,0,0);}
+// ================= EP9 STORY (after the hook): one place + one event per line, west -> east along the north lawn of Maple St =================
+// camera looks +z (north) everywhere, so SCREEN RIGHT = -x. Scenes: S1 gas station (x -31) / S2 supply chain (-22) / S3 steak (-12) / S4 fill-up (-4)
+// S5 gas-can tower (5) / S6 money tower (15) / S7 rally stage (27) / S8 gallon jug (35) / S9 pump vs tax bill + CTA (40)
+const T=(w,n=0)=>Wd(w,n);
+const MK=person('mike',-30,0,14.6,Math.PI);   // the story Mike (the hook Mike stays at the stage)
+const canvasTex=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return {c,t};};
+// ---- a real gas pump with its own screen (gallons + price) ----
+function makePump(x,z){const red=M(0xc8202a,.4,.2),wht=M(0xf3f3f0,.5),dk=M(0x24262b,.6,.3),g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ add(B(1.0,.12,.8),dk,0,.06,0,g);add(RB(.78,1.8,.58,.08),red,0,1.02,0,g);add(B(.8,.18,.6),wht,0,1.95,0,g);add(B(.8,.1,.6),wht,0,.5,0,g);
+ const {c,t}=canvasTex(256,200);const sc=add(new THREE.PlaneGeometry(.6,.47),new THREE.MeshBasicMaterial({map:t,toneMapped:false}),0,1.38,-.296,g,false);sc.rotation.y=Math.PI;
+ add(B(.1,.55,.1),dk,.5,1.0,-.05,g);const nz=add(B(.07,.3,.16),dk,.5,.62,-.14,g);nz.rotation.x=.4;
+ const hs=add(new THREE.TorusGeometry(.22,.025,10,24,Math.PI*1.4),dk,.34,.75,-.3,g,false);hs.rotation.set(0,0,-.5);
+ let last='';const draw=(gal,price,col)=>{const k=gal+price+col;if(k===last)return;last=k;const x=c.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,200);x.textAlign='center';
+  x.fillStyle='#9fb6d0';x.font='800 26px Mont';x.fillText('GALLONS',128,30);x.fillStyle='#e8f0ff';x.font='800 50px Mont';x.fillText(gal,128,80);
+  x.fillStyle='#9fb6d0';x.font='800 26px Mont';x.fillText('PRICE / GAL',128,118);x.fillStyle=col;x.font='800 66px Mont';x.fillText(price,128,184);t.needsUpdate=true;};
+ draw('0.000','$4.23','#ff4a3a');return {g,draw};}
+// ---- S1 gas station at GAS & GO (x -31): pump, Mike's pickup, Mike with the nozzle ----
+const P1=makePump(-31,15.6);vehicle('pickup',0x7d1f1f,-26.6,15.6,Math.PI);
+add(B(5,.25,3.2),M(0xf3f3f0,.5),-30.2,4.3,15.6);for(const x of[-32.2,-28.2])add(CY(.12,.12,4.2,16),M(0xdcdcdc,.4,.6),x,2.1,15.6);   // canopy over the pump
+{const ct=tex(1024,128,x=>{x.fillStyle='#c25b0a';x.fillRect(0,0,1024,128);x.fillStyle='#fff';x.font='800 92px Mont';x.textAlign='center';x.fillText('GAS & GO',512,98);});const m=add(new THREE.PlaneGeometry(4.6,.25),new THREE.MeshStandardMaterial({map:ct,roughness:.6}),-30.2,4.3,13.99,scene,false);m.rotation.y=Math.PI;}
+const NOZ=add(B(.06,.26,.14),M(0x24262b,.6,.3),0,0,0,scene);NOZ.visible=false;
+// thought bubble: $0.01 dream
+const BUB=new THREE.Group();scene.add(BUB);{const wm=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5,emissive:0x333333});
+ add(new THREE.SphereGeometry(.06,16,10),wm,.1,-.38,0,BUB);add(new THREE.SphereGeometry(.09,16,10),wm,.22,-.2,0,BUB);const big=add(new THREE.SphereGeometry(.42,32,16),wm,.42,.18,0,BUB);big.scale.set(1.35,.8,.3);}
+const BUBT=txt3('$0.01',.16,0x18c45a,BUB);BUBT.position.set(.42,.1,-.16);BUBT.rotation.y=Math.PI;BUB.visible=false;
+// ---- S2 the supply chain (x -22): oil barrel, refinery, tanker truck, gas station ----
+const CHAIN=[];
+{const g=new THREE.Group();g.position.set(-17.6,0,15.6);scene.add(g);const bm=M(0x1f4f9a,.45,.4);add(CY(.38,.38,1.15,32),bm,0,.58,0,g);for(const y of[.25,.58,.9])add(CY(.395,.395,.05,32),M(0x173d78,.4,.5),0,y,0,g);
+ const lt=tex(512,256,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,512,256);x.fillStyle='#111';x.font='800 120px Mont';x.textAlign='center';x.fillText('OIL',256,170);});const l=add(new THREE.PlaneGeometry(.42,.21),new THREE.MeshStandardMaterial({map:lt,roughness:.7}),0,.6,-.385,g,false);l.rotation.y=Math.PI;CHAIN.push(g);}
+{const g=new THREE.Group();g.position.set(-18.9,0,15.9);scene.add(g);const st=M(0xd8dade,.35,.7);add(CY(.55,.55,1.6,32),st,0,.8,0,g);add(new THREE.SphereGeometry(.55,32,12,0,Math.PI*2,0,Math.PI/2),st,0,1.6,0,g);
+ add(CY(.12,.14,3.0,16),M(0xb0b3b8,.4,.6),.75,1.5,.1,g);for(const y of[1.2,2.2])add(CY(.15,.15,.12,16),M(0xd21e2a,.5),.75,y,.1,g);
+ const fl=add(new THREE.ConeGeometry(.12,.35,12),new THREE.MeshBasicMaterial({color:0xffa020,toneMapped:false}),.75,3.15,.1,g,false);fl.userData.flame=1;
+ add(CY(.05,.05,1.2,10),M(0x8c8f94,.4,.7),.38,.5,0,g).rotation.z=Math.PI/2;CHAIN.push(g);}
+{const g=new THREE.Group();g.position.set(-20.5,0,15.6);g.rotation.y=Math.PI;g.userData.s=.7;scene.add(g);const tk=M(0xeef0f2,.3,.6),cb=M(0xc8202a,.4,.2),dk=M(0x1a1a1a,.8);
+ const tank=add(CY(.48,.48,2.1,32),tk,-.35,.95,0,g);tank.rotation.z=Math.PI/2;add(RB(.75,1.0,.95,.08),cb,1.05,.85,0,g);add(B(.05,.4,.8),M(0x22303f,.1,.4),1.43,1.05,0,g);
+ for(const x of[-1.1,-.2,1.05])for(const z of[-.42,.42]){const w=add(CY(.22,.22,.16,20),dk,x,.22,z,g);w.rotation.x=Math.PI/2;}
+ const lt=tex(512,128,x=>{x.fillStyle='#eef0f2';x.fillRect(0,0,512,128);x.fillStyle='#c8202a';x.font='800 96px Mont';x.textAlign='center';x.fillText('FUEL',256,100);});const l=add(new THREE.PlaneGeometry(1.2,.3),new THREE.MeshStandardMaterial({map:lt,roughness:.6}),-.35,.95,.485,g,false);CHAIN.push(g);}
+const P2=makePump(-22.1,15.6);P2.draw('','$4.22','#ffc61a');CHAIN.push(P2.g);
+// ---- S3 the steak (x -12): table, plate, steak, $50 sign, the chef ----
+const STK=new THREE.Group();scene.add(STK);STK.position.set(-12,0,15.2);
+{const wd=pbr('oak_wood_planks',1,1,0x8a5a3a);add(B(1.3,.06,.8),wd,0,.78,0,STK);for(const x of[-.58,.58])for(const z of[-.32,.32])add(B(.06,.76,.06),wd,x,.38,z,STK);
+ add(CY(.26,.22,.03,40),M(0xffffff,.3),0,.825,-.05,STK);
+ const gt=tex(256,256,x=>{x.fillStyle='#6b2e17';x.fillRect(0,0,256,256);x.fillStyle='#9b4a25';x.fillRect(18,18,220,220);x.strokeStyle='#2a1208';x.lineWidth=14;for(let i=0;i<5;i++){x.beginPath();x.moveTo(20+i*50,20);x.lineTo(i*50-40,236);x.stroke();}});
+ const s=add(RB(.34,.05,.24,.025),new THREE.MeshStandardMaterial({map:gt,roughness:.55}),0,.86,-.05,STK);s.rotation.y=.3;
+ add(B(.02,.01,.2),M(0xd0d0d0,.2,1),.3,.85,-.05,STK);}
+const {c:SGC,t:SGT}=canvasTex(512,640);
+function steakSign(top,price,col){const x=SGC.getContext('2d');x.fillStyle='#1b1b1b';x.fillRect(0,0,512,640);x.strokeStyle='#8a5a3a';x.lineWidth=24;x.strokeRect(12,12,488,616);x.fillStyle='#fff';x.textAlign='center';
+ x.font='800 84px Mont';x.fillText(top,256,150);x.fillStyle=col;x.font='800 200px Mont';x.fillText(price,256,420);SGT.needsUpdate=true;}
+steakSign('STEAK','$50','#ffffff');
+{const g=new THREE.Group();g.position.set(-13.05,0,15.0);g.rotation.y=Math.PI;scene.add(g);const wd=M(0x6b4a2a,.7);for(const s of[-1,1]){const l=add(B(.05,1.25,.05),wd,s*.36,.62,0,g);}
+ add(new THREE.PlaneGeometry(.72,.9),new THREE.MeshBasicMaterial({map:SGT,toneMapped:false}),0,.85,.04,g,false);}
+SRC.manager.traverse(o=>{if(o.isMesh&&!/body|eye|brow|lash|teeth|tongue|hair|short|bob|ponytail|messy/i.test(o.name+o.material.name)){o.material.map=null;o.material.color.set(/shoe/i.test(o.name)?0x222222:0xf6f6f4);o.material.needsUpdate=true;}});   // chef whites
+const CHEF=person('manager',-12,0,15.95,Math.PI);
+{CHEF.g.updateMatrixWorld(true);const h=V3();CHEF.BN.head.getWorldPosition(h);const wm=M(0xffffff,.6);const hat=new THREE.Group();hat.position.copy(h).add(V3(0,.17,0));scene.add(hat);
+ add(CY(.1,.1,.14,24),wm,0,0,0,hat);const pf=add(new THREE.SphereGeometry(.15,24,12),wm,0,.13,0,hat);pf.scale.set(1,.6,1);CHEF.BN.head.attach(hat);}
+const FIFTY=tex(1024,436,x=>{x.fillStyle='#e6d9c4';x.fillRect(0,0,1024,436);x.strokeStyle='#5b4a3a';x.lineWidth=14;x.strokeRect(14,14,996,408);x.fillStyle='#3d3226';x.textAlign='center';x.font='800 40px Mont';x.fillText('THE UNITED STATES OF AMERICA',512,86);
+ x.font='800 120px Mont';for(const [a,b] of[[110,150],[914,150],[110,400],[914,400]])x.fillText('50',a,b);x.fillStyle='#d4c3a8';x.beginPath();x.ellipse(512,236,120,135,0,0,7);x.fill();x.fillStyle='#6b5a48';x.beginPath();x.ellipse(512,226,62,78,0,0,7);x.fill();x.fillRect(450,284,124,70);x.fillStyle='#c04a2a';x.font='800 64px Mont';x.fillText('FIFTY',512,390);});
+const BILL50=add(new THREE.PlaneGeometry(.5,.213),new THREE.MeshStandardMaterial({map:FIFTY,roughness:.8,side:THREE.DoubleSide}),0,0,0,scene,false);BILL50.visible=false;
+// ---- S4 the fill-up (x -4): Mike's pickup + a pump counting 15 gallons ----
+const P4=makePump(-4.3,15.6);vehicle('pickup',0x7d1f1f,-7.4,15.6,Math.PI);
+// ---- S5 136 billion gallons: a tower of red 1-gallon cans rising out of the lawn (x 5) ----
+const CANG=new THREE.Group();scene.add(CANG);CANG.position.set(5,0,16.4);const CANS=[];
+{const red=M(0xd0242c,.35,.2),lb=tex(256,160,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,256,160);x.fillStyle='#111';x.font='800 70px Mont';x.textAlign='center';x.fillText('1 GAL',128,105);});const lm=new THREE.MeshStandardMaterial({map:lb,roughness:.6});
+ const cg=new RoundedBoxGeometry(.54,.7,.29,3,.05),lg=new THREE.PlaneGeometry(.38,.24);const NX=9,NY=9;
+ for(let y=0;y<NY;y++)for(let i=0;i<NX-(y>5?y-5:0);i++){const off=(y>5?(y-5)*.18:0);const c=new THREE.Group();c.position.set((i-(NX-1)/2)*.59+off*1.6,.35+y*.72,0);CANG.add(c);const m=new THREE.Mesh(cg,red);m.castShadow=true;c.add(m);const l=new THREE.Mesh(lg,lm);l.position.z=-.148;l.rotation.y=Math.PI;c.add(l);c.userData.y=y;c.visible=false;CANS.push(c);}}
+// ---- S6 $570 billion: a tower of $10,000 straps (x 15) ----
+const BRICKT=tex(512,538,x=>{x.fillStyle='#b7c9a4';x.fillRect(0,0,512,538);for(let r=0;r<5;r++)for(let c=0;c<2;c++){const X=c*256,Y=r*107.6;x.drawImage(NOTE.image,X+2,Y+2,252,103);x.fillStyle='#c9952f';x.fillRect(X+114,Y+2,26,103);x.fillStyle='rgba(0,0,0,.18)';x.fillRect(X+2,Y+103,252,3);}});
+const BRSIDE=tex(256,256,x=>{x.fillStyle='#c3d3b0';x.fillRect(0,0,256,256);for(let i=0;i<256;i++){x.fillStyle=`rgba(60,95,60,${.08+Math.random()*.16})`;x.fillRect(0,i,256,1);}for(let k=0;k<2;k++){x.fillStyle='#c9952f';x.fillRect(52+k*128,0,22,256);}});
+const BTOP=new THREE.MeshStandardMaterial({map:BRICKT,roughness:.85}),BSID=new THREE.MeshStandardMaterial({map:BRSIDE,roughness:.9});
+const FRONTM=new THREE.MeshStandardMaterial({map:tex(512,206,x=>{x.drawImage(NOTE.image,0,0,512,206);x.fillStyle='#c9952f';x.fillRect(236,0,40,206);x.fillStyle='rgba(0,0,0,.25)';x.fillRect(0,200,512,6);}),roughness:.85});
+const BRK=[];{const bw=.5,bh=.2,bd=.52,g=new THREE.BoxGeometry(bw,bh,bd);for(let y=0;y<20;y++)for(let ix=0;ix<6;ix++)for(let iz=0;iz<2;iz++){const m=new THREE.Mesh(g,[BSID,BSID,BTOP,BSID,FRONTM,FRONTM]);m.castShadow=true;m.position.set(15+(ix-2.5)*bw*1.02,bh/2+y*bh,16.4+(iz-.5)*bd*1.02);m.userData.y=y;m.visible=false;scene.add(m);BRK.push(m);}}
+// ---- S7 at the rally stage: an empty open safe next to Trump, TAXES form, the IOU, Mike's kids ----
+const SAFE=new THREE.Group();scene.add(SAFE);SAFE.position.set(GX-.85,SY,18.9);{const gm=M(0x3c4046,.4,.7);add(B(.7,.8,.6),gm,0,.4,0,SAFE);add(B(.6,.7,.02),M(0x0a0a0a,.9),0,.4,-.295,SAFE,false);
+ const dr=new THREE.Group();dr.position.set(.35,.4,-.3);SAFE.add(dr);add(B(.62,.72,.06),gm,-.31,0,-.03,dr);add(CY(.07,.07,.04,20),M(0xc9a640,.3,1),-.31,0,-.07,dr).rotation.x=Math.PI/2;dr.rotation.y=1.9;}
+SAFE.visible=false;
+function paper(w,h,draw){const m=add(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:tex(512,Math.round(512*h/w),draw),roughness:.8,side:THREE.DoubleSide}),0,0,0,scene,false);m.visible=false;return m;}
+const TAXF=paper(.62,.8,x=>{x.fillStyle='#fbfbf7';x.fillRect(0,0,512,660);x.strokeStyle='#111';x.lineWidth=10;x.strokeRect(8,8,496,644);x.fillStyle='#111';x.font='800 80px Mont';x.textAlign='center';x.fillText('TAXES',256,120);
+ x.fillStyle='#d21e2a';x.beginPath();x.moveTo(256,190);x.lineTo(400,370);x.lineTo(315,370);x.lineTo(315,560);x.lineTo(197,560);x.lineTo(197,370);x.lineTo(112,370);x.closePath();x.fill();});
+const IOU=paper(.7,.46,x=>{x.fillStyle='#fff6d8';x.fillRect(0,0,512,336);x.strokeStyle='#8a6a2a';x.lineWidth=10;x.strokeRect(8,8,496,320);x.fillStyle='#111';x.font='800 130px Mont';x.textAlign='center';x.fillText('IOU',256,150);x.fillStyle='#d21e2a';x.font='800 84px Mont';x.fillText('DEBT',256,270);});
+const KIDS=[['teller',GX+1.3,15.5],['guard',GX-.05,15.5]].map(([n,x,z])=>{const P=person(n,x,0,z,Math.PI);P.g.scale.setScalar(.6);P.g.visible=false;return P;});
+// ---- S8 one gallon of gas: a glass jug, the top slice is TAX (x 35) ----
+const JUG=new THREE.Group();scene.add(JUG);JUG.position.set(35,0,15.7);
+{add(RB(1.1,1.7,.7,.12),new THREE.MeshStandardMaterial({color:0xddeeff,roughness:.05,metalness:0,transparent:true,opacity:.22,depthWrite:false}),0,.85,0,JUG,false);
+ add(new THREE.TorusGeometry(.2,.05,12,24,Math.PI),M(0xddeeff,.1),0,1.72,0,JUG,false);add(CY(.14,.14,.18,24),M(0x1a1a1a,.6),-.3,1.78,0,JUG);}
+const FUEL=add(B(1.0,1.2,.6),new THREE.MeshStandardMaterial({color:0xf2b233,roughness:.3,emissive:0x5a3800}),0,.65,0,JUG,false);
+const TAXL=add(B(1.0,.32,.6),new THREE.MeshStandardMaterial({color:0xe02a2a,roughness:.35,emissive:0x4a0000}),0,1.41,0,JUG,false);TAXL.visible=false;
+const JL=paper(.9,.32,x=>{x.fillStyle='rgba(0,0,0,0)';x.clearRect(0,0,512,182);x.fillStyle='#fff';x.font='800 104px Mont';x.textAlign='center';x.fillText('TAX 50¢',256,130);});JL.material.transparent=true;
+const JG=paper(.9,.3,x=>{x.clearRect(0,0,512,170);x.fillStyle='#fff';x.font='800 96px Mont';x.textAlign='center';x.fillText('1 GALLON',256,120);});JG.material.transparent=true;
+// ---- S9 at the pump vs on the tax bill (x 40), then the CTA ----
+const P9=makePump(40.95,15.7);P9.draw('','$0.01','#4dff74');P9.g.visible=false;
+const BILLT=paper(.75,1.0,x=>{x.fillStyle='#fbfbf7';x.fillRect(0,0,512,683);x.strokeStyle='#111';x.lineWidth=10;x.strokeRect(8,8,496,667);x.fillStyle='#111';x.font='800 78px Mont';x.textAlign='center';x.fillText('TAX BILL',256,110);
+ for(let i=0;i<4;i++){x.fillStyle='#d9d9d2';x.fillRect(50,160+i*60,412,30);}x.fillStyle='#d21e2a';x.font='800 150px Mont';x.fillText('$4.22',256,560);});
+// ---- floating 3D words (glow colour = meaning) ----
+const F=(s,size,col,x,y,z,t0,t1)=>popT(s,size,col,V3(x,y,z),t0,t1);
+F('$4.22',.34,YEL,-19.85,3.5,15.6,T('$422'),T('it\'s')-.1);F('?',.45,RED,-19.85,2.55,15.0,T('difference'),T('it\'s')-.1);
+F('$63',.26,RED,-3.8,2.45,15.0,T('$63'),T('americans')-.1);
+F('136 BILLION',.46,YEL,5,7.3,16.2,T('136'),T('pay',1)-.1);F('GALLONS',.34,WHT,5,6.7,16.2,T('gallons',1),T('pay',1)-.1);
+F('$570 BILLION',.36,RED,15,4.85,16.2,T('$570'),T('and',4)-.1);F('EVERY YEAR',.28,YEL,15,4.4,16.2,T('every',2),T('and',4)-.1);
+F('PUMP',.13,GRN,40.55,1.8,14.3,T('pump',2),99);F('TAX',.13,RED,39.45,1.8,14.3,T('tax',2),99);
+// ---- Mike's arm targets (local: x = his right, y up, z forward), solved once after load ----
+const MA={};const MGOAL={nozzle:['L',-.32,.95,.38],self:['R',-.02,1.3,.2],right:['R',.34,.92,.45],left:['L',-.34,.92,.45],point:['R',.22,1.42,.55],openL:['L',-.45,1.0,.3],openR:['R',.45,1.0,.3]};
+function solveMike(){MK.g.position.set(0,0,0);MK.g.rotation.y=Math.PI;const f=V3(0,0,-1),r=V3(1,0,0);for(const [k,[sd,x,y,z]] of Object.entries(MGOAL)){relax(MK);MA[k]=solveReach(MK,sd,r.clone().multiplyScalar(x).add(V3(0,y,0)).addScaledVector(f,z));}relax(MK);}
+const MPL=[[0,-30.0,14.9,Math.PI+.5],[T('who'),-3.3,14.8,Math.PI+.35],[T('today'),36.4,14.9,Math.PI+.4],[T('so',3),40,14.6,Math.PI]];   // [from, x, z, ry]
+function story(t){
+ // ---- Mike: one character, a new place + a new event on every line ----
+ const P=MK;relax(P);idle(P,t,3);let pl=MPL[0];for(const p of MPL)if(t>=p[0]-.6)pl=p;P.g.position.set(pl[1],0,pl[2]);P.g.rotation.y=pl[3];
+ const A=(sd,k,s=1)=>{setA(P,sd,lerpA(REST,MA[k],s));};
+ if(t<T('who')-.6){   // S1: fills his truck; the dream bubble; shakes his head
+  const k=sm(T('fills')-.3,T('fills'),t);A('L','nozzle',k);NOZ.visible=k>.5;if(NOZ.visible){P.g.updateMatrixWorld(true);P.BN.wristL.getWorldPosition(_w);NOZ.position.copy(_w).add(V3(0,-.08,-.06));NOZ.rotation.set(.5,0,0);}
+  if(t>T('cent',1)-.2&&t<T('but')){face(P,{smile:1});pose(P,'head',-.12,.1,0);}
+  if(t>T('doesn\'t')&&t<T('the',3)){pose(P,'head',0,.35*Math.sin((t-T('doesn\'t'))*9),0);face(P,{jaw:.05});}}
+ else NOZ.visible=false;
+ if(t>=T('who')-.6&&t<T('americans')-.5){   // S4: 'Mike does' points at himself, then fills 15 gallons
+  A('R','self',sm(T('mike',1)-.2,T('mike',1)+.1,t)*(1-sm(T('fill')-.2,T('fill'),t)));const k=sm(T('fill')-.1,T('fill')+.25,t);if(k>0)A('L','nozzle',k);
+  if(t>T('$63')){face(P,{jaw:.2});pose(P,'head',-.05,0,0);}}
+ if(t>=T('today')-.6&&t<T('so',3)-.6){A('L','left',sm(T('tax')-.3,T('tax'),t));face(P,{smile:.2});}   // S8: shows the TAX slice (screen right)
+ if(t>=T('so',3)-.6){const tp=T('pump',1),tb=T('tax',1);   // S9 + CTA
+  if(t<T('next')){A('R','right',sm(tp-.3,tp,t)*(1-sm(tb-.3,tb,t)));A('L','left',sm(tb-.3,tb,t));}
+  else if(t<T('would',2)){A('R','point',sm(T('ask')-.3,T('ask'),t));face(P,{jaw:.05});}
+  else{A('L','left',sm(T('tax',2)-.3,T('tax',2),t));A('R','right',sm(T('pump',2)-.3,T('pump',2),t));face(P,{smile:.4});}}
+ // ---- S1 pump + dream bubble ----
+ P1.draw('0.000',t>T('says')?'$4.23':'$-.--',t>T('says')?'#ff4a3a':'#4dff74');
+ {const s=pop(t,T('cent',1)-.15,.3)*(1-sm(T('but'),T('but')+.2,t));BUB.visible=s>.01;if(BUB.visible){P.BN.head.getWorldPosition(_w);BUB.position.copy(_w).add(V3(-.05,.42,0));BUB.scale.setScalar(s);BUB.lookAt(cam.position);BUB.rotateY(Math.PI);}}
+ // ---- S2 supply chain pops in, one per word ----
+ const tc=[T('oil'),T('refinery'),T('trucks'),T('stations')];CHAIN.forEach((g,i)=>{const s=pop(t,tc[i]-.05,.3);g.visible=s>.01;g.scale.setScalar(Math.max(.001,s*(g.userData.s||1)));});
+ CHAIN[1].traverse(o=>{if(o.userData.flame)o.scale.set(1,1+.25*Math.sin(t*20),1);});
+ // ---- S3 steak: sign $50 -> 1¢ -> back to $50 COST; $50 bill flies to the chef ----
+ const ts1=T('cent',2),ts2=T('$50',1);steakSign(t>=ts2?'COSTS':'STEAK',t>=ts1&&t<ts2?'1¢':'$50',t>=ts1&&t<ts2?'#22e06a':(t>=ts2?'#ff4a3a':'#ffffff'));
+ {const P=CHEF;relax(P);idle(P,t,5);face(P,{smile:t>T('chef')?.9:.3});const tp=T('pays');if(t>tp+.3)arm(P,'R',AD[0]+.9,AD[2]-.3,.9);
+  BILL50.visible=t>tp-.1&&t<T('who')+.2;if(BILL50.visible){const k=sm(tp-.1,tp+.5,t);BILL50.position.set(-11.0-.9*(1-k)+.0,1.25+.5*Math.sin(Math.PI*k),15.0+.6*k);BILL50.rotation.set(0,Math.PI+(1-k)*3,(1-k)*.8);}}
+ // ---- S4 the pump counts to 15 gallons at 1 cent ----
+ {const k=sm(T('fill'),T('gallons'),t);P4.draw((15*k).toFixed(3),'$0.01','#4dff74');}
+ // ---- S5 / S6 towers rise row by row ----
+ {const t0=T('burn'),t1=T('gallons',1)+.3;CANS.forEach(c=>{const k=sm(t0+c.userData.y*(t1-t0)/9,t0+(c.userData.y+1)*(t1-t0)/9,t);c.visible=k>.01;c.scale.setScalar(Math.max(.001,k));});}
+ {const t0=T('$422',1),t1=T('billion',1)+.2;BRK.forEach(m=>{const k=sm(t0+m.userData.y*(t1-t0)/20,t0+(m.userData.y+1)*(t1-t0)/20,t);m.visible=k>.01;m.scale.y=Math.max(.001,k);});}
+ // ---- S7 stage: empty safe, TAXES form, IOU, Mike's kids ----
+ {const s=pop(t,T('money')-.1,.3);SAFE.visible=s>.01;SAFE.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('taxes')-.15,.3);TAXF.visible=s>.01&&t<T('today')-.3;TAXF.position.set(GX+.7,SY+1.6+.03*Math.sin(t*3),18.6);TAXF.rotation.set(0,Math.PI,.06*Math.sin(t*2));TAXF.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('debt')-.15,.3),k=sm(T('pay',2),T('later')+.1,t);IOU.visible=s>.01&&t<T('today')-.3;IOU.position.copy(V3(GX-.6,SY+1.5,18.6).lerp(V3(GX+.62,1.05,15.2),k));IOU.position.y+=.4*Math.sin(Math.PI*k);IOU.rotation.set(0,Math.PI,.25*Math.sin(Math.PI*k));IOU.scale.setScalar(Math.max(.001,s));}
+ KIDS.forEach((K,i)=>{const s=pop(t,T('kids')-.2+i*.08,.3);K.g.visible=s>.01;if(!K.g.visible)return;K.g.scale.setScalar(.6*s);relax(K);idle(K,t,i*2);face(K,{jaw:.15,smile:0});arm(K,'L',AD[0]+.6,AD[2]-.5,1.4);arm(K,'R',AD[0]+.6,AD[2]-.5,1.4);});
+ // ---- S8 the TAX slice of one gallon ----
+ {const s=pop(t,T('today')-.2,.35);JUG.visible=s>.01;JUG.scale.setScalar(Math.max(.001,s));const k=sm(T('tax')-.1,T('tax')+.4,t);TAXL.visible=k>.01;TAXL.scale.y=Math.max(.001,k);
+  JL.visible=k>.5&&JUG.visible;JL.position.set(35,1.41,15.33);JL.rotation.y=Math.PI;JG.visible=JUG.visible;JG.position.set(35,.6,15.33);JG.rotation.y=Math.PI;}
+ // ---- S9 pump (screen left) vs tax bill (screen right) ----
+ {const s=pop(t,T('pump',1)-.15,.3)*(1-sm(T('next')-.3,T('next'),t));P9.g.visible=s>.01;P9.g.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('tax',1)-.15,.3)*(1-sm(T('next')-.3,T('next'),t));BILLT.visible=s>.01;BILLT.position.set(39.05,1.5+.03*Math.sin(t*2.5),15.4);BILLT.rotation.set(0,Math.PI,.05*Math.sin(t*2));BILLT.scale.setScalar(Math.max(.001,s));}
+}
+
 let BST=0;
 function animate(t){updPops(t);updC(t);
  trumpPose(t);TR.g.updateMatrixWorld(true);
- {const s=pop(t,tProm+.1,.3);PENNY.visible=s>.01;if(PENNY.visible){TR.BN.wristR.getWorldPosition(_w);PENNY.position.copy(_w).add(V3(.02,.19,-.06));PENNY.rotation.set(Math.PI/2,0,.12*Math.sin(t*2));PENNY.scale.setScalar(s);
+{PENNY.visible=false;if(PENNY.visible){TR.BN.wristR.getWorldPosition(_w);PENNY.position.copy(_w).add(V3(.02,.19,-.06));PENNY.rotation.set(Math.PI/2,0,.12*Math.sin(t*2));PENNY.scale.setScalar(s);
   PENNY.lookAt(cam.position);PENNY.rotateX(Math.PI/2);PENNY.rotateY(Number(Q.get('py2')??Math.PI/2));}}
- [MIKE,...CROWD].forEach((P,i)=>{relax(P);idle(P,t,i*1.3);
-  if(t>tPrice){const k=sm(tPrice,tPrice+.2,t);face(P,{jaw:.22*k,smile:0});arm(P,'L',AD[0]+.6*k,AD[2]-.5*k,1.4*k);arm(P,'R',AD[0]+.6*k,AD[2]-.5*k,1.4*k);}   // gasp: hands to the face
+ [MIKE,...CROWD].forEach((P,i)=>{relax(P);idle(P,t,i*1.3);P.g.rotation.y=-.08+(Math.PI)*sm(Wd('kids')-.6,Wd('kids')-.1,t);
+  if(t>tPrice&&t<5){const k=sm(tPrice,tPrice+.2,t);face(P,{jaw:.22*k,smile:0});arm(P,'L',AD[0]+.6*k,AD[2]-.5*k,1.4*k);arm(P,'R',AD[0]+.6*k,AD[2]-.5*k,1.4*k);}   // gasp: hands to the face
   else if(t>tCent){pose(P,'head',-.05,-.3*sm(tCent,tCent+.3,t),0);face(P,{smile:.5});}});
- const st=t>=tPrice?1:0;if(st!==BST){BST=st;board(st?'$4.23':'$0.01',st?'#ff2a2a':'#22e06a');pumpScr(st?'$4.23':'$0.01',st?'#ff4a3a':'#4dff74');}
+ const st=t>=tPrice?1:0;if(st!==BST){BST=st;board(st?'$4.23':'$0.01',st?'#ff2a2a':'#22e06a');}
  {const dt=t-tPrice;const s=dt>0?1+.14*Math.exp(-dt*7)*Math.cos(dt*22):1;fl.scale.setScalar(s);}   // the board pops when it flips
- BILLS4.forEach((m,i)=>{const k=pop(t,tPrice+.15+i*.08,.3);m.visible=k>.01;if(!m.visible)return;const a=(i-1.5)*.32;m.position.set(GX-.6+Math.sin(a)*.26,SY+1.0+Math.cos(a)*.14+.015*Math.sin(t*3+i),18.55-i*.01);m.rotation.set(0,Math.PI,-a);m.scale.setScalar(k*.82);});
  FX.intensity=t>tPrice?5*Math.exp(-(t-tPrice)*2.4):0;
+ story(t);
  {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
 }
 await loaded;
 {relax(TR);TR.g.updateMatrixWorld(true);RP.present=solveReach(TR,'R',V3(GX+.55,SY+1.3,18.7));relax(TR);RP.point=solveReach(TR,'L',V3(GX-.85,SY+1.4,18.85));relax(TR);
  RP.open={R:solveReach(TR,'R',V3(GX+.6,SY+1.0,18.68))};relax(TR);RP.open.L=solveReach(TR,'L',V3(GX-.6,SY+1.0,18.68));relax(TR);}
+solveMike();
 await Promise.all(Object.values(MODELS));
 
 const cap=document.getElementById('cap');
