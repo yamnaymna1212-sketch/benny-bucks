@@ -238,6 +238,31 @@ const PUX=GX-1.2,PUZ=19.5;
  add(B(.1,.55,.1),dk,PUX+.5,SY+1.0,PUZ-.05);const nz=add(B(.07,.3,.16),dk,PUX+.5,SY+.62,PUZ-.14);nz.rotation.x=.4;
  const hs=add(new THREE.TorusGeometry(.22,.025,10,24,Math.PI*1.4),dk,PUX+.34,SY+.75,PUZ-.3,scene,false);hs.rotation.set(0,0,-.5);}
 const CX=GX-3.15,CZ=19.0;
+// ---- real props: a giant U.S. penny (1 cent) in Trump's hand + a red 1-GALLON gas can on the stage ----
+const PENT=tex(512,512,x=>{const g=x.createRadialGradient(220,200,30,256,256,256);g.addColorStop(0,'#f0a46a');g.addColorStop(.6,'#c96f3b');g.addColorStop(1,'#8a4420');x.fillStyle=g;x.beginPath();x.arc(256,256,256,0,7);x.fill();
+ x.strokeStyle='rgba(90,40,15,.8)';x.lineWidth=14;x.beginPath();x.arc(256,256,240,0,7);x.stroke();x.fillStyle='#6e3416';x.textAlign='center';
+ x.font='800 56px Mont';x.fillText('LIBERTY',256,112);x.font='800 200px Mont';x.fillText('1¢',256,330);x.font='800 52px Mont';x.fillText('ONE CENT',256,420);
+ x.fillStyle='rgba(255,220,180,.25)';x.beginPath();x.ellipse(190,170,120,60,-.6,0,7);x.fill();});
+const PENNY=new THREE.Mesh(CY(.17,.17,.025,64),[M(0xb8683a,.35,.9),new THREE.MeshStandardMaterial({map:PENT,roughness:.35,metalness:.75}),M(0x9a5530,.4,.9)]);PENNY.castShadow=true;scene.add(PENNY);PENNY.visible=false;
+const CAN=new THREE.Group();scene.add(CAN);{const red=M(0xd0242c,.35,.2),bl=M(0x18181a,.5,.3);
+ add(RB(.36,.46,.17,.035),red,0,.23,0,CAN);add(B(.3,.05,.18),red,0,.03,0,CAN);
+ const hd=add(new THREE.TorusGeometry(.07,.016,10,20,Math.PI),bl,-.06,.46,0,CAN);
+ const sp=add(CY(.022,.03,.2,16),bl,.13,.52,0,CAN);sp.rotation.z=-.7;add(CY(.04,.04,.03,16),bl,.1,.47,0,CAN);
+ const lb=tex(512,320,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,512,320);x.fillStyle='#d0242c';x.fillRect(0,0,512,70);x.fillStyle='#fff';x.font='800 54px Mont';x.textAlign='center';x.fillText('GASOLINE',256,54);
+  x.fillStyle='#111';x.font='800 150px Mont';x.fillText('1 GAL',256,215);x.font='800 40px Mont';x.fillText('UNLEADED',256,290);});
+ const l=add(new THREE.PlaneGeometry(.27,.17),new THREE.MeshStandardMaterial({map:lb,roughness:.6}),0,.24,-.087,CAN,false);l.rotation.y=Math.PI;}
+add(B(.5,.5,.42),pbr('oak_wood_planks',1,1,0x9a7650),GX-.7,SY+.25,18.85);CAN.position.set(GX-.7,SY+.5,18.85);CAN.rotation.y=.15;   // the can sits on a wooden crate so it stays in frame
+// four real $1 bills fan out above the gas can when the price flips to $4.23
+const ONE=tex(1024,436,x=>{x.fillStyle='#d9dfcc';x.fillRect(0,0,1024,436);x.strokeStyle='#3d5a45';x.lineWidth=14;x.strokeRect(14,14,996,408);x.lineWidth=3;x.strokeRect(34,34,956,368);
+ x.fillStyle='#2f4a38';x.textAlign='center';x.font='800 40px Mont';x.fillText('THE UNITED STATES OF AMERICA',512,86);x.font='800 70px Mont';x.fillText('ONE',512,380);x.font='800 26px Mont';x.fillText('FEDERAL RESERVE NOTE',512,124);
+ x.font='800 96px Mont';for(const [a,b] of[[90,130],[934,130],[90,390],[934,390]])x.fillText('1',a,b);
+ x.fillStyle='#c4ccb5';x.beginPath();x.ellipse(512,236,110,130,0,0,7);x.fill();x.strokeStyle='#3d5a45';x.lineWidth=6;x.stroke();x.fillStyle='#5b6e5c';x.beginPath();x.ellipse(512,226,58,74,0,0,7);x.fill();x.fillRect(452,280,120,70);
+ x.fillStyle='#2e6b3f';x.beginPath();x.arc(780,236,48,0,7);x.fill();x.fillStyle='#d9dfcc';x.font='800 30px Mont';x.fillText('USA',780,247);});
+const ONEM=new THREE.MeshStandardMaterial({map:ONE,roughness:.8,side:THREE.DoubleSide});
+const BILLS4=[0,1,2,3].map(i=>{const m=add(new THREE.PlaneGeometry(.5,.213),ONEM,0,0,0,scene,false);m.visible=false;return m;});
+function addBrows(){relax(TR);TR.g.updateMatrixWorld(true);const bm=M(0xe8cc8e,.7);for(const sd of['L','R']){const e=V3();TR.BN['eye'+sd].getWorldPosition(e);
+ const m=new THREE.Mesh(new THREE.CapsuleGeometry(.007,.04,4,8),bm);m.rotation.set(0,0,Math.PI/2+(sd==='L'?-1:1)*.12);m.scale.set(1.5,1,.8);m.position.copy(e).add(V3(0,.026,-.018));m.castShadow=true;scene.add(m);TR.BN.head.attach(m);}}
+
 
 // ================= CAST =================
 const SRC={};const CAST={mike:['mike'],trump:['trump'],guard:['guard',{polo:0x2f6f4f,cargo:0x3b3b3b}],printer:['printer',{tucked:0xe2557f,cargo:0x2a2a33}],teller:['teller'],manager:['manager']};
@@ -247,8 +272,9 @@ function remap(mt,f){if(!mt.map)return;const im=mt.map.image,c=document.createEl
 const lum=(r,g,b)=>.3*r+.59*g+.11*b;
 function styleTrump(o,mt){const n=o.name+mt.name;
  if(/suit_?3/i.test(n)){remap(mt,(r,g,b,u,v)=>{const l=lum(r,g,b);if(u>.84&&v<.27&&r>90)return [214,18,26];if(l>150)return [246,246,250];return [17,25,60];});if(mt.normalScale)mt.normalScale.set(.25,.25);mt.roughness=.72;mt.metalness=0;mt.metalnessMap=null;mt.roughnessMap=null;mt.needsUpdate=true;}   // suit3 UV areas: tie = top-right patch (solid red, no dots); light pieces = white shirt; rest = solid navy
- if(/short04|eyebrow/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.72+.45*l;return [Math.min(255,236*k),Math.min(255,182*k),Math.min(255,82*k)];});mt.color.set(0xffffff);mt.roughness=.55;}
- if(/body/i.test(n))mt.color.setRGB(1,.76,.55);
+ if(/eyebrow/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.55+.3*l;return [Math.min(255,200*k),Math.min(255,150*k),Math.min(255,70*k)];});mt.color.set(0xffffff);mt.roughness=.6;}
+ else if(/short04/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.72+.45*l;return [Math.min(255,236*k),Math.min(255,182*k),Math.min(255,82*k)];});mt.color.set(0xffffff);mt.roughness=.55;}
+ if(/body/i.test(n))mt.color.setRGB(1,.66,.43);
  if(/high-poly/i.test(n))remap(mt,(r,g,b)=>{const l=lum(r,g,b);return (r>g+12&&r>b+12&&l<200)?[l*.45,l*.85,Math.min(255,l*1.9+40)]:[r,g,b];});}   // brown iris -> blue eyes
 const GLB={};for(const [key,[file,rec]] of Object.entries(CAST)){GLB[file]=GLB[file]||await new GLTFLoader().loadAsync(`dl/models/cast/${file}.glb`);const g=skClone(GLB[file].scene);
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material=o.material.clone();
@@ -277,16 +303,17 @@ const TR=person('trump',GX,SY,19.25,Math.PI);
 const MIKE=person('mike',GX+.62,0,15.8,-.08);
 const CROWD=[['guard',GX+1.7,16.2,-.15],['teller',GX-.9,16.9,.05],['manager',GX+2.6,16.9,-.2],['printer',GX+1.0,17.0,-.05]].map(([n,x,z,r])=>person(n,x,0,z,r));
 // Trump extras: blond volume on top + US flag pin (attached to bones, so they follow every pose)
-const HAIRT=tex(256,256,x=>{x.fillStyle='#d9ae55';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.strokeStyle=`rgba(${150+Math.random()*90},${100+Math.random()*70},30,${.15+Math.random()*.2})`;x.lineWidth=1+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);x.bezierCurveTo(80,y-20,170,y+15,256,y-10);x.stroke();}});
+const HAIRT=tex(256,256,x=>{x.fillStyle='#e6bd66';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.strokeStyle=`rgba(${150+Math.random()*90},${100+Math.random()*70},30,${.15+Math.random()*.2})`;x.lineWidth=1+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);x.bezierCurveTo(80,y-20,170,y+15,256,y-10);x.stroke();}});
 const HAIRM=new THREE.MeshStandardMaterial({color:0xffffff,map:HAIRT,roughness:.65});
 const FLAGPIN=new THREE.MeshStandardMaterial({map:FT,roughness:.5,metalness:.2});
 function dressTrump(){relax(TR);TR.g.updateMatrixWorld(true);const h=V3();TR.BN.head.getWorldPosition(h);if(Q.get('dbg')){TR.g.traverse(o=>{if(o.isMesh&&/short04/.test(o.name)){o.geometry.computeBoundingBox();const bb=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);console.error('HAIR',JSON.stringify(bb),'HEAD',JSON.stringify(h));}});}if(Q.get('nocap'))return;
  const hm=(geo,sc,off,rot)=>{const m=new THREE.Mesh(geo.rotateZ(Math.PI/2),HAIRM);m.scale.set(...sc);m.position.copy(h).add(V3(...off));m.rotation.set(...rot);m.castShadow=true;scene.add(m);TR.BN.head.attach(m);return m;};
  hm(new THREE.SphereGeometry(.1,40,20),[1.02,.74,1.2],[0,.105,.012],[.28,0,0]);                    // swept-back cap over the skull, down to the ear tops
- hm(new THREE.SphereGeometry(.07,32,16),[1.26,.5,.98],[.012,.15,-.06],[-.22,0,.12]);              // the raised front swoop (pompadour)
+ hm(new THREE.SphereGeometry(.07,32,16),[1.5,.62,1.25],[.018,.142,-.07],[-.3,0,.14]);   // big forward swoop (his signature front wave)
+ hm(new THREE.SphereGeometry(.05,24,12),[1.6,.55,1.1],[-.03,.12,-.105],[-.5,0,.25]);   // the wave tip hangs over the forehead, swept to one side              // the raised front swoop (pompadour)
  const pin=new THREE.Mesh(new THREE.PlaneGeometry(.034,.019),FLAGPIN);const s=V3();TR.BN.neck01.getWorldPosition(s);pin.position.copy(s).add(V3(-.1,HT.pinY,HT.pinZ));pin.rotation.y=Math.PI;scene.add(pin);TR.BN.spine01?TR.BN.spine01.attach(pin):0;}
 const HT={capY:Number(Q.get('cy')||.118),capZ:Number(Q.get('cz')||-.04),sx:Number(Q.get('sx')||1.5),sy:Number(Q.get('sy')||.95),sz:Number(Q.get('sz')||1.65),pinY:Number(Q.get('py')||-.14),pinZ:Number(Q.get('pz')||-.13)};
-dressTrump();TR.BN.head.scale.setScalar(Number(Q.get('hs')||1.3));TR.BN.neck01&&TR.BN.neck01.scale.setScalar(1.08);   // caricature: big head like the user's reference
+dressTrump();TR.BN.head.scale.setScalar(Number(Q.get('hs')||1.3));TR.BN.neck01&&TR.BN.neck01.scale.setScalar(1.08);TR.g.scale.set(1.1,1.0,1.08);   // caricature: big head like the user's reference
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
 function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
@@ -348,15 +375,21 @@ function trumpPose(t){const P=TR;relax(P);idle(P,t,1);P.g.position.set(GX,SY,19.
  if(t>tCent-.25)pose(P,'head',0,-.35*sm(tCent-.25,tCent+.2,t),0);
  if(t>tPrice){const j=sm(tPrice,tPrice+.3,t);R=lerpA(R,RP.open.R,j);Lf=lerpA(Lf,RP.open.L,j);pose(P,'head',-.08*j,0,.15*j);}   // open-palm shrug: 'what, me?'
  setA(P,'R',R);setA(P,'L',Lf);
- const talk=t<tPrice+2.3?.02+.05*Math.abs(Math.sin(t*13)):0;face(P,{jaw:talk,smile:.9});}
+ const talk=t<tPrice+2.3?.02+.05*Math.abs(Math.sin(t*13)):0;face(P,{jaw:talk*.6,smile:Number(Q.get('sm')??-.12)});
+ const lid=Number(Q.get('lid')??-.12),lo=Number(Q.get('lo')??.08),pk=Number(Q.get('pk')??.0);
+ for(const sd of['L','R']){pose(P,'orbicularis03'+sd,lid,0,0);pose(P,'orbicularis04'+sd,lo,0,0);}
+ if(pk)for(const n of['oris01','oris05'])pose(P,n,pk,0,0);}
 let BST=0;
 function animate(t){updPops(t);updC(t);
  trumpPose(t);TR.g.updateMatrixWorld(true);
+ {const s=pop(t,tProm+.1,.3);PENNY.visible=s>.01;if(PENNY.visible){TR.BN.wristR.getWorldPosition(_w);PENNY.position.copy(_w).add(V3(.02,.19,-.06));PENNY.rotation.set(Math.PI/2,0,.12*Math.sin(t*2));PENNY.scale.setScalar(s);
+  PENNY.lookAt(cam.position);PENNY.rotateX(Math.PI/2);PENNY.rotateY(Number(Q.get('py2')??Math.PI/2));}}
  [MIKE,...CROWD].forEach((P,i)=>{relax(P);idle(P,t,i*1.3);
   if(t>tPrice){const k=sm(tPrice,tPrice+.2,t);face(P,{jaw:.22*k,smile:0});arm(P,'L',AD[0]+.6*k,AD[2]-.5*k,1.4*k);arm(P,'R',AD[0]+.6*k,AD[2]-.5*k,1.4*k);}   // gasp: hands to the face
   else if(t>tCent){pose(P,'head',-.05,-.3*sm(tCent,tCent+.3,t),0);face(P,{smile:.5});}});
  const st=t>=tPrice?1:0;if(st!==BST){BST=st;board(st?'$4.23':'$0.01',st?'#ff2a2a':'#22e06a');pumpScr(st?'$4.23':'$0.01',st?'#ff4a3a':'#4dff74');}
  {const dt=t-tPrice;const s=dt>0?1+.14*Math.exp(-dt*7)*Math.cos(dt*22):1;fl.scale.setScalar(s);}   // the board pops when it flips
+ BILLS4.forEach((m,i)=>{const k=pop(t,tPrice+.15+i*.08,.3);m.visible=k>.01;if(!m.visible)return;const a=(i-1.5)*.32;m.position.set(GX-.6+Math.sin(a)*.26,SY+1.0+Math.cos(a)*.14+.015*Math.sin(t*3+i),18.55-i*.01);m.rotation.set(0,Math.PI,-a);m.scale.setScalar(k*.82);});
  FX.intensity=t>tPrice?5*Math.exp(-(t-tPrice)*2.4):0;
  {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
 }
