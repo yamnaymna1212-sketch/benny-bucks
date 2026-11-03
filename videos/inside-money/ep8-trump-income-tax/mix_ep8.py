@@ -25,12 +25,12 @@ def rip(dur=.42):   # paper tear (no tear in the library): crackly band-passed n
     n=int(dur*SR);x=rng.standard_normal(n).astype(np.float32);x=np.diff(x,prepend=0);cr=(rng.random(n)<.02).astype(np.float32)*rng.standard_normal(n).astype(np.float32)*3
     x=np.convolve(x+cr,np.ones(6)/6,'same');env=np.minimum(1,np.arange(n)/(.01*SR))*np.exp(-np.arange(n)/(.25*SR));return x*env/np.abs(x).max()
 put(cut(S['ting'],.3,.15),0.0,.14)                                           # soft ting under the first word
-put(rip(),W('cancel')+.02,.5)                                                 # he rips the Form 1040
+put(rip(),W('replace')+.02,.5)                                                 # he rips the Form 1040
 put(cut(S['whoosh'],.5),W('tax')+.15,.16)                                     # halves thrown away
 put(S['ting'],W('tax')+.06,.3);put(S['pop'],W('tax')+.06,.2)                  # $0 TAX
-put(S['boom'],W('forever'),.3);put(cut(S['yeah'],.7),W('forever')+.05,.22);put(cut(S['wow'],.6),W('forever')+.3,.16)   # FOREVER: crowd cheers
-put(cut(S['whoosh'],.8),W('tariffs')-.05,.22)                                 # camera flies back
-for i in range(3):t0=W('tariffs')+i*.28+.35;put(cut(S['slap'],.3),t0,.3-.05*i);put(cut(S['boom'],.5,.2),t0,.16)   # containers land
+put(S['boom'],W('claims'),.3);put(cut(S['yeah'],.7),W('claims')+.05,.22);put(cut(S['wow'],.6),W('claims')+.3,.16)   # FOREVER: crowd cheers
+put(cut(S['whoosh'],.8),W('they')-.05,.22)                                 # camera flies back
+for i in range(3):t0=W('they')+i*.28+.35;put(cut(S['slap'],.3),t0,.3-.05*i);put(cut(S['boom'],.5,.2),t0,.16)   # containers land
 put(cut(S['cash-register'],.7),W('money')+.05,.26);put(cut(S['money'],.9),W('money')+.15,.16)   # money pours out
 
 # ---------- story SFX: every event has a sound, trimmed so nothing bleeds into the next word ----------

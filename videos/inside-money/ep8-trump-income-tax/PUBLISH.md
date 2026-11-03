@@ -1,5 +1,5 @@
 # EP8 publish kit (TikTok, US audience)
-Caption: Trump wants tariffs to replace your income tax. One number says no 🧾📈 TAX or PRICES?
+Caption: Trump says tariffs could replace your income tax. One number says it is a long shot 🧾📈 TAX or PRICES?
 Alt titles: $2.7 trillion vs $200 billion: the income tax math / Why tariffs can't replace your income tax (yet) / Mike's paycheck vs Trump's no-tax promise
 Hashtags: #incometax #tariffs #trump #moneyexplained #personalfinance #howmoneyworks #usa
 Poll: Would you trade your income tax for higher prices at the store? -> TAX 🧾 / PRICES 🏷️
