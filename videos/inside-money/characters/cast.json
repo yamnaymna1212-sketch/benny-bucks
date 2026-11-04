@@ -232,5 +232,43 @@
         "value": 0.4
       }
     ]
+  },
+  "masked": {
+    "role": "masked criminal (EP12): black knit balaclava (built in make_cast.py, knit look in three.js), black sweater + cargo pants + boots, tall and broad, never shows his face",
+    "body": {
+      "gender": 1.0,
+      "age": 0.5,
+      "muscle": 0.8,
+      "weight": 0.62,
+      "height": 0.6,
+      "race": {
+        "caucasian": 0.5,
+        "african": 0.25,
+        "asian": 0.25
+      }
+    },
+    "skin": "middleage_caucasian_male",
+    "eyebrows": "eyebrow007",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_fisherman_sweater",
+      "cortu_cargo_pants",
+      "toigo_ankle_boots_male"
+    ],
+    "balaclava": {
+      "rgb": [
+        0.035,
+        0.035,
+        0.04
+      ],
+      "eye_r": 0.021,
+      "mouth_r": 0.024,
+      "offset": 0.008,
+      "smooth": 8,
+      "neck_drop": 0.07
+    }
   }
 }
