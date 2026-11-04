@@ -22,7 +22,21 @@ for k in['fahh','pop','notif2']:S[k]=load(f'{SFX}/user-{k}.wav')
 W=lambda w,n=0:Wn(w,n)
 for k in['shock','money-transfer','timer']:S[k]=load(f'{SFX}/user-{k}.wav')
 put(cut(S['ting'],.3,.15),0.0,.14)                                             # soft ting under the first word
-for i in range(8):put(cut(S['money'],.22),W('send')+.05+i*(W('year')-W('send'))/8+.35,.09)   # each strap lands in the crate
+def unramp(tw,t0=1.25,t1=2.15,slow=.45,rec=.45):   # camera-kit CK.ramp (slow-mo in the macro shot): real time when scene time tw happens
+    lo,hi=0.,9.
+    def f(t):
+        if t<=t0:return t
+        if t<=t1:return t0+(t-t0)*slow
+        lag=(t1-t0)*(1-slow)
+        if t>=t1+rec:return t
+        u=(t-t1)/rec;return t1-lag+(t-t1)+lag*u*u*(3-2*u)
+    for _ in range(50):
+        m=(lo+hi)/2
+        if f(m)<tw:lo=m
+        else:hi=m
+    return hi
+for i in range(8):put(cut(S['money'],.22),unramp(W('send')+.05+i*(W('year')-W('send'))/8+.35),.09)   # each strap lands in the crate
+put(cut(S['whoosh'],.35),1.25-.06,.16);put(cut(S['whoosh'],.35),2.15-.06,.18)   # camera-kit cuts: macro on the real strap, low shot of $3.8 BILLION
 put(cut(S['cash-register'],.6),W('$3.8'),.2)                                    # $3.8
 put(S['ting'],W('billion'),.24)                                                 # $3.8 BILLION pops
 put(cut(S['whoosh'],.5),W('with')-.08,.26)                                      # whip-pan to the debt clock

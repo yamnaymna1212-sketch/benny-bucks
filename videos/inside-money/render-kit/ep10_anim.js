@@ -8,7 +8,7 @@ function shake(t){cam.rotateX(.0035*Math.sin(t*9.1)+.0018*Math.sin(t*17.3+2));ca
 function zfxPrev(t){setCam(Math.max(0,t-1/30));shake(Math.max(0,t-1/30));cam.getWorldDirection(_zd);_zp.copy(cam.position).addScaledVector(_zd,10);}
 function zfxNow(t){shake(t);const p=_zp.clone().project(cam);let bx=-p.x*.5,by=-p.y*.5;const L=Math.hypot(bx,by),mx=.06;if(L>mx){bx*=mx/L;by*=mx/L;}if(L<.003){bx=0;by=0;}   // motion blur only on fast moves
  ZG.uniforms.blur.value.set(bx,by);ZG.uniforms.time.value=t;
- BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...(CAMF?CAMF.look:hv(t,k=>k[2]))));BOKEH.uniforms.aperture.value=CAMF?.ap??.0018;   // camera-kit framing: per-shot focus + aperture (macro = shallow)EL.position.copy(cam.position).add(V3(0,.12,0));}
+ BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...(CAMF?CAMF.look:hv(t,k=>k[2]))));BOKEH.uniforms.aperture.value=CAMF?.ap??.0018;/* camera-kit framing: per-shot focus + aperture (macro = shallow) */EL.position.copy(cam.position).add(V3(0,.12,0));}
 const TRA={};let TRS=0;   // Trump loads the straps: right hand pallet -> crate, solved once
 const TPX=CRX+.52,TPZ=CRZ+.4;
 function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Math.PI;
@@ -17,7 +17,7 @@ function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Mat
  const on=sm(tSend-.3,tSend,t)*(1-sm(tWith,tWith+.3,t));
  setA(P,'R',lerpA(REST,lerpA(TRA.pal,TRA.cr,ph),on));pose(P,'upperarm01L',AD[0]+.15*on,0,-AD[2]+.25*on);   // left hand stays at his side (no hidden arm)
  pose(P,'spine03',.12*on,0,0);face(P,{jaw:.03+.04*Math.abs(Math.sin(t*9)),smile:.35});}
-function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;const tf=CK.ramp(t,S2a,S2b,.45,.45);trumpLoad(tf);hookIcons(t);   // tf = speed-ramped scene time (slow-mo in the macro)
+function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;const tf=CK.ramp(t,S2a,S2b,.45,.45);trumpLoad(tf);hookIcons(t);/* tf = speed-ramped scene time (slow-mo in the macro) */
  {const pa=FG3.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+.44)/.88;pa.setZ(i,Math.sin(u*7-t*6)*.05*u);}pa.needsUpdate=true;FG3.computeVertexNormals();}
  FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length,k=sm(t0,t0+.42,tf);m.position.lerpVectors(m.userData.a,m.userData.b,k);m.position.y+=.32*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*2.4,(1-k)*.5);});
  if(t<57.75)drawDebt(40502080966097+t*63000);else drawGrid();DEBT.visible=DFR.visible=t>tWith-.12;   // the clock appears inside the whip-pan blur: no cropped teaser in the crate shots

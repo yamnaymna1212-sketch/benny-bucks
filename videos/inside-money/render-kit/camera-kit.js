@@ -3,13 +3,14 @@
 //   const CK=cameraKit(THREE,{FK});          FK = faceKit instance (for closeUp), optional
 //   CK.fit(targets,{dir,fov})               auto-fit 9:16: every target point inside the frame AND above the 74 % caption line
 //   CK.closeUp(P,{dist,fov,side,dy,ry})     face close-up (FK.closeUp), ry = temporary body yaw (pose at the shot time)
-//   CK.overShoulder(P,target,{side,back,up,out,fov})   camera behind P's shoulder looking at target (P in the foreground)
+//   CK.overShoulder(P,target,{side,back,up,out,fov,fit})   camera behind P's shoulder looking at target (P in the foreground); fit = targets kept whole
 //   CK.macro(obj|points,{dir,fov,margin,ap})           extreme close-up on an object (real money straps), shallow DoF
 //   CK.orbit(center,{r0,r1,a0,a1,h0,h1,fov0,fov1}) -> [from,to]   a = yaw angle atan2(dx,dz) around the centre
 //   CK.track(shots) -> t=>framing           shots [{t0,t1,a,b,ease,in:'cut'|'whip'}]; a/b = framing or ()=>framing (lazy)
 //   CK.boom(t0,amp)  CK.fx(cam,t)           decaying impact shake + fov punch (call after cam.lookAt)
 //   CK.ramp(t,t0,t1,slow,rec)               speed ramp for scene time: slow-mo inside [t0,t1], catches up over rec s, = t outside
 //   CK.icon(kind,{color,size}) + CK.iconAnim(ic,t,t0,t1,{cam})   3D glowing icons: dollar warn up down check x
+//   CK.popBox(mesh,k)                       world box of a floating text/icon mesh incl. its pop overshoot (use as a fit target)
 //   CK.check(framing,targets) -> {inside, below}   how many points are in the safe area / under the caption line
 //   CK.audit(times,max=2) -> gaps longer than max s without a new framing (rule: new framing every 1.5-2 s)
 // Ease names: smooth, linear, ramp (fast start, long glide = speed ramp), rampIn (slow then whoosh), expo (in-out), settle (overshoot 2 %).
@@ -42,6 +43,8 @@ function fit(targets,o={}){const P=pts(targets),S=safe(o),fov=o.fov??40,d=VA(o.d
   return {ok:!b.behind&&b.x1-b.x0<=S.x1-S.x0&&b.y1-b.y0<=S.y1-S.y0,pos,look};};
  let lo=o.min??.15,hi=o.max??300;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(ok(m).ok)hi=m;else lo=m;}
  const r=ok(hi*(o.slack??1));return {pos:r.pos.toArray(),look:r.look.toArray(),fov,ap:o.ap};}
+function popBox(m,k=1.3){if(!m.geometry.boundingBox)m.geometry.computeBoundingBox();const g=m.geometry.boundingBox,p=m.userData.pos||m.position;
+ const hw=(g.max.x-g.min.x)/2*k,hy=(g.max.y-g.min.y)*k;return box([p.x-hw,p.y-.03,p.z-hw*.3],[p.x+hw,p.y+hy+.04,p.z+hw*.3]);}
 function check(F,targets,o={}){const P=pts(targets),S=safe({...o,gap:0}),pos=VA(F.pos),look=VA(F.look);let inside=0,below=0;
  tmp.fov=F.fov;tmp.position.copy(pos);tmp.lookAt(look);tmp.updateMatrixWorld(true);tmp.updateProjectionMatrix();
  for(const p of P){const q=p.clone().project(tmp);if(q.x>=-1&&q.x<=1&&q.y>=S.y0&&q.y<=1&&q.z<1)inside++;else if(q.y<S.y0)below++;}return {inside,below,n:P.length};}
@@ -52,10 +55,15 @@ function closeUp(P,o={}){return withPose(P,o,()=>{
  if(FK){const [pos,look,fov]=FK.closeUp(P,o.dist??.75,o.fov??27,o.side??0,o.dy??-.03);return {pos,look,fov,ap:o.ap??.0026};}
  const h=P.BN.head.getWorldPosition(V()).add(V(0,.04,0)),f=V(Math.sin(o.side??0),0,Math.cos(o.side??0)).applyQuaternion(P.g.getWorldQuaternion(new THREE.Quaternion()));
  return {pos:h.clone().addScaledVector(f,o.dist??.75).toArray(),look:h.toArray(),fov:o.fov??27,ap:o.ap??.0026};});}
+// o.fit = targets that must be whole above the caption line: the camera steps back along the shoulder line until they fit
 function overShoulder(P,target,o={}){return withPose(P,o,()=>{P.g.updateMatrixWorld(true);
- const h=P.BN.head.getWorldPosition(V()),T=VA(target),f=T.clone().sub(h).setY(0).normalize(),r=V().crossVectors(f,V(0,1,0)).normalize();
- const pos=h.clone().addScaledVector(f,-(o.back??.9)).addScaledVector(r,(o.side??1)*(o.out??.35)).add(V(0,o.up??.08,0));
- const look=T.clone().lerp(h,o.mix??0);return {pos:pos.toArray(),look:look.toArray(),fov:o.fov??40,ap:o.ap};});}
+ const h=P.BN.head.getWorldPosition(V()),T=VA(target),f=T.clone().sub(h).setY(0).normalize(),r=V().crossVectors(f,V(0,1,0)).normalize(),fov=o.fov??40;
+ const at=back=>h.clone().addScaledVector(f,-back).addScaledVector(r,(o.side??1)*(o.out??.35)).add(V(0,o.up??.08,0));
+ if(!o.fit){const look=T.clone().lerp(h,o.mix??0);return {pos:at(o.back??.9).toArray(),look:look.toArray(),fov,ap:o.ap};}
+ const Pt=pts(o.fit),S=safe(o),c=new THREE.Box3().setFromPoints(Pt).getCenter(V());
+ const ok=back=>{const pos=at(back),look=aim(Pt,c,pos,fov,S),b=bounds(Pt,pos,look,fov);return {ok:!b.behind&&b.x1-b.x0<=S.x1-S.x0&&b.y1-b.y0<=S.y1-S.y0,pos,look};};
+ let lo=o.back??.6,hi=12;if(ok(lo).ok)hi=lo;else for(let i=0;i<30;i++){const m=(lo+hi)/2;if(ok(m).ok)hi=m;else lo=m;}
+ const R=ok(hi*(o.slack??1));return {pos:R.pos.toArray(),look:R.look.toArray(),fov,ap:o.ap};});}
 function macro(obj,o={}){return fit(obj,{dir:o.dir??[0,.7,-1],fov:o.fov??24,margin:o.margin??.01,top:o.top??.02,gap:-.1,slack:o.slack??.92,ap:o.ap??.006,min:.05,center:o.center});}
 function orbit(c,o={}){const C=VA(c),f=(a,r,h,fov)=>({pos:[C.x+Math.sin(a)*r,C.y+h,C.z+Math.cos(a)*r],look:C.toArray(),fov,ap:o.ap});
  return [f(o.a0??0,o.r0??1.2,o.h0??.1,o.fov0??34),f(o.a1??Math.PI/2,o.r1??o.r0??1.2,o.h1??o.h0??.1,o.fov1??o.fov0??34)];}
@@ -102,4 +110,4 @@ function iconAnim(ic,t,t0,t1=1e9,o={}){const s=ic.userData.size,on=t>=t0&&t<t1+.
  if(o.pos)ic.position.copy(VA(o.pos)).add(V(0,Math.sin(d*3.1)*(o.bob??.012),0));if(o.cam)ic.lookAt(o.cam.position);
  const sp=o.spin??1;ic.userData.inner.rotation.y=(1-k)*Math.PI*2*sp+Math.sin(d*2.2)*.3*sp;}
 function audit(times,max=2){const T=[...times].sort((a,b)=>a-b),gaps=[];for(let i=1;i<T.length;i++)if(T[i]-T[i-1]>max)gaps.push([+T[i-1].toFixed(2),+T[i].toFixed(2)]);return gaps;}
-return {fit,check,pts,box,safe,closeUp,overShoulder,macro,orbit,track,lerpF,whipF,boom,fx,ramp,icon,iconAnim,audit,EASE,hfov};}
+return {fit,check,popBox,pts,box,safe,closeUp,overShoulder,macro,orbit,track,lerpF,whipF,boom,fx,ramp,icon,iconAnim,audit,EASE,hfov};}

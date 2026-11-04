@@ -21,7 +21,14 @@ How to use: `import {moneyKit} from './money-kit.js'`; `const MNY=await moneyKit
 Facts: top faces read upright from the -z side (camera looking +z); bands on top + long faces only; keep glow <= .05 on bricks (more washes the notes out); close-up at ~0.6 m shows the real $100 + "$10,000" band.
 Old intent:
 - Official US note images ($100, $20, $1) from uscurrency.gov. Legal (18 USC 504, not legal advice): one-sided, size < 75% or > 150% of real -> use 150% scale. Use on straps, hands, pallets.
-## Stage 3 - camera + montage kit
+## Stage 3 - camera + montage kit -- DONE 2026-11-04 (render-kit/camera-kit.js, test EP10 hook: ep10_cam.js, preview ep10-israel-aid-debt/hook-preview-5s-v5-camera.mp4)
+How to use: `import {cameraKit} from './camera-kit.js'`; `const CK=cameraKit(THREE,{FK})`. A framing = {pos,look,fov,ap?,drift?}.
+Shots: `CK.track([{t0,t1,a,b,ease,in:'whip'}])` -> t=>framing; in setCam use it for the hook (`if(t<CAM_END){CAMF=CAMH(t);...}`), after cam.lookAt call `CK.fx(cam,t)`; BokehPass focus = distance to CAMF.look, aperture = CAMF.ap.
+Helpers: `CK.fit(targets,{dir,fov})` (9:16, whole + above the 74 % caption line; targets = Box3/points/objects, floating text via `CK.popBox(mesh)` - text is baseline-anchored and pops to 1.22x),
+`CK.closeUp(P,{ry,dist,fov})` (FK.closeUp, ry = body yaw at shot time), `CK.overShoulder(P,target,{back,out,fit})` (steps back until `fit` targets are whole), `CK.macro(box,{dir,fov,ap})`,
+`CK.orbit(c,{a0,a1,r0,r1})`, `CK.boom(t,amp)` (shake + fov punch), `CK.ramp(t,t0,t1,slow)` (speed-ramped scene time; mix must use the inverse, see mix_ep10.py unramp), `CK.icon('dollar'|'warn'|'up'|'down'|'check'|'x')` + `CK.iconAnim`.
+Check: stills.mjs prints `CK {...}` = per-shot points inside the safe area + cut list + story gaps > 2 s. Gotchas: an icon placed beside text can hide behind scene props (US flag) - put it above; a `//` comment pasted mid-line in a one-line function kills the page ("Unexpected reserved word").
+EP10 story still has moves > 2 s (10.5-13.4, 16.95-19.5, 20.3-24.2, 29.6-32.5, 41.5-45, 48.3-53.6, 54.3-57.4, 60.7-64.8) -> next episode builds every scene with CK shots.
 - Shot helpers: closeUp(face), overShoulder, macro(obj), whip(to), orbit(char); auto-fit framing (9:16: hfov = 2*atan(tan(vfov/2)*.5625); keep key text above the 74 % caption line).
 - Boom shake, speed ramps, a new framing every 1.5-2 s, 3D glowing icons; DoF + whip motion blur + grade already exist in ep10_grade.js / ep10_anim.js.
 ## Stage 4 - fix old weak spots
