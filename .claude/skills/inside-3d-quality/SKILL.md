@@ -19,6 +19,9 @@ Template: `videos/inside-money/render-kit/ep4.html` (+ `ep4-print-million/PLAN.m
 - A face close-up (fov 27-30 at ~0.7 m, `FK.closeUp(P)` gives the numbers) on every key emotional beat; wide shots hide faces.
 - Check faces with `facelab.mjs` contact sheets (one load, many variants) before stills/renders.
 
+## Real money (stage 2, 2026-11-04): `render-kit/money-kit.js` for every note/strap/pallet
+- `const MNY=await moneyKit(THREE)`: real uscurrency.gov fronts ($100/$20/$1), blank backs (one-sided), 151 % size (never smaller), ABA strap colours. `brick/strap/note/fan/flutter`; details in `NEXT_LEVEL_PLAN.md` stage 2. Do not use the old canvas `NOTE`/`billT` fakes in new episodes.
+
 ## Checklist before any render
 1. Hook first frame readable with no sound; main character visible; titles centred and uncropped.
 2. Every line has a new shot/angle/action; nothing static for > 3 s.

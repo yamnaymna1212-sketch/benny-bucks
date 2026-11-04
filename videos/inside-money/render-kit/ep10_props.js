@@ -9,11 +9,8 @@ const EMB=tex(800,560,x=>{x.clearRect(0,0,800,560);x.fillStyle='rgba(20,40,90,.0
  x.fillStyle='#fff';x.fillRect(cx-70,by,140,18);x.fillRect(cx-40,by+18,80,30);for(const dx of[-130,-90,-50,0,50,90,130]){x.beginPath();x.arc(cx+dx,108,9,0,7);x.fill();}
  x.strokeStyle='#fff';x.lineWidth=7;for(const sd of[-1,1]){x.beginPath();x.moveTo(cx+sd*165,400);x.quadraticCurveTo(cx+sd*175,230,cx+sd*150,90);x.stroke();for(let i=0;i<7;i++){const yy=380-i*42,xx=cx+sd*(166+Math.sin(i)*4);x.beginPath();x.ellipse(xx+sd*16,yy,16,7,sd*.6,0,7);x.fill();}}
  x.fillStyle='#0038b8';x.font='800 78px Mont';x.textAlign='center';x.fillText('ISRAEL',400,548);});
-const ZBT=tex(512,538,x=>{x.fillStyle='#b7c9a4';x.fillRect(0,0,512,538);for(let r=0;r<5;r++)for(let c=0;c<2;c++){const X=c*256,Y=r*107.6;x.drawImage(NOTE.image,X+2,Y+2,252,103);x.fillStyle='#c9952f';x.fillRect(X+114,Y+2,26,103);x.fillStyle='rgba(0,0,0,.18)';x.fillRect(X+2,Y+103,252,3);}});
-const ZBS=tex(256,256,x=>{x.fillStyle='#c3d3b0';x.fillRect(0,0,256,256);for(let i=0;i<256;i++){x.fillStyle=`rgba(60,95,60,${.08+Math.random()*.16})`;x.fillRect(0,i,256,1);}for(let k=0;k<2;k++){x.fillStyle='#c9952f';x.fillRect(52+k*128,0,22,256);}});
-const ZBF=tex(512,206,x=>{x.drawImage(NOTE.image,0,0,512,206);x.fillStyle='#c9952f';x.fillRect(236,0,40,206);x.fillStyle='rgba(0,0,0,.25)';x.fillRect(0,200,512,6);});
-const ZBM=[new THREE.MeshStandardMaterial({map:ZBS,roughness:.85}),new THREE.MeshStandardMaterial({map:ZBT,roughness:.8}),new THREE.MeshStandardMaterial({map:ZBF,roughness:.8,emissive:0x1a5c2a,emissiveIntensity:.25})];
-const ZBG=new THREE.BoxGeometry(.28,.11,.29),zbrick=(x,y,z)=>{const m=new THREE.Mesh(ZBG,[ZBM[0],ZBM[0],ZBM[1],ZBM[0],ZBM[2],ZBM[2]]);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);return m;};
+// real $10,000 straps from money-kit.js (uscurrency.gov $100 front, one-sided, 151 % size): one box = 3 straps side by side x 7 layers
+const ZBM6=MNY.brickMats(100,1,7,3,.04),ZBG=new THREE.BoxGeometry(MNY.NW,.11,MNY.NH*3),zbrick=(x,y,z)=>{const m=new THREE.Mesh(ZBG,ZBM6);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);return m;};
 const PLX=CRX+1.05;   // pallet: screen left of the crate
 {const wd=pbr('oak_wood_planks',1,1,0xb08a60);for(let i=0;i<3;i++)add(B(.95,.06,.09),wd,PLX,SY+.03,CRZ-.38+i*.38);for(let i=0;i<5;i++)add(B(.17,.03,.95),wd,PLX-.38+i*.19,SY+.075,CRZ);}
 for(let y=0;y<4;y++)for(let ix=0;ix<3;ix++)for(let iz=0;iz<3;iz++)zbrick(PLX+(ix-1)*.29,SY+.09+.055+y*.112,CRZ+(iz-1)*.3);

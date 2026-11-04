@@ -16,7 +16,10 @@ Old intent:
 - Expression presets per cast member: shock, joy, sad, angry, doubt (brows, lids, mouth bones of the MakeHuman rig: orbicularis*, risorius*, jaw, oris*; check which bones move what with stills). Trigger them on script words.
 - Reaction source (user has NO face video): take a FREE stock reaction clip (Pexels / Pixabay license, note the URL + licence in facts) and run MediaPipe Face Landmarker (52 blendshapes) on it; map blendshapes to the rig bones. If mapping fails, keep hand-made presets.
 - Skin: softer wrap lighting / sheen, better normal maps. Close-up shot on every key beat (Zack style).
-## Stage 2 - real money
+## Stage 2 - real money -- DONE 2026-11-04 (render-kit/money-kit.js + money/*.jpg, test EP10 hook pallet/crate/streams, preview ep10-israel-aid-debt/hook-preview-5s-v4-money.mp4)
+How to use: `import {moneyKit} from './money-kit.js'`; `const MNY=await moneyKit(THREE)` (name it MNY: ep9/ep10 already use MK for Mike). `MNY.brick(100,{nx,ny,nz,glow})` (pallets, flying stacks; one box, cheap), `MNY.strap(20)`, `MNY.note(1,{curve})`, `MNY.fan(100,5)` (hand), `MNY.flutter(note,t,seed)`; `MNY.brickMats(d,nx,ny,nz,glow)` to reuse materials on your own BoxGeometry (EP10 squeezes 7 layers into .11 m).
+Facts: top faces read upright from the -z side (camera looking +z); bands on top + long faces only; keep glow <= .05 on bricks (more washes the notes out); close-up at ~0.6 m shows the real $100 + "$10,000" band.
+Old intent:
 - Official US note images ($100, $20, $1) from uscurrency.gov. Legal (18 USC 504, not legal advice): one-sided, size < 75% or > 150% of real -> use 150% scale. Use on straps, hands, pallets.
 ## Stage 3 - camera + montage kit
 - Shot helpers: closeUp(face), overShoulder, macro(obj), whip(to), orbit(char); auto-fit framing (9:16: hfov = 2*atan(tan(vfov/2)*.5625); keep key text above the 74 % caption line).

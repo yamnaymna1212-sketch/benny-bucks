@@ -10,7 +10,7 @@ for(const o of scene.children)if(o.isGroup&&Math.abs(o.position.x+7.4)<.01&&Math
 const PS=(o,s)=>{o.visible=s>.01;if(o.visible)o.scale.setScalar(Math.max(.001,s));};
 const pin=(t,t0,t1=99)=>pop(t,t0,.3)*(1-sm(t1,t1+.25,t));
 const PT=(s,size,col,x,y,z,t0,t1)=>popT(s,size,col,V3(x,y,z),t0,t1);
-const zbG=(p,x,y,z)=>{const m=new THREE.Mesh(ZBG,[ZBM[0],ZBM[0],ZBM[1],ZBM[0],ZBM[2],ZBM[2]]);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;p.add(m);return m;};
+const zbG=(p,x,y,z)=>{const m=new THREE.Mesh(ZBG,ZBM6);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;p.add(m);return m;};
 const wood=pbr('oak_wood_planks',1,1,0xa07a52);
 function table(x,z,w,d,h=.76){add(B(w,.05,d),wood,x,h,z);for(const sx of[-1,1])for(const sz of[-1,1])add(B(.05,h,.05),wood,x+sx*(w/2-.06),h/2,z+sz*(d/2-.06));}
 function canvasPlane(w,h,pw,ph,basic=false){const {c,t}=canvasTex(pw,ph);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),basic?new THREE.MeshBasicMaterial({map:t,toneMapped:false,side:THREE.DoubleSide}):new THREE.MeshStandardMaterial({map:t,roughness:.75,side:THREE.DoubleSide}));scene.add(m);return {m,c,t,x:c.getContext('2d')};}

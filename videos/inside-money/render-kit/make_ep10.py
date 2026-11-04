@@ -12,7 +12,7 @@ def sub(old, new, count=1):
 
 sub("// EP9 \"Trump promised one cent gas.\"", "// EP10 \"Why does America send Israel $3.8 billion a year, with $40 trillion in debt?\" (Mike). Built by make_ep10.py from ep9.html.\n// EP9 \"Trump promised one cent gas.\"")
 sub("import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';",
-    "import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';\nimport {BokehPass} from 'three/addons/postprocessing/BokehPass.js';\nimport {faceKit} from './face-kit.js';")
+    "import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';\nimport {BokehPass} from 'three/addons/postprocessing/BokehPass.js';\nimport {faceKit} from './face-kit.js';\nimport {moneyKit} from './money-kit.js';")
 sub("timeline_ep9.json", "timeline_ep10.json")
 sub("const tProm=Wd('promised'),tCent=Wd('cent'),tPrice=Wd('$423');",
     "const tProm=99,tCent=99,tPrice=99;   // EP9 Trump beats unused\nconst tSend=Wd('send'),tIsr=Wd('israel'),tBil=Wd('billion'),tYear=Wd('year'),tWith=Wd('with'),tTril=Wd('trillion'),tDebt=Wd('debt'),tMeet=Wd('meet');")
@@ -24,7 +24,7 @@ src = src[:i] + open('ep10_keys.js').read() + src[j:]
 
 # ---- materials: wet eyes, skin sheen, soft hair ----
 sub("mt.color.set(c);}});SRC[key]=g;}", "mt.color.set(c);o.material=zmat(o,o.material);}});SRC[key]=g;}")
-sub("// ================= CAST =================", open('ep10_props.js').read() + "\n// ================= CAST =================")
+sub("// ================= CAST =================", "const MNY=await moneyKit(THREE);   // real money (NEXT_LEVEL_PLAN stage 2)\n" + open('ep10_props.js').read() + "\n// ================= CAST =================")
 
 # ---- post: DoF + bloom + grade with motion blur, split tone, grain ----
 sub("comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.5,.25,2.4));comp.addPass(new OutputPass());",
