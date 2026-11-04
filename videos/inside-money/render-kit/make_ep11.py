@@ -25,7 +25,7 @@ a = src.index("comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:
 b = src.index("c.a);}'}));", a) + len("c.a);}'}));")
 src = src[:a] + open('ep10_grade.js').read() + src[b:]
 sub("function animate(t){updPops(t);updC(t);", "function animate9(t){updPops(t);updC(t);")
-sub("await loaded;\n", open('ep11_hook.js').read() + "\n" + open('ep11_anim.js').read() + "\nawait loaded;\n")
+sub("await loaded;\n", open('ep11_hook.js').read() + "\n" + open('ep11_story.js').read() + "\n" + open('ep11_anim.js').read() + "\nawait loaded;\n")
 sub("const renderAt0=t=>{setCam(t);", "const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);")
 sub("const PUX=GX-1.2,PUZ=19.5;", "const PUX=GX-1.2+500,PUZ=19.5;   // EP9 gas pump off")
 open('ep11.html', 'w').write(src)

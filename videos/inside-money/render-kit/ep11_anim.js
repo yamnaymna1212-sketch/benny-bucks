@@ -4,7 +4,7 @@ const _zp=V3(),_zd=V3();
 function shake(t){cam.rotateX(.0035*Math.sin(t*9.1)+.0018*Math.sin(t*17.3+2));cam.rotateY(.0035*Math.sin(t*7.7+1)+.0015*Math.sin(t*15.1));cam.updateMatrixWorld();}
 function zfxPrev(t){setCam(Math.max(0,t-1/30));shake(Math.max(0,t-1/30));cam.getWorldDirection(_zd);_zp.copy(cam.position).addScaledVector(_zd,10);}
 const FOC=t=>sm(tYours+.1,tPut-.25,t)*(1-sm(tPut-.05,tPut+.05,t))+sm(tTheirs-.3,tTheirs,t)*(1-sm(tMeet-.12,tMeet+.05,t));   // tight glowing zooms: the rest goes darker
-function zfxNow(t){shake(t);const p=_zp.clone().project(cam);let bx=-p.x*.5,by=-p.y*.5;const L=Math.hypot(bx,by),mx=.06;if(L>mx){bx*=mx/L;by*=mx/L;}if(L<.003){bx=0;by=0;}
+function zfxNow(t){shake(t);const p=_zp.clone().project(cam);let bx=-p.x*.5,by=-p.y*.5;const L=Math.hypot(bx,by),mx=(t>51.4&&t<58.3)?.012:.06;if(L>mx){bx*=mx/L;by*=mx/L;}if(L<.003){bx=0;by=0;}
  ZG.uniforms.blur.value.set(bx,by);ZG.uniforms.time.value=t;ZG.uniforms.vig.value=.16+.6*FOC(t);
  BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...hv(t,k=>k[2])));EL.position.copy(cam.position).add(V3(0,.12,0));}
 const MIKEA={};let MAS=0;
@@ -13,6 +13,7 @@ const LDT=i=>.25+i*.26;         // each money layer floats down into the hole (r
 const DIG=.8;                   // one dig every .8 s while the money drops
 function shovelTo(top,bot){const d=bot.clone().sub(top).normalize();SHV.position.copy(top);SHV.quaternion.setFromUnitVectors(V3(0,-1,0),d);}
 function animate(t){updPops(t);updC(t);fl.visible=false;const P=MIKE;relax(P);
+ if(t>=5.2){LAY.forEach(m=>m.visible=false);SHV.visible=false;DIRT.forEach(m=>m.visible=false);BLAY.forEach(m=>m.visible=false);PAL.visible=t<8.2;const sh=1;DOORS.forEach(({g,sd})=>{g.rotation.y=0;});ZG.uniforms.vig.value=.16;LTM.emissiveIntensity=.3;LEM.emissiveIntensity=.18;story11(t);return;}
  if(!MAS){MAS=1;P.g.position.set(MPX,0,MPZ);P.g.rotation.y=Math.PI/2;P.g.updateMatrixWorld(true);
   const a=(sd,v)=>{relax(P);const r=solveReach(P,sd,v);relax(P);return r;};
   MIKEA.dnR=a('R',V3(PX-.62,.42,MPZ+.05));MIKEA.dnL=a('L',V3(PX-.86,.92,MPZ-.08));MIKEA.upR=a('R',V3(PX-.78,.95,MPZ+.05));MIKEA.upL=a('L',V3(PX-1.0,1.28,MPZ-.1));
