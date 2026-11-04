@@ -41,3 +41,15 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 - Keep: calm confident narrator tone, 2-3 word low caption, floating glowing 3D prices, shot types.
 - Beat him: **3.2-3.4 words/s, pauses <= 0.12 s inside a sentence and <= 0.2 s between sentences (max_gap 0.05)**, a visual change/cut every 2-3 s, never a static shot.
 - Never clone a real person's voice; use a Kokoro American male voice with the same calm tone.
+
+## Zack D. Films #3: references/inside-money/zack/zack-03.mp4 ("She shot at the president", marine hero story) — measured 2026-11-03
+Sheets: references/inside-money/analysis/zack-03-sheet.jpg (1 fps) and zack-03-hook-sheet.jpg (first 5 s, 3 fps). 33.2 s, 720x1280, 29.97 fps, -8.1 LUFS (loud, LRA 1.8), NO silence > 0.25 s at -35 dB.
+- **Hook (0-5 s)**: first-person BULLET POV: gun in foreground, bullet flies through frame, president's face reacts (open-mouth shock), camera follows the bullet past his head (macro on hair), whip-pan with motion blur into the shooter. The caption starts at 0 s. The story is understood with no sound.
+- **Camera**: handheld-feel, ALWAYS moving (optical-flow speed 2.2-6.0 px/step in every 3-s window, peaks 10-15 at whips). Mostly push-ins (zoom +5..+12) with 2 pull-outs at 21-27 s. Cuts disguised as whip pans / object wipes (bullet, hand, paper); only ~3 hard cuts, ~20+ shots in 33 s = a new shot every ~1.5 s. Macro inserts: bullet, shoe, thank-you letter signature, newspaper, whisky bottle, framed letter.
+- **Characters**: offline-rendered (Unreal/Blender class) realistic humans, skin subsurface, individual hair strands, wet eyes, clear emotion close-ups (shock, shame, grief); crowd of background extras with phones/hands on mouth reacting; role by costume (suits+sunglasses guards, white shirt marine, military caps).
+- **Light**: golden-hour / blue-hour colour split (orange practicals vs blue fill), shallow DoF, film grade, strong contrast between day street and dark interior.
+- **Caption**: 2-3 words, white bold, centred ~y 70-74 %, thin shadow, synced to each phrase. ~2.3 words/s, no pauses.
+- **Story**: hook event -> twist -> consequence -> sad payoff shown with objects (framed letter on wall). Every phrase = a new image.
+- **Sound** (cannot separate from file alone): constant bed + hits on impact; loudness -8 LUFS means a mastered mix, louder than ours.
+### Gaps vs our Three.js (EP9)
+Faces/eyes/hair strands (biggest), skin shading, extras reacting, DoF + motion blur on whips, handheld camera energy, macro inserts every 1.5 s, object-wipe transitions, grade. Three.js can improve: whip-pan blur transitions, macro inserts, DoF (BokehPass), extras with reaction poses, grade, louder master. Cannot reach: face realism -> needs Blender/Unreal MetaHuman.
