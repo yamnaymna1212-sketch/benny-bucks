@@ -15,7 +15,7 @@ i = src.index("const KEYS=["); j = src.index("\n];\n", i) + 4
 src = src[:i] + open('ep11_keys.js').read() + src[j:]
 # hole in the lawn for the backyard pit (ground = 4 slabs around it)
 sub("add(B(600,.2,600),pbr('leafy_grass',200,200,0x86b84f),0,-.1,-100,scene,false);",
-    "ringBox(0,-.1,-100,600,.2,600,{x:-8.6,z:-14.6,w:.98,d:.5},(w,d)=>pbr('leafy_grass',Math.max(.33,w/3),Math.max(.17,d/3),0x86b84f));   // EP11: the backyard hole")
+    "ringBox(0,-.1,-100,600,.2,600,{x:-8.6,z:(-15.05-8.5+(-14.3))/2,w:5.2,d:8.5+.75},(w,d)=>pbr('leafy_grass',Math.max(.33,w/3),Math.max(.17,d/3),0x86b84f));   // EP11: the backyard hole")
 sub("mt.color.set(c);}});SRC[key]=g;}", "mt.color.set(c);o.material=zmat(o,o.material);}});SRC[key]=g;}")
 zp = open('ep10_props.js').read(); zp = zp[zp.index("// ---- zack-style materials"):]
 sub("// ================= CAST =================", zp + "\n// ================= CAST =================")

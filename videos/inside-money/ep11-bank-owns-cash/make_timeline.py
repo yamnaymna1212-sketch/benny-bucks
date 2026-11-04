@@ -19,11 +19,12 @@ for i,w in enumerate(W):  # "two to three dollars" -> "$2 to $3"
         w['w']='$2';W[i+2]['w']='$3.';W[i+2]['e']=W[i+3]['e'];del W[i+3];break
 W[-3]['w']='CASH';W[-1]['w']='CARD.'
 W[0]['s']=0.0
-ch=[];cur=[]
+# captions: ONE word at a time (user 2026-11-04); a price shown as 3D text is left out of the captions (blank chunk), no repetition
+ch=[];prev=''
 for w in W:
-    cur.append(w);end=w['w'][-1] in '.,?!'
-    if len(cur)==3 or end or (len(cur)==2 and len(w['w'])>8):ch.append({'t':' '.join(x['w'].strip('.,?') for x in cur),'s':cur[0]['s'],'e':cur[-1]['e']});cur=[]
-if cur:ch.append({'t':' '.join(x['w'].strip('.,?') for x in cur),'s':cur[0]['s'],'e':cur[-1]['e']})
+    t=w['w'].strip('.,?!')
+    price=t.startswith('$') or (prev.startswith('$') and t.lower() in('billion','million','thousand','trillion'))
+    ch.append({'t':'' if price else t,'s':w['s'],'e':w['e']});prev=t
 dur=W[-1]['e']+.3
 json.dump({'dur':round(dur,2),'words':W,'chunks':ch},open('render-kit/timeline_ep11.json','w'),indent=0)
 print(len(W),len(ch),round(dur,2));print(' '.join(w['w'] for w in W))
