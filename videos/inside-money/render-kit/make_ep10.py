@@ -17,7 +17,7 @@ sub("timeline_ep9.json", "timeline_ep10.json")
 sub("const tProm=Wd('promised'),tCent=Wd('cent'),tPrice=Wd('$423');",
     "const tProm=99,tCent=99,tPrice=99;   // EP9 Trump beats unused\nconst tSend=Wd('send'),tIsr=Wd('israel'),tBil=Wd('billion'),tYear=Wd('year'),tWith=Wd('with'),tTril=Wd('trillion'),tDebt=Wd('debt'),tMeet=Wd('meet');")
 
-# ---- camera keys: hook only (story keys are added after hook approval) ----
+# ---- camera keys: hook + story (ep10_keys.js) ----
 i = src.index("const KEYS=[")
 j = src.index("\n];\n", i) + 4
 src = src[:i] + open('ep10_keys.js').read() + src[j:]
@@ -35,7 +35,7 @@ src = src[:a] + open('ep10_grade.js').read() + src[b:]
 
 # ---- animate: EP10 hook replaces the EP9 one ----
 sub("function animate(t){updPops(t);updC(t);", "function animate9(t){updPops(t);updC(t);")
-sub("await loaded;\n", open('ep10_anim.js').read() + "\nawait loaded;\n")
+sub("await loaded;\n", open('ep10_story.js').read() + "\n" + open('ep10_anim.js').read() + "\nawait loaded;\n")
 sub("const renderAt0=t=>{setCam(t);", "const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);")
 sub("const PUX=GX-1.2,PUZ=19.5;", "const PUX=GX-1.2+500,PUZ=19.5;   // EP9 gas pump moved off the stage")
 open('ep10.html', 'w').write(src)

@@ -12,5 +12,6 @@
 | ~32 hours of interest | 3.8 / 2.88 x 24 = 31.7 h (our math) | derived |
 | defense $965 billion, interest more | FY2026 National Defense outlays $965.16B vs Net Interest $1,051.75B | MTS table 9, 2026-09-30 |
 | < 1/100 of 1% of the debt | 3.8B / 40,502B = 0.0094 % | derived |
+| on screen: 1 square = $4 billion (debt drawn as 100x100 squares) | 40,502B / 10,000 = $4.05B; the $3.8B aid fits inside one square | derived |
 Not claimed: supplemental aid since 2023 (separate laws) - the video talks only about the yearly MOU amount. Neutral framing: no opinion, CTA is a two-option vote.
 Voice: Kokoro am_liam 0.95, max_gap .08, one take, 64.6 s (vo.wav). Timeline: render-kit/timeline_ep10.json (64.79 s).

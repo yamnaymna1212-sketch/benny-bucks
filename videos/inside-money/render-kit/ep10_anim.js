@@ -17,13 +17,14 @@ function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Mat
  const on=sm(tSend-.3,tSend,t)*(1-sm(tWith,tWith+.3,t));
  setA(P,'R',lerpA(REST,lerpA(TRA.pal,TRA.cr,ph),on));pose(P,'upperarm01L',AD[0]+.15*on,0,-AD[2]+.25*on);   // left hand stays at his side (no hidden arm)
  pose(P,'spine03',.12*on,0,0);face(P,{jaw:.03+.04*Math.abs(Math.sin(t*9)),smile:.35});}
-function animate(t){updPops(t);updC(t);TR.g.visible=t<tWith+.5;fl.visible=false;trumpLoad(t);
+function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;trumpLoad(t);
  {const pa=FG3.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+.44)/.88;pa.setZ(i,Math.sin(u*7-t*6)*.05*u);}pa.needsUpdate=true;FG3.computeVertexNormals();}
  FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length,k=sm(t0,t0+.42,t);m.position.lerpVectors(m.userData.a,m.userData.b,k);m.position.y+=.32*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*2.4,(1-k)*.5);});
- drawDebt(40502080966097+t*63000);DEBT.visible=DFR.visible=t>tWith-.12;   // the clock appears inside the whip-pan blur: no cropped teaser in the crate shots
+ if(t<57.75)drawDebt(40502080966097+t*63000);else drawGrid();DEBT.visible=DFR.visible=t>tWith-.12;   // the clock appears inside the whip-pan blur: no cropped teaser in the crate shots
  {const dt=t-tTril;DEBT.scale.setScalar(dt>0?1+.1*Math.exp(-dt*7)*Math.cos(dt*22):1);}
  {const P=MIKE;relax(P);idle(P,t,1.3);const turn=sm(tDebt+.1,tDebt+.5,t);P.g.rotation.y=-.08-.8*turn;
   if(t>tTril-.1&&t<tDebt-.15)pose(P,'head',-.18*sm(tTril-.1,tTril+.2,t),0,0);   // looks up at the clock
   if(t>tDebt-.25){const k=sm(tDebt-.25,tDebt+.05,t);face(P,{jaw:.09*k,smile:0});pose(P,'spine03',-.08*k,0,0);arm(P,'L',AD[0]+.25*k,AD[2]-.25*k,.5*k);arm(P,'R',AD[0]+.25*k,AD[2]-.25*k,.5*k);}}   // shock: mouth opens a little, leans back, hands flinch up, turns to us (no tongue)
+ story10(t);
  {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
 }
