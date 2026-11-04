@@ -22,6 +22,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
+import {faceKit} from './face-kit.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 await document.fonts.load('800 60px Mont');
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
@@ -402,8 +403,8 @@ const KEYS=[   // [t, camera, look-at, fov] - zack rhythm: push-in, pull-out, wh
  [tDebt-.2, [GX+.4,2.15,13.85],[GX,2.95,20.3],52],
  [tDebt+.02,[GX+1.45,1.78,15.15],[GX+.62,1.6,15.8],42],            // orbit around Mike, always looking at him
  [tDebt+.28,[GX+1.35,1.7,16.85],[GX+.62,1.58,15.8],40],
- [tDebt+.5, [GX-.35,1.66,17.0],[GX+.62,1.55,15.8],38],             // the shock close-up, he turns to us
- [tMeet+.6, [GX-.3,1.64,16.85],[GX+.62,1.55,15.8],36],
+ [tDebt+.5, [GX+.06,1.63,16.27],[GX+.615,1.6,15.805],30],          // the shock FACE close-up (face-kit stage 1): he turns to us
+ [tMeet+.6, [GX+.12,1.625,16.2],[GX+.615,1.6,15.805],27],
  // ---- STORY (keys are on the spoken words; the auto 'hold' key makes every long move a short fly that lands on the subject) ----
  [6.25,[-22,1.62,11.4],[-22,1.35,14.8],40],[8.0,[-22.05,1.6,12.0],[-22.05,1.38,14.8],38],                         // S1 Mike + TAXES PAID + magnifier
  [8.75,[-13.75,1.75,11.0],[-13.75,1.05,15.3],50],[9.9,[-13.78,1.72,11.3],[-13.78,1.08,15.3],48],                      // S2 the 2016 memorandum signed
@@ -875,8 +876,23 @@ function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith
   if(t>tTril-.1&&t<tDebt-.15)pose(P,'head',-.18*sm(tTril-.1,tTril+.2,t),0,0);   // looks up at the clock
   if(t>tDebt-.25){const k=sm(tDebt-.25,tDebt+.05,t);face(P,{jaw:.09*k,smile:0});pose(P,'spine03',-.08*k,0,0);arm(P,'L',AD[0]+.25*k,AD[2]-.25*k,.5*k);arm(P,'R',AD[0]+.25*k,AD[2]-.25*k,.5*k);}}   // shock: mouth opens a little, leans back, hands flinch up, turns to us (no tongue)
  story10(t);
+ faces10(t);   // face-kit: expressions, blink, look-at (ep10_face.js)
  {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
 }
+
+// ================= EP10 FACES (face-kit.js, NEXT_LEVEL_PLAN stage 1) =================
+// Trump: a pleased smirk while he loads the straps, eyes on the crate. Mike: eyes go up to the debt clock on "trillion",
+// then the real stock-clip shock (Pexels 6980085, MediaPipe) when he turns to us on "debt". Everyone blinks + saccades.
+const FK=faceKit(THREE);
+FK.rig(MIKE,{iris:'#5c4330',brow:'#3a281a'});FK.rig(MK,{iris:'#5c4330',brow:'#3a281a'});FK.rig(TR,{});
+const SHOCK=await FK.loadClip('faces/6980085.json');   // brows up 4.5 s -> jaw drop 4.8 s (smile after 5.3 s is not used)
+const CRATE_EYE=V3(CRX+.2,SY+.6,CRZ),CLOCK_EYE=V3(GX,3.0,20.3);
+function faces10(t){
+ if(TR.g.visible)FK.update(TR,t,{expr:[['smirk',.9],['joy',.35]],look:CRATE_EYE});
+ if(MIKE.g.visible){const sh=sm(tDebt-.3,tDebt+.1,t);
+  const look=t<tTril-.1?CRATE_EYE:t<tDebt-.2?CLOCK_EYE:cam.position;
+  FK.update(MIKE,t,{expr:[['shock',.55*sh],['doubt',.6*sm(tTril-.1,tTril+.25,t)*(1-sh)]],clip:{data:SHOCK,t0:tDebt-.3,from:4.42,len:.85,k:1},look});}
+ if(MK.g.visible)FK.update(MK,t,{look:cam.position});}
 
 await loaded;
 {relax(TR);TR.g.updateMatrixWorld(true);RP.present=solveReach(TR,'R',V3(GX+.55,SY+1.3,18.7));relax(TR);RP.point=solveReach(TR,'L',V3(GX-.85,SY+1.4,18.85));relax(TR);
@@ -886,8 +902,8 @@ await Promise.all(Object.values(MODELS));
 
 const cap=document.getElementById('cap');
 window.renderAt=t=>{try{return renderAt0(t);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}};
-const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);
+const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);if(window.FB)for(const [w,n,x,y,z] of window.FB)pose(w==='T'?TR:MIKE,n,x,y,z);if(window.FX)for(const f of window.FX)FK.update(f.who==='T'?TR:MIKE,t,f);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
-window.renderAt(Number(Q.get('t')||0));document.title='ready';
+Object.assign(window,{Q,MIKE,TR,THREE,cam,FK});window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>

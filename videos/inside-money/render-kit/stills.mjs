@@ -2,7 +2,7 @@
 // Writes still-<t>.jpg in this folder and prints the GPU + any page errors.
 import http from 'node:http';import fs from 'node:fs';import path from 'node:path';
 import {chromium} from 'playwright';
-const root=process.cwd(),PORT=8766;const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.woff2':'font/woff2','.jpg':'image/jpeg','.glb':'model/gltf-binary'};
+const root=process.cwd(),PORT=Number(process.env.PORT||8766);const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.woff2':'font/woff2','.jpg':'image/jpeg','.glb':'model/gltf-binary'};
 const srv=http.createServer((q,r)=>{const f=path.join(root,decodeURIComponent(q.url.split('?')[0]));if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);return r.end();}
   r.writeHead(200,{'Content-Type':types[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(r);}).listen(PORT);
 const args=process.argv.slice(2),qi=args.indexOf('--q'),extra=qi>=0?args.splice(qi,2)[1]:'';

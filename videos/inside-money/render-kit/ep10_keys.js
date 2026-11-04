@@ -7,8 +7,8 @@ const KEYS=[   // [t, camera, look-at, fov] - zack rhythm: push-in, pull-out, wh
  [tDebt-.2, [GX+.4,2.15,13.85],[GX,2.95,20.3],52],
  [tDebt+.02,[GX+1.45,1.78,15.15],[GX+.62,1.6,15.8],42],            // orbit around Mike, always looking at him
  [tDebt+.28,[GX+1.35,1.7,16.85],[GX+.62,1.58,15.8],40],
- [tDebt+.5, [GX-.35,1.66,17.0],[GX+.62,1.55,15.8],38],             // the shock close-up, he turns to us
- [tMeet+.6, [GX-.3,1.64,16.85],[GX+.62,1.55,15.8],36],
+ [tDebt+.5, [GX+.06,1.63,16.27],[GX+.615,1.6,15.805],30],          // the shock FACE close-up (face-kit stage 1): he turns to us
+ [tMeet+.6, [GX+.12,1.625,16.2],[GX+.615,1.6,15.805],27],
  // ---- STORY (keys are on the spoken words; the auto 'hold' key makes every long move a short fly that lands on the subject) ----
  [6.25,[-22,1.62,11.4],[-22,1.35,14.8],40],[8.0,[-22.05,1.6,12.0],[-22.05,1.38,14.8],38],                         // S1 Mike + TAXES PAID + magnifier
  [8.75,[-13.75,1.75,11.0],[-13.75,1.05,15.3],50],[9.9,[-13.78,1.72,11.3],[-13.78,1.08,15.3],48],                      // S2 the 2016 memorandum signed

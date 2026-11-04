@@ -26,5 +26,6 @@ function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith
   if(t>tTril-.1&&t<tDebt-.15)pose(P,'head',-.18*sm(tTril-.1,tTril+.2,t),0,0);   // looks up at the clock
   if(t>tDebt-.25){const k=sm(tDebt-.25,tDebt+.05,t);face(P,{jaw:.09*k,smile:0});pose(P,'spine03',-.08*k,0,0);arm(P,'L',AD[0]+.25*k,AD[2]-.25*k,.5*k);arm(P,'R',AD[0]+.25*k,AD[2]-.25*k,.5*k);}}   // shock: mouth opens a little, leans back, hands flinch up, turns to us (no tongue)
  story10(t);
+ faces10(t);   // face-kit: expressions, blink, look-at (ep10_face.js)
  {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
 }

@@ -15,3 +15,4 @@
 | on screen: 1 square = $4 billion (debt drawn as 100x100 squares) | 40,502B / 10,000 = $4.05B; the $3.8B aid fits inside one square | derived |
 Not claimed: supplemental aid since 2023 (separate laws) - the video talks only about the yearly MOU amount. Neutral framing: no opinion, CTA is a two-option vote.
 Voice: Kokoro am_liam 0.95, max_gap .08, one take, 64.6 s (vo.wav). Timeline: render-kit/timeline_ep10.json (64.79 s).
+Face capture (stage 1, 2026-11-04): Mike's shock on "debt" = MediaPipe blendshapes from the free Pexels clip 6980085 (Pexels licence), see render-kit/faces/SOURCES.md. Not a real person's likeness: only expression curves are reused.
