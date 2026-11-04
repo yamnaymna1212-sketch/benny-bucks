@@ -24,6 +24,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
 import {faceKit} from './face-kit.js';
 import {moneyKit} from './money-kit.js';
+import {cameraKit} from './camera-kit.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 await document.fonts.load('800 60px Mont');
 const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
@@ -432,8 +433,8 @@ function hv(t,sel){let i=0;while(i<KEYS.length-2&&t>=KEYS[i+1][0])i++;const a=KE
  for(let j=0;j<Bv.length;j++){const d1=(C[j]-Bv[j])/h,d0=a===b?d1:(Bv[j]-A[j])/(b[0]-a[0]),d2=c===d?d1:(D[j]-C[j])/(d[0]-c[0]);
   const m0=(a===b?0:tg(d0,d1))*h,m1=(c===d?0:tg(d1,d2))*h;out.push(h00*Bv[j]+h10*m0+h01*C[j]+h11*m1);}return out;}
 function setCam(t){if(Q.get('cam')){const v=Q.get('cam').split(',').map(Number);cam.position.set(v[0],v[1],v[2]);cam.fov=v[6];cam.updateProjectionMatrix();cam.lookAt(v[3],v[4],v[5]);return;}   // debug camera
- const P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);
- cam.position.set(...P).add(V3(Math.sin(t*.55)*.045+Math.sin(t*1.3)*.012,Math.sin(t*.75)*.03,Math.sin(t*.4)*.04));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(...L);   // slow handheld drift: no frame is ever frozen
+ let P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);CAMF=null;if(t<CAM_END){CAMF=CAMH(t);P=CAMF.pos;L=CAMF.look;F=[CAMF.fov];}
+ cam.position.set(...P).add(V3(Math.sin(t*.55)*.045+Math.sin(t*1.3)*.012,Math.sin(t*.75)*.03,Math.sin(t*.4)*.04).multiplyScalar(CAMF?.drift??1));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(...L);CK.fx(cam,t);   // slow handheld drift: no frame is ever frozen
  const c=cam.position,f=V3();cam.getWorldDirection(f);f.y=0;f.normalize();sun.target.position.copy(c).addScaledVector(f,10).setY(0);sun.position.copy(c).addScaledVector(f,-22).add(V3(-8,40,0));}   // sun always behind the camera: subjects are front-lit
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
@@ -857,7 +858,7 @@ function shake(t){cam.rotateX(.0035*Math.sin(t*9.1)+.0018*Math.sin(t*17.3+2));ca
 function zfxPrev(t){setCam(Math.max(0,t-1/30));shake(Math.max(0,t-1/30));cam.getWorldDirection(_zd);_zp.copy(cam.position).addScaledVector(_zd,10);}
 function zfxNow(t){shake(t);const p=_zp.clone().project(cam);let bx=-p.x*.5,by=-p.y*.5;const L=Math.hypot(bx,by),mx=.06;if(L>mx){bx*=mx/L;by*=mx/L;}if(L<.003){bx=0;by=0;}   // motion blur only on fast moves
  ZG.uniforms.blur.value.set(bx,by);ZG.uniforms.time.value=t;
- BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...hv(t,k=>k[2])));EL.position.copy(cam.position).add(V3(0,.12,0));}
+ BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...(CAMF?CAMF.look:hv(t,k=>k[2]))));BOKEH.uniforms.aperture.value=CAMF?.ap??.0018;   // camera-kit framing: per-shot focus + aperture (macro = shallow)EL.position.copy(cam.position).add(V3(0,.12,0));}
 const TRA={};let TRS=0;   // Trump loads the straps: right hand pallet -> crate, solved once
 const TPX=CRX+.52,TPZ=CRZ+.4;
 function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Math.PI;
@@ -866,9 +867,9 @@ function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Mat
  const on=sm(tSend-.3,tSend,t)*(1-sm(tWith,tWith+.3,t));
  setA(P,'R',lerpA(REST,lerpA(TRA.pal,TRA.cr,ph),on));pose(P,'upperarm01L',AD[0]+.15*on,0,-AD[2]+.25*on);   // left hand stays at his side (no hidden arm)
  pose(P,'spine03',.12*on,0,0);face(P,{jaw:.03+.04*Math.abs(Math.sin(t*9)),smile:.35});}
-function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;trumpLoad(t);
+function animate(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;const tf=CK.ramp(t,S2a,S2b,.45,.45);trumpLoad(tf);hookIcons(t);   // tf = speed-ramped scene time (slow-mo in the macro)
  {const pa=FG3.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+.44)/.88;pa.setZ(i,Math.sin(u*7-t*6)*.05*u);}pa.needsUpdate=true;FG3.computeVertexNormals();}
- FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length,k=sm(t0,t0+.42,t);m.position.lerpVectors(m.userData.a,m.userData.b,k);m.position.y+=.32*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*2.4,(1-k)*.5);});
+ FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length,k=sm(t0,t0+.42,tf);m.position.lerpVectors(m.userData.a,m.userData.b,k);m.position.y+=.32*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*2.4,(1-k)*.5);});
  if(t<57.75)drawDebt(40502080966097+t*63000);else drawGrid();DEBT.visible=DFR.visible=t>tWith-.12;   // the clock appears inside the whip-pan blur: no cropped teaser in the crate shots
  {const dt=t-tTril;DEBT.scale.setScalar(dt>0?1+.1*Math.exp(-dt*7)*Math.cos(dt*22):1);}
  {const P=MIKE;relax(P);idle(P,t,1.3);const turn=sm(tDebt+.1,tDebt+.5,t);P.g.rotation.y=-.08-.8*turn;
@@ -893,6 +894,37 @@ function faces10(t){
   FK.update(MIKE,t,{expr:[['shock',.55*sh],['doubt',.6*sm(tTril-.1,tTril+.25,t)*(1-sh)]],clip:{data:SHOCK,t0:tDebt-.3,from:4.42,len:.85,k:1},look});}
  if(MK.g.visible)FK.update(MK,t,{look:cam.position});}
 
+// ================= EP10 HOOK CAMERA (camera-kit.js, NEXT_LEVEL_PLAN stage 3) =================
+// 5 framings in 5.6 s, every one auto-fitted above the 74 % caption line:
+// wide crate+pallet+Trump (push) -> MACRO real $10,000 strap ($3.8, slow-mo ramp) -> low medium crate + $3.8 BILLION + glowing $ coin (boom)
+// -> WHIP over Mike's shoulder to the debt clock + $40 TRILLION + glowing warning icon (big boom) -> orbit -> face close-up (FK.closeUp).
+const CK=cameraKit(THREE,{FK});
+const TPH=V3(TPX,SY+1.95,TPZ),TOPL=SY+.09+.055+3*.112;   // Trump's head, centre of the pallet's top layer
+const CRATE=CK.box([CRX-.45,SY,CRZ-.39],[CRX+.45,SY+.62,CRZ+.39]),PALLET=CK.box([PLX-.45,SY,CRZ-.45],[PLX+.45,SY+.8,CRZ+.45]);
+const FLAG=CK.box([CRX-.78,SY+1.72,CRZ+.2],[CRX-.3,SY+2.42,CRZ+.2]),TXT38=CK.box([CRX+.52-.62,2.76,CRZ-.3],[CRX+.52+.62,3.12,CRZ-.3]);
+const MIKE_HEAD=V3(GX+.615,1.6,15.805),CLOCK=CK.box([GX-1.8,SY+2.2,20.35],[GX+1.8,SY+3.8,20.35]),TXT40=CK.box([GX-1.1,1.95,19.6],[GX+1.1,2.27,19.6]);
+const COIN=CK.icon('dollar',{color:'#1fd66a',size:.26}),WARN=CK.icon('warn',{color:'#ff2a2a',size:.42});scene.add(COIN,WARN);
+const COIN_AT=V3(CRX+.52+.86,2.95,CRZ-.3),WARN_AT=V3(GX-1.45,2.62,19.55);
+const S2a=1.25,S2b=2.15;   // macro shot = speed-ramp window for the flying straps
+const MAC=CK.box([PLX-.16,TOPL+.03,CRZ-.45],[PLX+.16,TOPL+.06,CRZ-.16]);
+const HOOK_SHOTS=[
+ {t0:0,t1:S2a,a:()=>CK.fit([CRATE,PALLET,FLAG,TPH],{dir:[0,.12,-1],fov:46}),b:()=>CK.fit([CRATE,PALLET,FLAG,TPH],{dir:[.05,.1,-1],fov:46,slack:.94}),ease:'ramp'},
+ {t0:S2a,t1:S2b,a:()=>CK.macro(MAC,{dir:[.12,.8,-1],fov:26,ap:.007}),b:()=>CK.macro(MAC,{dir:[.05,.72,-1],fov:26,ap:.007,slack:.8}),ease:'linear',drift:.25},
+ {t0:S2b,t1:tWith,a:()=>CK.fit([CRATE,TXT38,COIN_AT,TPH],{dir:[.35,-.1,-1],fov:44}),b:()=>CK.fit([CRATE,TXT38,COIN_AT,TPH],{dir:[.28,-.08,-1],fov:44,slack:.95}),ease:'ramp'},
+ {t0:tWith,t1:tDebt-.06,in:'whip',a:()=>CK.overShoulder(MIKE,[GX,2.95,20.3],{back:1.25,out:.3,up:.12,fov:50,ry:-.08}),b:()=>CK.overShoulder(MIKE,[GX,2.95,20.3],{back:1.0,out:.27,up:.1,fov:47,ry:-.08}),ease:'ramp'},
+ {t0:tDebt-.06,t1:tDebt+.5,a:()=>CK.orbit(MIKE_HEAD,{a0:2.25,a1:-.87,r0:1.05,r1:.72,h0:.16,h1:.03,fov0:40,fov1:29})[0],b:()=>HOOK_SHOTS[5].a,ease:'ramp'},
+ {t0:tDebt+.5,t1:tMeet+.62,a:()=>CK.closeUp(MIKE,{ry:-.88,dist:.72,fov:29}),b:()=>CK.closeUp(MIKE,{ry:-.88,dist:.66,fov:27}),ease:'smooth'},
+];
+const CAMH=CK.track(HOOK_SHOTS,{whip:.26}),CAM_END=tMeet+.62;let CAMF=null;
+HOOK_SHOTS.forEach(s=>{if(typeof s.a==='function')s.a=s.a();});HOOK_SHOTS[4].b=HOOK_SHOTS[5].a;   // solve framings now (orbit lands exactly on the close-up)
+HOOK_SHOTS.forEach(s=>{if(typeof s.b==='function')s.b=s.b();if(s.drift!==undefined){s.a.drift=s.drift;s.b.drift=s.drift;}});
+{const E=CAMH.end(CAM_END);for(const k of KEYS)if(k[0]<CAM_END+.06){k[1]=E.pos;k[2]=E.look;k[3]=E.fov;}}   // story keys start from the last hook framing
+CK.boom(tBil,.5);CK.boom(tTril,1);
+function hookIcons(t){CK.iconAnim(COIN,t,tBil-.02,tWith,{pos:COIN_AT,cam,spin:1});CK.iconAnim(WARN,t,tTril+.02,tDebt-.06,{pos:WARN_AT,cam,spin:.5});}
+// stills check: frame-safety of every key target per shot (console 'CK' lines) + story framing gaps > 2 s
+window.CK_REPORT=()=>({shots:HOOK_SHOTS.map((s,i)=>({i,t0:s.t0,a:CK.check(s.a,[[CRATE,PALLET,FLAG,TPH],[MAC],[CRATE,TXT38,COIN_AT],[CLOCK,TXT40],[MIKE_HEAD],[MIKE_HEAD]][i]),b:CK.check(s.b,[[CRATE,PALLET,FLAG,TPH],[MAC],[CRATE,TXT38,COIN_AT],[CLOCK,TXT40],[MIKE_HEAD],[MIKE_HEAD]][i])})),
+ cuts:CAMH.cuts,storyGaps:CK.audit(KEYS.map(k=>k[0]).filter(t=>t>=CAM_END))});
+
 await loaded;
 {relax(TR);TR.g.updateMatrixWorld(true);RP.present=solveReach(TR,'R',V3(GX+.55,SY+1.3,18.7));relax(TR);RP.point=solveReach(TR,'L',V3(GX-.85,SY+1.4,18.85));relax(TR);
  RP.open={R:solveReach(TR,'R',V3(GX+.6,SY+1.0,18.68))};relax(TR);RP.open.L=solveReach(TR,'L',V3(GX-.6,SY+1.0,18.68));relax(TR);}
@@ -904,5 +936,5 @@ window.renderAt=t=>{try{return renderAt0(t);}catch(e){console.error('RENDER ERR'
 const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);if(window.FB)for(const [w,n,x,y,z] of window.FB)pose(w==='T'?TR:MIKE,n,x,y,z);if(window.FX)for(const f of window.FX)FK.update(f.who==='T'?TR:MIKE,t,f);
  let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
-Object.assign(window,{Q,MIKE,TR,THREE,cam,FK});window.renderAt(Number(Q.get('t')||0));document.title='ready';
+Object.assign(window,{Q,MIKE,TR,THREE,cam,FK,CK});window.renderAt(Number(Q.get('t')||0));document.title='ready';
 </script></body></html>
