@@ -1,3 +1,23 @@
+# EP14 script v4 (FINAL for voice, 2026-11-05). Wallet angle, user's hook. FICTIONAL WHAT-IF. Text for ElevenLabs = vo.tts.txt (numbers in words).
+Hook (0-5 s, built: render-kit/ep14_hook.js, stills hook-stills-v4.jpg): map north-up, Trump on the US flag -> face -> button -> missile chase -> mushroom cloud on the Iran flag.
+Story: Mike enters on "Meet Mike" (gas station / home / phone), then oil, Hormuz, stocks/gold, gas pump, trucks/ships, peace talks, CTA GAS or STOCKS.
+1. What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to your wallet?
+2. Meet Mike. He just filled up his car this morning.
+3. Here's the thing. No one has used a nuclear weapon since nineteen forty-five, so nobody can predict it exactly.
+4. But we know what a regular war with Iran already did to oil.
+5. Before the war this year, a barrel cost about seventy dollars.
+6. In March, it shot up to about one hundred twenty-five.
+7. Why? Iran sits next to the Strait of Hormuz. About one fifth of the world's oil sails through it.
+8. Last June, one strike on Iran pushed oil up seven percent in a single day.
+9. Stocks fell, and investors ran to gold.
+10. Now look at Mike's gas station. In January, a gallon cost about two eighty-two. This fall, about four twenty-seven.
+11. That's roughly twenty-two dollars more every time he fills a fifteen gallon tank.
+12. Trucks and ships burn that fuel too, so the price of things that travel can go up as well.
+13. And when peace talks start, oil can drop just as fast. Fear moves prices in days.
+14. So which hits your wallet first? Comment GAS or STOCKS.
+Facts: facts.md (re-check Brent peak + AAA gas on the recording day).
+
+---- older ----
 # EP14 script v3 (CURRENT, user 2026-11-05): wallet angle + user's hook. FICTIONAL WHAT-IF. Voice = user's ElevenLabs Zack; numbers in words.
 HOOK (user's words): "What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to your wallet?"
 Hook visuals (user): easy map -> Trump presses a button -> missile flies to Iran -> Mike scared for his bank account + money. Built: render-kit/ep14_hook.js, stills hook-stills-v1.jpg (placeholder word times until the mp3).

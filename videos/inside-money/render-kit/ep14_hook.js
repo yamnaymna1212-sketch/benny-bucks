@@ -82,7 +82,7 @@ function missile14(t){const u=uM(t),on=t>=tLaunch&&t<tHit;MSL.visible=on;
 // ---------------- nuclear blast: flash -> fireball -> stem + cap (stylized mushroom cloud) + dust ring ----------------
 const BLAST=new THREE.Group();BLAST.position.copy(IRAN);scene.add(BLAST);
 const BM=(c,o={})=>new THREE.MeshBasicMaterial(Object.assign({color:c,toneMapped:false},o));
-const SMOKEM=new THREE.MeshStandardMaterial({color:0x4a4442,roughness:1,envMapIntensity:.15,emissive:0xff3c00,emissiveIntensity:0}),
+const SMOKEM=new THREE.MeshStandardMaterial({color:0x3f3b3a,roughness:1,envMapIntensity:.08,emissive:0xff3c00,emissiveIntensity:0}),
  HOTM=BM(new THREE.Color(2.4,1.25,.25)),COREM=BM(new THREE.Color(3,2.6,1.4)),ORM=BM(0xff5a12);
 const FLASH=add(new THREE.SphereGeometry(1,32,16),BM(new THREE.Color(3,3,2.6),{transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}),0,.2,0,BLAST,false);
 const SHOCK14=add(new THREE.RingGeometry(.9,1,96),BM(new THREE.Color(2.2,1.6,1),{transparent:true,side:THREE.DoubleSide,depthWrite:false}),0,.05,0,BLAST,false);SHOCK14.rotation.x=-Math.PI/2;
@@ -100,11 +100,11 @@ function impact14(t){const d=t-tHit;BLAST.visible=d>0;if(d<=0)return;
  FLASH.visible=d<.45;FLASH.scale.setScalar(.15+.5*sm(0,.15,d));FLASH.material.opacity=1-sm(.1,.45,d);
  SHOCK14.visible=d<1.2;SHOCK14.scale.setScalar(.3+3.2*sm(0,1.1,d));SHOCK14.material.opacity=1-sm(.4,1.2,d);
  const grow=sm(.05,1.3,d),hgt=.3+2.3*grow,hot=1-sm(.5,2.6,d);
- BASEF.scale.set(.7+.9*grow,.35+.3*grow,.7+.9*grow);BASEF.visible=hot>.05;
+ const hb=1-sm(.3,1.4,d);BASEF.scale.set(.5+.5*grow,.3+.2*grow,.5+.5*grow).multiplyScalar(Math.max(.01,hb));BASEF.visible=hb>.03;
  STEM.scale.set(.7+.6*grow,hgt,.7+.6*grow);STEM.position.y=hgt/2;STEMH.scale.set(.7+.5*grow,hgt*.85,.7+.5*grow);STEMH.position.y=hgt*.42;STEMH.visible=hot>.15;
  CAP.position.y=hgt+.1;CAP.scale.setScalar(.4+1.25*grow+.03*Math.sin(d*2));CAP.rotation.y=d*.3;
  CORE.scale.setScalar(.4+.9*hot);CORE.visible=hot>.05;RIM14.scale.setScalar(.8+.3*grow);
- SMOKEM.emissiveIntensity=.55*hot;
+ SMOKEM.emissiveIntensity=.3*hot*hot;
  DUST14.visible=false;}
 // ---------------- Trump presses the button ----------------
 let TRA14=null;
@@ -123,7 +123,7 @@ const LF=(A,B,k)=>({pos:A.pos.map((v,i)=>v+(B.pos[i]-v)*k),look:A.look.map((v,i)
 trump14(0);
 const gbox=(lo0,la0,lo1,la1,y0,y1)=>{const a=mxz(lo0,la0,y0),b=mxz(lo1,la1,y1);return new THREE.Box3(a.clone().min(b),a.clone().max(b));};
 const USB=gbox(-124,26,-68,48.5,0,.2),TRB=CK.box([TRP.x-.3,US_Y,TRP.z-.35],[TRP.x+.7,US_Y+2.05,TRP.z+.35]);
-const WIDE=CK.fit([USB,TRB],{dir:[1,1.55,0],fov:40,top:.06}),WIDE2=CK.fit([TRB],{dir:[1,.75,.05],fov:36,top:.06});
+const WIDE=CK.fit([gbox(-108,27,-68,47,0,.2),TRB],{dir:[1,1.4,0],fov:40,top:.05}),WIDE2=CK.fit([TRB],{dir:[1,.75,.05],fov:36,top:.06});
 trump14(tPress);const FACE=CK.closeUp(TR,{dist:1.35,fov:30,dy:-.1});
 trump14(tButton);const HAND=CK.fit([CK.box([PED.x-.2,PED.y+.85,PED.z-.22],[PED.x+.2,PED.y+1.2,PED.z+.22]),CK.box([TRP.x-.15,US_Y+1.35,TRP.z-.2],[TRP.x+.15,US_Y+2.1,TRP.z+.2])],{dir:[1,.55,.2],fov:34,top:.06});
 trump14(0);
@@ -135,7 +135,7 @@ window.CAM14=t=>{
  if(t<tPress+.05)return LF(LF(WIDE,WIDE2,.35),FACE,sm(tTrump,tPress+.05,t));
  if(t<tButton-.25)return FACE;
  if(t<tLaunch+.1)return LF(FACE,HAND,sm(tButton-.25,tButton,t));
- if(t<tHit){const c=chase(t),k=sm(tLaunch+.1,tLaunch+.45,t),e=sm(tLaunch+(tHit-tLaunch)*.62,tHit,t);return LF(LF(HAND,c,k),IRF,e);}
+ if(t<tHit){const c=chase(t),k=sm(tLaunch+.1,tLaunch+.45,t),e=sm(tLaunch+(tHit-tLaunch)*.8,tHit+.15,t);return LF(LF(HAND,c,k),IRF,e);}
  return LF(IRF,IRF2,sm(tHit,HOOK_END,t));};
 window.CAM14_END=HOOK_END;
 window.HOOK14={tLaunch,tHit,tWhat2,HOOK_END};
