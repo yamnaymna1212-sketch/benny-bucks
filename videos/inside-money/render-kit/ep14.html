@@ -1,0 +1,1066 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3;pointer-events:none}
+.cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 60px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.8),0 0 3px #000}
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div><div id="dayw_unused" style="display:none;position:absolute;left:30px;top:4.5%;text-align:left;color:#fff;font:800 70px Mont,sans-serif;letter-spacing:1px;text-shadow:0 4px 10px rgba(0,0,0,.85),0 0 4px #000"><div id="day">DAY 1</div></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP10 "Why does America send Israel $3.8 billion a year, with $40 trillion in debt?" (Mike). Built by make_ep10.py from ep9.html.
+// EP9 "Trump promised one cent gas." (Mike) - Maple Street, DAY, rally stage in front of a U.S. GOVERNMENT building. Built from ep7.html.
+// (built from ep5.html) - Maple Street, USA (a whole suburban neighbourhood, cutaway houses).
+// stills: node stills.mjs ep9.html 0.3 1.0 2.4 3.3 4.4      render: npm run render -- ep9 5
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
+import {faceKit} from './face-kit.js';
+import {moneyKit} from './money-kit.js';
+import {cameraKit} from './camera-kit.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+await document.fonts.load('800 60px Mont');
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.9;
+scene.fog=new THREE.Fog(0xc4d6ea,90,260);
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM),GL=new GLTFLoader(LM);
+const PC={};   // material cache: textures are loaded once
+function pbr(name,rx,ry,color){const key=[name,rx,ry,color].join();if(PC[key])return PC[key];
+ const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;const m=new THREE.MeshStandardMaterial({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1});if(color!==undefined)m.color.set(color);return PC[key]=m;}
+const MC={};const M=(c,r=.6,m=0,o={})=>{const k=[c,r,m,JSON.stringify(o)].join();return MC[k]||(MC[k]=new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o)));};
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),RB=(w,h,d,r=.05)=>new RoundedBoxGeometry(w,h,d,4,r),CY=(a,b,h,s=32)=>new THREE.CylinderGeometry(a,b,h,s),V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const MODELS={};
+// a box with a rectangular hole in xz (used for the pit through floor, foundation and ground); mf(w,d) -> material for a piece
+function ringBox(cx,cy,cz,W,H,D,hl,mf,p=scene,cast=false){const x0=cx-W/2,x1=cx+W/2,z0=cz-D/2,z1=cz+D/2,hx0=hl.x-hl.w/2,hx1=hl.x+hl.w/2,hz0=hl.z-hl.d/2,hz1=hl.z+hl.d/2;
+ for(const [a,b,c,d] of[[x0,hx0,z0,z1],[hx1,x1,z0,z1],[hx0,hx1,z0,hz0],[hx0,hx1,hz1,z1]]){const w=b-a,dd=d-c;if(w<=0||dd<=0)continue;add(B(w,H,dd),mf(w,dd),(a+b)/2,cy,(c+d)/2,p,cast);}}
+function model(name,x,y,z,h,ry=0,p=scene){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ const put=src=>{const s=src.clone(true);const bb=new THREE.Box3().setFromObject(s);s.scale.setScalar(h/(bb.max.y-bb.min.y));
+  const b2=new THREE.Box3().setFromObject(s);s.position.set(-(b2.min.x+b2.max.x)/2,-b2.min.y,-(b2.min.z+b2.max.z)/2);g.add(s);};
+ if(!MODELS[name])MODELS[name]=new Promise(r=>GL.load(`dl/models/${name}/${name}.gltf`,o=>{o.scene.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true;}});r(o.scene);}));
+ MODELS[name].then(put);return g;}
+// ================= GROUND: lawns, streets, sidewalks, curbs =================
+add(B(600,.2,600),pbr('leafy_grass',200,200,0x86b84f),0,-.1,-100,scene,false);
+function street(cx,cz,len,alongX){const g=new THREE.Group();g.position.set(cx,0,cz);if(!alongX)g.rotation.y=Math.PI/2;scene.add(g);
+ add(B(len,.12,8),pbr('asphalt_02',len/3.3,2.5),0,.02,0,g,false);for(const z of[-.15,.15])add(B(len,.005,.1),M(0xf2b705,.6),0,.085,z,g,false);
+ for(const s of[-1,1]){add(B(len,.14,3.2),pbr('concrete_pavement',len/3.3,1.2),0,.05,s*5.6,g,false);add(B(len,.18,.22),M(0xb9b6ae,.8),0,.06,s*4.0,g,false);}return g;}
+street(0,7.5,420,true);street(0,-41.5,420,true);street(46,-17,90,false);street(-46,-17,90,false);
+for(let i=0;i<9;i++){add(B(.5,.006,3),M(0xf4f4f0,.7),43.4+i*.9-3.6,.095,7.5,scene,false);}   // crosswalk at the corner
+// ================= HOUSES =================
+// cut=true: ground-floor front wall removed (cutaway); facing +z by default (ry=Math.PI faces -z)
+const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',rc:0xb9b9b9,sh:0x2f3f4f,inner:0xa3b39f},
+ {siding:'white_planks_clean',col:0xe2d6bd,roof:'roof_07',rc:0xc79b84,sh:0x2b5a41,inner:0xece4d4},
+ {siding:'white_planks_clean',col:0xf2f2ee,roof:'grey_roof_tiles',rc:0x8d929a,sh:0x1f2f55,inner:0xeae6dc},
+ {siding:'red_brick',col:0xc9a596,roof:'grey_roof_tiles',rc:0x7d7f86,sh:0x1c1c1c,inner:0xe6dccb},
+ {siding:'white_planks_clean',col:0xb9cbd8,roof:'roof_07',rc:0xa9a29a,sh:0xffffff,inner:0xeee6d8},
+ {siding:'white_planks_clean',col:0xe6d7a8,roof:'grey_roof_tiles',rc:0x9a8f86,sh:0x6b2b22,inner:0xefe8d8}];
+function house(x,z,ry,o,cut=false,flip=1){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const W=9,D=7.5,H1=2.9,H2=2.7,y0=.46+H1+.3+H2;
+ const sid=pbr(o.siding,o.siding==='red_brick'?3:4,2,o.col),wall=pbr('plastered_wall',3,1.2,o.inner),rs=pbr(o.roof,5,3,o.rc),trim=M(0xe9e6df,.7);
+ if(o.pit)ringBox(0,.15,0,W+.6,.5,D+.6,o.pit,(w,d)=>pbr('concrete_pavement',Math.max(1,w/2.5),Math.max(1,d/2.5)),g,true);else add(B(W+.6,.5,D+.6),pbr('concrete_pavement',4,3),0,.15,0,g);
+ if(cut){if(o.pit)ringBox(0,.46,0,W,.12,D,o.pit,(w,d)=>pbr('oak_wood_planks',Math.max(1,w/1.8),Math.max(1,d/1.8),0xc29466),g);else add(B(W,.12,D),pbr('oak_wood_planks',5,4,0xc29466),0,.46,0,g,false);
+  add(B(W,H1,.2),wall,0,.46+H1/2,-D/2,g);add(B(.2,H1,D),wall,-W/2,.46+H1/2,0,g);add(B(.2,H1,D),wall,W/2,.46+H1/2,0,g);
+  add(B(W,.12,.06),M(0xffffff,.5),0,.58,-D/2+.13,g,false);
+  for(const s of[-1,1])add(B(.3,H1,.3),sid,s*(W/2-.05),.46+H1/2,D/2-.1,g);}            // cut faces: show the wall thickness
+ else{add(B(W,H1,D),sid,0,.46+H1/2,0,g);}
+ add(B(W+.4,.3,D+.4),trim,0,.46+H1+.15,0,g);add(B(W,H2,D),sid,0,.46+H1+.3+H2/2,0,g);
+ const RA=.62,RH=(D/2+.4)*Math.tan(RA);for(const s of[-1,1]){const r=add(B(W+1.2,.2,(D/2+.4)/Math.cos(RA)+.1),rs,0,y0+RH/2+.12,s*(D/4+.2),g);r.rotation.x=s*RA;}
+ add(B(W+1.3,.22,.45),rs,0,y0+RH+.14,0,g);
+ {const sh=new THREE.Shape([new THREE.Vector2(-D/2,0),new THREE.Vector2(D/2,0),new THREE.Vector2(0,RH-.05)]);const gg=new THREE.ExtrudeGeometry(sh,{depth:.2,bevelEnabled:false});
+  for(const sx of[-1,1]){const m=add(gg,sid,sx*(W/2-.1)-.1,y0,0,g);m.rotation.y=Math.PI/2;}}
+ add(B(.9,4.0,.9),pbr('red_brick',1,2),2.6*flip,y0+2.0,-1.8,g);
+ const win=(wx,wy,ww,wh)=>{const wz=D/2+.02;add(B(ww+.22,wh+.22,.08),trim,wx,wy,wz,g,false);add(B(ww,wh,.1),M(0x22384f,.08,.3,{envMapIntensity:1.8}),wx,wy,wz+.02,g,false);
+  add(B(ww,.05,.12),trim,wx,wy,wz+.05,g,false);add(B(.05,wh,.12),trim,wx,wy,wz+.05,g,false);
+  for(const s of[-1,1])add(B(ww*.42,wh+.1,.06),M(o.sh,.6),wx+s*(ww*.5+ww*.24),wy,wz+.02,g,false);};
+ for(const wx of[-2.8,0,2.8])win(wx,y0-H2/2,1.15,1.45);
+ if(!cut){win(-2.8,.46+H1/2,1.4,1.5);win(2.8,.46+H1/2,1.4,1.5);add(B(1.1,2.1,.12),M(o.sh===0xffffff?0x7a1f1f:o.sh,.4),-.2*flip,.46+1.05,D/2+.04,g,false);}
+ // porch
+ const px=-1.4*flip;add(B(4.4,.2,2.2),pbr('concrete_pavement',2,1),px,.5,D/2+1.1,g);add(B(2,.14,.7),pbr('concrete_pavement',1,.4),px,.3,D/2+2.45,g);
+ if(!cut){for(const cx of[px-2,px+.8*flip])add(CY(.1,.1,3.1,20),trim,cx,2.1,D/2+1.9,g);add(B(4.6,.18,2.6),trim,px,3.7,D/2+1.15,g);}   // no porch roof on the cutaway: keep the room visible
+ // garage + driveway
+ const gx=flip*(W/2+2.3);
+ if(o.office){add(B(4.2,3,.2),sid,gx,1.45,-2.7,g);for(const s2 of[-1,1])add(B(.2,3,6),sid,gx+s2*2.0,1.45,.2,g);add(B(4.2,.1,6),M(0x6b6258,.8),gx,.32,.2,g,false);
+  add(B(4.0,2.9,.05),M(0xe8e2d4,.8),gx,1.5,-2.58,g,false);
+  const sg=tex(1024,200,t=>{t.fillStyle='#1f3b2c';t.fillRect(0,0,1024,200);t.fillStyle='#fff';t.font='800 92px Mont';t.textAlign='center';t.fillText('DANA DESIGN CO.',512,135);});
+  add(new THREE.PlaneGeometry(3.4,.62),new THREE.MeshStandardMaterial({map:sg,roughness:.5}),gx,3.2,3.27,g,false);
+  add(B(2.0,.06,.8),pbr('oak_wood_planks',1,.4,0xc29466),gx,1.08,-.6,g);for(const lx of[-.9,.9])add(B(.06,.72,.7),M(0x222222,.4,.6),gx+lx,.7,-.6,g);
+  add(B(.9,.55,.04),M(0x0c0c10,.2,.4),gx-.35,1.45,-.9,g);add(B(.84,.49,.02),M(0x6aa7ff,.3,0,{emissive:0x3d7be0,emissiveIntensity:.9}),gx-.35,1.45,-.875,g,false);
+  add(B(.5,.03,.32),M(0x9ea3aa,.3,.8),gx+.45,1.13,-.5,g);add(B(1.6,1.6,.4),pbr('oak_wood_planks',1,1,0xa77b52),gx+1.1,1.1,-2.3,g);
+  const ol=new THREE.PointLight(0xfff2dc,8,8,1.4);ol.position.set(gx,2.6,1.0);g.add(ol);}
+ else add(B(4.2,3,6),sid,gx,1.45,.2,g);const gr=add(B(4.6,.22,6.4),rs,gx,3.05,.2,g);gr.rotation.z=flip*.12;
+ if(!o.office){add(B(3.1,2.3,.08),M(0xebe7de,.5),gx,1.6,3.23,g,false);for(let i=0;i<4;i++)add(B(3.0,.02,.1),M(0xc4beb2,.6),gx,.9+i*.5,3.25,g,false);}
+ add(B(3.6,.05,7.6),pbr('grooved_concrete_driveway',2,4,0xc9c6c0),gx,.3,D/2+3.4,g,false);
+ add(B(1.3,.04,4.8),pbr('concrete_pavement',1,3),px,.3,D/2+4.75,g,false);
+ // white picket fence along the front lawn
+ const fx0=-W/2-.6,fx1=gx-flip*1.9;const fa=Math.min(fx0*flip,fx1*flip)*flip;
+ for(let fx=-W/2-.5;fx<W/2-.3;fx+=.32){if(Math.abs(fx-px)<.8)continue;add(B(.09,.85,.04),trim,fx*flip<0?fx:fx,.62,D/2+6.9,g,false);}
+ for(const fy of[.45,.85])add(B(W-.2,.07,.04),trim,-.3,fy,D/2+6.88,g,false);
+ // mailbox + flag
+ const mb=new THREE.Group();mb.position.set(px-1.9*flip,0,D/2+7.4);g.add(mb);add(B(.1,1.05,.1),M(0x5a4126,.6),0,.55,0,mb);add(RB(.26,.26,.56,.1),M(0x2b2b2e,.4,.4),0,1.15,0,mb);add(B(.03,.2,.04),M(0xc0262d,.5),.15,1.28,.1,mb);
+ if(o.flag!==false&&!cut){const fl=add(FG,FLAGM,px-2+.62,3.05,D/2+2.0,g,true);fl.rotation.y=-.5;add(CY(.015,.015,1.4,8),M(0x777777,.3,.8),px-2,3.1,D/2+1.95,g);}
+ // backyard wooden fence
+ add(B(W+10,1.8,.08),pbr('wood_planks',6,1,0xb09878),0,.9,-D/2-6,g);
+ return g;}
+const FT=tex(512,270,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#fff':'#b22234';x.fillRect(0,i*270/13,512,270/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,205,145);x.fillStyle='#fff';
+ for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++){x.beginPath();x.arc(17+c*34+(r%2?17:0),14+r*15.5,3.4,0,7);x.fill();}});
+const FG=new THREE.PlaneGeometry(1.2,.63,24,8);{const pp=FG.attributes.position;for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.6)/1.2;pp.setZ(i,Math.sin(u*7)*.06*u);}FG.computeVertexNormals();}
+const FLAGM=new THREE.MeshStandardMaterial({map:FT,roughness:.8,side:THREE.DoubleSide});
+// main row (south side of Maple St, facing the street): Mike's house is the cutaway at x=-9
+const MX=-9,MZ=-8;
+const mikeH=house(MX,MZ,0,STY[0],true,1);
+house(11,MZ,0,STY[1],false,1);house(-27,MZ,0,STY[2],false,-1);   // neighbours
+shop(-20,22.8,12,'FIRST NATIONAL BANK','#14335f',0,Math.PI);
+const ROW=[[-64,3],[-45,4],[29,5],[47+20,3]];
+for(const [x,s] of ROW)house(x,MZ,0,STY[s],false,x>0?1:-1);
+// north side (across Maple St), facing south
+for(const [x,s] of[[-55,1],[-36,5],[64,2]])house(x,23,Math.PI,STY[s],false,1);   // x 18-36 = the rented mansion
+// back rows (seen over the roofs in aerial shots)
+for(const [x,s] of[[-55,2],[-36,1],[-18,5],[0,4],[18,3],[36,1],[64,0]])house(x,-30,Math.PI,STY[s],false,1);
+for(const [x,s] of[[-55,4],[-36,0],[-18,3],[0,2],[18,5],[36,2],[64,4]])house(x,-53,0,STY[s],false,1);
+// corner of Maple St & Main St: bank + shops
+function shop(x,z,w,label,col,awn,ry=0){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);add(B(w,4.4,8),pbr('red_brick',w/3,1.6,0xd8b6a6),0,2.2,0,g);
+ add(B(w+.2,.4,8.2),M(0xe9e1d0,.6),0,4.5,0,g);add(B(w-1,2.4,.1),M(0x2a3c50,.08,.3,{envMapIntensity:1.8}),0,1.4,4.02,g,false);
+ const st=tex(1024,160,t=>{t.fillStyle=col;t.fillRect(0,0,1024,160);t.fillStyle='#fff';t.font='800 96px Mont';t.textAlign='center';t.fillText(label,512,118);});
+ add(new THREE.PlaneGeometry(w-.6,.85),new THREE.MeshStandardMaterial({map:st,roughness:.5}),0,3.5,4.06,g,false);
+ if(awn){const a=add(B(w-.4,.08,1.6),M(awn,.7),0,2.85,4.7,g);a.rotation.x=.3;}return g;}
+const BANKP=V3(-20,2.4,18.8),TRAVP=V3(-1,2.4,18.8);shop(-1,22.8,10,'MAPLE ELECTRONICS','#1f3b6e',0x2a4f8f,Math.PI);shop(-31,22.8,8,'GAS & GO','#c25b0a',0xe07b16,Math.PI);
+shop(56,-8,12,'FIRST NATIONAL BANK','#14335f',0);shop(70,-8,9,"JOE'S DINER",'#9b1c1c',0xb22234);shop(56,23,10,'TRAVEL AGENCY','#0f6a73',0x1b8a91);shop(68,23,9,'GAS & GO','#c25b0a',0xe07b16);
+// bank columns
+for(const cx of[-4,-1.3,1.3,4]){add(CY(.25,.28,4,24),M(0xf2eee6,.5),56+cx,2.2,-3.6);add(CY(.25,.28,4,24),M(0xf2eee6,.5),-20+cx,2.2,18.4);}
+// ================= STREET LIFE: trees, lamps, hydrants, parked cars =================
+const TREES=['island_tree_01','jacaranda_tree','island_tree_02'];
+for(let x=-80;x<=80;x+=13.5){if(x>-13&&x<17)continue;if(!(x+2>46&&x+2<62))model(TREES[Math.abs(Math.round(x))%2],x+2,.1,1.0,7+Math.abs(Math.sin(x))*2.5,x);if(!(x-4>10&&x-4<54)&&!(x-4>-35&&x-4<-24))model(TREES[(Math.abs(Math.round(x))+1)%2],x-4,.1,14.2,7.5+Math.abs(Math.cos(x))*2,x+1);}
+for(const [x,z] of[[-30,-22],[-8,-24],[14,-21],[34,-23],[-48,-24],[2,-36],[-24,-37],[26,-36]])model('jacaranda_tree',x,0,z,10+Math.abs(Math.sin(x))*3,x);
+for(let x=-75;x<=80;x+=27)model('street_lamp_01',x,.1,3.0,5.2,0);
+for(let x=-62;x<=80;x+=27){if(x===-8||x===46)continue;model('street_lamp_01',x,.1,12.0,5.2,Math.PI);}
+for(const x of[-16,7,25])model('fire_hydrant',x,.1,3.2,.8,0);
+for(const x of[-58,-40,-22,0,18,40])model('shrub_01',x,.3,-3.6,.9,x);
+// ================= VEHICLES: extruded side profiles (sedan / SUV / pickup) =================
+const PROF={sedan:{b:[[-2.4,.32],[2.4,.32],[2.45,.7],[2.3,.9],[1.1,.98],[.35,1.48],[-1.3,1.5],[-2.15,1.02],[-2.42,.9]],g:[[1.0,1.0],[.4,1.42],[-1.25,1.44],[-1.95,1.04]],w:1.85},
+ suv:{b:[[-2.45,.34],[2.45,.34],[2.5,.8],[2.35,1.05],[1.3,1.13],[.65,1.85],[-2.3,1.9],[-2.47,1.2]],g:[[1.18,1.16],[.62,1.78],[-2.2,1.82],[-2.32,1.22]],w:1.95},
+ pickup:{b:[[-2.8,.4],[2.8,.4],[2.85,.85],[2.7,1.15],[1.5,1.2],[.9,1.92],[-.62,1.94],[-.68,1.28],[-2.8,1.28]],g:[[1.38,1.23],[.86,1.82],[-.52,1.84],[-.57,1.25]],w:1.95}};
+const ext=(pts,d,bev)=>{const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(...p)));const g=new THREE.ExtrudeGeometry(s,{depth:d,bevelEnabled:true,bevelThickness:bev,bevelSize:bev,bevelSegments:4,curveSegments:8});g.translate(0,0,-d/2);return g;};
+const VG={};for(const [k,p] of Object.entries(PROF))VG[k]={b:ext(p.b,p.w-.16,.08),g:ext(p.g,p.w-.1,.05)};
+const GLASS=new THREE.MeshPhysicalMaterial({color:0x101820,roughness:.05,metalness:.2,clearcoat:1,envMapIntensity:1.6});
+const TYRE=M(0x151515,.9),RIM=M(0xcfd3d8,.25,1),WG=CY(.38,.38,.28,28),RG=CY(.23,.23,.3,24);
+function vehicle(type,color,x,z,ry,label){const p=PROF[type],g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);
+ add(VG[type].b,new THREE.MeshPhysicalMaterial({color,roughness:.3,metalness:.6,clearcoat:1,clearcoatRoughness:.1}),0,0,0,g);add(VG[type].g,GLASS,0,0,0,g,false);
+ const L=p.b[1][0],wx=L-.78;for(const sx of[-wx,wx])for(const sz of[-1,1]){const w=add(WG,TYRE,sx,.38,sz*(p.w/2-.08),g);w.rotation.x=Math.PI/2;const r=add(RG,RIM,sx,.38,sz*(p.w/2-.06),g,false);r.rotation.x=Math.PI/2;}
+ for(const sz of[-1,1]){add(B(.06,.12,.36),M(0xfffbe8,.2,0,{emissive:0xfff3c4,emissiveIntensity:.5}),L+.04,.78,sz*.62,g,false);add(B(.06,.14,.3),M(0xa01010,.3,0,{emissive:0x900000,emissiveIntensity:.4}),p.b[0][0]-.04,.85,sz*.66,g,false);}
+ if(label){const dt=tex(256,80,t=>{t.fillStyle='#fff';t.font='800 60px Mont';t.textAlign='center';t.fillText(label,128,62);});
+  for(const sz of[-1,1]){const d=add(new THREE.PlaneGeometry(1.5,.47),new THREE.MeshBasicMaterial({map:dt,transparent:true}),-.3,.98,sz*(p.w/2+.02),g,false);if(sz<0)d.rotation.y=Math.PI;}}
+ return g;}
+const PICK=vehicle('pickup',0x7d1f1f,MX+6.8,-1.4,-Math.PI/2);                       // Mike's old pickup in his driveway
+vehicle('sedan',0x2c4f7c,-27-6.8,-1.4,-Math.PI/2);vehicle('sedan',0x9a9da3,29+6.8,-1.4,-Math.PI/2);
+vehicle('sedan',0xb0322e,-40,11.0,0);vehicle('suv',0x3b4a3a,-50,11.2,Math.PI);vehicle('sedan',0xe8e4da,-60,4.2,0);
+const IRSV=vehicle('suv',0x0b0c0f,-40,5.6,0,'IRS');
+// ================= MIKE'S LIVING ROOM (house-local, floor top y=.52) =================
+const NOTE=tex(1024,436,x=>{const g=x.createLinearGradient(0,0,1024,436);g.addColorStop(0,'#cddcbd');g.addColorStop(.55,'#bccfa9');g.addColorStop(1,'#c6d6b3');x.fillStyle=g;x.fillRect(0,0,1024,436);
+ for(let i=0;i<22000;i++){x.fillStyle=`rgba(60,85,65,${Math.random()*.05})`;x.fillRect(Math.random()*1024,Math.random()*436,1.3,1.3);}
+ for(let k=0;k<3;k++)for(let i=0;i<90;i++){x.strokeStyle=`rgba(70,100,80,${.05+k*.01})`;x.lineWidth=1;x.beginPath();for(let u=0;u<=1024;u+=8){const y=60+k*140+i*1.4+Math.sin(u/40+i*.3)*10;u?x.lineTo(u,y):x.moveTo(u,y);}x.stroke();}
+ x.strokeStyle='#3d5a45';x.lineWidth=10;x.strokeRect(14,14,996,408);x.lineWidth=2;x.strokeRect(32,32,960,372);
+ for(let i=0;i<40;i++){x.strokeStyle='rgba(61,90,69,.35)';x.beginPath();x.arc(120,330,20+i*1.6,0,7);x.stroke();x.beginPath();x.arc(905,95,16+i*1.4,0,7);x.stroke();}
+ // portrait oval with an engraved generic bust (hatching)
+ x.save();x.beginPath();x.ellipse(415,212,120,150,0,0,7);x.clip();const pg=x.createRadialGradient(400,170,10,415,212,170);pg.addColorStop(0,'#eef0e2');pg.addColorStop(1,'#cfd6c0');x.fillStyle=pg;x.fillRect(290,60,260,310);
+ x.fillStyle='#5f6f5c';x.beginPath();x.ellipse(415,170,50,62,0,0,7);x.fill();x.fillStyle='#4a5a49';x.beginPath();x.ellipse(415,128,56,30,0,Math.PI,0);x.fill();
+ x.fillStyle='#3f4f40';x.beginPath();x.moveTo(300,372);x.quadraticCurveTo(320,250,415,238);x.quadraticCurveTo(510,250,530,372);x.fill();
+ for(let i=0;i<70;i++){x.strokeStyle='rgba(30,45,32,.25)';x.beginPath();x.moveTo(290,80+i*4.4);x.lineTo(545,90+i*4.4);x.stroke();}x.restore();
+ x.strokeStyle='#3d5a45';x.lineWidth=7;x.beginPath();x.ellipse(415,212,120,150,0,0,7);x.stroke();
+ // blue 3-D security ribbon with bells/100s, copper inkwell, copper 100
+ x.fillStyle='#3b6fc6';x.fillRect(628,30,26,376);x.fillStyle='rgba(255,255,255,.55)';for(let y=44;y<400;y+=34){x.font='800 14px Mont';x.fillText('100',631,y);}
+ const cg=x.createLinearGradient(740,250,830,330);cg.addColorStop(0,'#b5652c');cg.addColorStop(1,'#5f8a52');x.fillStyle=cg;x.beginPath();x.moveTo(760,250);x.quadraticCurveTo(785,215,810,250);x.lineTo(820,320);x.lineTo(750,320);x.closePath();x.fill();
+ const g2=x.createLinearGradient(820,300,990,410);g2.addColorStop(0,'#b5652c');g2.addColorStop(1,'#6f8f4f');x.fillStyle=g2;x.font='800 150px Mont';x.textAlign='right';x.fillText('100',985,405);
+ x.fillStyle='#2e4a35';x.font='800 88px Mont';x.textAlign='left';x.fillText('100',52,128);
+ x.font='800 32px Mont';x.textAlign='center';x.fillText('THE UNITED STATES OF AMERICA',512,74);x.font='800 20px Mont';x.fillText('FEDERAL RESERVE NOTE',415,400);x.fillText('ONE HUNDRED DOLLARS',740,385);
+ x.fillStyle='#2f6b45';x.font='800 24px Mont';x.textAlign='left';x.fillText('PL 21907546 B',60,190);x.textAlign='right';x.fillText('PL 21907546 B',985,190);});
+const EDGE=tex(256,64,x=>{x.fillStyle='#d9dcc8';x.fillRect(0,0,256,64);for(let i=0;i<64;i+=2){x.fillStyle=`rgba(70,90,70,${.15+Math.random()*.2})`;x.fillRect(0,i,256,1);}});
+const BAND=tex(512,128,x=>{x.fillStyle='#d6a63a';x.fillRect(0,0,512,128);x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,0,512,8);x.fillRect(0,120,512,8);x.fillStyle='#3b2706';x.font='800 64px Mont';x.textAlign='center';x.fillText('$10,000',256,88);});
+const NW=.156*1.25,NH=.066*1.25,NT=.011*2.2;   // slightly enlarged so a strap reads on a phone
+const NOTEM=new THREE.MeshStandardMaterial({map:NOTE,roughness:.85}),EDGEM=new THREE.MeshStandardMaterial({map:EDGE,color:0xbccaa8,roughness:.9}),BANDM=new THREE.MeshStandardMaterial({map:BAND,roughness:.55});
+function bundle(p){const g=new THREE.Group();p.add(g);add(B(NW,NT,NH),[EDGEM,EDGEM,NOTEM,NOTEM,EDGEM,EDGEM],0,0,0,g);add(B(.03,NT+.003,NH+.003),BANDM,0,0,0,g,false);return g;}
+window.missingBones=[];
+// ================= EP8 SETS: U.S. GOVERNMENT building + rally stage (north side of Maple St, x=27, front faces -z) =================
+// camera looks +z in the hook, so SCREEN RIGHT = -x.
+const GX=27,GZ=31,SY=.7;   // building centre, stage top height
+{const marble=pbr('plastered_wall',4,2,0xe6dfd2),stone=pbr('concrete_pavement',6,4,0xeeeae2),trim=M(0xffffff,.45),g=new THREE.Group();g.position.set(GX,0,GZ);scene.add(g);
+ add(B(26,1.2,16),stone,0,.6,1,g);
+ for(let i=0;i<5;i++)add(B(16,.24*(i+1),.5),pbr('concrete_pavement',4,.3,0xf1ede6),0,.12*(i+1),-7.25-(4-i)*.5-.25+.25,g);   // steps down to the lawn
+ add(B(22,7.8,10),marble,0,1.2+3.9,2.5,g);                                   // main hall (front wall at z -2.5)
+ for(let i=0;i<8;i++){const x=-9.1+i*2.6;add(CY(.42,.46,6.8,28),trim,x,1.2+3.4,-6.9,g);add(B(1.1,.3,1.1),trim,x,1.35,-6.9,g);add(B(1.1,.3,1.1),trim,x,8.0-.15,-6.9,g);}
+ add(B(22.4,1.1,5.4),trim,0,8.55,-4.6,g);add(B(22.8,.25,5.8),trim,0,9.2,-4.6,g);
+ const ft=tex(2048,128,t=>{t.fillStyle='#f4f1ea';t.fillRect(0,0,2048,128);t.fillStyle='#2a2f3a';t.font='800 92px Mont';t.textAlign='center';t.fillText('U . S .   G O V E R N M E N T',1024,98);});
+ const fp=add(new THREE.PlaneGeometry(18,1.0),new THREE.MeshStandardMaterial({map:ft,roughness:.6}),0,8.55,-7.31,g,false);fp.rotation.y=Math.PI;fp.visible=false;
+ {const sh=new THREE.Shape([new THREE.Vector2(-11.2,0),new THREE.Vector2(11.2,0),new THREE.Vector2(0,2.6)]);const pg=new THREE.ExtrudeGeometry(sh,{depth:5.4,bevelEnabled:false});const m=add(pg,trim,0,9.32,-1.9,g);m.rotation.y=Math.PI;}
+ add(CY(3.4,3.6,2.4,40),marble,0,10.9,2.5,g);for(let i=0;i<16;i++){const a=i/16*Math.PI*2;add(CY(.16,.16,2.2,12),trim,Math.cos(a)*3.65,10.9,2.5+Math.sin(a)*3.65,g);}
+ add(new THREE.SphereGeometry(3.4,40,20,0,Math.PI*2,0,Math.PI/2),M(0xf7f5f0,.4),0,12.1,2.5,g);add(CY(.5,.6,1.3,20),trim,0,15.9,2.5,g);
+ for(let i=0;i<7;i++){if(i===3)continue;const x=-7.8+i*2.6;add(B(1.3,2.4,.1),M(0x22303f,.08,.3,{envMapIntensity:1.6}),x,4.0,-2.56,g,false);add(B(1.5,.14,.16),trim,x,2.72,-2.58,g,false);}
+ add(B(2.2,3.6,.12),M(0x3a2414,.45),0,3.0,-2.57,g,false);}
+// flags: six tall poles in front of the steps + two on stage
+const FG2=new THREE.PlaneGeometry(2.4,1.26,30,10),FLAGS=[];
+function flagPole(x,z,h,s=1){add(CY(.05,.07,h,12),M(0xd6d9de,.3,.9),x,h/2,z);add(new THREE.SphereGeometry(.1,12,8),M(0xd4af37,.3,1),x,h+.05,z);
+ const f=add(FG2,FLAGM,x-1.2*s,h-.7*s,z,scene,true);f.scale.setScalar(s);f.rotation.y=Math.PI;FLAGS.push(f);}
+for(const dx of[-10,-6.5,6.5,10])flagPole(GX+dx,19.4,7.5);
+flagPole(GX-4.3,18.0,3.6,.55);flagPole(GX+4.6,18.0,3.6,.55);
+// the stage: navy skirt with stars + red/white stripe band
+const SKT=tex(1024,128,t=>{t.fillStyle='#16224a';t.fillRect(0,0,1024,128);for(let i=0;i<5;i++){t.fillStyle=i%2?'#ffffff':'#b22234';t.fillRect(0,88+i*8,1024,8);}t.fillStyle='#fff';for(let i=0;i<22;i++){const cx=24+i*46.5,cy=40;t.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?6:15;t.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}t.fill();}});
+add(B(9,SY,3.6),[M(0x16224a,.6),M(0x16224a,.6),pbr('oak_wood_planks',3,1.2,0x8a6a4a),M(0x16224a,.6),M(0x16224a,.6),new THREE.MeshStandardMaterial({map:SKT,roughness:.7})],GX,SY/2,18.9);
+{const s=add(new THREE.PlaneGeometry(9,SY),new THREE.MeshStandardMaterial({map:SKT,roughness:.7}),GX,SY/2,17.09,scene,false);s.rotation.y=Math.PI;}
+for(let i=0;i<3;i++)add(B(1.6,.23*(i+1),.35),pbr('concrete_pavement',1,.2),GX+3.4,.115*(i+1),17.1-.35*(3-i)+.17);   // side stairs
+// backdrop banner behind Trump: U.S. GOVERNMENT
+const BNT=tex(1536,256,t=>{t.fillStyle='#16224a';t.fillRect(0,0,1536,256);t.fillStyle='#b22234';t.fillRect(0,214,1536,20);t.fillStyle='#fff';t.fillRect(0,234,1536,22);
+ t.font='800 150px Mont';t.textAlign='center';t.fillText('U.S. GOVERNMENT',768,165);for(const cx of[70,1466]){t.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r=k%2?18:44;t.lineTo(cx+r*Math.cos(a),110+r*Math.sin(a));}t.fill();}});
+let fl;const BDC=document.createElement('canvas');BDC.width=1024;BDC.height=540;const BDT=new THREE.CanvasTexture(BDC);BDT.colorSpace=THREE.SRGBColorSpace;BDT.anisotropy=8;
+{const bk=add(B(2.3,2.0,.08),M(0x16224a,.7),GX,SY+3.1,20.52);   // navy backdrop
+ const bp=add(new THREE.PlaneGeometry(2.1,.36),new THREE.MeshStandardMaterial({map:BNT,roughness:.6}),GX,SY+3.88,20.47,scene,false);bp.rotation.y=Math.PI;bp.visible=false;
+ fl=add(new THREE.PlaneGeometry(1.9,1.0),new THREE.MeshBasicMaterial({map:BDT,toneMapped:false}),GX,SY+3.05,20.47,scene,false);fl.rotation.y=Math.PI;}
+// mic stand
+
+// ================= EP9 gas pump on the stage (screen right of Trump) + price board =================
+function board(price,col){const x=BDC.getContext('2d');x.fillStyle='#0b1530';x.fillRect(0,0,1024,540);x.fillStyle='#d21e2a';x.fillRect(0,0,1024,76);x.fillStyle='#fff';x.font='800 52px Mont';x.textAlign='center';x.font='800 64px Mont';x.fillText('GAS',512,62);
+ x.fillStyle=col;x.font='800 290px Mont';x.fillText(price,512,400);x.strokeStyle='#fff';x.lineWidth=12;x.strokeRect(6,6,1012,528);BDT.needsUpdate=true;}
+board('$0.01','#22e06a');
+const PC2=document.createElement('canvas');PC2.width=256;PC2.height=160;const PT2=new THREE.CanvasTexture(PC2);PT2.colorSpace=THREE.SRGBColorSpace;
+function pumpScr(price,col){const x=PC2.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,160);x.fillStyle='#9fb6d0';x.font='800 28px Mont';x.textAlign='center';x.fillText('PRICE / GAL',128,36);x.fillStyle=col;x.font='800 76px Mont';x.fillText(price,128,118);PT2.needsUpdate=true;}
+{const x=PC2.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,160);x.fillStyle='#e8f0ff';x.font='800 70px Mont';x.textAlign='center';x.fillText('GAS',128,105);PT2.needsUpdate=true;}   // hook pump: no second number
+const PUX=GX-1.2+500,PUZ=19.5;   // EP9 gas pump moved off the stage
+{const red=M(0xc8202a,.4,.2),wht=M(0xf3f3f0,.5),dk=M(0x24262b,.6,.3);
+ add(B(1.0,.12,.8),dk,PUX,SY+.06,PUZ);add(RB(.78,1.8,.58,.08),red,PUX,SY+1.02,PUZ);add(B(.8,.18,.6),wht,PUX,SY+1.95,PUZ);add(B(.8,.1,.6),wht,PUX,SY+.5,PUZ);
+ const sc=add(new THREE.PlaneGeometry(.58,.36),new THREE.MeshBasicMaterial({map:PT2,toneMapped:false}),PUX,SY+1.35,PUZ-.296,scene,false);sc.rotation.y=Math.PI;
+ add(B(.1,.55,.1),dk,PUX+.5,SY+1.0,PUZ-.05);const nz=add(B(.07,.3,.16),dk,PUX+.5,SY+.62,PUZ-.14);nz.rotation.x=.4;
+ const hs=add(new THREE.TorusGeometry(.22,.025,10,24,Math.PI*1.4),dk,PUX+.34,SY+.75,PUZ-.3,scene,false);hs.rotation.set(0,0,-.5);}
+const CX=GX-3.15,CZ=19.0;
+// ---- real props: a giant U.S. penny (1 cent) in Trump's hand + a red 1-GALLON gas can on the stage ----
+const PENT=tex(512,512,x=>{const g=x.createRadialGradient(220,200,30,256,256,256);g.addColorStop(0,'#f0a46a');g.addColorStop(.6,'#c96f3b');g.addColorStop(1,'#8a4420');x.fillStyle=g;x.beginPath();x.arc(256,256,256,0,7);x.fill();
+ x.strokeStyle='rgba(90,40,15,.8)';x.lineWidth=14;x.beginPath();x.arc(256,256,240,0,7);x.stroke();x.fillStyle='#6e3416';x.textAlign='center';
+ x.font='800 56px Mont';x.fillText('LIBERTY',256,112);x.font='800 200px Mont';x.fillText('1¢',256,330);x.font='800 52px Mont';x.fillText('ONE CENT',256,420);
+ x.fillStyle='rgba(255,220,180,.25)';x.beginPath();x.ellipse(190,170,120,60,-.6,0,7);x.fill();});
+const PENNY=new THREE.Mesh(CY(.17,.17,.025,64),[M(0xb8683a,.35,.9),new THREE.MeshStandardMaterial({map:PENT,roughness:.35,metalness:.75}),M(0x9a5530,.4,.9)]);PENNY.castShadow=true;scene.add(PENNY);PENNY.visible=false;
+const CAN=new THREE.Group();{const red=M(0xd0242c,.35,.2),bl=M(0x18181a,.5,.3);
+ add(RB(.36,.46,.17,.035),red,0,.23,0,CAN);add(B(.3,.05,.18),red,0,.03,0,CAN);
+ const hd=add(new THREE.TorusGeometry(.07,.016,10,20,Math.PI),bl,-.06,.46,0,CAN);
+ const sp=add(CY(.022,.03,.2,16),bl,.13,.52,0,CAN);sp.rotation.z=-.7;add(CY(.04,.04,.03,16),bl,.1,.47,0,CAN);
+ const lb=tex(512,320,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,512,320);x.fillStyle='#d0242c';x.fillRect(0,0,512,70);x.fillStyle='#fff';x.font='800 54px Mont';x.textAlign='center';x.fillText('GASOLINE',256,54);
+  x.fillStyle='#111';x.font='800 150px Mont';x.fillText('1 GAL',256,215);x.font='800 40px Mont';x.fillText('UNLEADED',256,290);});
+ const l=add(new THREE.PlaneGeometry(.27,.17),new THREE.MeshStandardMaterial({map:lb,roughness:.6}),0,.24,-.087,CAN,false);l.rotation.y=Math.PI;}
+// four real $1 bills fan out above the gas can when the price flips to $4.23
+const ONE=tex(1024,436,x=>{x.fillStyle='#d9dfcc';x.fillRect(0,0,1024,436);x.strokeStyle='#3d5a45';x.lineWidth=14;x.strokeRect(14,14,996,408);x.lineWidth=3;x.strokeRect(34,34,956,368);
+ x.fillStyle='#2f4a38';x.textAlign='center';x.font='800 40px Mont';x.fillText('THE UNITED STATES OF AMERICA',512,86);x.font='800 70px Mont';x.fillText('ONE',512,380);x.font='800 26px Mont';x.fillText('FEDERAL RESERVE NOTE',512,124);
+ x.font='800 96px Mont';for(const [a,b] of[[90,130],[934,130],[90,390],[934,390]])x.fillText('1',a,b);
+ x.fillStyle='#c4ccb5';x.beginPath();x.ellipse(512,236,110,130,0,0,7);x.fill();x.strokeStyle='#3d5a45';x.lineWidth=6;x.stroke();x.fillStyle='#5b6e5c';x.beginPath();x.ellipse(512,226,58,74,0,0,7);x.fill();x.fillRect(452,280,120,70);
+ x.fillStyle='#2e6b3f';x.beginPath();x.arc(780,236,48,0,7);x.fill();x.fillStyle='#d9dfcc';x.font='800 30px Mont';x.fillText('USA',780,247);});
+const ONEM=new THREE.MeshStandardMaterial({map:ONE,roughness:.8,side:THREE.DoubleSide});
+const BILLS4=[0,1,2,3].map(i=>{const m=add(new THREE.PlaneGeometry(.5,.213),ONEM,0,0,0,scene,false);m.visible=false;return m;});
+function addBrows(){relax(TR);TR.g.updateMatrixWorld(true);const bm=M(0xe8cc8e,.7);for(const sd of['L','R']){const e=V3();TR.BN['eye'+sd].getWorldPosition(e);
+ const m=new THREE.Mesh(new THREE.CapsuleGeometry(.007,.04,4,8),bm);m.rotation.set(0,0,Math.PI/2+(sd==='L'?-1:1)*.12);m.scale.set(1.5,1,.8);m.position.copy(e).add(V3(0,.026,-.018));m.castShadow=true;scene.add(m);TR.BN.head.attach(m);}}
+
+
+const MNY=await moneyKit(THREE);   // real money (NEXT_LEVEL_PLAN stage 2)
+// ================= EP10 HOOK PROPS: Israel-flag crate + $10,000 straps on a pallet + U.S. NATIONAL DEBT clock =================
+const CRX=GX+2.0,CRZ=18.7;
+const ILT=tex(880,640,x=>{x.fillStyle='#ffffff';x.fillRect(0,0,880,640);x.fillStyle='#0038b8';x.fillRect(0,60,880,100);x.fillRect(0,480,880,100);   // Israel flag 11:8, stripes + Star of David
+ x.strokeStyle='#0038b8';x.lineWidth=22;x.lineJoin='miter';const r=128,cx=440,cy=320;for(const a0 of[-Math.PI/2,Math.PI/2]){x.beginPath();for(let k=0;k<3;k++){const a=a0+k*2*Math.PI/3;x.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}x.closePath();x.stroke();}});
+const EMB=tex(800,560,x=>{x.clearRect(0,0,800,560);x.fillStyle='rgba(20,40,90,.0)';   // Israel emblem stamp: blue shield, white menorah, olive branches, ISRAEL
+ x.fillStyle='#0038b8';x.beginPath();x.moveTo(220,40);x.lineTo(580,40);x.lineTo(580,300);x.quadraticCurveTo(580,430,400,470);x.quadraticCurveTo(220,430,220,300);x.closePath();x.fill();
+ x.strokeStyle='#fff';x.lineCap='round';x.lineWidth=14;const cx=400,by=330;x.beginPath();x.moveTo(cx,by);x.lineTo(cx,110);x.stroke();
+ for(const r of[50,90,130]){x.beginPath();x.arc(cx,by-200+0,r,Math.PI*0,Math.PI,false);x.stroke();}
+ x.fillStyle='#fff';x.fillRect(cx-70,by,140,18);x.fillRect(cx-40,by+18,80,30);for(const dx of[-130,-90,-50,0,50,90,130]){x.beginPath();x.arc(cx+dx,108,9,0,7);x.fill();}
+ x.strokeStyle='#fff';x.lineWidth=7;for(const sd of[-1,1]){x.beginPath();x.moveTo(cx+sd*165,400);x.quadraticCurveTo(cx+sd*175,230,cx+sd*150,90);x.stroke();for(let i=0;i<7;i++){const yy=380-i*42,xx=cx+sd*(166+Math.sin(i)*4);x.beginPath();x.ellipse(xx+sd*16,yy,16,7,sd*.6,0,7);x.fill();}}
+ x.fillStyle='#0038b8';x.font='800 78px Mont';x.textAlign='center';x.fillText('ISRAEL',400,548);});
+// real $10,000 straps from money-kit.js (uscurrency.gov $100 front, one-sided, 151 % size): one box = 3 straps side by side x 7 layers
+const ZBM6=MNY.brickMats(100,1,7,3,.04),ZBG=new THREE.BoxGeometry(MNY.NW,.11,MNY.NH*3),zbrick=(x,y,z)=>{const m=new THREE.Mesh(ZBG,ZBM6);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);return m;};
+const PLX=CRX+1.05;   // pallet: screen left of the crate
+{const wd=pbr('oak_wood_planks',1,1,0xb08a60);for(let i=0;i<3;i++)add(B(.95,.06,.09),wd,PLX,SY+.03,CRZ-.38+i*.38);for(let i=0;i<5;i++)add(B(.17,.03,.95),wd,PLX-.38+i*.19,SY+.075,CRZ);}
+for(let y=0;y<4;y++)for(let ix=0;ix<3;ix++)for(let iz=0;iz<3;iz++)zbrick(PLX+(ix-1)*.29,SY+.09+.055+y*.112,CRZ+(iz-1)*.3);
+const FLY=[];for(let i=0;i<8;i++){const m=zbrick(0,0,0);m.userData.a=V3(PLX+((i%3)-1)*.29,SY+.09+.055+4*.112+Math.floor(i/3)*.112,CRZ+(((i>>1)%3)-1)*.3);m.userData.b=V3(CRX+((i%2)-.5)*.3,SY+.2+Math.floor(i/2)*.1,CRZ+(((i>>1)%2)-.5)*.3);FLY.push(m);}
+{const wd=pbr('oak_wood_planks',1,1,0x9a7650);const w=.9,h=.62,d=.78;   // open wooden crate
+ add(B(w,.04,d),wd,CRX,SY+.02,CRZ);add(B(w,h,.04),wd,CRX,SY+h/2,CRZ-d/2);add(B(w,h,.04),wd,CRX,SY+h/2,CRZ+d/2);add(B(.04,h,d),wd,CRX-w/2,SY+h/2,CRZ);add(B(.04,h,d),wd,CRX+w/2,SY+h/2,CRZ);
+ const f=add(new THREE.PlaneGeometry(.8,.56),new THREE.MeshStandardMaterial({map:EMB,roughness:.75,transparent:true}),CRX,SY+h/2,CRZ-d/2-.022,scene,false);f.rotation.y=Math.PI;}
+// Israel flag on a pole next to the crate (screen right), waving
+const FG3=new THREE.PlaneGeometry(.88,.64,24,8),ILM=new THREE.MeshStandardMaterial({map:ILT,roughness:.8,side:THREE.DoubleSide});
+add(CY(.02,.025,2.4,12),M(0xd6d9de,.3,.9),CRX-.75,SY+1.2,CRZ+.2);add(new THREE.SphereGeometry(.04,12,8),M(0xd4af37,.3,1),CRX-.75,SY+2.42,CRZ+.2);
+{const f=add(FG3,ILM,CRX-.75+.44,SY+2.05,CRZ+.2,scene,true);f.rotation.y=Math.PI;}
+// the debt clock on the stage backdrop
+const DCC=document.createElement('canvas');DCC.width=1536;DCC.height=640;const DCT=new THREE.CanvasTexture(DCC);DCT.colorSpace=THREE.SRGBColorSpace;DCT.anisotropy=8;
+function drawDebt(v){const x=DCC.getContext('2d');x.fillStyle='#0b1530';x.fillRect(0,0,1536,640);x.fillStyle='#b22234';x.fillRect(0,0,1536,150);x.fillStyle='#fff';x.textAlign='center';x.font='800 100px Mont';x.fillText('U.S. NATIONAL DEBT',768,112);
+ x.fillStyle='#ff2a2a';x.font='800 138px Mont';x.fillText('$'+Math.floor(v).toLocaleString('en-US'),768,380);x.fillStyle='#c9d4e8';x.font='800 64px Mont';x.fillText('AND COUNTING',768,520);x.strokeStyle='#fff';x.lineWidth=14;x.strokeRect(7,7,1522,626);DCT.needsUpdate=true;}
+drawDebt(40502080966097);
+const DFR=add(B(3.6,1.6,.1),M(0x16224a,.6),GX,SY+3.0,20.4);
+const DEBT=add(new THREE.PlaneGeometry(3.4,1.42),new THREE.MeshBasicMaterial({map:DCT,toneMapped:false}),GX,SY+3.0,20.34,scene,false);DEBT.rotation.y=Math.PI;
+// ---- zack-style materials: wet eyes (clearcoat), skin sheen, soft hair edges ----
+function phys(mt){const p=new THREE.MeshPhysicalMaterial();THREE.MeshStandardMaterial.prototype.copy.call(p,mt);p.defines={STANDARD:'',PHYSICAL:''};return p;}
+function zmat(o,mt){const n=o.name+mt.name;
+ if(/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(n)){mt.alphaToCoverage=true;mt.alphaTest=.35;mt.roughness=Math.min(mt.roughness,.5);return mt;}
+ if(/high-poly|eye/i.test(n)){const p=phys(mt);p.clearcoat=1;p.clearcoatRoughness=.03;p.roughness=.2;return p;}
+ if(/body/i.test(n)){const p=phys(mt);p.sheen=.35;p.sheenRoughness=.5;p.sheenColor=new THREE.Color(1,.78,.68);p.roughness=.52;p.specularIntensity=.5;return p;}
+ return mt;}
+
+// ================= CAST =================
+const SRC={};const CAST={mike:['mike'],trump:['trump'],guard:['guard',{polo:0x2f6f4f,cargo:0x3b3b3b}],printer:['printer',{tucked:0xe2557f,cargo:0x2a2a33}],teller:['teller'],manager:['manager']};
+// Trump look (user reference 2026-11-03): solid navy suit, white shirt, bright red tie, blond hair, tan skin
+function remap(mt,f){if(!mt.map)return;const im=mt.map.image,c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data,Wt=c.width,Ht=c.height;
+ for(let i=0;i<p.length;i+=4){const q=i/4,u=(q%Wt)/Wt,v=Math.floor(q/Wt)/Ht;const o=f(p[i],p[i+1],p[i+2],u,v);p[i]=o[0];p[i+1]=o[1];p[i+2]=o[2];}x.putImageData(d,0,0);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.flipY=mt.map.flipY;t.wrapS=mt.map.wrapS;t.wrapT=mt.map.wrapT;t.anisotropy=8;mt.map=t;mt.needsUpdate=true;}
+const lum=(r,g,b)=>.3*r+.59*g+.11*b;
+function styleTrump(o,mt){const n=o.name+mt.name;
+ if(/suit_?3/i.test(n)){remap(mt,(r,g,b,u,v)=>{const l=lum(r,g,b);if(u>.84&&v<.27&&r>90)return [214,18,26];if(l>150)return [246,246,250];return [17,25,60];});if(mt.normalScale)mt.normalScale.set(.25,.25);mt.roughness=.72;mt.metalness=0;mt.metalnessMap=null;mt.roughnessMap=null;mt.needsUpdate=true;}   // suit3 UV areas: tie = top-right patch (solid red, no dots); light pieces = white shirt; rest = solid navy
+ if(/eyebrow/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.55+.3*l;return [Math.min(255,200*k),Math.min(255,150*k),Math.min(255,70*k)];});mt.color.set(0xffffff);mt.roughness=.6;}
+ else if(/short04/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.72+.45*l;return [Math.min(255,236*k),Math.min(255,182*k),Math.min(255,82*k)];});mt.color.set(0xffffff);mt.roughness=.55;}
+ if(/body/i.test(n))mt.color.setRGB(1,.66,.43);
+ if(/high-poly/i.test(n))remap(mt,(r,g,b)=>{const l=lum(r,g,b);return (r>g+12&&r>b+12&&l<200)?[l*.45,l*.85,Math.min(255,l*1.9+40)]:[r,g,b];});}   // brown iris -> blue eyes
+const GLB={};for(const [key,[file,rec]] of Object.entries(CAST)){GLB[file]=GLB[file]||await new GLTFLoader().loadAsync(`dl/models/cast/${file}.glb`);const g=skClone(GLB[file].scene);
+ g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material=o.material.clone();
+  if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
+  if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
+  if(key==='trump'){if(Q.get('dbg'))console.error('MAT',o.name,mt.name,mt.map&&mt.map.image&&mt.map.image.width,mt.map&&mt.map.name,mt.normalMap&&mt.normalMap.name,mt.roughnessMap&&mt.roughnessMap.name,mt.metalnessMap&&1);styleTrump(o,mt);}
+  if(rec)for(const [k,c] of Object.entries(rec))if(new RegExp(k,'i').test(o.name+mt.name))mt.color.set(c);o.material=zmat(o,o.material);}});SRC[key]=g;}
+const qx=new THREE.Quaternion(),E=new THREE.Euler();
+function pose(P,n,x,y,z){const b=P.BN[n];if(!b){window.missingBones.push(n);return;}b.quaternion.copy(P.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);}
+const AD=[0.12,0,0.72],SB=1,LB=-1,KB=1;
+function curl(P,side,v,thumb=v*.6){for(const [n] of Object.entries(P.BN)){const m=n.match(/^finger(\d)-(\d)(L|R)$/);if(!m||m[3]!==side)continue;const k=(m[1]==='1'?thumb:v)*(m[2]==='1'?.7:1);pose(P,n,k,0,0);}}
+function person(name,x,y,z,ry,p=scene){const g=skClone(SRC[name]);g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest};}
+function relax(P){for(const b of Object.values(P.BN))b.quaternion.copy(P.rest.get(b));pose(P,'upperarm01L',AD[0],0,-AD[2]);pose(P,'upperarm01R',AD[0],0,AD[2]);}
+function face(P,{jaw=0,smile=0}={}){pose(P,'jaw',jaw,0,0);for(const sd of['L','R']){pose(P,'risorius03'+sd,0,0,(sd==='L'?1:-1)*smile*.35);pose(P,'risorius02'+sd,0,0,(sd==='L'?1:-1)*smile*.35);}}
+function armsUp(P,k){pose(P,'upperarm01L',AD[0]+.25*k,0,-AD[2]+2.05*k);pose(P,'upperarm01R',AD[0]+.25*k,0,AD[2]-2.05*k);pose(P,'lowerarm01L',.35*k,0,0);pose(P,'lowerarm01R',.35*k,0,0);}
+function idle(P,t,o=0){pose(P,'spine03',.03*Math.sin(t*1.7+o),0,.025*Math.sin(t*.9+o));pose(P,'head',.04*Math.sin(t*1.3+o),.12*Math.sin(t*.7+o),0);}
+function arm(P,sd,ux,uz,lx){pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);}
+function wave(P,sd,t){arm(P,sd,AD[0]+.3,AD[2]-2.0,.6+.35*Math.sin(t*10));}
+function walk(P,t,amp=.4){const ph=t*7;pose(P,'upperleg01L',-amp*Math.sin(ph),0,0);pose(P,'upperleg01R',amp*Math.sin(ph),0,0);
+ pose(P,'lowerleg01L',amp*1.3*Math.max(0,Math.cos(ph)),0,0);pose(P,'lowerleg01R',amp*1.3*Math.max(0,-Math.cos(ph)),0,0);
+ pose(P,'upperarm01L',AD[0]+.3*Math.sin(ph),0,-AD[2]);pose(P,'upperarm01R',AD[0]-.3*Math.sin(ph),0,AD[2]);}
+function solveReach(P,sd,tgt){const w=V3(),res={ux:0,uz:0,lx:0};let best=1e9;for(let ux=-.5;ux<=2.2;ux+=.1)for(let uz=-1.5;uz<=1.8;uz+=.1)for(let lx=0;lx<=2.4;lx+=.12){
+ pose(P,'upperarm01'+sd,ux,0,(sd==='L'?-1:1)*uz);pose(P,'lowerarm01'+sd,lx,0,0);P.g.updateMatrixWorld(true);P.BN['wrist'+sd].getWorldPosition(w);const d=w.distanceTo(tgt);if(d<best){best=d;Object.assign(res,{ux,uz,lx});}}return res;}
+const TR=person('trump',GX,SY,19.25,Math.PI);
+const MIKE=person('mike',GX+.62,0,15.8,-.08);
+const CROWD=[];   // hook = Trump + board + pump + Mike only (user 2026-11-03: no clutter)
+// Trump extras: blond volume on top + US flag pin (attached to bones, so they follow every pose)
+const HAIRT=tex(256,256,x=>{x.fillStyle='#e6bd66';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.strokeStyle=`rgba(${150+Math.random()*90},${100+Math.random()*70},30,${.15+Math.random()*.2})`;x.lineWidth=1+Math.random();x.beginPath();const y=Math.random()*256;x.moveTo(0,y);x.bezierCurveTo(80,y-20,170,y+15,256,y-10);x.stroke();}});
+const HAIRM=new THREE.MeshStandardMaterial({color:0xffffff,map:HAIRT,roughness:.65});
+const FLAGPIN=new THREE.MeshStandardMaterial({map:FT,roughness:.5,metalness:.2});
+function dressTrump(){relax(TR);TR.g.updateMatrixWorld(true);const h=V3();TR.BN.head.getWorldPosition(h);if(Q.get('dbg')){TR.g.traverse(o=>{if(o.isMesh&&/short04/.test(o.name)){o.geometry.computeBoundingBox();const bb=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);console.error('HAIR',JSON.stringify(bb),'HEAD',JSON.stringify(h));}});}if(Q.get('nocap'))return;
+ const hm=(geo,sc,off,rot)=>{const m=new THREE.Mesh(geo.rotateZ(Math.PI/2),HAIRM);m.scale.set(...sc);m.position.copy(h).add(V3(...off));m.rotation.set(...rot);m.castShadow=true;scene.add(m);TR.BN.head.attach(m);return m;};
+ hm(new THREE.SphereGeometry(.1,40,20),[1.02,.74,1.2],[0,.105,.012],[.28,0,0]);                    // swept-back cap over the skull, down to the ear tops
+ hm(new THREE.SphereGeometry(.07,32,16),[1.5,.62,1.25],[.018,.142,-.07],[-.3,0,.14]);   // big forward swoop (his signature front wave)
+ hm(new THREE.SphereGeometry(.05,24,12),[1.6,.55,1.1],[-.03,.12,-.105],[-.5,0,.25]);   // the wave tip hangs over the forehead, swept to one side              // the raised front swoop (pompadour)
+ const pin=new THREE.Mesh(new THREE.PlaneGeometry(.034,.019),FLAGPIN);const s=V3();TR.BN.neck01.getWorldPosition(s);pin.position.copy(s).add(V3(-.1,HT.pinY,HT.pinZ));pin.rotation.y=Math.PI;scene.add(pin);TR.BN.spine01?TR.BN.spine01.attach(pin):0;}
+const HT={capY:Number(Q.get('cy')||.118),capZ:Number(Q.get('cz')||-.04),sx:Number(Q.get('sx')||1.5),sy:Number(Q.get('sy')||.95),sz:Number(Q.get('sz')||1.65),pinY:Number(Q.get('py')||-.14),pinZ:Number(Q.get('pz')||-.13)};
+dressTrump();TR.BN.head.scale.setScalar(Number(Q.get('hs')||1.3));TR.BN.neck01&&TR.BN.neck01.scale.setScalar(1.08);TR.g.scale.set(1.1,1.0,1.08);   // caricature: big head like the user's reference
+const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
+function txt3(str,size,col,p){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
+ g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
+ const m=add(g,[new THREE.MeshBasicMaterial({color:col,toneMapped:false}),new THREE.MeshBasicMaterial({color:new THREE.Color(col).multiplyScalar(.3),toneMapped:false})],0,0,0,p,false);m.material[0].emissiveIntensity=0;return m;}   // flat solid colour + dark sides: always clear
+const GRN=0x22e06a,WHT=0xffffff,RED=0xff1e1e,YEL=0xffc61a;
+const POPS=[];function popT(str,size,col,pos,t0,t1){const m=txt3(str,size,col,scene);m.material[0].emissiveIntensity=3;m.userData={pos,t0,t1};m.visible=false;POPS.push(m);return m;}
+function updPops(t){for(const m of POPS){const {pos,t0,t1}=m.userData;const s=pop(t,t0,.3)*(1-sm(t1,t1+.25,t));m.visible=s>.01;if(!m.visible)continue;m.scale.setScalar(s);m.position.copy(pos);m.position.y+=.03*Math.sin(t*2.4+t0);m.lookAt(cam.position);}}
+const CPOPS=[];function cpop(str,size,col,t0,t1,up=.12){const m=txt3(str,size,col,scene);m.material[0].emissiveIntensity=2.0;m.geometry.computeBoundingBox();const bb=m.geometry.boundingBox;m.userData={cx:(bb.min.x+bb.max.x)/2,cy:(bb.min.y+bb.max.y)/2,t0,t1,up};m.visible=false;CPOPS.push(m);return m;}
+function centre(m,s,up){m.visible=s>.01;if(!m.visible)return;const d=V3(),r=V3(1,0,0).applyQuaternion(cam.quaternion),u=V3(0,1,0).applyQuaternion(cam.quaternion);cam.getWorldDirection(d);
+ m.position.copy(cam.position).addScaledVector(d,2.2).addScaledVector(r,-m.userData.cx*s).addScaledVector(u,up-m.userData.cy*s);m.quaternion.copy(cam.quaternion);m.scale.setScalar(s);}
+function updC(t){for(const m of CPOPS){const u=m.userData;centre(m,pop(t,u.t0,.3)*(1-sm(u.t1,u.t1+.2,t)),u.up);}}
+// confetti (red / white / blue) on 'Forever'
+const CONF=[];for(let i=0;i<240;i++){const m=add(new THREE.PlaneGeometry(.09,.05),M([0xd21e2a,0xffffff,0x1f3fa8,0xffc61a][i%4],.5,0,{side:THREE.DoubleSide}),0,0,0,scene,false);m.userData={x:GX+(Math.random()-.5)*5,z:14.5+Math.random()*4.5,v:.6+Math.random()*.9,r:Math.random()*6,y0:4+Math.random()*2.5};m.visible=false;CONF.push(m);}
+// ================= LIGHT / POST =================
+const sun=new THREE.DirectionalLight(0xfff1dc,3.4);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-25,right:25,top:25,bottom:-25,near:1,far:140});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;scene.add(sun);scene.add(sun.target);
+const KEY=new THREE.SpotLight(0xfff3e2,10,16,.45,.8,1.2);KEY.position.set(GX+1.5,5.5,14.5);KEY.target.position.set(GX,1.6,19.2);scene.add(KEY);scene.add(KEY.target);   // stage key light on Trump + the form
+const FX=new THREE.PointLight(0xffefc8,0,8,1.4);FX.position.set(GX,4.2,16.4);scene.add(FX);
+const cam=new THREE.PerspectiveCamera(40,W/H,.05,500);
+const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);if(any(isnan(c))||any(isinf(c)))c=vec4(0.,0.,0.,1.);gl_FragColor=vec4(min(c.rgb,vec3(60.)),c.a);}'}));
+const BOKEH=new BokehPass(scene,cam,{focus:3,aperture:.0018,maxblur:.005});comp.addPass(BOKEH);BOKEH.enabled=false;
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.35,.18,2.4));comp.addPass(new OutputPass());
+const ZG=new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.12},sat:{value:1.26},vig:{value:.16},blur:{value:new THREE.Vector2()},grain:{value:0},time:{value:0}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig,grain,time;uniform vec2 blur;varying vec2 vUv;float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}\
+void main(){vec3 v=vec3(0.);float ca=length(blur)*.06;for(int i=0;i<12;i++){vec2 uv=vUv+blur*(float(i)/11.-.5);v.r+=texture2D(tDiffuse,uv+blur*ca).r;v.g+=texture2D(tDiffuse,uv).g;v.b+=texture2D(tDiffuse,uv-blur*ca).b;}v/=12.;\
+float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=pow(max(v,vec3(0.)),vec3(.85));v=(v-.5)*con+.5;\
+float l2=dot(clamp(v,0.,1.),vec3(.2126,.7152,.0722));v*=mix(vec3(.95,1.,1.06),vec3(1.05,1.,.94),smoothstep(.15,.85,l2));\
+float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);v+=(h(vUv*vec2(720.,1280.)+fract(time)*91.)-.5)*grain;gl_FragColor=vec4(clamp(v,0.,1.),1.);}'});comp.addPass(ZG);
+
+scene.background=hdr;scene.environmentIntensity=.85;scene.add(new THREE.HemisphereLight(0xf2f7ff,0x9a8a70,1.0));
+
+// ================= TIMELINE + ONE CONTINUOUS CAMERA (world coords) =================
+const TLN=await (await fetch('timeline_ep14.json')).json(),CH=TLN.chunks;
+const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$%(),']/g,'').replace(/[,.?]$/,'')===w);return (k[Math.min(n,k.length-1)]||{s:0}).s;};
+const tProm=99,tCent=99,tPrice=99;   // EP9 Trump beats unused
+const tSend=Wd('send'),tIsr=Wd('israel'),tBil=Wd('billion'),tYear=Wd('year'),tWith=Wd('with'),tTril=Wd('trillion'),tDebt=Wd('debt'),tMeet=Wd('meet');
+const KEYS=[   // [t, camera, look-at, fov] - zack rhythm: push-in, pull-out, whip-pan, emotion close-up. Everything key stays whole in frame.
+ [0,        [CRX+.52,1.85,CRZ-4.9],[CRX+.52,1.6,CRZ],48],          // crate (Israel flag) + pallet of straps: both whole
+ [tBil-.1,  [CRX+.52,1.85,CRZ-4.6],[CRX+.52,1.6,CRZ],48],            // slow push-in while the straps fly into the crate
+ [tWith-.02,[CRX+.52,1.87,CRZ-4.5],[CRX+.52,1.62,CRZ],48],
+ [tWith+.28,[GX+.45,2.2,13.4],[GX,3.0,20.3],52],                   // WHIP-PAN to the U.S. NATIONAL DEBT clock, Mike's back in the foreground
+ [tTril+.3, [GX+.4,2.15,13.9],[GX,3.0,20.3],50],                   // push in: $40 TRILLION
+ [tDebt-.2, [GX+.4,2.15,13.85],[GX,2.95,20.3],52],
+ [tDebt+.02,[GX+1.45,1.78,15.15],[GX+.62,1.6,15.8],42],            // orbit around Mike, always looking at him
+ [tDebt+.28,[GX+1.35,1.7,16.85],[GX+.62,1.58,15.8],40],
+ [tDebt+.5, [GX+.06,1.63,16.27],[GX+.615,1.6,15.805],30],          // the shock FACE close-up (face-kit stage 1): he turns to us
+ [tMeet+.6, [GX+.12,1.625,16.2],[GX+.615,1.6,15.805],27],
+ // ---- STORY (keys are on the spoken words; the auto 'hold' key makes every long move a short fly that lands on the subject) ----
+ [6.25,[-22,1.62,11.4],[-22,1.35,14.8],40],[8.0,[-22.05,1.6,12.0],[-22.05,1.38,14.8],38],                         // S1 Mike + TAXES PAID + magnifier
+ [8.75,[-13.75,1.75,11.0],[-13.75,1.05,15.3],50],[9.9,[-13.78,1.72,11.3],[-13.78,1.08,15.3],48],                      // S2 the 2016 memorandum signed
+ [10.5,[-14.15,2.2,10.0],[-14.15,1.5,16.4],58],[13.4,[-14.15,2.15,10.3],[-14.15,1.45,16.4],58],                   //    10 yearly stacks 2019-2028
+ [14.45,[-4.75,1.75,10.8],[-4.75,1.25,15.5],56],[16.2,[-4.77,1.72,11.1],[-4.77,1.25,15.5],56],                      // S3 $317M a month
+ [16.95,[5.15,1.85,10.0],[5.15,1.35,15.8],56],[19.5,[5.15,1.85,10.3],[5.15,1.4,15.8],56],                           // S4 the jet
+ [20.3,[5.3,2.6,8.4],[5.3,3.6,16.2],58],[24.2,[5.3,2.55,8.5],[5.3,3.5,16.2],57],                                  //    Iron Dome intercept (sky + launcher + Mike)
+ [25.0,[16.3,1.9,11.0],[16.3,1.3,15.5],54],[26.25,[16.25,1.95,11.2],[16.25,1.35,15.5],54],[26.65,[15.25,2.6,8.0],[15.25,2.3,16.3],56],[27.1,[15.3,2.55,8.3],[15.3,2.3,16.3],56],                             // S5 the lump-sum tower drops
+ [27.75,[16.5,1.68,12.4],[16.9,1.55,14.6],38],[28.9,[16.55,1.66,12.6],[16.9,1.55,14.6],36],                       // S6 'most people miss' close-up
+ [29.6,[35,2.1,10.0],[35,1.9,15.9],54],[32.5,[35,2.05,10.3],[35,1.9,15.9],54],                                      // S7 money into the MADE IN USA factory
+ [33.2,[35,2.0,11.2],[35,1.85,15.6],46],[35.0,[35,2.0,11.0],[35,1.8,15.6],48],                                    //    the check to Israel -> the factory gets paid
+ [35.9,[35.1,2.0,10.0],[35.1,1.5,15.6],52],[37.8,[35.1,2.0,10.2],[35.1,1.5,15.6],52],                             //    workers, planes, missiles
+ [38.6,[GX+.2,2.3,12.4],[GX,3.1,20.3],52],[40.6,[GX+.2,2.3,12.6],[GX,3.1,20.3],52],                             // S8 debt clock $40T, Mike's back in the foreground
+ [41.5,[GX+.15,2.2,12.8],[GX,2.95,20.3],52],[45.0,[GX+.15,2.2,13.0],[GX,2.95,20.3],52],                             //    interest straps fly into the clock
+ [45.6,[GX-1.4,1.95,14.3],[GX-1.5,2.0,18.0],46],[47.4,[GX-1.4,1.95,14.5],[GX-1.5,2.0,18.0],46],                   //    $3B every day calendar
+ [48.3,[GX-.65,2.1,14.3],[GX-.65,1.85,18.3],54],[53.6,[GX-.65,2.1,14.5],[GX-.65,1.85,18.3],54],                   // S9 Mike's math board
+ [54.3,[40.3,1.95,11.6],[40.3,1.75,15.8],54],[57.4,[40.3,1.95,11.8],[40.3,1.75,15.8],54],                           // S10 defense vs interest scale
+ [58.1,[GX,3.0,15.9],[GX,3.55,20.3],46],[60.0,[GX,3.0,16.0],[GX,3.55,20.3],46],                                   // S11 the debt as 10,000 squares
+ [60.7,[GX+.62,1.7,11.2],[GX+.62,1.6,15.6],54],[64.8,[GX+.62,1.68,11.5],[GX+.62,1.6,15.6],52],                  // S12 CTA: AID or DEBT
+];
+
+for(let i=KEYS.length-2;i>=0;i--){const a=KEYS[i],b=KEYS[i+1];if(Math.hypot(a[1][0]-b[1][0],a[1][2]-b[1][2])>3)KEYS.splice(i+1,0,[Math.max(a[0]+.05,b[0]-.6),a[1],a[2],a[3]]);}   // hold the shot, then fly
+function hv(t,sel){let i=0;while(i<KEYS.length-2&&t>=KEYS[i+1][0])i++;const a=KEYS[Math.max(0,i-1)],b=KEYS[i],c=KEYS[i+1],d=KEYS[Math.min(KEYS.length-1,i+2)];
+ const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2,out=[];const A=sel(a),Bv=sel(b),C=sel(c),D=sel(d);
+ const tg=(dl,dr)=>dl*dr<=0?0:Math.sign(dr)*Math.min(Math.abs(dl+dr)/2,3*Math.abs(dl),3*Math.abs(dr));   // monotone tangents: never overshoots a key
+ for(let j=0;j<Bv.length;j++){const d1=(C[j]-Bv[j])/h,d0=a===b?d1:(Bv[j]-A[j])/(b[0]-a[0]),d2=c===d?d1:(D[j]-C[j])/(d[0]-c[0]);
+  const m0=(a===b?0:tg(d0,d1))*h,m1=(c===d?0:tg(d1,d2))*h;out.push(h00*Bv[j]+h10*m0+h01*C[j]+h11*m1);}return out;}
+function setCam(t){if(Q.get('cam')){const v=Q.get('cam').split(',').map(Number);cam.position.set(v[0],v[1],v[2]);cam.fov=v[6];cam.updateProjectionMatrix();cam.lookAt(v[3],v[4],v[5]);return;}   // debug camera
+ let P=hv(t,k=>k[1]),L=hv(t,k=>k[2]),F=hv(t,k=>[k[3]]);CAMF=null;if(window.CAM14&&t<window.CAM14_END){CAMF=CAM14(t);CAMF.drift=0;P=CAMF.pos;L=CAMF.look;F=[CAMF.fov];}else if(t<CAM_END){CAMF=CAMH(t);P=CAMF.pos;L=CAMF.look;F=[CAMF.fov];}
+ cam.position.set(...P).add(V3(Math.sin(t*.55)*.045+Math.sin(t*1.3)*.012,Math.sin(t*.75)*.03,Math.sin(t*.4)*.04).multiplyScalar(CAMF?.drift??1));cam.fov=F[0];cam.updateProjectionMatrix();cam.lookAt(...L);CK.fx(cam,t);   // slow handheld drift: no frame is ever frozen
+ const c=cam.position,f=V3();cam.getWorldDirection(f);f.y=0;f.normalize();sun.target.position.copy(c).addScaledVector(f,10).setY(0);sun.position.copy(c).addScaledVector(f,-22).add(V3(-8,40,0));}   // sun always behind the camera: subjects are front-lit
+const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
+const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
+const _w=V3(),_a=V3();
+// ---- floating words ----
+
+const RP={};const REST={ux:AD[0],uz:AD[2],lx:0};
+const lerpA=(a,b,k)=>({ux:a.ux+(b.ux-a.ux)*k,uz:a.uz+(b.uz-a.uz)*k,lx:a.lx+(b.lx-a.lx)*k});
+const setA=(P,sd,a)=>{pose(P,'upperarm01'+sd,a.ux,0,(sd==='L'?-1:1)*a.uz);pose(P,'lowerarm01'+sd,a.lx,0,0);};
+function trumpPose(t){const P=TR;relax(P);idle(P,t,1);P.g.position.set(GX,SY,19.25);
+ let R=lerpA(REST,RP.present,sm(tProm-.15,tProm+.3,t)),Lf=lerpA(REST,RP.point,sm(tCent-.25,tCent+.2,t));   // his right presents (screen left), his left points at the pump (screen right)
+ if(t>tCent-.25)pose(P,'head',0,-.35*sm(tCent-.25,tCent+.2,t),0);
+ if(t>tPrice){const j=sm(tPrice,tPrice+.3,t);R=lerpA(R,RP.open.R,j);Lf=lerpA(Lf,RP.open.L,j);pose(P,'head',-.08*j,0,.15*j);}   // open-palm shrug: 'what, me?'
+ setA(P,'R',R);setA(P,'L',Lf);
+ const talk=t<tPrice+2.3?.02+.05*Math.abs(Math.sin(t*13)):0;face(P,{jaw:talk*.6,smile:Number(Q.get('sm')??-.12)});
+ const lid=Number(Q.get('lid')??-.12),lo=Number(Q.get('lo')??.08),pk=Number(Q.get('pk')??.0);
+ for(const sd of['L','R']){pose(P,'orbicularis03'+sd,lid,0,0);pose(P,'orbicularis04'+sd,lo,0,0);}
+ if(pk)for(const n of['oris01','oris05'])pose(P,n,pk,0,0);}
+// ================= EP9 STORY (after the hook): one place + one event per line, west -> east along the north lawn of Maple St =================
+// camera looks +z (north) everywhere, so SCREEN RIGHT = -x. Scenes: S1 gas station (x -31) / S2 supply chain (-22) / S3 steak (-12) / S4 fill-up (-4)
+// S5 gas-can tower (5) / S6 money tower (15) / S7 rally stage (27) / S8 gallon jug (35) / S9 pump vs tax bill + CTA (40)
+const T=(w,n=0)=>Wd(w,n);
+const MK=person('mike',-30,0,14.6,Math.PI);   // the story Mike (the hook Mike stays at the stage)
+const canvasTex=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return {c,t};};
+// ---- a real gas pump with its own screen (gallons + price) ----
+function makePump(x,z){const red=M(0xc8202a,.4,.2),wht=M(0xf3f3f0,.5),dk=M(0x24262b,.6,.3),g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ add(B(1.0,.12,.8),dk,0,.06,0,g);add(RB(.78,1.8,.58,.08),red,0,1.02,0,g);add(B(.8,.18,.6),wht,0,1.95,0,g);add(B(.8,.1,.6),wht,0,.5,0,g);
+ const {c,t}=canvasTex(256,200);const sc=add(new THREE.PlaneGeometry(.6,.47),new THREE.MeshBasicMaterial({map:t,toneMapped:false}),0,1.38,-.296,g,false);sc.rotation.y=Math.PI;
+ add(B(.1,.55,.1),dk,.5,1.0,-.05,g);const nz=add(B(.07,.3,.16),dk,.5,.62,-.14,g);nz.rotation.x=.4;
+ const hs=add(new THREE.TorusGeometry(.22,.025,10,24,Math.PI*1.4),dk,.34,.75,-.3,g,false);hs.rotation.set(0,0,-.5);
+ let last='';const draw=(gal,price,col)=>{const k=gal+price+col;if(k===last)return;last=k;const x=c.getContext('2d');x.fillStyle='#07120c';x.fillRect(0,0,256,200);x.textAlign='center';
+  x.fillStyle='#9fb6d0';x.font='800 26px Mont';x.fillText('GALLONS',128,30);x.fillStyle='#e8f0ff';x.font='800 50px Mont';x.fillText(gal,128,80);
+  x.fillStyle='#9fb6d0';x.font='800 26px Mont';x.fillText('PRICE / GAL',128,118);x.fillStyle=col;x.font='800 66px Mont';x.fillText(price,128,184);t.needsUpdate=true;};
+ draw('0.000','$4.23','#ff4a3a');return {g,draw};}
+// ---- S1 gas station at GAS & GO (x -31): pump, Mike's pickup, Mike with the nozzle ----
+const P1=makePump(-31,15.6);vehicle('pickup',0x7d1f1f,-26.6,15.6,Math.PI);
+add(B(5,.25,3.2),M(0xf3f3f0,.5),-30.2,4.3,15.6);for(const x of[-32.2,-28.2])add(CY(.12,.12,4.2,16),M(0xdcdcdc,.4,.6),x,2.1,15.6);   // canopy over the pump
+{const ct=tex(1024,128,x=>{x.fillStyle='#c25b0a';x.fillRect(0,0,1024,128);x.fillStyle='#fff';x.font='800 92px Mont';x.textAlign='center';x.fillText('GAS & GO',512,98);});const m=add(new THREE.PlaneGeometry(4.6,.25),new THREE.MeshStandardMaterial({map:ct,roughness:.6}),-30.2,4.3,13.99,scene,false);m.rotation.y=Math.PI;}
+const NOZ=add(B(.06,.26,.14),M(0x24262b,.6,.3),0,0,0,scene);NOZ.visible=false;
+// thought bubble: $0.01 dream
+const BUB=new THREE.Group();scene.add(BUB);{const wm=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5,emissive:0x333333});
+ add(new THREE.SphereGeometry(.06,16,10),wm,.1,-.38,0,BUB);add(new THREE.SphereGeometry(.09,16,10),wm,.22,-.2,0,BUB);const big=add(new THREE.SphereGeometry(.42,32,16),wm,.42,.18,0,BUB);big.scale.set(1.35,.8,.3);}
+const BUBT=txt3('$0.01',.16,0x18c45a,BUB);BUBT.position.set(.42,.1,-.16);BUBT.rotation.y=Math.PI;BUB.visible=false;
+// ---- S2 the supply chain (x -22): oil barrel, refinery, tanker truck, gas station ----
+const CHAIN=[];
+{const g=new THREE.Group();g.position.set(-17.6,0,15.6);scene.add(g);const bm=M(0x1f4f9a,.45,.4);add(CY(.38,.38,1.15,32),bm,0,.58,0,g);for(const y of[.25,.58,.9])add(CY(.395,.395,.05,32),M(0x173d78,.4,.5),0,y,0,g);
+ const lt=tex(512,256,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,512,256);x.fillStyle='#111';x.font='800 120px Mont';x.textAlign='center';x.fillText('OIL',256,170);});const l=add(new THREE.PlaneGeometry(.42,.21),new THREE.MeshStandardMaterial({map:lt,roughness:.7}),0,.6,-.385,g,false);l.rotation.y=Math.PI;CHAIN.push(g);}
+{const g=new THREE.Group();g.position.set(-18.9,0,15.9);scene.add(g);const st=M(0xd8dade,.35,.7);add(CY(.55,.55,1.6,32),st,0,.8,0,g);add(new THREE.SphereGeometry(.55,32,12,0,Math.PI*2,0,Math.PI/2),st,0,1.6,0,g);
+ add(CY(.12,.14,3.0,16),M(0xb0b3b8,.4,.6),.75,1.5,.1,g);for(const y of[1.2,2.2])add(CY(.15,.15,.12,16),M(0xd21e2a,.5),.75,y,.1,g);
+ const fl=add(new THREE.ConeGeometry(.12,.35,12),new THREE.MeshBasicMaterial({color:0xffa020,toneMapped:false}),.75,3.15,.1,g,false);fl.userData.flame=1;
+ add(CY(.05,.05,1.2,10),M(0x8c8f94,.4,.7),.38,.5,0,g).rotation.z=Math.PI/2;CHAIN.push(g);}
+{const g=new THREE.Group();g.position.set(-20.5,0,15.6);g.rotation.y=Math.PI;g.userData.s=.7;scene.add(g);const tk=M(0xeef0f2,.3,.6),cb=M(0xc8202a,.4,.2),dk=M(0x1a1a1a,.8);
+ const tank=add(CY(.48,.48,2.1,32),tk,-.35,.95,0,g);tank.rotation.z=Math.PI/2;add(RB(.75,1.0,.95,.08),cb,1.05,.85,0,g);add(B(.05,.4,.8),M(0x22303f,.1,.4),1.43,1.05,0,g);
+ for(const x of[-1.1,-.2,1.05])for(const z of[-.42,.42]){const w=add(CY(.22,.22,.16,20),dk,x,.22,z,g);w.rotation.x=Math.PI/2;}
+ const lt=tex(512,128,x=>{x.fillStyle='#eef0f2';x.fillRect(0,0,512,128);x.fillStyle='#c8202a';x.font='800 96px Mont';x.textAlign='center';x.fillText('FUEL',256,100);});const l=add(new THREE.PlaneGeometry(1.2,.3),new THREE.MeshStandardMaterial({map:lt,roughness:.6}),-.35,.95,.485,g,false);CHAIN.push(g);}
+const P2=makePump(-22.1,15.6);P2.draw('','$4.22','#ffc61a');CHAIN.push(P2.g);
+// ---- S3 the steak (x -12): table, plate, steak, $50 sign, the chef ----
+const STK=new THREE.Group();scene.add(STK);STK.position.set(-12,0,15.2);
+{const wd=pbr('oak_wood_planks',1,1,0x8a5a3a);add(B(1.3,.06,.8),wd,0,.78,0,STK);for(const x of[-.58,.58])for(const z of[-.32,.32])add(B(.06,.76,.06),wd,x,.38,z,STK);
+ add(CY(.26,.22,.03,40),M(0xffffff,.3),0,.825,-.05,STK);
+ const gt=tex(256,256,x=>{x.fillStyle='#6b2e17';x.fillRect(0,0,256,256);x.fillStyle='#9b4a25';x.fillRect(18,18,220,220);x.strokeStyle='#2a1208';x.lineWidth=14;for(let i=0;i<5;i++){x.beginPath();x.moveTo(20+i*50,20);x.lineTo(i*50-40,236);x.stroke();}});
+ const s=add(RB(.34,.05,.24,.025),new THREE.MeshStandardMaterial({map:gt,roughness:.55}),0,.86,-.05,STK);s.rotation.y=.3;
+ add(B(.02,.01,.2),M(0xd0d0d0,.2,1),.3,.85,-.05,STK);}
+const {c:SGC,t:SGT}=canvasTex(512,640);
+function steakSign(top,price,col){const x=SGC.getContext('2d');x.fillStyle='#1b1b1b';x.fillRect(0,0,512,640);x.strokeStyle='#8a5a3a';x.lineWidth=24;x.strokeRect(12,12,488,616);x.fillStyle='#fff';x.textAlign='center';
+ x.font='800 84px Mont';x.fillText(top,256,150);x.fillStyle=col;x.font='800 200px Mont';x.fillText(price,256,420);SGT.needsUpdate=true;}
+steakSign('STEAK','$50','#ffffff');
+{const g=new THREE.Group();g.position.set(-13.05,0,15.0);g.rotation.y=Math.PI;scene.add(g);const wd=M(0x6b4a2a,.7);for(const s of[-1,1]){const l=add(B(.05,1.25,.05),wd,s*.36,.62,0,g);}
+ add(new THREE.PlaneGeometry(.72,.9),new THREE.MeshBasicMaterial({map:SGT,toneMapped:false}),0,.85,.04,g,false);}
+SRC.manager.traverse(o=>{if(o.isMesh&&!/body|eye|brow|lash|teeth|tongue|hair|short|bob|ponytail|messy/i.test(o.name+o.material.name)){o.material.map=null;o.material.color.set(/shoe/i.test(o.name)?0x222222:0xf6f6f4);o.material.needsUpdate=true;}});   // chef whites
+const CHEF=person('manager',-12,0,15.95,Math.PI);
+{CHEF.g.updateMatrixWorld(true);const h=V3();CHEF.BN.head.getWorldPosition(h);const wm=M(0xffffff,.6);const hat=new THREE.Group();hat.position.copy(h).add(V3(0,.17,0));scene.add(hat);
+ add(CY(.1,.1,.14,24),wm,0,0,0,hat);const pf=add(new THREE.SphereGeometry(.15,24,12),wm,0,.13,0,hat);pf.scale.set(1,.6,1);CHEF.BN.head.attach(hat);}
+const FIFTY=tex(1024,436,x=>{x.fillStyle='#e6d9c4';x.fillRect(0,0,1024,436);x.strokeStyle='#5b4a3a';x.lineWidth=14;x.strokeRect(14,14,996,408);x.fillStyle='#3d3226';x.textAlign='center';x.font='800 40px Mont';x.fillText('THE UNITED STATES OF AMERICA',512,86);
+ x.font='800 120px Mont';for(const [a,b] of[[110,150],[914,150],[110,400],[914,400]])x.fillText('50',a,b);x.fillStyle='#d4c3a8';x.beginPath();x.ellipse(512,236,120,135,0,0,7);x.fill();x.fillStyle='#6b5a48';x.beginPath();x.ellipse(512,226,62,78,0,0,7);x.fill();x.fillRect(450,284,124,70);x.fillStyle='#c04a2a';x.font='800 64px Mont';x.fillText('FIFTY',512,390);});
+const BILL50=add(new THREE.PlaneGeometry(.5,.213),new THREE.MeshStandardMaterial({map:FIFTY,roughness:.8,side:THREE.DoubleSide}),0,0,0,scene,false);BILL50.visible=false;
+// ---- S4 the fill-up (x -4): Mike's pickup + a pump counting 15 gallons ----
+const P4=makePump(-4.3,15.6);vehicle('pickup',0x7d1f1f,-7.4,15.6,Math.PI);
+// ---- S5 136 billion gallons: a tower of red 1-gallon cans rising out of the lawn (x 5) ----
+const CANG=new THREE.Group();scene.add(CANG);CANG.position.set(5,0,16.4);const CANS=[];
+{const red=M(0xd0242c,.35,.2),lb=tex(256,160,x=>{x.fillStyle='#f2f2ee';x.fillRect(0,0,256,160);x.fillStyle='#111';x.font='800 70px Mont';x.textAlign='center';x.fillText('1 GAL',128,105);});const lm=new THREE.MeshStandardMaterial({map:lb,roughness:.6});
+ const cg=new RoundedBoxGeometry(.54,.7,.29,3,.05),lg=new THREE.PlaneGeometry(.38,.24);const NX=9,NY=9;
+ for(let y=0;y<NY;y++)for(let i=0;i<NX-(y>5?y-5:0);i++){const off=(y>5?(y-5)*.18:0);const c=new THREE.Group();c.position.set((i-(NX-1)/2)*.59+off*1.6,.35+y*.72,0);CANG.add(c);const m=new THREE.Mesh(cg,red);m.castShadow=true;c.add(m);const l=new THREE.Mesh(lg,lm);l.position.z=-.148;l.rotation.y=Math.PI;c.add(l);c.userData.y=y;c.visible=false;CANS.push(c);}}
+// ---- S6 $570 billion: a tower of $10,000 straps (x 15) ----
+const BRICKT=tex(512,538,x=>{x.fillStyle='#b7c9a4';x.fillRect(0,0,512,538);for(let r=0;r<5;r++)for(let c=0;c<2;c++){const X=c*256,Y=r*107.6;x.drawImage(NOTE.image,X+2,Y+2,252,103);x.fillStyle='#c9952f';x.fillRect(X+114,Y+2,26,103);x.fillStyle='rgba(0,0,0,.18)';x.fillRect(X+2,Y+103,252,3);}});
+const BRSIDE=tex(256,256,x=>{x.fillStyle='#c3d3b0';x.fillRect(0,0,256,256);for(let i=0;i<256;i++){x.fillStyle=`rgba(60,95,60,${.08+Math.random()*.16})`;x.fillRect(0,i,256,1);}for(let k=0;k<2;k++){x.fillStyle='#c9952f';x.fillRect(52+k*128,0,22,256);}});
+const BTOP=new THREE.MeshStandardMaterial({map:BRICKT,roughness:.85}),BSID=new THREE.MeshStandardMaterial({map:BRSIDE,roughness:.9});
+const FRONTM=new THREE.MeshStandardMaterial({map:tex(512,206,x=>{x.drawImage(NOTE.image,0,0,512,206);x.fillStyle='#c9952f';x.fillRect(236,0,40,206);x.fillStyle='rgba(0,0,0,.25)';x.fillRect(0,200,512,6);}),roughness:.85});
+const BRK=[];{const bw=.5,bh=.2,bd=.52,g=new THREE.BoxGeometry(bw,bh,bd);for(let y=0;y<20;y++)for(let ix=0;ix<6;ix++)for(let iz=0;iz<2;iz++){const m=new THREE.Mesh(g,[BSID,BSID,BTOP,BSID,FRONTM,FRONTM]);m.castShadow=true;m.position.set(15+(ix-2.5)*bw*1.02,bh/2+y*bh,16.4+(iz-.5)*bd*1.02);m.userData.y=y;m.visible=false;scene.add(m);BRK.push(m);}}
+// ---- S7 at the rally stage: an empty open safe next to Trump, TAXES form, the IOU, Mike's kids ----
+const SAFE=new THREE.Group();scene.add(SAFE);SAFE.position.set(GX-.85,SY,18.9);{const gm=M(0x3c4046,.4,.7);add(B(.7,.8,.6),gm,0,.4,0,SAFE);add(B(.6,.7,.02),M(0x0a0a0a,.9),0,.4,-.295,SAFE,false);
+ const dr=new THREE.Group();dr.position.set(.35,.4,-.3);SAFE.add(dr);add(B(.62,.72,.06),gm,-.31,0,-.03,dr);add(CY(.07,.07,.04,20),M(0xc9a640,.3,1),-.31,0,-.07,dr).rotation.x=Math.PI/2;dr.rotation.y=1.9;}
+SAFE.visible=false;
+function paper(w,h,draw){const m=add(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:tex(512,Math.round(512*h/w),draw),roughness:.8,side:THREE.DoubleSide}),0,0,0,scene,false);m.visible=false;return m;}
+const TAXF=paper(.62,.8,x=>{x.fillStyle='#fbfbf7';x.fillRect(0,0,512,660);x.strokeStyle='#111';x.lineWidth=10;x.strokeRect(8,8,496,644);x.fillStyle='#111';x.font='800 80px Mont';x.textAlign='center';x.fillText('TAXES',256,120);
+ x.fillStyle='#d21e2a';x.beginPath();x.moveTo(256,190);x.lineTo(400,370);x.lineTo(315,370);x.lineTo(315,560);x.lineTo(197,560);x.lineTo(197,370);x.lineTo(112,370);x.closePath();x.fill();});
+const IOU=paper(.7,.46,x=>{x.fillStyle='#fff6d8';x.fillRect(0,0,512,336);x.strokeStyle='#8a6a2a';x.lineWidth=10;x.strokeRect(8,8,496,320);x.fillStyle='#111';x.font='800 130px Mont';x.textAlign='center';x.fillText('IOU',256,150);x.fillStyle='#d21e2a';x.font='800 84px Mont';x.fillText('DEBT',256,270);});
+const KIDS=[['teller',GX+1.3,15.5],['guard',GX-.05,15.5]].map(([n,x,z])=>{const P=person(n,x,0,z,Math.PI);P.g.scale.setScalar(.6);P.g.visible=false;return P;});
+// ---- S8 one gallon of gas: a glass jug, the top slice is TAX (x 35) ----
+const JUG=new THREE.Group();scene.add(JUG);JUG.position.set(35,0,15.7);
+{add(RB(1.1,1.7,.7,.12),new THREE.MeshStandardMaterial({color:0xddeeff,roughness:.05,metalness:0,transparent:true,opacity:.22,depthWrite:false}),0,.85,0,JUG,false);
+ add(new THREE.TorusGeometry(.2,.05,12,24,Math.PI),M(0xddeeff,.1),0,1.72,0,JUG,false);add(CY(.14,.14,.18,24),M(0x1a1a1a,.6),-.3,1.78,0,JUG);}
+const FUEL=add(B(1.0,1.2,.6),new THREE.MeshStandardMaterial({color:0xf2b233,roughness:.3,emissive:0x5a3800}),0,.65,0,JUG,false);
+const TAXL=add(B(1.0,.32,.6),new THREE.MeshStandardMaterial({color:0xe02a2a,roughness:.35,emissive:0x4a0000}),0,1.41,0,JUG,false);TAXL.visible=false;
+const JL=paper(.9,.32,x=>{x.fillStyle='rgba(0,0,0,0)';x.clearRect(0,0,512,182);x.fillStyle='#fff';x.font='800 104px Mont';x.textAlign='center';x.fillText('TAX 50¢',256,130);});JL.material.transparent=true;
+const JG=paper(.9,.3,x=>{x.clearRect(0,0,512,170);x.fillStyle='#fff';x.font='800 96px Mont';x.textAlign='center';x.fillText('1 GALLON',256,120);});JG.material.transparent=true;
+// ---- S9 at the pump vs on the tax bill (x 40), then the CTA ----
+const P9=makePump(40.95,15.7);P9.draw('','$0.01','#4dff74');P9.g.visible=false;
+const BILLT=paper(.75,1.0,x=>{x.fillStyle='#fbfbf7';x.fillRect(0,0,512,683);x.strokeStyle='#111';x.lineWidth=10;x.strokeRect(8,8,496,667);x.fillStyle='#111';x.font='800 78px Mont';x.textAlign='center';x.fillText('TAX BILL',256,110);
+ for(let i=0;i<4;i++){x.fillStyle='#d9d9d2';x.fillRect(50,160+i*60,412,30);}x.fillStyle='#d21e2a';x.font='800 150px Mont';x.fillText('$4.22',256,560);});
+// ---- floating 3D words (glow colour = meaning) ----
+const F=(s,size,col,x,y,z,t0,t1)=>popT(s,size,col,V3(x,y,z),t0,t1);
+F('$4.22',.34,YEL,-19.85,3.5,15.6,T('$422'),T('it\'s')-.1);F('?',.45,RED,-19.85,2.55,15.0,T('difference'),T('it\'s')-.1);
+F('$63',.26,RED,-3.8,2.45,15.0,T('$63'),T('americans')-.1);
+F('136 BILLION',.46,YEL,5,7.3,16.2,T('136'),T('pay',1)-.1);F('GALLONS',.34,WHT,5,6.7,16.2,T('gallons',1),T('pay',1)-.1);
+F('$570 BILLION',.36,RED,15,4.85,16.2,T('$570'),T('and',4)-.1);F('EVERY YEAR',.28,YEL,15,4.4,16.2,T('every',2),T('and',4)-.1);
+F('PUMP',.13,GRN,40.55,1.8,14.3,T('pump',2),99);F('TAX',.13,RED,39.45,1.8,14.3,T('tax',2),99);
+// ---- Mike's arm targets (local: x = his right, y up, z forward), solved once after load ----
+const MA={};const MGOAL={nozzle:['L',-.32,.95,.38],self:['R',-.02,1.3,.2],right:['R',.34,.92,.45],left:['L',-.34,.92,.45],point:['R',.22,1.42,.55],openL:['L',-.45,1.0,.3],openR:['R',.45,1.0,.3]};
+function solveMike(){MK.g.position.set(0,0,0);MK.g.rotation.y=Math.PI;const f=V3(0,0,-1),r=V3(1,0,0);for(const [k,[sd,x,y,z]] of Object.entries(MGOAL)){relax(MK);MA[k]=solveReach(MK,sd,r.clone().multiplyScalar(x).add(V3(0,y,0)).addScaledVector(f,z));}relax(MK);}
+const MPL=[[0,-30.0,14.9,Math.PI+.5],[T('who'),-3.3,14.8,Math.PI+.35],[T('today'),36.4,14.9,Math.PI+.4],[T('so',3),40,14.6,Math.PI]];   // [from, x, z, ry]
+function story(t){
+ // ---- Mike: one character, a new place + a new event on every line ----
+ const P=MK;relax(P);idle(P,t,3);let pl=MPL[0];for(const p of MPL)if(t>=p[0]-.6)pl=p;P.g.position.set(pl[1],0,pl[2]);P.g.rotation.y=pl[3];
+ const A=(sd,k,s=1)=>{setA(P,sd,lerpA(REST,MA[k],s));};
+ if(t<T('who')-.6){   // S1: fills his truck; the dream bubble; shakes his head
+  const k=sm(T('fills')-.3,T('fills'),t);A('L','nozzle',k);NOZ.visible=k>.5;if(NOZ.visible){P.g.updateMatrixWorld(true);P.BN.wristL.getWorldPosition(_w);NOZ.position.copy(_w).add(V3(0,-.08,-.06));NOZ.rotation.set(.5,0,0);}
+  if(t>T('cent',1)-.2&&t<T('but')){face(P,{smile:1});pose(P,'head',-.12,.1,0);}
+  if(t>T('doesn\'t')&&t<T('the',3)){pose(P,'head',0,.35*Math.sin((t-T('doesn\'t'))*9),0);face(P,{jaw:.05});}}
+ else NOZ.visible=false;
+ if(t>=T('who')-.6&&t<T('americans')-.5){   // S4: 'Mike does' points at himself, then fills 15 gallons
+  A('R','self',sm(T('mike',1)-.2,T('mike',1)+.1,t)*(1-sm(T('fill')-.2,T('fill'),t)));const k=sm(T('fill')-.1,T('fill')+.25,t);if(k>0)A('L','nozzle',k);
+  if(t>T('$63')){face(P,{jaw:.2});pose(P,'head',-.05,0,0);}}
+ if(t>=T('today')-.6&&t<T('so',3)-.6){A('L','left',sm(T('tax')-.3,T('tax'),t));face(P,{smile:.2});}   // S8: shows the TAX slice (screen right)
+ if(t>=T('so',3)-.6){const tp=T('pump',1),tb=T('tax',1);   // S9 + CTA
+  if(t<T('next')){A('R','right',sm(tp-.3,tp,t)*(1-sm(tb-.3,tb,t)));A('L','left',sm(tb-.3,tb,t));}
+  else if(t<T('would',2)){A('R','point',sm(T('ask')-.3,T('ask'),t));face(P,{jaw:.05});}
+  else{A('L','left',sm(T('tax',2)-.3,T('tax',2),t));A('R','right',sm(T('pump',2)-.3,T('pump',2),t));face(P,{smile:.4});}}
+ // ---- S1 pump + dream bubble ----
+ P1.draw('0.000',t>T('says')?'$4.23':'$-.--',t>T('says')?'#ff4a3a':'#4dff74');
+ {const s=pop(t,T('cent',1)-.15,.3)*(1-sm(T('but'),T('but')+.2,t));BUB.visible=s>.01;if(BUB.visible){P.BN.head.getWorldPosition(_w);BUB.position.copy(_w).add(V3(-.05,.42,0));BUB.scale.setScalar(s);BUB.lookAt(cam.position);BUB.rotateY(Math.PI);}}
+ // ---- S2 supply chain pops in, one per word ----
+ const tc=[T('oil'),T('refinery'),T('trucks'),T('stations')];CHAIN.forEach((g,i)=>{const s=pop(t,tc[i]-.05,.3);g.visible=s>.01;g.scale.setScalar(Math.max(.001,s*(g.userData.s||1)));});
+ CHAIN[1].traverse(o=>{if(o.userData.flame)o.scale.set(1,1+.25*Math.sin(t*20),1);});
+ // ---- S3 steak: sign $50 -> 1¢ -> back to $50 COST; $50 bill flies to the chef ----
+ const ts1=T('cent',2),ts2=T('$50',1);steakSign(t>=ts2?'COSTS':'STEAK',t>=ts1&&t<ts2?'1¢':'$50',t>=ts1&&t<ts2?'#22e06a':(t>=ts2?'#ff4a3a':'#ffffff'));
+ {const P=CHEF;relax(P);idle(P,t,5);face(P,{smile:t>T('chef')?.9:.3});const tp=T('pays');if(t>tp+.3)arm(P,'R',AD[0]+.9,AD[2]-.3,.9);
+  BILL50.visible=t>tp-.1&&t<T('who')+.2;if(BILL50.visible){const k=sm(tp-.1,tp+.5,t);BILL50.position.set(-11.0-.9*(1-k)+.0,1.25+.5*Math.sin(Math.PI*k),15.0+.6*k);BILL50.rotation.set(0,Math.PI+(1-k)*3,(1-k)*.8);}}
+ // ---- S4 the pump counts to 15 gallons at 1 cent ----
+ {const k=sm(T('fill'),T('gallons'),t);P4.draw((15*k).toFixed(3),'$0.01','#4dff74');}
+ // ---- S5 / S6 towers rise row by row ----
+ {const t0=T('burn'),t1=T('gallons',1)+.3;CANS.forEach(c=>{const k=sm(t0+c.userData.y*(t1-t0)/9,t0+(c.userData.y+1)*(t1-t0)/9,t);c.visible=k>.01;c.scale.setScalar(Math.max(.001,k));});}
+ {const t0=T('$422',1),t1=T('billion',1)+.2;BRK.forEach(m=>{const k=sm(t0+m.userData.y*(t1-t0)/20,t0+(m.userData.y+1)*(t1-t0)/20,t);m.visible=k>.01;m.scale.y=Math.max(.001,k);});}
+ // ---- S7 stage: empty safe, TAXES form, IOU, Mike's kids ----
+ {const s=pop(t,T('money')-.1,.3);SAFE.visible=s>.01;SAFE.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('taxes')-.15,.3);TAXF.visible=s>.01&&t<T('today')-.3;TAXF.position.set(GX+.7,SY+1.6+.03*Math.sin(t*3),18.6);TAXF.rotation.set(0,Math.PI,.06*Math.sin(t*2));TAXF.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('debt')-.15,.3),k=sm(T('pay',2),T('later')+.1,t);IOU.visible=s>.01&&t<T('today')-.3;IOU.position.copy(V3(GX-.6,SY+1.5,18.6).lerp(V3(GX+.62,1.05,15.2),k));IOU.position.y+=.4*Math.sin(Math.PI*k);IOU.rotation.set(0,Math.PI,.25*Math.sin(Math.PI*k));IOU.scale.setScalar(Math.max(.001,s));}
+ KIDS.forEach((K,i)=>{const s=pop(t,T('kids')-.2+i*.08,.3);K.g.visible=s>.01;if(!K.g.visible)return;K.g.scale.setScalar(.6*s);relax(K);idle(K,t,i*2);face(K,{jaw:.15,smile:0});arm(K,'L',AD[0]+.6,AD[2]-.5,1.4);arm(K,'R',AD[0]+.6,AD[2]-.5,1.4);});
+ // ---- S8 the TAX slice of one gallon ----
+ {const s=pop(t,T('today')-.2,.35);JUG.visible=s>.01;JUG.scale.setScalar(Math.max(.001,s));const k=sm(T('tax')-.1,T('tax')+.4,t);TAXL.visible=k>.01;TAXL.scale.y=Math.max(.001,k);
+  JL.visible=k>.5&&JUG.visible;JL.position.set(35,1.41,15.33);JL.rotation.y=Math.PI;JG.visible=JUG.visible;JG.position.set(35,.6,15.33);JG.rotation.y=Math.PI;}
+ // ---- S9 pump (screen left) vs tax bill (screen right) ----
+ {const s=pop(t,T('pump',1)-.15,.3)*(1-sm(T('next')-.3,T('next'),t));P9.g.visible=s>.01;P9.g.scale.setScalar(Math.max(.001,s));}
+ {const s=pop(t,T('tax',1)-.15,.3)*(1-sm(T('next')-.3,T('next'),t));BILLT.visible=s>.01;BILLT.position.set(39.05,1.5+.03*Math.sin(t*2.5),15.4);BILLT.rotation.set(0,Math.PI,.05*Math.sin(t*2));BILLT.scale.setScalar(Math.max(.001,s));}
+}
+
+let BST=0;
+function animate9(t){updPops(t);updC(t);
+ trumpPose(t);TR.g.updateMatrixWorld(true);
+{PENNY.visible=false;if(PENNY.visible){TR.BN.wristR.getWorldPosition(_w);PENNY.position.copy(_w).add(V3(.02,.19,-.06));PENNY.rotation.set(Math.PI/2,0,.12*Math.sin(t*2));PENNY.scale.setScalar(s);
+  PENNY.lookAt(cam.position);PENNY.rotateX(Math.PI/2);PENNY.rotateY(Number(Q.get('py2')??Math.PI/2));}}
+ [MIKE,...CROWD].forEach((P,i)=>{relax(P);idle(P,t,i*1.3);P.g.rotation.y=-.08+(Math.PI)*sm(Wd('kids')-.6,Wd('kids')-.1,t);
+  if(t>tPrice&&t<5){const k=sm(tPrice,tPrice+.2,t);face(P,{jaw:.22*k,smile:0});arm(P,'L',AD[0]+.6*k,AD[2]-.5*k,1.4*k);arm(P,'R',AD[0]+.6*k,AD[2]-.5*k,1.4*k);}   // gasp: hands to the face
+  else if(t>tCent){pose(P,'head',-.05,-.3*sm(tCent,tCent+.3,t),0);face(P,{smile:.5});}});
+ const st=t>=tPrice?1:0;if(st!==BST){BST=st;board(st?'$4.23':'$0.01',st?'#ff2a2a':'#22e06a');}
+ {const dt=t-tPrice;const s=dt>0?1+.14*Math.exp(-dt*7)*Math.cos(dt*22):1;fl.scale.setScalar(s);}   // the board pops when it flips
+ FX.intensity=t>tPrice?5*Math.exp(-(t-tPrice)*2.4):0;
+ story(t);
+ {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
+}
+// ================= EP10 STORY (after the hook). One Mike, a new place + event on every line, one continuous camera. =================
+// Camera looks +z (north) everywhere, so SCREEN RIGHT = -x.
+// S1 taxes (x -22) / S2 2016 deal + 10 yearly stacks (-14) / S3 a month (-4.6) / S4 jet + Iron Dome (5) / S5 lump-sum tower (15) / S6 'most people miss' (16.9)
+// S7 factory: money in, check, workers, planes + missiles (35) / S8 debt clock + interest + $3B a day (stage 27) / S9 Mike's math board (stage)
+// S10 defense vs interest scale (40.3) / S11 the debt as 10,000 squares (stage clock) / S12 CTA AID or DEBT (in front of the stage)
+for(const o of[...CHAIN,STK,CHEF.g,P4.g,CANG,JUG,P9.g,SAFE,TAXF,IOU,BILL50,BUB,NOZ,...KIDS.map(k=>k.g)])o.visible=false;   // EP9 story props off
+for(const o of scene.children)if(o.isGroup&&Math.abs(o.position.x+13.05)<.01&&Math.abs(o.position.z-15)<.01)o.visible=false;   // EP9 steak sign
+POPS.forEach(m=>m.visible=false);POPS.length=0;   // EP9 floating words off (the EP10 ones are created below)
+for(const o of scene.children)if(o.isGroup&&Math.abs(o.position.x+7.4)<.01&&Math.abs(o.position.z-15.6)<.01)o.visible=false;   // EP9 pickup at the S3 calendar
+const PS=(o,s)=>{o.visible=s>.01;if(o.visible)o.scale.setScalar(Math.max(.001,s));};
+const pin=(t,t0,t1=99)=>pop(t,t0,.3)*(1-sm(t1,t1+.25,t));
+const PT=(s,size,col,x,y,z,t0,t1)=>popT(s,size,col,V3(x,y,z),t0,t1);
+const zbG=(p,x,y,z)=>{const m=new THREE.Mesh(ZBG,ZBM6);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;p.add(m);return m;};
+const wood=pbr('oak_wood_planks',1,1,0xa07a52);
+function table(x,z,w,d,h=.76){add(B(w,.05,d),wood,x,h,z);for(const sx of[-1,1])for(const sz of[-1,1])add(B(.05,h,.05),wood,x+sx*(w/2-.06),h/2,z+sz*(d/2-.06));}
+function canvasPlane(w,h,pw,ph,basic=false){const {c,t}=canvasTex(pw,ph);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),basic?new THREE.MeshBasicMaterial({map:t,toneMapped:false,side:THREE.DoubleSide}):new THREE.MeshStandardMaterial({map:t,roughness:.75,side:THREE.DoubleSide}));scene.add(m);return {m,c,t,x:c.getContext('2d')};}
+// ---- a generic grey fighter jet (nose to -x = screen right), ~2.15 m long ----
+function jetModel(){const g=new THREE.Group();const paint=M(0x7f8890,.45,.5),dk=M(0x2a2e33,.5,.6);
+ const fu=add(CY(.13,.11,1.6,24),paint,0,0,0,g);fu.rotation.z=Math.PI/2;
+ const no=add(new THREE.ConeGeometry(.13,.45,24),paint,-1.02,0,0,g);no.rotation.z=Math.PI/2;
+ const ex=add(CY(.1,.12,.14,20),dk,.86,0,0,g);ex.rotation.z=Math.PI/2;
+ const ws=new THREE.Shape([new THREE.Vector2(-.3,0),new THREE.Vector2(.5,-.95),new THREE.Vector2(.66,-.95),new THREE.Vector2(.62,0),new THREE.Vector2(.66,.95),new THREE.Vector2(.5,.95)]);
+ const w=add(new THREE.ExtrudeGeometry(ws,{depth:.03,bevelEnabled:false}),paint,0,-.03,0,g);w.rotation.x=-Math.PI/2;
+ const ts=new THREE.Shape([new THREE.Vector2(.42,0),new THREE.Vector2(.8,0),new THREE.Vector2(.86,.46),new THREE.Vector2(.72,.46)]);
+ add(new THREE.ExtrudeGeometry(ts,{depth:.026,bevelEnabled:false}),paint,0,.06,-.013,g);
+ const hs=new THREE.Shape([new THREE.Vector2(.6,-.36),new THREE.Vector2(.84,-.36),new THREE.Vector2(.84,.36),new THREE.Vector2(.6,.36)]);const h=add(new THREE.ExtrudeGeometry(hs,{depth:.02,bevelEnabled:false}),paint,0,0,0,g);h.rotation.x=-Math.PI/2;
+ const cp=add(new THREE.SphereGeometry(.1,24,12),GLASS,-.55,.1,0,g);cp.scale.set(2.3,.85,.9);return g;}
+// ---- a missile (axis +y) with a flame ----
+function missileModel(col){const g=new THREE.Group();const b=M(col,.4,.3);add(CY(.045,.045,.55,16),b,0,0,0,g);add(new THREE.ConeGeometry(.045,.16,16),b,0,.355,0,g);
+ for(let i=0;i<4;i++){const f=add(B(.008,.12,.09),M(0x333333,.5),0,-.22,0,g);f.rotation.y=i*Math.PI/2;f.translateZ(.06);}
+ const fl=add(new THREE.ConeGeometry(.05,.3,12),new THREE.MeshBasicMaterial({color:0xffa030,toneMapped:false}),0,-.43,0,g,false);fl.rotation.x=Math.PI;g.userData.fl=fl;scene.add(g);return g;}
+const Y1=V3(0,1,0);
+// ================= S1 Mike pays his taxes, looks for the real numbers (x -22) =================
+const TAXP=canvasPlane(.3,.4,384,512);const drawTax=paid=>{const x=TAXP.x;x.fillStyle='#fbfbf7';x.fillRect(0,0,384,512);x.strokeStyle='#111';x.lineWidth=8;x.strokeRect(6,6,372,500);x.fillStyle='#111';x.textAlign='center';
+ x.font='800 54px Mont';x.fillText('TAXES',192,80);x.font='800 30px Mont';x.fillText('FORM 1040',192,122);for(let i=0;i<6;i++){x.fillStyle='#d9d9d2';x.fillRect(40,160+i*44,304,22);}
+ if(paid){x.save();x.translate(192,330);x.rotate(-.25);x.strokeStyle='#d21e2a';x.lineWidth=12;x.strokeRect(-150,-62,300,124);x.fillStyle='#d21e2a';x.font='800 100px Mont';x.fillText('PAID',0,36);x.restore();}TAXP.t.needsUpdate=true;};
+drawTax(false);TAXP.m.visible=false;
+const MAG=new THREE.Group();scene.add(MAG);{const bk=M(0x1b1b1b,.4,.3);add(new THREE.TorusGeometry(.085,.013,12,32),bk,0,0,0,MAG);
+ add(new THREE.CircleGeometry(.08,32),new THREE.MeshPhysicalMaterial({color:0xddeeff,roughness:.02,transmission:.6,transparent:true,opacity:.35}),0,0,0,MAG,false);add(CY(.013,.016,.16,12),bk,0,-.165,0,MAG);}MAG.visible=false;
+// ================= S2 the 2016 deal on a desk + 10 yearly money stacks (x -14) =================
+table(-14.1,15.3,1.2,.7);
+const DOC=canvasPlane(.42,.55,512,672);DOC.m.position.set(-14.1,.83,15.25);DOC.m.rotation.y=Math.PI;DOC.m.rotateX(-1.0);
+let DOCK=-1;function drawDoc(k){if(Math.abs(k-DOCK)<.01)return;DOCK=k;const x=DOC.x;x.fillStyle='#fbfaf4';x.fillRect(0,0,512,672);x.strokeStyle='#1f3b6e';x.lineWidth=10;x.strokeRect(10,10,492,652);x.fillStyle='#111';x.textAlign='center';
+ x.font='800 40px Mont';x.fillText('MEMORANDUM',256,80);x.fillText('OF UNDERSTANDING',256,126);x.font='800 34px Mont';x.fillStyle='#1f3b6e';x.fillText('UNITED STATES · ISRAEL',256,190);
+ x.fillStyle='#c9952f';x.font='800 92px Mont';x.fillText('2016',256,300);for(let i=0;i<4;i++){x.fillStyle='#d9d9d2';x.fillRect(60,350+i*40,392,18);}
+ x.strokeStyle='#111';x.lineWidth=3;x.beginPath();x.moveTo(90,600);x.lineTo(422,600);x.stroke();
+ if(k>0){x.strokeStyle='#14306a';x.lineWidth=7;x.lineCap='round';x.beginPath();for(let i=0;i<=60*k;i++){const u=i/60;x.lineTo(110+300*u,585-18*Math.sin(u*19)-10*Math.sin(u*7));}x.stroke();}DOC.t.needsUpdate=true;}
+drawDoc(0);
+const PEN=add(CY(.007,.009,.15,10),M(0x111111,.3,.5),0,0,0,scene);PEN.visible=false;
+{for(const [x,tx] of[[-13.6,FT],[-14.6,ILT]]){add(CY(.005,.005,.3,8),M(0xd6d9de,.3,.9),x,.93,15.5);const f=add(new THREE.PlaneGeometry(.2,.13),new THREE.MeshStandardMaterial({map:tx,roughness:.8,side:THREE.DoubleSide}),x-.1,1.01,15.5,scene,false);f.rotation.y=Math.PI;}}   // desk flags: US (screen left) + Israel
+table(-14.04,16.6,3.7,.45,.75);
+const STACKS=[];for(let i=0;i<10;i++){const g=new THREE.Group();g.position.set(-15.66+i*.36,.775,16.6);scene.add(g);for(let k=0;k<6;k++)zbG(g,0,.055+k*.112,0);g.visible=false;STACKS.push(g);}
+// ================= S3 about $317 million a month: a pallet of straps + a calendar (x -4.6) =================
+const S3P=new THREE.Group();S3P.position.set(-4.85,0,15.6);scene.add(S3P);
+{for(let i=0;i<3;i++)add(B(.95,.06,.09),wood,0,.03,-.38+i*.38,S3P);for(let i=0;i<5;i++)add(B(.17,.03,.95),wood,-.38+i*.19,.075,0,S3P);for(let y=0;y<3;y++)for(let ix=0;ix<3;ix++)for(let iz=0;iz<3;iz++)zbG(S3P,(ix-1)*.29,.145+y*.112,(iz-1)*.3);}
+S3P.visible=false;
+const calTex=(top,big,col)=>tex(512,580,x=>{x.fillStyle='#ffffff';x.fillRect(0,0,512,580);x.fillStyle=col;x.fillRect(0,0,512,120);x.fillStyle='#fff';x.textAlign='center';x.font='800 78px Mont';x.fillText(top,256,90);
+ x.fillStyle='#222';if(big){x.font='800 230px Mont';x.fillText(big,256,410);}else{x.font='800 34px Mont';for(let r=0;r<5;r++)for(let c=0;c<7;c++){const d=r*7+c+1;if(d<=30)x.fillText(d,48+c*69,190+r*80);}}x.strokeStyle='#999';x.lineWidth=6;x.strokeRect(3,3,506,574);});
+function calendar(x,z,y0,w,h,front,back){const g=new THREE.Group();g.position.set(x,y0,z);scene.add(g);const dk=M(0x2a2a2a,.5,.4);
+ if(y0<.5)for(const s of[-1,1])add(CY(.015,.015,1.1,8),dk,s*w*.4,.55,.05,g);
+ const base=add(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:back,roughness:.7}),0,1.1,0,g,false);base.rotation.y=Math.PI;
+ const pv=new THREE.Group();pv.position.set(0,1.1+h/2,-.012);g.add(pv);const pg=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshStandardMaterial({map:front,roughness:.7,side:THREE.DoubleSide}));pg.position.y=-h/2;pg.rotation.y=Math.PI;pv.add(pg);
+ g.visible=false;return {g,pv,pg,base};}
+const CAL3=calendar(-3.95,15.6,0,.7,.8,calTex('1 MONTH',null,'#d21e2a'),calTex('1 MONTH',null,'#d21e2a'));
+// ================= S4 $3.3B military equipment (jet) + $500M missile defense (Iron Dome) (x 5) =================
+add(CY(.035,.035,.62,12),M(0x9aa0a6,.3,.8),5.6,.31,15.8);add(CY(.3,.34,.05,32),M(0x3a3f45,.5,.4),5.6,.025,15.8);
+const JET=jetModel();scene.add(JET);JET.position.set(5.6,.75,15.8);JET.visible=false;
+const LCH=new THREE.Group();LCH.position.set(6.1,0,16.8);scene.add(LCH);
+{const od=M(0x5a6648,.7,.2),dk=M(0x1a1a1a,.8);add(B(1.6,.35,.8),od,0,.55,0,LCH);add(B(.5,.55,.78),od,-.9,.72,0,LCH);add(B(.04,.3,.6),M(0x22303f,.1,.4),-1.16,.82,0,LCH);
+ for(const x of[-.85,-.1,.55])for(const z of[-.42,.42]){const w=add(CY(.2,.2,.14,20),dk,x,.2,z,LCH);w.rotation.x=Math.PI/2;}
+ const tt=tex(256,256,x=>{x.fillStyle='#4a5640';x.fillRect(0,0,256,256);x.fillStyle='#111';for(let r=0;r<4;r++)for(let c=0;c<5;c++){x.beginPath();x.arc(30+c*49,36+r*61,19,0,7);x.fill();}});
+ const bx=add(B(.95,.5,.7),[od,new THREE.MeshStandardMaterial({map:tt,roughness:.7}),od,od,od,od],.15,1.12,0,LCH);bx.rotation.z=-.9;}
+LCH.visible=false;
+const INT=missileModel(0xf2f2f2),ROCK=missileModel(0x555a52);INT.visible=ROCK.visible=false;
+const SMK=[];{const sm_=new THREE.MeshStandardMaterial({color:0xd8d8d8,roughness:1,transparent:true,opacity:.5,depthWrite:false});for(let i=0;i<60;i++){const m=add(new THREE.SphereGeometry(.11,10,8),sm_,0,0,0,scene,false);m.visible=false;SMK.push(m);}}
+const BOOMS=add(new THREE.SphereGeometry(1,24,16),new THREE.MeshBasicMaterial({color:0xffb030,toneMapped:false,transparent:true}),0,0,0,scene,false);BOOMS.visible=false;
+const BOOML=new THREE.PointLight(0xffa040,0,14,1.5);scene.add(BOOML);
+const T_HIT=T('down')+.05,T_INT=T('shoots'),P_LA=V3(5.85,1.55,16.7),P_HIT=V3(4.9,5.4,16.2),P_RK=V3(2.4,8.9,16.2);
+const mPath=(a,b,k,bend)=>{const p=a.clone().lerp(b,k);p.x+=bend*Math.sin(Math.PI*k);return p;};
+// ================= S5 the yearly money early, in one lump sum: the whole tower drops at once (x 15) =================
+BRK.forEach(m=>{m.userData.by=m.position.y;});
+const SHAD=add(new THREE.CircleGeometry(1.9,40),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0,depthWrite:false}),15,.02,16.4,scene,false);SHAD.rotation.x=-Math.PI/2;
+const EMB5=add(new THREE.PlaneGeometry(1.0,.7),new THREE.MeshStandardMaterial({map:EMB,roughness:.75,transparent:true}),15.75,.45,15.05,scene,false);EMB5.rotation.y=Math.PI;EMB5.visible=false;
+const DUST=[];{const dm=new THREE.MeshStandardMaterial({color:0xc9b89a,roughness:1,transparent:true,opacity:.5,depthWrite:false});for(let i=0;i<14;i++){const m=add(new THREE.SphereGeometry(.25,10,8),dm,0,0,0,scene,false);m.userData.a=i/14*Math.PI*2;m.visible=false;DUST.push(m);}}
+// ================= S7 the factory: money in, the check, workers, planes + missiles (x 35) =================
+const FX7=35,FZ7=17.6;
+{const br=pbr('red_brick',3,2,0xc89a8a);add(B(4.4,3.0,3.5),br,FX7,1.5,FZ7);
+ for(let i=0;i<3;i++){const sh=new THREE.Shape([new THREE.Vector2(0,0),new THREE.Vector2(1.467,0),new THREE.Vector2(1.467,.6)]);const m=add(new THREE.ExtrudeGeometry(sh,{depth:3.5,bevelEnabled:false}),M(0x6b6f75,.6,.3),FX7-2.2+i*1.467,3.0,FZ7-1.75);}
+ add(CY(.22,.26,2.4,16),pbr('red_brick',1,2,0x8a5a4a),FX7+1.6,4.2,FZ7+.8);
+ const dr=add(new THREE.PlaneGeometry(1.6,2.0),M(0x15171a,.9),FX7,1.0,FZ7-1.76,scene,false);dr.rotation.y=Math.PI;
+ add(B(1.75,.1,.08),M(0xe8e8e8,.5),FX7,2.05,FZ7-1.78);for(const s of[-1,1])add(B(.08,2.05,.08),M(0xe8e8e8,.5),FX7+s*.84,1.02,FZ7-1.78);
+ for(const s of[-1,1])for(const y of[1.0,2.2]){const w=add(new THREE.PlaneGeometry(.6,.6),M(0x22303f,.08,.3,{envMapIntensity:1.6}),FX7+s*1.5,y,FZ7-1.76,scene,false);w.rotation.y=Math.PI;}}
+const SIGN7=canvasPlane(1.9,.4,1024,214);{const x=SIGN7.x;x.fillStyle='#16224a';x.fillRect(0,0,1024,214);x.strokeStyle='#fff';x.lineWidth=10;x.strokeRect(5,5,1014,204);x.drawImage(FT.image,30,45,236,124);
+ x.fillStyle='#fff';x.font='800 100px Mont';x.textAlign='center';x.fillText('MADE IN USA',630,146);SIGN7.t.needsUpdate=true;}
+SIGN7.m.position.set(FX7,2.5,FZ7-1.8);SIGN7.m.rotation.y=Math.PI;SIGN7.m.visible=false;
+const STREAM=[];for(let i=0;i<10;i++){const m=zbrick(0,0,0);m.visible=false;STREAM.push(m);}
+const CHK=canvasPlane(1.5,.64,1024,436);{const x=CHK.x;x.fillStyle='#e4f0e0';x.fillRect(0,0,1024,436);x.strokeStyle='#3d6b4f';x.lineWidth=10;x.strokeRect(10,10,1004,416);x.fillStyle='#1f3b2a';x.textAlign='left';
+ x.font='800 40px Mont';x.fillText('UNITED STATES',40,70);x.font='800 30px Mont';x.fillText('PAY TO THE ORDER OF',40,170);x.font='800 76px Mont';x.fillStyle='#0038b8';x.fillText('ISRAEL',420,180);
+ x.fillStyle='#fff';x.fillRect(600,230,380,80);x.strokeStyle='#1f3b2a';x.lineWidth=4;x.strokeRect(600,230,380,80);x.fillStyle='#1f3b2a';x.font='800 50px Mont';x.fillText('$3.8 BILLION',614,288);
+ x.strokeStyle='#1f3b2a';x.lineWidth=3;x.beginPath();x.moveTo(40,375);x.lineTo(520,375);x.stroke();x.font='800 26px Mont';x.fillText('FOR: MILITARY AID',40,410);CHK.t.needsUpdate=true;}
+CHK.m.visible=false;
+const WK=[['guard',FX7-.7],['printer',FX7],['teller',FX7+.7]].map(([n,x],i)=>{const P=person(n,x,0,15.55,Math.PI);P.g.updateMatrixWorld(true);const h=V3();P.BN.head.getWorldPosition(h);
+ const hat=new THREE.Group();hat.position.copy(h).add(V3(0,.1,0));scene.add(hat);const ym=M(0xf2c418,.35,.1);add(new THREE.SphereGeometry(.125,24,12,0,Math.PI*2,0,Math.PI/2),ym,0,0,0,hat);add(CY(.16,.16,.015,24),ym,0,0,0,hat);P.BN.head.attach(hat);
+ P.g.visible=false;P.x0=x;return P;});
+const JET2=jetModel();scene.add(JET2);JET2.scale.setScalar(.5);JET2.position.set(FX7+1.15,.08,15.0);JET2.visible=false;
+const MRACK=new THREE.Group();MRACK.position.set(FX7-1.55,0,15.0);scene.add(MRACK);{add(B(.6,.08,.3),M(0x3a3f45,.5,.4),0,.04,0,MRACK);for(let i=0;i<3;i++){const m=missileModel(0xf2f2f2);m.userData.fl.visible=false;scene.remove(m);m.position.set(-.18+i*.18,.38,0);MRACK.add(m);}}
+MRACK.visible=false;
+// ================= S8 debt clock: $40T, interest straps flying in, $3B every day calendar (stage) =================
+const FLY2=[];for(let i=0;i<12;i++){const m=zbrick(0,0,0);m.visible=false;m.userData.x=GX+.1+((i*37)%7)/7*.6;FLY2.push(m);}
+const CAL8=calendar(GX-1.5,18.0,SY-.45,.75,.85,calTex('DAY',' 1','#b22234'),calTex('DAY',' 2','#b22234'));
+const DAYT=[...Array(9)].map((_,i)=>calTex('DAY',String(i+1).padStart(2,' '),'#b22234'));
+const FLY3=[];for(let i=0;i<6;i++){const m=zbrick(0,0,0);m.visible=false;FLY3.push(m);}
+// ================= S9 Mike's math on a whiteboard (stage) =================
+const WB=canvasPlane(1.4,1.0,1024,732);WB.m.position.set(GX-.9,SY+1.3,18.4);WB.m.rotation.y=Math.PI;WB.m.visible=false;
+const WBL=[];{const dk=M(0x3a3f45,.5,.5);for(const s of[-1,1])WBL.push(add(CY(.018,.018,1.8,8),dk,GX-.9+s*.6,SY+.9,18.45));add(B(1.46,.05,.05),M(0xd6d9de,.3,.8),GX-.9,SY+.79,18.42);WBL.forEach(l=>l.visible=false);}
+let WBK='';function drawWB(t){const l1=t>T('yearly',1)-.1,l2=t>T('costs')-.1,l3=t>T('32')-.05;const ang=(Math.min(1,Math.max(0,(t-T('32'))/2.2)))*32/12*Math.PI*2;
+ const k=[l1,l2,l3,ang.toFixed(2)].join();if(k===WBK)return;WBK=k;const x=WB.x;x.fillStyle='#fbfbf8';x.fillRect(0,0,1024,732);x.strokeStyle='#9aa0a6';x.lineWidth=16;x.strokeRect(8,8,1008,716);
+ x.textAlign='left';x.fillStyle='#1d2b4f';x.font='800 50px Mont';x.fillText("MIKE'S MATH",50,90);
+ if(l1){x.fillStyle='#1a8a3e';x.font='800 84px Mont';x.fillText('$3.8B',50,250);x.fillStyle='#555';x.font='800 40px Mont';x.fillText('a year',330,250);}
+ if(l2){x.fillStyle='#c23030';x.font='800 84px Mont';x.fillText('÷ $2.9B',50,400);x.fillStyle='#555';x.font='800 40px Mont';x.fillText('a day',390,400);}
+ if(l3){x.fillStyle='#d21e2a';x.font='800 100px Mont';x.fillText('= 32 HOURS',50,600);}
+ const cx=830,cy=290,r=130;x.fillStyle='#fff';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.strokeStyle='#1d2b4f';x.lineWidth=12;x.stroke();x.lineWidth=6;
+ for(let i=0;i<12;i++){const a=i/12*Math.PI*2;x.beginPath();x.moveTo(cx+Math.sin(a)*(r-12),cy-Math.cos(a)*(r-12));x.lineTo(cx+Math.sin(a)*(r-30),cy-Math.cos(a)*(r-30));x.stroke();}
+ if(ang>0){x.fillStyle='rgba(210,30,42,.25)';x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,r-8,-Math.PI/2,-Math.PI/2+Math.min(ang,Math.PI*2*.999));x.closePath();x.fill();}
+ x.strokeStyle='#111';x.lineCap='round';x.lineWidth=12;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.sin(ang)*70,cy-Math.cos(ang)*70);x.stroke();x.lineWidth=7;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.sin(ang*4)*105,cy-Math.cos(ang*4)*105);x.stroke();WB.t.needsUpdate=true;}
+// ================= S10 defense vs interest on a balance scale (x 40.3) =================
+const SCX=40.3,SCZ=15.8,SCY=1.55,gold=M(0xd4af37,.3,1);
+add(B(.6,.08,.4),gold,SCX,.04,SCZ);add(CY(.035,.05,1.5,16),gold,SCX,.79,SCZ);add(new THREE.SphereGeometry(.06,16,10),gold,SCX,SCY+.06,SCZ);
+const BEAM=new THREE.Group();BEAM.position.set(SCX,SCY,SCZ);scene.add(BEAM);add(B(1.35,.05,.05),gold,0,0,0,BEAM);
+const PANS=[-1,1].map(s=>{const g=new THREE.Group();scene.add(g);add(CY(.36,.3,.05,32),gold,0,-.48,0,g);add(CY(.008,.008,.46,6),gold,0,-.23,0,g);g.userData.s=s;return g;});
+const JET3=jetModel();JET3.scale.setScalar(.3);JET3.position.set(0,-.4,0);PANS[0].add(JET3);
+const PILE=new THREE.Group();PANS[1].add(PILE);for(let y=0;y<3;y++)for(let ix=0;ix<2;ix++)for(let iz=0;iz<2;iz++)zbG(PILE,(ix-.5)*.29,-.4+y*.112,(iz-.5)*.3);
+// ================= S11 the debt as 10,000 squares, the aid fits inside ONE (1 square = $4 billion) =================
+let GRID=0;function drawGrid(){if(GRID)return;GRID=1;const x=DCC.getContext('2d');x.fillStyle='#0b1530';x.fillRect(0,0,1536,640);x.fillStyle='#b22234';x.fillRect(0,0,1536,110);x.fillStyle='#fff';x.textAlign='center';x.font='800 84px Mont';x.fillText('U.S. NATIONAL DEBT',768,84);
+ x.fillStyle='#e0303a';for(let r=0;r<100;r++)for(let c=0;c<100;c++)x.fillRect(518+c*5,125+r*5,4,4);
+ x.fillStyle='#22ff6a';x.fillRect(518+99*5-1,125-1,6,6);x.strokeStyle='#22ff6a';x.lineWidth=6;x.beginPath();x.arc(518+99*5+2,127,26,0,7);x.stroke();
+ x.strokeStyle='#fff';x.lineWidth=14;x.strokeRect(7,7,1522,626);DCT.needsUpdate=true;}
+// ================= floating 3D words (glow colour = meaning) =================
+PT('2016',.16,YEL,-14.0,1.55,15.3,T('2016')-.05,T('$38',1)-.1);
+PT('$38 BILLION',.26,GRN,-14.04,2.62,16.6,T('$38',1),T("that's")-.1);PT('10 YEARS',.17,YEL,-14.04,2.32,16.6,T('10'),T("that's")-.1);
+STACKS.forEach((g,i)=>PT(String(2019+i),.075,WHT,g.position.x,1.55,16.6,T('from')+i*(T('2028')+.3-T('from'))/10,T("that's")-.1));
+PT('$317 MILLION',.2,GRN,-4.75,2.25,15.6,T('$317'),T('$33')-.1);PT('A MONTH',.15,YEL,-4.75,2.0,15.6,T('a',1)-.05,T('$33')-.1);
+PT('$3.3 BILLION',.2,GRN,5.15,2.3,15.8,T('$33'),T('$500')-.1);PT('A YEAR',.14,YEL,5.15,2.07,15.8,T('a',2)-.05,T('$500')-.1);
+PT('$500 MILLION',.26,GRN,6.3,6.3,16.2,T('$500'),T('and',0)+.1);PT('IRON DOME',.22,YEL,6.3,5.95,16.2,T('iron'),T('and',0)+.1);
+PT('EARLY',.24,YEL,15,2.0,15.4,T('early')-.05,T('lump')-.05);
+PT('$3.8 BILLION',.3,GRN,15,4.62,16.4,T('lump'),T('miss')-.3);PT('ONE LUMP SUM',.2,YEL,15,4.3,16.4,T('sum')-.1,T('miss')-.3);
+PT('!',.3,YEL,16.62,1.95,14.5,T('miss'),T('under')+.15);
+PT('PAID',.32,GRN,FX7,3.0,15.5,T('paid'),T('and',2)+.2);
+PT('$40 TRILLION',.25,RED,GX,2.1,19.6,T('$40',1),T('last')-.1);
+PT('$1.05 TRILLION',.22,RED,GX,2.1,19.6,T('$105'),T("that's",1)-.1);PT('INTEREST',.16,YEL,GX,1.78,19.6,T('interest')-.05,T("that's",1)-.1);
+PT('$3 BILLION',.2,RED,GX-1.5,SY+1.95,18.0,T('$3'),T('so',2)-.1);PT('EVERY DAY',.13,YEL,GX-1.5,SY+1.66,18.0,T('every')-.05,T('so',2)-.1);
+const H32=PT('32 HOURS',.22,YEL,GX-.9,SY+1.95,18.3,T('32'),T('defense',1)-.3);
+PT('$965 BILLION',.075,GRN,SCX-.55,2.4,SCZ,T('$965'),57.6);PT('DEFENSE',.07,YEL,SCX-.55,2.24,SCZ,T('defense',1)-.05,57.6);
+PT('$1.05 TRILLION',.075,RED,SCX+.55,2.4,SCZ,T('interest',2)-.05,57.6);PT('INTEREST',.07,YEL,SCX+.55,2.24,SCZ,T('interest',2)-.05,57.6);
+PT('1 SQUARE = $4 BILLION',.085,WHT,GX,4.5,20.15,T('aid')-.1,T('so',3)-.1);PT('THE AID',.08,GRN,GX-.8,4.06,20.15,T('aid')+.2,T('so',3)-.1);PT('< 0.01%',.2,YEL,GX,4.72,20.15,T('less'),T('so',3)-.1);
+PT('AID',.24,GRN,GX+1.25,2.05,15.6,T('aid',1)-.05,99);PT('DEBT',.22,RED,GX-.05,2.05,15.6,T('debt',3)-.05,99);
+// ================= Mike: arm goals (local: x = his right, y up, z forward), solved with solveMike() after load =================
+Object.assign(MGOAL,{holdL:['L',-.1,1.12,.32],magR:['R',.16,1.5,.36],pointL:['L',-.42,1.42,.45],up:['R',.12,1.75,.25]});
+const MKP=[[0,-22,0,14.8,Math.PI],[8.45,-13.15,0,14.95,Math.PI+.35],[14.15,-5.55,0,14.8,Math.PI-.45],[16.65,4.15,0,15.2,Math.PI-.4],[24.7,16.9,0,14.6,Math.PI+.45],
+ [29.3,FX7-1.25,0,14.9,Math.PI-.5],[38.3,GX+.62,0,15.8,-.08],[47.0,GX+.25,SY,18.2,Math.PI],[54.0,SCX,0,16.6,Math.PI],[57.8,GX+.62,0,15.8,-.08]];
+function story10(t){
+ const P=MK;relax(P);idle(P,t,3);let pl=MKP[0];for(const p of MKP)if(t>=p[0])pl=p;P.g.position.set(pl[1],pl[2],pl[3]);P.g.rotation.y=pl[4];
+ const A=(sd,k,s=1)=>{if(s>0)setA(P,sd,lerpA(REST,MA[k],s));};
+ // ---- S1 ----
+ if(t<8.45){A('L','holdL',1);P.g.updateMatrixWorld(true);P.BN.wristL.getWorldPosition(_w);TAXP.m.visible=true;TAXP.m.position.copy(_w).add(V3(.04,.13,-.08));TAXP.m.lookAt(cam.position);
+  if(t>T('taxes')-.05&&!TAXP.paid){TAXP.paid=1;drawTax(true);}if(t<T('taxes')-.05&&TAXP.paid){TAXP.paid=0;drawTax(false);}
+  const k=sm(T('looking')-.3,T('looking'),t);A('R','magR',k);MAG.visible=k>.3;if(MAG.visible){P.BN.wristR.getWorldPosition(_w);MAG.position.copy(_w).add(V3(-.02,.16,-.06));MAG.lookAt(cam.position);}
+  pose(P,'head',.12*k,-.15*k,0);face(P,{smile:.35});}
+ else{TAXP.m.visible=false;MAG.visible=false;}
+ // ---- S2 ----
+ if(t>=8.45&&t<14.15){A('L','openL',sm(T('deal')-.2,T('deal')+.1,t)*(1-sm(T('$38',1)-.2,T('$38',1)+.1,t)));if(t>T('$38',1)){pose(P,'head',-.2,.25,0);face(P,{jaw:.08,smile:.4});}}
+ {const k=sm(T('signed')-.1,T('2016'),t);drawDoc(k);PEN.visible=t>T('signed')-.3&&t<T('2016')+.4;if(PEN.visible){const u=k;DOC.m.updateMatrixWorld(true);const lp=V3(-.21+(110+300*u)/512*.42,.275-(585-18*Math.sin(u*19)-10*Math.sin(u*7))/672*.55,.0);
+  PEN.position.copy(DOC.m.localToWorld(lp)).add(V3(0,.07,0));PEN.rotation.set(.3,0,-.4);}}
+ STACKS.forEach((g,i)=>{const t0=T('from')+i*(T('2028')+.3-T('from'))/10;PS(g,pin(t,t0-.05,14.6));});
+ // ---- S3 ----
+ PS(S3P,pin(t,T('$317')-.1,17));PS(CAL3.g,pin(t,T('about')-.1,17));CAL3.pv.rotation.x=-Math.PI*.96*sm(T('month')-.35,T('month')+.1,t);
+ if(t>=14.15&&t<16.65){A('R','point',sm(T('$317')-.2,T('$317')+.1,t));face(P,{smile:.3});}
+ // ---- S4: the jet, then the jet takes off and the Iron Dome intercepts a rocket ----
+ {const s=pin(t,T('$33')-.1,99);JET.visible=s>.01&&t<T('missile')+1.2;if(JET.visible){const k=sm(T('$500')-.1,T('missile')+1.0,t);JET.scale.setScalar(Math.max(.001,s));
+  JET.position.set(5.6-6*k*k,.75+7*k*k,15.8);JET.rotation.z=-.5*sm(0,.25,k);}}
+ PS(LCH,pin(t,T('missile')-.15,26));
+ {const kI=sm(T_INT,T_HIT,t),kR=sm(T('rockets')-.6,T_HIT,t);INT.visible=t>T_INT&&t<T_HIT;ROCK.visible=t>T('rockets')-.6&&t<T_HIT;
+  const pI=mPath(P_LA,P_HIT,kI,-.3),pR=mPath(P_RK,P_HIT,kR,.25);INT.position.copy(pI);ROCK.position.copy(pR);
+  INT.quaternion.setFromUnitVectors(Y1,mPath(P_LA,P_HIT,Math.min(1,kI+.02),-.3).sub(pI).normalize());ROCK.quaternion.setFromUnitVectors(Y1,mPath(P_RK,P_HIT,Math.min(1,kR+.02),.25).sub(pR).normalize());
+  INT.userData.fl.scale.set(1,1+.3*Math.sin(t*40),1);ROCK.userData.fl.scale.set(1,1+.3*Math.sin(t*37),1);
+  SMK.forEach((m,i)=>{const isI=i<30,j=i%30,tt=t-j*.02,k=isI?sm(T_INT,T_HIT,tt):sm(T('rockets')-.6,T_HIT,tt),on=isI?tt>T_INT:tt>T('rockets')-.6;
+   m.visible=on&&t<T_HIT+1.2&&t>15;if(!m.visible)return;m.position.copy(isI?mPath(P_LA,P_HIT,k,-.3):mPath(P_RK,P_HIT,k,.25));m.scale.setScalar((1+j*.03)*(1-sm(T_HIT,T_HIT+1.2,t)));});
+  const db=t-T_HIT;BOOMS.visible=db>0&&db<.7;if(BOOMS.visible){BOOMS.position.copy(P_HIT);BOOMS.scale.setScalar(.15+.85*sm(0,.25,db));BOOMS.material.opacity=1-sm(.15,.7,db);}
+  BOOML.position.copy(P_HIT);BOOML.intensity=db>0?40*Math.exp(-db*5):0;}
+ if(t>=16.65&&t<24.7){A('R','point',sm(T('$33')-.3,T('$33'),t)*(1-sm(T('$500')-.2,T('$500')+.1,t)));
+  if(t>T('missile')){pose(P,'head',-.35*sm(T('missile'),T('missile')+.4,t),.15,0);}
+  if(t>T_HIT){const k=sm(T_HIT,T_HIT+.15,t)*(1-sm(T_HIT+.9,T_HIT+1.3,t));arm(P,'L',AD[0]+.4*k,AD[2]-.35*k,.8*k);arm(P,'R',AD[0]+.4*k,AD[2]-.35*k,.8*k);face(P,{jaw:.1*k});}}
+ // ---- S5: the lump-sum drop ----
+ {const tl=T('lump'),k=sm(tl-.3,tl,t);EMB5.visible=t>T('israel',1)-.1&&t<29.5;if(EMB5.visible)EMB5.scale.setScalar(Math.max(.001,pop(t,T('israel',1)-.1,.3)));
+  SHAD.material.opacity=.45*sm(T('yearly')-.2,tl,t)*(1-sm(29,29.5,t));SHAD.scale.setScalar(.4+.6*sm(T('yearly')-.2,tl,t));
+  const fall=t<tl?12*(1-k*k)*(t>tl-.3?1:1):0,db=t-tl,sq=db>0?1-.06*Math.exp(-db*9)*Math.cos(db*30):1;
+  BRK.forEach(m=>{m.visible=t>tl-.3&&t<29.5;if(m.visible){m.position.y=m.userData.by*sq+fall;m.scale.y=1;}});
+  DUST.forEach((m,i)=>{m.visible=db>0&&db<1.2;if(!m.visible)return;const r=1.7+1.4*sm(0,1,db);m.position.set(15+Math.cos(m.userData.a)*r,.2+.3*sm(0,1,db),16.4+Math.sin(m.userData.a)*r*.6);m.scale.setScalar(1+db);m.material.opacity=.5*(1-sm(.3,1.2,db));});
+  FX.position.set(15,3,14);FX.intensity=db>0&&db<1?6*Math.exp(-db*4):0;}
+ if(t>=24.7&&t<29.3){const tl=T('lump');if(t>tl-.05&&t<T('now')){const k=sm(tl-.05,tl+.15,t);arm(P,'L',AD[0]+.4*k,AD[2]-.35*k,.8*k);arm(P,'R',AD[0]+.4*k,AD[2]-.35*k,.8*k);face(P,{jaw:.12*k});pose(P,'spine03',-.1*k,0,0);}
+  if(t>T('now')-.2){const k=sm(T('now')-.2,T('now')+.3,t);P.g.rotation.y=Math.PI+.45*(1-k);A('R','point',sm(T('part')-.2,T('part')+.1,t));face(P,{smile:.45});pose(P,'head',.05*Math.sin(t*6)*sm(T('most'),T('miss'),t),0,0);}}
+ // ---- S7: money into the factory, the check, workers + planes + missiles ----
+ PS(SIGN7.m,pin(t,T('made')-.15,40));
+ STREAM.forEach((m,i)=>{const t0=T('money',1)-.1+i*.11,k=sm(t0,t0+.55,t);m.visible=t>t0&&k<.99;if(!m.visible)return;m.position.copy(V3(FX7-1.05,1.2,14.8).lerp(V3(FX7,1.0,16.3),k));m.position.y+=.7*Math.sin(Math.PI*k);m.rotation.set(0,k*3,k*.6);});
+ {const s=pop(t,T('check')-.1,.3),k=sm(T('but')-.05,T('but')+.5,t);CHK.m.visible=s>.01&&k<.98;if(CHK.m.visible){CHK.m.position.copy(V3(FX7,1.95,15.2).lerp(V3(FX7,1.0,16.1),k));CHK.m.rotation.set(0,Math.PI,.04*Math.sin(t*2)+k*.5);CHK.m.scale.setScalar(Math.max(.001,s*(1-.7*k)));}}
+ WK.forEach((K,i)=>{const t0=T('workers')-.15+i*.12;K.g.visible=t>t0&&t<38.4;if(!K.g.visible)return;relax(K);idle(K,t,i*2);const k=sm(t0,t0+.7,t);K.g.position.set(K.x0,0,16.5-1.0*k);
+  if(k<1)walk(K,t+i,.35);else{const h=Math.max(0,Math.sin((t+i*.3)*9));arm(K,'R',AD[0]+.9+.5*h,AD[2]-.5,1.2-.5*h);}face(K,{smile:.4});});
+ PS(JET2,pin(t,T('planes')-.1,38.4)*.5);PS(MRACK,pin(t,T('missiles')-.1,38.4));
+ if(t>=29.3&&t<38.3){A('L','openL',sm(T('made')-.2,T('made')+.1,t)*(1-sm(T('check')-.2,T('check'),t)));if(t>T('paid')-.2){face(P,{smile:.6});pose(P,'head',0,.2,0);}}
+ // ---- S8: clock, interest straps, the $3B-a-day calendar ----
+ FLY2.forEach((m,i)=>{const t0=T('paid',1)+.2+i*(T("that's",1)-.6-T('paid',1))/12,k=sm(t0,t0+.75,t);m.visible=t>t0&&k<.98;if(!m.visible)return;m.position.copy(V3(m.userData.x,1.05,16.3).lerp(V3(GX,SY+3.0,20.2),k));m.position.x+=.4*Math.sin(Math.PI*k)*(i%2?1:-1);m.rotation.set(k*2,k*3,0);m.scale.setScalar(1-.5*k);});
+ {const s=pin(t,T("that's",1)-.15,47.5);PS(CAL8.g,s);const n=Math.floor(Math.max(0,(t-T('$3'))/.24));const ph=((t-T('$3'))/.24)%1;
+  if(CAL8.g.visible){const a=Math.min(n,8),b=Math.min(n+1,8);if(CAL8.n!==a){CAL8.n=a;CAL8.pg.material.map=DAYT[a];CAL8.base.material.map=DAYT[b];CAL8.pg.material.needsUpdate=CAL8.base.material.needsUpdate=true;}CAL8.pv.rotation.x=t>T('$3')&&n<8?-Math.PI*.96*sm(.35,.95,ph):0;}
+  FLY3.forEach((m,i)=>{const t0=T('$3')+.1+i*.3,k=sm(t0,t0+.55,t);m.visible=t>t0&&k<.98&&t<47.6;if(!m.visible)return;m.position.copy(V3(GX-1.5,SY+1.3,17.9).lerp(V3(GX-.2,SY+3.0,20.2),k));m.position.y+=.3*Math.sin(Math.PI*k);m.rotation.set(k*2,k*3,0);m.scale.setScalar(1-.5*k);});}
+ if(t>=38.3&&t<47.0){pose(P,'head',-.22,0,0);if(t>T('interest')-.2)pose(P,'head',-.15,.3*Math.sin((t-T('interest'))*8)*(1-sm(T('interest')+.4,T('interest')+.9,t)),0);}
+ // ---- S9: whiteboard math ----
+ {const s=pin(t,T('math')-.4,53.7);PS(WB.m,s);WBL.forEach(l=>l.visible=WB.m.visible);if(WB.m.visible)drawWB(t);
+  const dt=t-T('32',1);if(H32.visible&&dt>0)H32.scale.multiplyScalar(1+.25*Math.exp(-dt*6)*Math.cos(dt*20));}
+ if(t>=47.0&&t<54.0){A('L','pointL',sm(T('yearly',1)-.3,T('yearly',1),t)*(1-sm(T('32')-.3,T('32'),t)));
+  if(t>T('32')-.2){const k=sm(T('32')-.2,T('32')+.15,t);A('L','openL',k*(1-sm(T('just',1)-.2,T('just',1),t)));A('R','openR',k*(1-sm(T('just',1)-.2,T('just',1),t)));face(P,{smile:.6,jaw:.05});}
+  if(t>T('just',1)-.2){A('R','up',sm(T('just',1)-.2,T('just',1)+.1,t));face(P,{smile:.5});}}
+ // ---- S10: the scale ----
+ {const th=.12*sm(T('$965')-.2,T('$965')+.4,t)-.42*sm(T('more')-.35,T('more')+.05,t);const db=t-T('more');const w=th+(db>0?.05*Math.exp(-db*5)*Math.sin(db*18):0);BEAM.rotation.z=w;
+  PANS.forEach(g=>{const s=g.userData.s;g.position.set(SCX+s*.65*Math.cos(w),SCY+s*.65*Math.sin(w),SCZ);});
+  PS(JET3,pin(t,T('defense',1)-.1,99)*.3);PS(PILE,pin(t,T('interest',2)-.1,99));}
+ if(t>=54.0&&t<57.8){pose(P,'head',-.1,.35*Math.sin(t*1.6),0);if(t>T('more')-.1){face(P,{jaw:.1});A('L','openL',sm(T('more')-.1,T('more')+.2,t));A('R','openR',sm(T('more')-.1,T('more')+.2,t));}}
+ // ---- S11 + S12 CTA ----
+ if(t>=57.8){const k=sm(T('so',3)-.3,T('so',3)+.2,t);P.g.rotation.y=-.08+(Math.PI+.08)*k;if(k<.05)pose(P,'head',-.22,0,0);
+  if(t>T('so',3)+.1&&t<T('cut')-.1){const s=sm(T('what',1),T('what',1)+.3,t);A('L','openL',s);A('R','openR',s);pose(P,'head',0,0,.12*s);face(P,{smile:.2});}
+  if(t>=T('cut')-.1){A('R','right',sm(T('aid',1)-.3,T('aid',1),t)*(1-sm(T('comment')-.2,T('comment'),t)));A('L','left',sm(T('debt',3)-.3,T('debt',3),t)*(1-sm(T('comment')-.2,T('comment'),t)));
+   if(t>T('comment')-.2)A('R','point',sm(T('comment')-.2,T('comment')+.1,t));face(P,{smile:.5});}}
+}
+
+// ================= EP10 HOOK ANIMATION + zack camera FX =================
+popT('$3.8 BILLION',.15,GRN,V3(CRX+.52,3.02,CRZ-.3),tBil-.05,tWith+.2);
+popT('A YEAR',.11,YEL,V3(CRX+.52,2.84,CRZ-.3),tYear-.05,tWith+.2);
+popT('$40 TRILLION',.25,RED,V3(GX,2.1,19.6),tTril-.05,tMeet+3);
+const EL=new THREE.PointLight(0xfff4e6,.7,4,1.5);scene.add(EL);   // camera eye-light: catchlights in the eyes, soft face fill
+const _zp=V3(),_zd=V3();
+function shake(t){return;cam.rotateX(.0035*Math.sin(t*9.1)+.0018*Math.sin(t*17.3+2));cam.rotateY(.0035*Math.sin(t*7.7+1)+.0015*Math.sin(t*15.1));cam.updateMatrixWorld();}   // handheld micro-shake
+function zfxPrev(t){setCam(Math.max(0,t-1/30));shake(Math.max(0,t-1/30));cam.getWorldDirection(_zd);_zp.copy(cam.position).addScaledVector(_zd,10);}
+function zfxNow(t){shake(t);const p=_zp.clone().project(cam);let bx=-p.x*.5,by=-p.y*.5;const L=Math.hypot(bx,by),mx=.06;if(L>mx){bx*=mx/L;by*=mx/L;}if(L<.003){bx=0;by=0;}   // motion blur only on fast moves
+ ZG.uniforms.blur.value.set(0,0);ZG.uniforms.time.value=t;
+ BOKEH.uniforms.focus.value=cam.position.distanceTo(V3(...(CAMF?CAMF.look:hv(t,k=>k[2]))));BOKEH.uniforms.aperture.value=CAMF?.ap??.0018;/* camera-kit framing: per-shot focus + aperture (macro = shallow) */EL.position.copy(cam.position).add(V3(0,.12,0));}
+const TRA={};let TRS=0;   // Trump loads the straps: right hand pallet -> crate, solved once
+const TPX=CRX+.52,TPZ=CRZ+.4;
+function trumpLoad(t){const P=TR;P.g.position.set(TPX,SY,TPZ);P.g.rotation.y=Math.PI;
+ if(!TRS){TRS=1;relax(P);P.g.updateMatrixWorld(true);TRA.pal=solveReach(P,'R',V3(PLX-.25,SY+.72,CRZ+.05));relax(P);TRA.cr=solveReach(P,'R',V3(CRX+.25,SY+.78,CRZ+.05));relax(P);TRA.palL=solveReach(P,'L',V3(PLX-.05,SY+.72,CRZ+.05));relax(P);TRA.crL=solveReach(P,'L',V3(CRX+.05,SY+.78,CRZ+.05));relax(P);}
+ relax(P);idle(P,t,1);let ph=0;FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length;if(t>=t0-.2&&t<t0+.42)ph=sm(t0,t0+.42,t);});
+ const on=sm(tSend-.3,tSend,t)*(1-sm(tWith,tWith+.3,t));
+ setA(P,'R',lerpA(REST,lerpA(TRA.pal,TRA.cr,ph),on));pose(P,'upperarm01L',AD[0]+.15*on,0,-AD[2]+.25*on);   // left hand stays at his side (no hidden arm)
+ pose(P,'spine03',.12*on,0,0);face(P,{jaw:.03+.04*Math.abs(Math.sin(t*9)),smile:.35});}
+function animate10(t){updPops(t);updC(t);MIKE.g.visible=t<5.9;TR.g.visible=t<tWith+.5;fl.visible=false;const tf=CK.ramp(t,S2a,S2b,.45,.45);trumpLoad(tf);hookIcons(t);/* tf = speed-ramped scene time (slow-mo in the macro) */
+ {const pa=FG3.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+.44)/.88;pa.setZ(i,Math.sin(u*7-t*6)*.05*u);}pa.needsUpdate=true;FG3.computeVertexNormals();}
+ FLY.forEach((m,i)=>{const t0=tSend+.05+i*(tYear-tSend)/FLY.length,k=sm(t0,t0+.42,tf);m.position.lerpVectors(m.userData.a,m.userData.b,k);m.position.y+=.32*Math.sin(Math.PI*k);m.rotation.set(0,(1-k)*2.4,(1-k)*.5);});
+ if(t<57.75)drawDebt(40502080966097+t*63000);else drawGrid();DEBT.visible=DFR.visible=t>tWith-.12;   // the clock appears inside the whip-pan blur: no cropped teaser in the crate shots
+ {const dt=t-tTril;DEBT.scale.setScalar(dt>0?1+.1*Math.exp(-dt*7)*Math.cos(dt*22):1);}
+ {const P=MIKE;relax(P);idle(P,t,1.3);const turn=sm(tDebt+.1,tDebt+.5,t);P.g.rotation.y=-.08-.8*turn;
+  if(t>tTril-.1&&t<tDebt-.15)pose(P,'head',-.18*sm(tTril-.1,tTril+.2,t),0,0);   // looks up at the clock
+  if(t>tDebt-.25){const k=sm(tDebt-.25,tDebt+.05,t);face(P,{jaw:.09*k,smile:0});pose(P,'spine03',-.08*k,0,0);arm(P,'L',AD[0]+.25*k,AD[2]-.25*k,.5*k);arm(P,'R',AD[0]+.25*k,AD[2]-.25*k,.5*k);}}   // shock: mouth opens a little, leans back, hands flinch up, turns to us (no tongue)
+ story10(t);
+ faces10(t);   // face-kit: expressions, blink, look-at (ep10_face.js)
+ {const pa=FG2.attributes.position;for(let i=0;i<pa.count;i++){const u=(pa.getX(i)+1.2)/2.4;pa.setZ(i,Math.sin(u*6-t*5)*.12*u);}pa.needsUpdate=true;FG2.computeVertexNormals();}
+}
+
+// ================= EP10 FACES (face-kit.js, NEXT_LEVEL_PLAN stage 1) =================
+// Trump: a pleased smirk while he loads the straps, eyes on the crate. Mike: eyes go up to the debt clock on "trillion",
+// then the real stock-clip shock (Pexels 6980085, MediaPipe) when he turns to us on "debt". Everyone blinks + saccades.
+const FK=faceKit(THREE);
+FK.rig(MIKE,{iris:'#5c4330',brow:'#3a281a'});FK.rig(MK,{iris:'#5c4330',brow:'#3a281a'});FK.rig(TR,{});
+const SHOCK=await FK.loadClip('faces/6980085.json');   // brows up 4.5 s -> jaw drop 4.8 s (smile after 5.3 s is not used)
+const CRATE_EYE=V3(CRX+.2,SY+.6,CRZ),CLOCK_EYE=V3(GX,3.0,20.3);
+function faces10(t){
+ if(TR.g.visible)FK.update(TR,t,{expr:[['smirk',.9],['joy',.35]],look:CRATE_EYE});
+ if(MIKE.g.visible){const sh=sm(tDebt-.3,tDebt+.1,t);
+  const look=t<tTril-.1?CRATE_EYE:t<tDebt-.2?CLOCK_EYE:cam.position;
+  FK.update(MIKE,t,{expr:[['shock',.55*sh],['doubt',.6*sm(tTril-.1,tTril+.25,t)*(1-sh)]],clip:{data:SHOCK,t0:tDebt-.3,from:4.42,len:.85,k:1},look});}
+ if(MK.g.visible)FK.update(MK,t,{look:cam.position});}
+
+// ================= EP10 HOOK CAMERA (camera-kit.js, NEXT_LEVEL_PLAN stage 3) =================
+// 5 framings in 5.6 s, every one auto-fitted above the 74 % caption line:
+// wide crate+pallet+Trump (push) -> MACRO real $10,000 strap ($3.8, slow-mo ramp) -> low medium crate + $3.8 BILLION + glowing $ coin (boom)
+// -> WHIP over Mike's shoulder to the debt clock + $40 TRILLION + glowing warning icon (big boom) -> orbit -> face close-up (FK.closeUp).
+const CK=cameraKit(THREE,{FK});
+const TPH=V3(TPX,SY+1.95,TPZ),TOPL=SY+.09+.055+3*.112;   // Trump's head, centre of the pallet's top layer
+const CRATE=CK.box([CRX-.45,SY,CRZ-.39],[CRX+.45,SY+.62,CRZ+.39]),PALLET=CK.box([PLX-.45,SY,CRZ-.45],[PLX+.45,SY+.8,CRZ+.45]);
+const FLAG=CK.box([CRX-.78,SY+1.72,CRZ+.2],[CRX-.3,SY+2.42,CRZ+.2]);
+const popAt=t0=>POPS.filter(m=>Math.abs(m.userData.t0-t0)<.01).map(m=>CK.popBox(m));   // the real floating-text meshes (baseline anchor, pop overshoot)
+const TXT38=[...popAt(tBil-.05),...popAt(tYear-.05)],TXT40=popAt(tTril-.05);
+const MIKE_HEAD=V3(GX+.615,1.6,15.805),CLOCK=CK.box([GX-1.8,SY+2.2,20.35],[GX+1.8,SY+3.8,20.35]);
+const COIN=CK.icon('dollar',{color:'#1fd66a',size:.3}),WARN=CK.icon('warn',{color:'#ff2a2a',size:.42});scene.add(COIN,WARN);
+const COIN_AT=V3((TXT38[0].min.x+TXT38[0].max.x)/2,TXT38[0].max.y+.2,CRZ-.3),WARN_AT=V3(TXT40[0].min.x-.32,TXT40[0].min.y+.2,19.55);   // icons beside the numbers (screen left = +x / screen right = -x)
+const COINB=CK.box(V3(COIN_AT.x-.17,COIN_AT.y-.17,COIN_AT.z),V3(COIN_AT.x+.17,COIN_AT.y+.17,COIN_AT.z)),WARNB=CK.box(V3(WARN_AT.x-.4,WARN_AT.y-.3,WARN_AT.z),V3(WARN_AT.x+.4,WARN_AT.y+.3,WARN_AT.z));
+const S2a=1.25,S2b=2.15;   // macro shot = speed-ramp window for the flying straps
+const MAC=CK.box([PLX-.16,TOPL+.03,CRZ-.45],[PLX+.16,TOPL+.06,CRZ-.16]);
+const HOOK_SHOTS=[
+ {t0:0,t1:S2a,a:()=>CK.fit([CRATE,PALLET,FLAG,TPH],{dir:[0,.12,-1],fov:46}),b:()=>CK.fit([CRATE,PALLET,FLAG,TPH],{dir:[.05,.1,-1],fov:46,slack:.94}),ease:'ramp'},
+ {t0:S2a,t1:S2b,a:()=>CK.macro(MAC,{dir:[.12,.8,-1],fov:26,ap:.007}),b:()=>CK.macro(MAC,{dir:[.05,.72,-1],fov:26,ap:.007,slack:.8}),ease:'linear',drift:.25},
+ {t0:S2b,t1:tWith,a:()=>CK.fit([CRATE,TXT38,COINB,TPH],{dir:[.35,-.1,-1],fov:44}),b:()=>CK.fit([CRATE,TXT38,COINB,TPH],{dir:[.28,-.08,-1],fov:44,slack:.95}),ease:'ramp'},
+ {t0:tWith,t1:tDebt-.06,in:'whip',a:()=>CK.overShoulder(MIKE,[GX,2.95,20.3],{back:1.25,out:.5,up:.12,fov:50,ry:-.08,fit:[CLOCK,TXT40,WARNB]}),b:()=>CK.overShoulder(MIKE,[GX,2.95,20.3],{back:1.0,out:.45,up:.1,fov:50,ry:-.08,fit:[CLOCK,TXT40,WARNB],slack:.93}),ease:'ramp'},
+ {t0:tDebt-.06,t1:tDebt+.5,a:()=>CK.orbit(MIKE_HEAD,{a0:2.25,a1:-.87,r0:1.05,r1:.72,h0:.16,h1:.03,fov0:40,fov1:29})[0],b:()=>HOOK_SHOTS[5].a,ease:'ramp'},
+ {t0:tDebt+.5,t1:tMeet+.62,a:()=>CK.closeUp(MIKE,{ry:-.88,dist:.72,fov:29}),b:()=>CK.closeUp(MIKE,{ry:-.88,dist:.66,fov:27}),ease:'smooth'},
+];
+const CAMH=CK.track(HOOK_SHOTS,{whip:.26}),CAM_END=tMeet+.62;let CAMF=null;
+HOOK_SHOTS.forEach(s=>{if(typeof s.a==='function')s.a=s.a();});HOOK_SHOTS[4].b=HOOK_SHOTS[5].a;   // solve framings now (orbit lands exactly on the close-up)
+HOOK_SHOTS.forEach(s=>{if(typeof s.b==='function')s.b=s.b();if(s.drift!==undefined){s.a.drift=s.drift;s.b.drift=s.drift;}});
+{const E=CAMH.end(CAM_END);for(const k of KEYS)if(k[0]<CAM_END+.06){k[1]=E.pos;k[2]=E.look;k[3]=E.fov;}}   // story keys start from the last hook framing
+
+function hookIcons(t){CK.iconAnim(COIN,t,tBil-.02,tWith,{pos:COIN_AT,cam,spin:1});CK.iconAnim(WARN,t,tTril+.02,tDebt-.06,{pos:WARN_AT,cam,spin:.5});}
+// stills check: frame-safety of every key target per shot (console 'CK' lines) + story framing gaps > 2 s
+window.CK_REPORT=()=>({shots:HOOK_SHOTS.map((s,i)=>({i,t0:s.t0,a:CK.check(s.a,[[CRATE,PALLET,FLAG,TPH],[MAC],[CRATE,TXT38,COINB],[CLOCK,TXT40,WARNB],[MIKE_HEAD],[MIKE_HEAD]][i]),b:CK.check(s.b,[[CRATE,PALLET,FLAG,TPH],[MAC],[CRATE,TXT38,COINB],[CLOCK,TXT40,WARNB],[MIKE_HEAD],[MIKE_HEAD]][i])})),
+ cuts:CAMH.cuts,storyGaps:CK.audit(KEYS.map(k=>k[0]).filter(t=>t>=CAM_END))});
+
+// ================= EP14 HOOK: "What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to your wallet?" =================
+// User design 2026-11-05: an easy-to-read MAP -> Trump presses a button -> a missile flies to Iran -> Mike, scared for his bank account and money.
+// Zack look (EP13 rules): plain dark-navy world, crisp flat colours (USA blue, Iran red, white labels), steady camera (no shake, no DoF, no motion blur).
+// Map = a giant 3D world map on the floor (Natural Earth 110m GeoJSON, assets/world-110m.json). Facing EAST = -z, so north is on the left (-x).
+// No casualties / no mushroom cloud on screen: a flash, a shock ring and a yellow radiation sign only. FICTIONAL WHAT-IF.
+const W14=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z]/g,'')===w);return (k[Math.min(n,k.length-1)]||{s:0}).s;};
+const tTrump=W14('trump'),tPress=W14('pressed'),tButton=W14('button'),tDrop=W14('dropped'),tNuc=W14('nuclear'),tBomb=W14('bomb'),tIran=W14('iran'),
+ tWhat2=W14('what',1),tHap=W14('happens'),tYour=W14('your'),tWallet=W14('wallet');
+const tLaunch=tButton+.15,tHit=Math.max(tIran+.05,tLaunch+1.0),HOOK_END=tWallet+.6;
+POPS.forEach(m=>{m.visible=false;scene.remove(m);});POPS.length=0;COIN.visible=WARN.visible=false;
+scene.background=new THREE.Color(0x07112a);scene.fog=new THREE.Fog(0x07112a,40,120);
+// ---------------- the map ----------------
+const MO=V3(400,0,400),S14=.1,LONC=-20,LATC=35,US_Y=.105;
+const mxz=(lon,lat,y=US_Y)=>V3(MO.x-(lat-LATC)*S14,y,MO.z-(lon-LONC)*S14);
+const MAPG=new THREE.Group();MAPG.position.copy(MO);scene.add(MAPG);
+{const o=add(new THREE.PlaneGeometry(90,90),new THREE.MeshStandardMaterial({color:0x081430,roughness:.95,envMapIntensity:.3}),0,.012,0,MAPG,false);o.rotation.x=-Math.PI/2;}
+const GEO=await (await fetch('assets/world-110m.json')).json();
+const LANDM=new THREE.MeshStandardMaterial({color:0x5a6478,roughness:.85,envMapIntensity:.5}),
+ USM=new THREE.MeshStandardMaterial({color:0x2a6cf0,roughness:.5,emissive:0x0b2a7a,emissiveIntensity:.6}),
+ IRM=new THREE.MeshStandardMaterial({color:0xe0242c,roughness:.5,emissive:0x5a0000,emissiveIntensity:.6}),
+ EDGEW=new THREE.LineBasicMaterial({color:0xffffff}),EDGED=new THREE.LineBasicMaterial({color:0x2b3448});
+for(const f of GEO.features){const nm=f.properties.name;if(nm==='Antarctica')continue;
+ const polys=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates,toV=([lo,la])=>new THREE.Vector2(-(la-LATC)*S14,(lo-LONC)*S14);
+ const shapes=polys.map(p=>{const s=new THREE.Shape(p[0].map(toV));for(const h of p.slice(1))s.holes.push(new THREE.Path(h.map(toV)));return s;});
+ const hi=nm==='United States of America'?'us':nm==='Iran'?'ir':null;
+ const g=new THREE.ExtrudeGeometry(shapes,{depth:hi?.09:.05,bevelEnabled:false});
+ const m=new THREE.Mesh(g,hi==='us'?USM:hi==='ir'?IRM:LANDM);m.rotation.x=-Math.PI/2;m.position.y=.015;m.receiveShadow=true;m.castShadow=false;MAPG.add(m);
+ const e=new THREE.LineSegments(new THREE.EdgesGeometry(g,40),hi?EDGEW:EDGED);e.rotation.x=-Math.PI/2;e.position.y=.016;MAPG.add(e);}
+const IRAN=mxz(53.5,32.5,.105),DC=mxz(-77,38.9);
+const LBL_USA=txt3('USA',.36,WHT,scene);LBL_USA.rotation.x=-Math.PI/2;LBL_USA.position.copy(mxz(-96,33.2,US_Y+.01));LBL_USA.userData.pos=LBL_USA.position;const _x=0,LBL_IR=popT('IRAN',.42,WHT,mxz(53.5,33,.75),-1,1e9);
+// ---------------- the button pedestal (yellow/black, radiation sign, big red button) ----------------
+const TRP=mxz(-77.5,39.2),PED=TRP.clone().add(V3(-.14,0,.46));
+const STRIPE=tex(256,512,x=>{x.fillStyle='#ffc61a';x.fillRect(0,0,256,512);x.fillStyle='#111';for(let i=-4;i<12;i++){x.beginPath();x.moveTo(0,i*64);x.lineTo(256,i*64+128);x.lineTo(256,i*64+160);x.lineTo(0,i*64+32);x.fill();}
+ x.fillStyle='#111';x.fillRect(28,150,200,200);x.fillStyle='#ffc61a';x.beginPath();x.arc(128,250,86,0,7);x.fill();x.fillStyle='#111';
+ for(let k=0;k<3;k++){const a=-Math.PI/2+k*2*Math.PI/3;x.beginPath();x.moveTo(128,250);x.arc(128,250,78,a-.52,a+.52);x.fill();}x.fillStyle='#ffc61a';x.beginPath();x.arc(128,250,17,0,7);x.fill();x.fillStyle='#111';x.beginPath();x.arc(128,250,11,0,7);x.fill();});
+const PEDG=new THREE.Group();{const g=PEDG;g.position.copy(PED);scene.add(g);add(B(.36,.92,.3),new THREE.MeshStandardMaterial({map:STRIPE,roughness:.55}),0,.46,0,g);add(B(.44,.05,.38),M(0x1a1a1a,.4,.3),0,.945,0,g);}
+const BTN=add(new THREE.SphereGeometry(.075,32,16,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0xe01010,roughness:.25,emissive:0xff0000,emissiveIntensity:.2}),PED.x,PED.y+.97,PED.z);
+const BTN_TOP=V3(PED.x,PED.y+1.03,PED.z);
+// ---------------- missile + white trail ----------------
+const LP=mxz(-75.5,38.3,US_Y),AP1=LP.clone().lerp(IRAN,.5).add(V3(0,4.2,0));
+const ARC=new THREE.QuadraticBezierCurve3(LP,AP1,IRAN.clone().add(V3(0,.15,0)));
+const MSL=missileModel(0xf4f4f4);MSL.scale.setScalar(1.7);scene.add(MSL);MSL.visible=false;
+const TRSEG=160,TRAIL=new THREE.Mesh(new THREE.TubeGeometry(ARC,TRSEG,.03,8,false),new THREE.MeshBasicMaterial({color:0xf2f4f8}));scene.add(TRAIL);
+const uM=t=>{const k=Math.min(1,Math.max(0,(t-tLaunch)/(tHit-tLaunch)));return Math.pow(k,1.35);};
+function missile14(t){const u=uM(t),on=t>=tLaunch&&t<tHit;MSL.visible=on;TRAIL.visible=t>=tLaunch;TRAIL.geometry.setDrawRange(0,Math.floor(u*TRSEG)*8*6);
+ if(!on)return;ARC.getPoint(u,MSL.position);const tg=ARC.getTangent(Math.min(u,.999));MSL.quaternion.setFromUnitVectors(V3(0,1,0),tg);}
+// ---------------- impact: flash + shock ring + Iran glows + radiation sign ----------------
+const FLASH=add(new THREE.SphereGeometry(1,32,16),new THREE.MeshBasicMaterial({color:new THREE.Color(1.6,1.0,.35),toneMapped:false,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}),IRAN.x,IRAN.y,IRAN.z,scene,false);
+const RING=add(new THREE.RingGeometry(.92,1,96),new THREE.MeshBasicMaterial({color:0xff8a1f,toneMapped:false,transparent:true,side:THREE.DoubleSide}),IRAN.x,IRAN.y+.04,IRAN.z,scene,false);RING.rotation.x=-Math.PI/2;
+const RADT=tex(256,256,x=>{x.fillStyle='#ffc61a';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.strokeStyle='#111';x.lineWidth=10;x.beginPath();x.arc(128,128,116,0,7);x.stroke();x.fillStyle='#111';
+ for(let k=0;k<3;k++){const a=-Math.PI/2+k*2*Math.PI/3;x.beginPath();x.moveTo(128,128);x.arc(128,128,96,a-.52,a+.52);x.fill();}x.fillStyle='#ffc61a';x.beginPath();x.arc(128,128,24,0,7);x.fill();x.fillStyle='#111';x.beginPath();x.arc(128,128,15,0,7);x.fill();});
+const RAD=new THREE.Mesh(new THREE.CircleGeometry(.42,64),new THREE.MeshBasicMaterial({map:RADT,toneMapped:false,side:THREE.DoubleSide}));scene.add(RAD);
+function impact14(t){const d=t-tHit;FLASH.visible=d>0&&d<.7;if(FLASH.visible){FLASH.scale.set(1,1.4,1).multiplyScalar(.1+.45*sm(0,.2,d));FLASH.material.opacity=1-sm(.1,.6,d);}
+ RING.visible=d>0&&d<1.6;if(RING.visible){RING.scale.setScalar(.2+2.6*sm(0,1.4,d));RING.material.opacity=1-sm(.6,1.6,d);}
+ IRM.emissiveIntensity=d>0?.6+2.2*(1-sm(0,1.2,d))+.4*Math.max(0,Math.sin(d*8)):.6;
+ const s=pop(t,tHit+.15,.3);RAD.visible=s>.01;RAD.scale.setScalar(s);RAD.position.copy(IRAN).add(V3(0,1.75,0));RAD.lookAt(cam.position);
+ LBL_IR.userData.pos.copy(IRAN).add(V3(0,t>tHit?.95:.75,0));}
+// ---------------- Trump presses the button ----------------
+let TRA14=null;
+function trump14(t){const P=TR;P.g.visible=t<tHit;PEDG.visible=BTN.visible=t<tHit;relax(P);idle(P,t,.6);P.g.position.copy(TRP);P.g.rotation.y=0;
+ if(!TRA14){P.g.updateMatrixWorld(true);TRA14={hov:solveReach(P,'R',BTN_TOP.clone().add(V3(0,.16,-.02)))};relax(P);TRA14.prs=solveReach(P,'R',BTN_TOP.clone().add(V3(0,.03,-.01)));relax(P);}
+ const up=sm(tTrump-.2,tTrump+.25,t),dn=sm(tButton-.18,tButton,t),rel=sm(tLaunch+.35,tLaunch+.7,t);
+ const a=lerpA(lerpA(REST,TRA14.hov,up),TRA14.prs,dn*(1-rel));setA(P,'R',rel>0?lerpA(TRA14.prs,TRA14.hov,rel):a);curl(P,'R',.7,.4);
+ if(rel>0)pose(P,'head',-.25*rel,0,0);   // he looks up at the missile
+ BTN.position.y=PED.y+.97-.025*dn*(1-rel);BTN.material.emissiveIntensity=.2+2.8*dn;
+ face(P,{jaw:t<tLaunch?.03+.03*Math.abs(Math.sin(t*9)):0,smile:.25});
+ FK.update(P,t,{expr:[['doubt',.5*(1-dn)],['joy',.4*dn]],look:t<tButton-.25?cam.position:rel>.3?MSL.position:BTN.position});}
+// ---------------- Mike: watches from the middle of the US, then turns to us with his bank app + money flying away ----------------
+const MKP14=mxz(-110,36.5);let MKA=null;
+const PHC=document.createElement('canvas');PHC.width=256;PHC.height=512;const PHT=new THREE.CanvasTexture(PHC);PHT.colorSpace=THREE.SRGBColorSpace;
+const PHONE=new THREE.Group();scene.add(PHONE);add(RB(.08,.16,.01,.012),M(0x111111,.3,.4),0,0,0,PHONE);
+{const s=new THREE.Mesh(new THREE.PlaneGeometry(.072,.148),new THREE.MeshBasicMaterial({map:PHT,toneMapped:false}));s.position.z=.0055;PHONE.add(s);}
+let PHV=-1;
+function phoneDraw(v,drop){const key=Math.round(v)+'|'+drop;if(key===PHV)return;PHV=key;const x=PHC.getContext('2d');x.fillStyle='#0d1424';x.fillRect(0,0,256,512);
+ x.fillStyle='#1b5cff';x.fillRect(0,0,256,80);x.fillStyle='#fff';x.font='800 34px Mont';x.textAlign='center';x.fillText('MY BANK',128,54);
+ x.fillStyle='#9aa7c4';x.font='700 24px Mont';x.fillText('Checking',128,140);
+ const col=drop>0?'#ff2a2a':'#ffffff';x.fillStyle=col;x.font='800 50px Mont';x.fillText('$'+Math.round(v).toLocaleString('en-US'),128,205);
+ if(drop>0){x.font='800 30px Mont';x.fillText('▼ -$'+Math.round(drop).toLocaleString('en-US'),128,252);}
+ x.strokeStyle=drop>0?'#ff2a2a':'#22e06a';x.lineWidth=7;x.beginPath();const n=12;for(let i=0;i<=n;i++){const u=i/n,y=330+(drop>0?Math.pow(u,1.5)*120:-Math.sin(u*3)*10)+Math.sin(i*2.3)*8;i?x.lineTo(20+u*216,y):x.moveTo(20+u*216,y);}x.stroke();
+ PHT.needsUpdate=true;}
+const BILLS14=[];for(let i=0;i<9;i++){const b=MNY.note(100,{curve:.01});b.scale.setScalar(.9);scene.add(b);b.visible=false;BILLS14.push(b);}
+const DOWN14=CK.icon('down',{color:'#ff2a2a',size:.17});scene.add(DOWN14);
+function mike14(t){const P=MIKE;P.g.visible=true;relax(P);idle(P,t,1.3);
+ const turn=sm(tWhat2-.15,tWhat2+.3,t);P.g.position.copy(MKP14);P.g.rotation.y=Math.PI*(1-turn)+(turn<1?0:0);
+ if(!MKA){const r=P.g.rotation.y;P.g.rotation.y=0;P.g.updateMatrixWorld(true);MKA={ph:solveReach(P,'L',MKP14.clone().add(V3(.1,1.12,.3)))};relax(P);P.g.rotation.y=r;}
+ // flinch on the button, hands up on the hit, then the phone comes up in front of his chest
+ const fl=sm(tButton-.05,tButton+.2,t)*(1-sm(tButton+.5,tButton+.9,t)),hit=sm(tHit,tHit+.2,t)*(1-turn);
+ pose(P,'spine03',-.12*fl,0,0);pose(P,'head',-.15*fl+.1*hit,0,0);
+ if(hit>0){arm(P,'R',AD[0]+.4*hit,AD[2]-1.1*hit,1.5*hit);arm(P,'L',AD[0]+.4*hit,AD[2]-1.1*hit,1.5*hit);}
+ const ph=sm(tWhat2,tWhat2+.35,t);if(ph>0){setA(P,'L',lerpA(REST,MKA.ph,ph));curl(P,'L',.6,.5);}
+ const fear=sm(tHap,tHap+.3,t);if(fear>0){arm(P,'R',AD[0]+.5*fear,AD[2]-.6*fear,1.9*fear);pose(P,'head',.18*fear,.12*Math.sin(t*5)*fear,0);}   // right hand to his head, head shakes slowly
+ P.g.updateMatrixWorld(true);
+ PHONE.visible=ph>.05;if(PHONE.visible){const w=P.BN.wristL.getWorldPosition(V3()),q=P.g.getWorldQuaternion(new THREE.Quaternion());
+  PHONE.position.copy(w).add(V3(-.03,.12,.06).applyQuaternion(q));PHONE.quaternion.copy(q);PHONE.rotateX(-.2);PHONE.scale.setScalar(1.7);
+  const loss=12480*.42*sm(tYour-.1,tWallet+.45,t);phoneDraw(12480-loss,loss);}
+ // $100 bills fly out of the phone and away (= his money leaving), crisp, real notes
+ BILLS14.forEach((b,i)=>{const d=t-(tHap+.1+i*.09);b.visible=d>0&&PHONE.visible;if(!b.visible)return;const a=i*2.4;
+  b.position.copy(PHONE.position).add(V3(Math.sin(a)*d*.55,.15+d*.75-d*d*.25,.15+d*.5));b.rotation.set(d*3+i,d*2+a,d*1.5);MNY.flutter&&MNY.flutter(b,t,i);});
+ const da=pop(t,tYour,.3);DOWN14.visible=da>.01&&PHONE.visible;if(DOWN14.visible){CK.iconAnim(DOWN14,t,tYour,1e9,{pos:PHONE.position.clone().add(V3(.15,.1,.06).applyQuaternion(P.g.quaternion)),cam,spin:.3});}
+ FK.update(P,t,{expr:[['doubt',.5*sm(tTrump,tTrump+.3,t)*(1-fl)],['shock',Math.max(.85*fl,.9*hit,.95*sm(tWhat2,tWhat2+.3,t))]],look:turn>.6?(t<tYour?cam.position:PHONE.position):t<tLaunch?BTN.position:MSL.visible?MSL.position:IRAN});}
+let story14=()=>{};
+function animate(t){updPops(t);MK.g.visible=false;DEBT.visible=DFR.visible=false;trump14(t);mike14(t);missile14(t);impact14(t);story14(t);}
+// ---------------- camera (steady, no shake): over Mike's shoulder on the map -> chase the missile -> Iran -> whip to Mike + phone ----------------
+const LF=(A,B,k)=>({pos:A.pos.map((v,i)=>v+(B.pos[i]-v)*k),look:A.look.map((v,i)=>v+(B.look[i]-v)*k),fov:A.fov+(B.fov-A.fov)*k});
+mike14(0);trump14(0);
+const TRB=CK.box([TRP.x-.35,US_Y,TRP.z-.25],[TRP.x+.35,US_Y+1.95,TRP.z+.6]);
+const S1A=CK.overShoulder(MIKE,[TRP.x,US_Y+1.2,TRP.z],{side:1,back:1.25,out:.55,up:.3,fov:40,top:.1,fit:[TRB,CK.box([LBL_USA.position.x-.2,US_Y,LBL_USA.position.z-.6],[LBL_USA.position.x+.2,US_Y+.1,LBL_USA.position.z+.6])]});
+const S1B=CK.fit([TRB,CK.box([PED.x-.25,US_Y,PED.z-.2],[PED.x+.25,US_Y+1.05,PED.z+.2])],{dir:[.35,.35,1],fov:36,top:.1});
+const IRF={pos:IRAN.clone().add(V3(1.2,2.8,3.8)).toArray(),look:IRAN.clone().add(V3(0,.35,0)).toArray(),fov:40},IRF2={pos:IRAN.clone().add(V3(1.0,2.2,3.6)).toArray(),look:IRAN.clone().add(V3(0,.85,0)).toArray(),fov:40};
+function chase(t){const u=uM(t),p=ARC.getPoint(u),tg=ARC.getTangent(Math.min(u,.98));const fl=tg.clone().setY(0).normalize();
+ const pos=p.clone().addScaledVector(fl,-2.8).add(V3(1.4,1.6,0)),look=p.clone().addScaledVector(fl,.35).add(V3(0,-.15,0));return {pos:pos.toArray(),look:look.toArray(),fov:42};}
+mike14(tYour+.2);const MKB=CK.box([MKP14.x-.3,US_Y+.9,MKP14.z-.1],[MKP14.x+.3,US_Y+1.85,MKP14.z+.45]);
+const MF1=CK.fit([MKB,CK.box([MKP14.x-.1,US_Y+1.0,MKP14.z+.3],[MKP14.x+.45,US_Y+2.15,MKP14.z+.6])],{dir:[.4,.1,1],fov:36,top:.06}),MF2=CK.fit([CK.box([MKP14.x-.3,US_Y+.95,MKP14.z],[MKP14.x+.42,US_Y+1.95,MKP14.z+.5])],{dir:[.35,.08,1],fov:34,top:.06});
+mike14(0);
+window.CAM14=t=>{
+ if(t<tLaunch)return LF(S1A,S1B,sm(0,tLaunch,t));
+ if(t<tHit){const c=chase(t),k=sm(tLaunch,tLaunch+.35,t),e=sm(tLaunch+(tHit-tLaunch)*.6,tHit,t);return LF(LF(S1B,c,k),IRF,e);}
+ if(t<tWhat2-.05)return LF(IRF,IRF2,sm(tHit,tWhat2,t));
+ const w=sm(tWhat2-.05,tWhat2+.22,t);if(w<1)return LF(IRF2,MF1,w*w*(3-2*w));   // fast whip back to the US
+ return LF(MF1,MF2,sm(tWhat2+.22,HOOK_END,t));};
+window.CAM14_END=HOOK_END;
+window.HOOK14={tLaunch,tHit,tWhat2,HOOK_END};
+
+await loaded;
+{relax(TR);TR.g.updateMatrixWorld(true);RP.present=solveReach(TR,'R',V3(GX+.55,SY+1.3,18.7));relax(TR);RP.point=solveReach(TR,'L',V3(GX-.85,SY+1.4,18.85));relax(TR);
+ RP.open={R:solveReach(TR,'R',V3(GX+.6,SY+1.0,18.68))};relax(TR);RP.open.L=solveReach(TR,'L',V3(GX-.6,SY+1.0,18.68));relax(TR);}
+solveMike();
+await Promise.all(Object.values(MODELS));
+
+const cap=document.getElementById('cap');
+window.renderAt=t=>{try{return renderAt0(t);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}};
+const renderAt0=t=>{zfxPrev(t);setCam(t);zfxNow(t);if(Q.get('dbg'))console.error('CAM',t,cam.position.toArray().map(v=>v.toFixed(2)).join(','),JSON.stringify(hv(t,k=>k[2]).map(v=>+v.toFixed(2))));animate(t);if(window.FB)for(const [w,n,x,y,z] of window.FB)pose(w==='T'?TR:MIKE,n,x,y,z);if(window.FX)for(const f of window.FX)FK.update(f.who==='T'?TR:MIKE,t,f);
+ let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
+ comp.render();return true;};
+Object.assign(window,{Q,MIKE,TR,THREE,cam,FK,CK});window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>

@@ -1,3 +1,10 @@
+# EP14 script v3 (CURRENT, user 2026-11-05): wallet angle + user's hook. FICTIONAL WHAT-IF. Voice = user's ElevenLabs Zack; numbers in words.
+HOOK (user's words): "What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to your wallet?"
+Hook visuals (user): easy map -> Trump presses a button -> missile flies to Iran -> Mike scared for his bank account + money. Built: render-kit/ep14_hook.js, stills hook-stills-v1.jpg (placeholder word times until the mp3).
+1. What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to your wallet?
+2-14 = the wallet body of v1 (oil $70 -> ~$125, Hormuz 1/5, June 2025 +7%, stocks down / gold, gas $2.82 -> $4.27, ~$22 per tank, shipping prices, peace talks, CTA GAS or STOCKS) - to be rewritten to fit 61-65 s after the hook is approved.
+
+---- older drafts below ----
 # EP14 script v2 (human-impact angle, user's own hook). FICTIONAL WHAT-IF, ~190 words, one line = one shot. Voice = user's ElevenLabs Zack; numbers in words.
 HOOK (user's wording, grammar fixed): "What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to people?"
 1. What if Trump pressed the button and dropped a nuclear bomb on Iran? What happens to people?
