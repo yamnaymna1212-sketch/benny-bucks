@@ -270,5 +270,37 @@
       "smooth": 8,
       "neck_drop": 0.07
     }
+  },
+  "elsayed": {
+    "role": "Abdul El-Sayed (hypothetical president, EP13, user ref image 2026-11-05): navy suit, white shirt, blue tie, dark swept-back hair, short salt-and-pepper beard (painted in skin), US flag pin added in three.js, slim, early 40s",
+    "body": {
+      "gender": 1.0,
+      "age": 0.55,
+      "muscle": 0.5,
+      "weight": 0.5,
+      "height": 0.6,
+      "race": {
+        "caucasian": 0.85,
+        "african": 0.05,
+        "asian": 0.1
+      }
+    },
+    "skin": "jartur69_middleage_slavic_male_with_genitals_and_beard",
+    "hair": "short04",
+    "eyebrows": "eyebrow001",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_male_suit_3",
+      "shoes03"
+    ],
+    "targets": [
+      {
+        "target": "chin-width-incr",
+        "value": 0.2
+      }
+    ]
   }
 }

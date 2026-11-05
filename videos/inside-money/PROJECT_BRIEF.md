@@ -48,6 +48,11 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Story after the hook (user 2026-11-01, 'never say it again'): the moment the hero is introduced, CHANGE place + action + event (never stay in the hook's room). The hero lives the story through many places; places/events change only by the usual continuous camera move (same filming style, no classic cuts), so the viewer feels one shot while scenes, events and locations change.
 - CTA: ask a choice between two ACTIONS in plain words ('take the legal path and give it to the bank, or enjoy it and live your dreams?') and 'Comment A or B' with two floating one-word signs (BANK/DREAMS), not character names.
 - Time honesty: say how long a build really takes; a new set of scenes (not a copy of a template) is a big job: offer to do it in stages.
+**EP13 feedback (user 2026-11-05, apply from the NEXT video; refs = Zack screenshots: white "6:10 AM" + white icons on a dark blue wall)**
+- Camera steady: NO shake/jitter (drop the handheld `shake()` from ep10_anim.js, CK.boom tiny/off); NO haze/mist (no soft bloom wash, no DoF blur) -> crisp image.
+- Never stay in one place/framing long: a change every ~2 s (camera move, subject moves or an icon pops). Characters move and react visibly, never stiff.
+- The element the voice talks about is ALWAYS centred; if the line is long -> move camera / move the element / show icons.
+- Icons and 3D words: solid, high contrast (white or flat saturated colour on a darker plain background), never faded.
 **Process**
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
