@@ -24,13 +24,13 @@ function irFlag(){return tex(1050,600,x=>{const W=1050,H=600,b=H/3;x.fillStyle='
  x.lineWidth=10;x.beginPath();x.arc(cx,cy-4,46,Math.PI*.6,Math.PI*1.36);x.stroke();x.beginPath();x.arc(cx,cy-4,46,-Math.PI*.36,Math.PI*.4);x.stroke();
  x.beginPath();x.moveTo(cx-7,cy-58);x.lineTo(cx+7,cy-58);x.lineTo(cx+5,cy+70);x.lineTo(cx,cy+84);x.lineTo(cx-5,cy+70);x.fill();x.beginPath();x.arc(cx,cy-72,9,0,7);x.fill();});}
 // ---------------- the map (beige land, blue sea, thin borders; US + Iran filled with their flags + white outline) ----------------
-const MO=V3(400,0,400),S14=.1,LONC=-20,LATC=35,US_Y=.105;
+const MO=V3(400,0,400),S14=.1,LONC=-20,LATC=35,US_Y=.185;
 const mxz=(lon,lat,y=US_Y)=>V3(MO.x-(lat-LATC)*S14,y,MO.z-(lon-LONC)*S14);
 const MAPG=new THREE.Group();MAPG.position.copy(MO);scene.add(MAPG);
 {const o=add(new THREE.PlaneGeometry(90,90),new THREE.MeshBasicMaterial({color:SEA,toneMapped:false}),0,.012,0,MAPG,false);o.rotation.x=-Math.PI/2;}
 const GEO=await (await fetch('assets/world-110m.json')).json();
-const LANDM=new THREE.MeshStandardMaterial({color:0xd6ad72,roughness:1,envMapIntensity:.15}),SIDEM=new THREE.MeshStandardMaterial({color:0xc9a676,roughness:.9}),
- EDGEW=new THREE.LineBasicMaterial({color:0xffffff}),EDGED=new THREE.LineBasicMaterial({color:0x8c7150});
+const LANDM=new THREE.MeshBasicMaterial({color:0xf0d29c,toneMapped:false}),SIDEM=new THREE.MeshBasicMaterial({color:0xb08a58,toneMapped:false}),HIS=new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}),
+ EDGEW=new THREE.LineBasicMaterial({color:0xffffff}),EDGED=new THREE.LineBasicMaterial({color:0x9a7a4e});
 const flagMat=t=>{t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;return new THREE.MeshBasicMaterial({map:t,toneMapped:false});};
 const USFM=flagMat(usFlag()),IRFM=flagMat(irFlag());
 const toV=([lo,la])=>new THREE.Vector2(-(la-LATC)*S14,(lo-LONC)*S14);
@@ -39,18 +39,18 @@ for(const f of GEO.features){const nm=f.properties.name;if(nm==='Antarctica')con
  const polys=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;
  const shapes=polys.map(p=>{const s=new THREE.Shape(p[0].map(toV));for(const h of p.slice(1))s.holes.push(new THREE.Path(h.map(toV)));return s;});
  const hi=nm==='United States of America'?'us':nm==='Iran'?'ir':null;
- const g=new THREE.ExtrudeGeometry(shapes,{depth:hi?.09:.05,bevelEnabled:false});
- if(hi){// flag UVs from the main polygon's box, oriented for a camera looking EAST: u = north->south (screen left->right), v = west->east (screen up)
+ const g=new THREE.ExtrudeGeometry(shapes,{depth:hi?.17:.05,bevelEnabled:false});
+ if(hi){// flag UVs from the main polygon's box, NORTH-UP (camera sits south of the map): u = west->east, v = south->north
   const main=polys.reduce((a,p)=>p[0].length>a[0].length?p:a),pv=main[0].map(toV),sx0=Math.min(...pv.map(v=>v.x)),sx1=Math.max(...pv.map(v=>v.x)),sy0=Math.min(...pv.map(v=>v.y)),sy1=Math.max(...pv.map(v=>v.y));
-  const pa=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<pa.count;i++)uv.setXY(i,(pa.getX(i)-sx0)/(sx1-sx0),(pa.getY(i)-sy0)/(sy1-sy0));uv.needsUpdate=true;}
- const m=new THREE.Mesh(g,hi==='us'?[USFM,SIDEM]:hi==='ir'?[IRFM,SIDEM]:[LANDM,SIDEM]);m.rotation.x=-Math.PI/2;m.position.y=.015;m.receiveShadow=true;m.castShadow=false;MAPG.add(m);
+  const pa=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<pa.count;i++)uv.setXY(i,(pa.getY(i)-sy0)/(sy1-sy0),(sx1-pa.getX(i))/(sx1-sx0));uv.needsUpdate=true;}
+ const m=new THREE.Mesh(g,hi==='us'?[USFM,HIS]:hi==='ir'?[IRFM,HIS]:[LANDM,SIDEM]);m.rotation.x=-Math.PI/2;m.position.y=.015;m.receiveShadow=true;m.castShadow=false;MAPG.add(m);
  const e=new THREE.LineSegments(new THREE.EdgesGeometry(g,40),hi?EDGEW:EDGED);e.rotation.x=-Math.PI/2;e.position.y=hi?.017:.016;MAPG.add(e);if(hi)C14[hi]=m;}
-const IRAN=mxz(53.5,32.5,.105);
+const IRAN=mxz(53.5,32.5,.185);
 // white bold country names lying on the map (like the references), dark side for contrast
-const flatTxt=(s,size,p)=>{const m=txt3(s,size,WHT,scene);m.rotation.x=-Math.PI/2;m.position.copy(p);return m;};
-const LBL_USA=flatTxt('USA',.42,mxz(-99,30.2,US_Y+.012)),LBL_IR=flatTxt('IRAN',.36,mxz(45.5,30.5,.03));
+const flatTxt=(s,size,p,col=WHT)=>{const g=new THREE.Group();scene.add(g);g.position.copy(p);g.rotation.y=Math.PI/2;const m=txt3(s,size,col,g);m.rotation.x=-Math.PI/2;return g;};
+const LBL_USA=flatTxt('USA',.55,mxz(-100,31,US_Y+.01)),LBL_IR=flatTxt('IRAN',.42,mxz(51,23.5,.07),0x0b1a3d);
 // ---------------- Trump + the button pedestal ----------------
-const TRP=mxz(-77.5,39.2),PED=TRP.clone().add(V3(-.14,0,.46));
+const TRP=mxz(-79,38.5),PED=TRP.clone().add(V3(.46,0,.14));
 const STRIPE=tex(256,512,x=>{x.fillStyle='#ffc61a';x.fillRect(0,0,256,512);x.fillStyle='#111';for(let i=-4;i<12;i++){x.beginPath();x.moveTo(0,i*64);x.lineTo(256,i*64+128);x.lineTo(256,i*64+160);x.lineTo(0,i*64+32);x.fill();}
  x.fillStyle='#111';x.fillRect(28,150,200,200);x.fillStyle='#ffc61a';x.beginPath();x.arc(128,250,86,0,7);x.fill();x.fillStyle='#111';
  for(let k=0;k<3;k++){const a=-Math.PI/2+k*2*Math.PI/3;x.beginPath();x.moveTo(128,250);x.arc(128,250,78,a-.52,a+.52);x.fill();}x.fillStyle='#ffc61a';x.beginPath();x.arc(128,250,17,0,7);x.fill();x.fillStyle='#111';x.beginPath();x.arc(128,250,11,0,7);x.fill();});
@@ -66,7 +66,7 @@ function missile2(){const g=new THREE.Group(),wh=M(0xf4f4f4,.35,.2),rd=M(0xd21e2
   f.geometry.translate(.07,-.27,-.006);f.rotation.y=i*Math.PI/2;g.add(f);}
  const fl=add(new THREE.ConeGeometry(.07,.42,16),new THREE.MeshBasicMaterial({color:new THREE.Color(3,1.6,.35),toneMapped:false}),0,-.77,0,g,false);fl.rotation.x=Math.PI;g.userData.flame=fl;
  const core=add(new THREE.ConeGeometry(.04,.22,12),new THREE.MeshBasicMaterial({color:new THREE.Color(3,3,2.4),toneMapped:false}),0,-.65,0,g,false);core.rotation.x=Math.PI;return g;}
-const LP=mxz(-76.2,37.6,US_Y),AP1=LP.clone().lerp(IRAN,.5).add(V3(0,4.2,0));
+const LP=mxz(-81,36.4,US_Y),AP1=LP.clone().lerp(IRAN,.5).add(V3(0,4.2,0));
 const ARC=new THREE.QuadraticBezierCurve3(LP,AP1,IRAN.clone().add(V3(0,.15,0)));
 const MSL=missile2();MSL.scale.setScalar(1.25);scene.add(MSL);MSL.visible=false;
 const NP=140,PUFF=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,2),new THREE.MeshStandardMaterial({color:0xf1f1f1,roughness:.95}),NP);PUFF.castShadow=false;scene.add(PUFF);
@@ -81,29 +81,35 @@ function missile14(t){const u=uM(t),on=t>=tLaunch&&t<tHit;MSL.visible=on;
  PUFF.count=n;PUFF.instanceMatrix.needsUpdate=true;}
 // ---------------- nuclear blast: flash -> fireball -> stem + cap (stylized mushroom cloud) + dust ring ----------------
 const BLAST=new THREE.Group();BLAST.position.copy(IRAN);scene.add(BLAST);
-const FIREM=new THREE.MeshStandardMaterial({color:0xffb347,roughness:.9,emissive:0xff7a1a,emissiveIntensity:2.5}),
- CLOUDM=new THREE.MeshStandardMaterial({color:0x9c8670,roughness:1,envMapIntensity:.2,emissive:0xff5a0a,emissiveIntensity:1.2});
-const FLASH=add(new THREE.SphereGeometry(1,32,16),new THREE.MeshBasicMaterial({color:new THREE.Color(2.6,2.4,1.8),toneMapped:false,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}),0,.1,0,BLAST,false);
-const STEM=add(CY(.13,.24,1,24,1,true),CLOUDM,0,.5,0,BLAST,false);
+const BM=(c,o={})=>new THREE.MeshBasicMaterial(Object.assign({color:c,toneMapped:false},o));
+const SMOKEM=new THREE.MeshStandardMaterial({color:0x4a4442,roughness:1,envMapIntensity:.15,emissive:0xff3c00,emissiveIntensity:0}),
+ HOTM=BM(new THREE.Color(2.4,1.25,.25)),COREM=BM(new THREE.Color(3,2.6,1.4)),ORM=BM(0xff5a12);
+const FLASH=add(new THREE.SphereGeometry(1,32,16),BM(new THREE.Color(3,3,2.6),{transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}),0,.2,0,BLAST,false);
+const SHOCK14=add(new THREE.RingGeometry(.9,1,96),BM(new THREE.Color(2.2,1.6,1),{transparent:true,side:THREE.DoubleSide,depthWrite:false}),0,.05,0,BLAST,false);SHOCK14.rotation.x=-Math.PI/2;
+const BASEF=add(new THREE.SphereGeometry(.5,32,16),HOTM,0,0,0,BLAST,false);BASEF.scale.set(1,.45,1);
+const STEM=add(CY(.17,.3,1,28),SMOKEM,0,.5,0,BLAST,false);const STEMH=add(CY(.12,.2,1,24),ORM,0,.5,0,BLAST,false);
 const CAP=new THREE.Group();BLAST.add(CAP);
-add(new THREE.SphereGeometry(.5,32,16),CLOUDM,0,0,0,CAP,false).scale.set(1,.62,1);
-add(new THREE.TorusGeometry(.42,.2,16,40),CLOUDM,0,-.12,0,CAP,false).rotation.x=Math.PI/2;
-for(let i=0;i<10;i++){const a=i/10*Math.PI*2;add(new THREE.SphereGeometry(.17,16,12),CLOUDM,Math.cos(a)*.5,.02+.06*Math.sin(i*2.1),Math.sin(a)*.5,CAP,false);}
-const FIRE=add(new THREE.SphereGeometry(.32,32,16),FIREM,0,0,0,CAP,false);
-const DUST14=add(new THREE.TorusGeometry(1,.05,10,64),new THREE.MeshStandardMaterial({color:0xd9c2a0,roughness:.95,emissive:0x7a3a10,emissiveIntensity:.6}),0,.06,0,BLAST,false);DUST14.rotation.x=Math.PI/2;
+const CAPS=[];const capS=(r,x,y,z,m=SMOKEM)=>{const o=add(new THREE.IcosahedronGeometry(r,3),m,x,y,z,CAP,false);CAPS.push(o);return o;};
+capS(.5,0,.05,0).scale.set(1.15,.7,1.15);
+for(let i=0;i<12;i++){const a=i/12*Math.PI*2;capS(.2+.04*Math.sin(i*3.3),Math.cos(a)*.55,-.05+.05*Math.sin(i*2.1),Math.sin(a)*.55);}
+for(let i=0;i<6;i++){const a=i/6*Math.PI*2+.4;capS(.2,Math.cos(a)*.25,.3,Math.sin(a)*.25);}
+const RIM14=add(new THREE.TorusGeometry(.48,.16,16,48),HOTM,0,-.2,0,CAP,false);RIM14.rotation.x=Math.PI/2;   // glowing underside of the cap
+const CORE=add(new THREE.SphereGeometry(.3,24,16),COREM,0,0,0,CAP,false);
+const DUST14=add(new THREE.TorusGeometry(1,.12,12,64),new THREE.MeshStandardMaterial({color:0x8f7a68,roughness:1}),0,.08,0,BLAST,false);DUST14.rotation.x=Math.PI/2;
 function impact14(t){const d=t-tHit;BLAST.visible=d>0;if(d<=0)return;
- FLASH.visible=d<.55;FLASH.scale.setScalar(.12+.45*sm(0,.18,d));FLASH.material.opacity=1-sm(.12,.55,d);
- const grow=sm(.05,1.5,d),hgt=.25+1.75*grow;
- STEM.scale.set(.6+.5*grow,hgt,.6+.5*grow);STEM.position.y=hgt/2;
- CAP.position.y=hgt+.05;CAP.scale.setScalar(.35+.85*grow+.04*Math.sin(d*2));CAP.rotation.y=d*.25;
- FIRE.scale.setScalar(1-sm(.3,1.6,d)*.75);FIREM.emissiveIntensity=2.5*(1-sm(.6,2.2,d))+.3;
- CLOUDM.emissiveIntensity=1.6*(1-sm(.6,3,d))+.12;
- DUST14.scale.setScalar(.2+.9*sm(0,1.3,d));
- }
+ FLASH.visible=d<.45;FLASH.scale.setScalar(.15+.5*sm(0,.15,d));FLASH.material.opacity=1-sm(.1,.45,d);
+ SHOCK14.visible=d<1.2;SHOCK14.scale.setScalar(.3+3.2*sm(0,1.1,d));SHOCK14.material.opacity=1-sm(.4,1.2,d);
+ const grow=sm(.05,1.3,d),hgt=.3+2.3*grow,hot=1-sm(.5,2.6,d);
+ BASEF.scale.set(.7+.9*grow,.35+.3*grow,.7+.9*grow);BASEF.visible=hot>.05;
+ STEM.scale.set(.7+.6*grow,hgt,.7+.6*grow);STEM.position.y=hgt/2;STEMH.scale.set(.7+.5*grow,hgt*.85,.7+.5*grow);STEMH.position.y=hgt*.42;STEMH.visible=hot>.15;
+ CAP.position.y=hgt+.1;CAP.scale.setScalar(.4+1.25*grow+.03*Math.sin(d*2));CAP.rotation.y=d*.3;
+ CORE.scale.setScalar(.4+.9*hot);CORE.visible=hot>.05;RIM14.scale.setScalar(.8+.3*grow);
+ SMOKEM.emissiveIntensity=.55*hot;
+ DUST14.visible=false;}
 // ---------------- Trump presses the button ----------------
 let TRA14=null;
-function trump14(t){const P=TR;P.g.visible=true;relax(P);idle(P,t,.6);P.g.position.copy(TRP);P.g.rotation.y=0;
- if(!TRA14){P.g.updateMatrixWorld(true);TRA14={hov:solveReach(P,'R',BTN_TOP.clone().add(V3(0,.16,-.02)))};relax(P);TRA14.prs=solveReach(P,'R',BTN_TOP.clone().add(V3(0,.03,-.01)));relax(P);}
+function trump14(t){const P=TR;P.g.visible=true;relax(P);idle(P,t,.6);P.g.position.copy(TRP);P.g.rotation.y=Math.PI/2;
+ if(!TRA14){P.g.updateMatrixWorld(true);TRA14={hov:solveReach(P,'R',BTN_TOP.clone().add(V3(-.02,.16,0)))};relax(P);TRA14.prs=solveReach(P,'R',BTN_TOP.clone().add(V3(-.01,.03,0)));relax(P);}
  const up=sm(tTrump-.2,tTrump+.25,t),dn=sm(tButton-.18,tButton,t),rel=sm(tLaunch+.35,tLaunch+.7,t);
  setA(P,'R',rel>0?lerpA(TRA14.prs,TRA14.hov,rel):lerpA(lerpA(REST,TRA14.hov,up),TRA14.prs,dn));curl(P,'R',.7,.4);
  if(rel>0){pose(P,'head',-.35*rel,0,0);arm(P,'L',AD[0]+.3*rel,AD[2]-.9*rel,.6*rel);}   // he looks up and points at the missile
@@ -112,21 +118,21 @@ function trump14(t){const P=TR;P.g.visible=true;relax(P);idle(P,t,.6);P.g.positi
  FK.update(P,t,{expr:[['doubt',.5*(1-dn)],['joy',.45*dn]],look:t<tPress?cam.position:rel>.3?MSL.position:BTN.position});}
 let story14=()=>{};
 function animate(t){sun.intensity=2.2;updPops(t);MK.g.visible=false;MIKE.g.visible=false;DEBT.visible=DFR.visible=false;trump14(t);missile14(t);impact14(t);story14(t);}
-// ---------------- camera (steady): wide map with both flags -> Trump's face -> hand on the button -> chase the missile -> the blast ----------------
+// ---------------- camera (steady, NORTH-UP like a real map): USA + flag + Trump -> his face -> hand on the button -> chase the missile east -> the blast ----------------
 const LF=(A,B,k)=>({pos:A.pos.map((v,i)=>v+(B.pos[i]-v)*k),look:A.look.map((v,i)=>v+(B.look[i]-v)*k),fov:A.fov+(B.fov-A.fov)*k});
 trump14(0);
-const TRB=CK.box([TRP.x-.35,US_Y,TRP.z-.25],[TRP.x+.35,US_Y+1.95,TRP.z+.6]);
-const WIDE={pos:mxz(-118,36,8.5).toArray(),look:mxz(-70,37,0).toArray(),fov:44};                       // both flags + Trump, high over the US
-const WIDE2={pos:mxz(-100,38,4.2).toArray(),look:mxz(-74,38.5,.8).toArray(),fov:42};                    // push toward Trump
+const gbox=(lo0,la0,lo1,la1,y0,y1)=>{const a=mxz(lo0,la0,y0),b=mxz(lo1,la1,y1);return new THREE.Box3(a.clone().min(b),a.clone().max(b));};
+const USB=gbox(-124,26,-68,48.5,0,.2),TRB=CK.box([TRP.x-.3,US_Y,TRP.z-.35],[TRP.x+.7,US_Y+2.05,TRP.z+.35]);
+const WIDE=CK.fit([USB,TRB],{dir:[1,1.55,0],fov:40,top:.06}),WIDE2=CK.fit([TRB],{dir:[1,.75,.05],fov:36,top:.06});
 trump14(tPress);const FACE=CK.closeUp(TR,{dist:1.35,fov:30,dy:-.1});
-trump14(tButton);const HAND=CK.fit([CK.box([PED.x-.22,PED.y+.85,PED.z-.2],[PED.x+.22,PED.y+1.2,PED.z+.2]),CK.box([TRP.x-.2,US_Y+1.35,TRP.z-.1],[TRP.x+.2,US_Y+2.1,TRP.z+.15])],{dir:[.25,.35,1],fov:34,top:.06});
+trump14(tButton);const HAND=CK.fit([CK.box([PED.x-.2,PED.y+.85,PED.z-.22],[PED.x+.2,PED.y+1.2,PED.z+.22]),CK.box([TRP.x-.15,US_Y+1.35,TRP.z-.2],[TRP.x+.15,US_Y+2.1,TRP.z+.2])],{dir:[1,.55,.2],fov:34,top:.06});
 trump14(0);
-const IRF={pos:IRAN.clone().add(V3(1.0,2.0,6.4)).toArray(),look:IRAN.clone().add(V3(0,1.1,0)).toArray(),fov:42},IRF2={pos:IRAN.clone().add(V3(.9,2.1,5.9)).toArray(),look:IRAN.clone().add(V3(0,1.35,0)).toArray(),fov:42};
-function chase(t){const u=uM(t),p=ARC.getPoint(u),tg=ARC.getTangent(Math.min(u,.98)),fl=tg.clone().setY(0).normalize();
- return {pos:p.clone().addScaledVector(fl,-2.8).add(V3(1.4,1.5,0)).toArray(),look:p.clone().addScaledVector(fl,.35).add(V3(0,-.15,0)).toArray(),fov:42};}
+const IRB=gbox(44,25,63.5,40,0,4.1);
+const IRF=CK.fit([IRB],{dir:[1,.85,.04],fov:40,top:.04}),IRF2=CK.fit([IRB],{dir:[1,.8,.03],fov:40,top:.04,slack:.96});
+function chase(t){const u=uM(t),p=ARC.getPoint(u);return {pos:p.clone().add(V3(3.4,2.6,1.3)).toArray(),look:p.clone().add(V3(0,-.05,-.15)).toArray(),fov:42};}
 window.CAM14=t=>{
- if(t<tTrump)return LF(WIDE,WIDE2,sm(0,tTrump,t)*.6);
- if(t<tPress+.05)return LF(LF(WIDE,WIDE2,.6),FACE,sm(tTrump,tPress+.05,t));
+ if(t<tTrump)return LF(WIDE,WIDE2,sm(0,tTrump,t)*.35);
+ if(t<tPress+.05)return LF(LF(WIDE,WIDE2,.35),FACE,sm(tTrump,tPress+.05,t));
  if(t<tButton-.25)return FACE;
  if(t<tLaunch+.1)return LF(FACE,HAND,sm(tButton-.25,tButton,t));
  if(t<tHit){const c=chase(t),k=sm(tLaunch+.1,tLaunch+.45,t),e=sm(tLaunch+(tHit-tLaunch)*.62,tHit,t);return LF(LF(HAND,c,k),IRF,e);}
