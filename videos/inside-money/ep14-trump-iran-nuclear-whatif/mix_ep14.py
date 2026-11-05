@@ -25,8 +25,8 @@ put(cut(S['shock'], .5), W('what', 1), .3)                               # "What
 put(cut(S['money'], .45), W('wallet'), .3); put(cut(S['ting'], .35), W('wallet') + .1, .25)
 # ---- story ----
 S.update({k: load(f'{SFX}/user-{k}.wav') for k in ['cash-register', 'wrong', 'notif', 'slap', 'wow', 'money-transfer']})
-for w, n, d in [('meet',0,-.3), ('but',0,-.3), ('before',0,-.2), ('march',0,-.2), ('why',0,-.25), ('last',0,-.25), ('stocks',0,-.4), ('now',0,-.3), ('january',0,-.2), ('thats',0,-.2), ('trucks',0,-.4), ('ships',0,-.1), ('peace',0,-.3), ('drop',0,-.3), ('fear',0,-.2), ('so',2,-.35)]:
-    put(cut(S['whoosh'], .45), W(w, n) + d, .3)                          # every camera move
+for w, n, d in [('meet',0,-.15), ('heres',0,-.15), ('but',0,-.15), ('before',0,-.2), ('march',0,-.2), ('why',0,-.15), ('last',0,-.15), ('stocks',0,-.15), ('now',0,-.1), ('january',0,-.2), ('thats',0,-.2), ('trucks',0,-.4), ('price',0,-.35), ('and',3,-.15), ('drop',0,-.3), ('fear',0,-.2), ('so',2,-.35)]:
+    put(cut(S['whoosh'], .45), W(w, n) + d, .3)                          # every white-flash change of place + camera moves
 put(cut(S['pop'], .22), W('mike'), .35); put(cut(S['ting'], .3), W('1945'), .3)
 for i in range(3): put(cut(S['pop'], .2), W('nobody') + i * .15, .28)   # ? ? ?
 put(cut(S['pop'], .25), W('oil') - .25, .35)                             # the barrel appears
