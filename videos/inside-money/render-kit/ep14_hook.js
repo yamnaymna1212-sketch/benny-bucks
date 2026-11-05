@@ -109,7 +109,7 @@ function impact14(t){const d=t-tHit;BLAST.visible=d>0;if(d<=0)return;
  DUST14.visible=false;}
 // ---------------- Trump presses the button ----------------
 let TRA14=null;
-function trump14(t){const P=TR;P.g.visible=true;relax(P);idle(P,t,.6);P.g.position.copy(TRP);P.g.rotation.y=Math.PI/2;
+function trump14(t){const P=TR;const tv=t<HOOK_END-.6;P.g.visible=tv;PEDG.visible=BTN.visible=SILO.visible=tv;relax(P);idle(P,t,.6);P.g.position.copy(TRP);P.g.rotation.y=Math.PI/2;
  if(!TRA14){P.g.updateMatrixWorld(true);TRA14={hov:solveReach(P,'R',BTN_TOP.clone().add(V3(-.05,.5,0)))};relax(P);pose(P,'spine03',.28,0,0);pose(P,'spine02',.12,0,0);P.g.updateMatrixWorld(true);TRA14.prs=solveReach(P,'R',BTN_TOP.clone().add(V3(-.01,.05,0)));relax(P);}
  const up=sm(tPress-.2,tPress+.2,t),dn=sm(tButton-.12,tButton,t),rel=sm(tLaunch+.35,tLaunch+.7,t);const lean=dn*(1-rel);pose(P,'spine03',.28*lean,0,0);pose(P,'spine02',.12*lean,0,0);
  setA(P,'R',rel>0?lerpA(TRA14.prs,TRA14.hov,rel):lerpA(lerpA(REST,TRA14.hov,up),TRA14.prs,dn));curl(P,'R',.7,.4);
@@ -128,6 +128,7 @@ const DOWN14=CK.icon('down',{color:'#ff2a2a',size:.22});scene.add(DOWN14);
 let MKA14=null;
 function mike14(t){const P=MIKE,on=t>=tWhat2-.1;P.g.visible=on;SAFE14.visible=FAN14.visible=on;LBL_USA.visible=!on;if(!on){DOWN14.visible=false;return;}
  relax(P);P.g.position.copy(MKP14);P.g.rotation.y=MKR;
+ if(t>=tMeet14-.15){FAN14.visible=false;DOWN14.visible=false;mikeS(t);return;}
  if(!MKA14){P.g.updateMatrixWorld(true);MKA14={hug:solveReach(P,'R',MKP14.clone().add(V3(.3,1.2,.1)))};relax(P);MKA14.face=solveReach(P,'L',MKP14.clone().add(V3(.16,1.58,-.08)));relax(P);}
  const k=sm(tWhat2-.1,tWhat2+.25,t),sh=Math.sin(t*38)*.02*k;   // trembling
  pose(P,'spine03',-.06*k,0,sh);pose(P,'head',.05*k,.18*Math.sin(t*4.5)*k,sh*1.5);
