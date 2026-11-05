@@ -128,7 +128,7 @@ const DOWN14=CK.icon('down',{color:'#ff2a2a',size:.22});scene.add(DOWN14);
 let MKA14=null;
 function mike14(t){const P=MIKE,on=t>=tWhat2-.1;P.g.visible=on;SAFE14.visible=FAN14.visible=on;LBL_USA.visible=!on;if(!on){DOWN14.visible=false;return;}
  relax(P);P.g.position.copy(MKP14);P.g.rotation.y=MKR;
- if(t>=tMeet14-.15){FAN14.visible=false;DOWN14.visible=false;mikeS(t);return;}
+ if(t>=tMeet14-.15){FAN14.visible=false;DOWN14.visible=false;return;}
  if(!MKA14){P.g.updateMatrixWorld(true);MKA14={hug:solveReach(P,'R',MKP14.clone().add(V3(.3,1.2,.1)))};relax(P);MKA14.face=solveReach(P,'L',MKP14.clone().add(V3(.16,1.58,-.08)));relax(P);}
  const k=sm(tWhat2-.1,tWhat2+.25,t),sh=Math.sin(t*38)*.02*k;   // trembling
  pose(P,'spine03',-.06*k,0,sh);pose(P,'head',.05*k,.18*Math.sin(t*4.5)*k,sh*1.5);
