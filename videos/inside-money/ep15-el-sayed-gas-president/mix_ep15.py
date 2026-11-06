@@ -18,7 +18,9 @@ def cut(sig, dur, fade=.12):
 S = {k: load(f'{SFX}/user-{k}.wav') for k in ['ting', 'whoosh', 'boom', 'pop', 'money', 'cash-register', 'wrong']}
 # user 2026-11-06: fewer SFX (no pops / extra tings / money loops) - the words carry the hook
 put(cut(S['ting'], .3, .15), 0.0, .14)                                    # ting at 0 s (channel rule)
-put(cut(S['whoosh'], .7, .3), W('president'), .3)                         # the map wipes red -> blue
+put(cut(S['pop'], .22), W('elsayed'), .34)                               # pop 1: the head badge appears
+put(cut(S['pop'], .22), W('today') + .05, .3)                             # pop 2: '?' + UP / DOWN
+put(cut(S['whoosh'], .7, .3), W('president'), .3)                       # the map wipes red -> blue
 put(cut(S['whoosh'], .45), W('meet') - .12, .26)                          # white flash -> Mike
 put(cut(S['cash-register'], .5), W('paid') + .05, .26)                    # bills into the pump
 out /= max(1, np.abs(out).max() / .95)
