@@ -23,6 +23,14 @@ put(cut(S['pop'], .22), W('today') + .05, .3)                             # pop 
 put(cut(S['whoosh'], .7, .3), W('president'), .3)                       # the map wipes red -> blue
 put(cut(S['whoosh'], .45), W('meet') - .12, .26)                          # white flash -> Mike
 put(cut(S['cash-register'], .5), W('paid') + .05, .26)                    # bills into the pump
+# ---- story (few SFX, user rule): a whoosh on every white flash + a few key cues ----
+for w, n in [('so',0), ('now',0), ('and',5), ('opec',0), ('elsayed',1)]:
+    put(cut(S['whoosh'], .45), W(w, n) - .12, .26)
+put(cut(S['cash-register'], .5), W('15', 1), .26)                         # +$15 per tank
+put(cut(S['pop'], .22), W('open'), .3)                                    # the cap flies off
+put(cut(S['ting'], .35), W('172'), .28)                                   # 172 million barrels
+put(cut(S['pop'], .22), W('federal', 1), .3)                              # the padlock
+put(cut(S['pop'], .22), W('up', 1) if len([x for x in WD if x['w'].lower().startswith('up')])>1 else W('up'), .3)   # UP / DOWN signs
 out /= max(1, np.abs(out).max() / .95)
 w = wave.open(f'{RK}/mix_ep15.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((out * 32767).astype(np.int16).tobytes()); w.close()
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{RK}/mix_ep15.wav', '-af', 'loudnorm=I=-11:TP=-1', '-ar', str(SR), f'{TMP}/_m15.wav'], check=True)

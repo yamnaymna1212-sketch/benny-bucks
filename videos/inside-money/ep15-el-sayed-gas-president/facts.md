@@ -11,4 +11,11 @@
 | 12 | Suspending the federal gas tax needs Congress (2022 proposal stalled) | CBS explainer; https://www.washingtoninformer.com/biden-calls-for-the-suspension-of-gas-tax/ |
 | 14 | El-Sayed won the Michigan Senate race (Nov 3, 2026) vs Mike Rogers | https://variety.com/2026/politics/news/abdul-el-sayed-the-view-slams-trump-ted-cruz-1236940461/ ; https://www.ms.now/news/abdul-el-sayed-trump-republicans-congress-retribution |
 
+| v2 | Highest November price on record (AAA, Nov 5 2026 report) | AAA newsroom link above |
+| v2 | 15-gal tank: ~$1.02 more x 15 = ~$15 more | math from AAA $4.10 vs $3.079 |
+| v2 | 1 barrel = 42 US gallons | EIA (standard unit), https://www.eia.gov/energyexplained/oil-and-petroleum-products/ |
+| v2 | State + local gas taxes vary by state (avg ~38 cents) | Stout 2026 forecast citing EIA; https://www.stout.com/en/insights/commentary/2026-gasoline-price-forecast-what-expect |
+| v2 | SPR release effect usually short-lived ("a few weeks") | CBS News explainer link above |
+| v2 | SPR sites: Bryan Mound + Big Hill (TX), West Hackberry + Bayou Choctaw (LA) | https://www.energy.gov/ceser/spr-storage-sites |
+
 Safety: hypothetical framing only; no prediction of what El-Sayed would do; no claim about his gas policy.
