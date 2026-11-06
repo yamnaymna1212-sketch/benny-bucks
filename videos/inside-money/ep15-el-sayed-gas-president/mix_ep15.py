@@ -16,18 +16,11 @@ def put(sig, t, g):
 def cut(sig, dur, fade=.12):
     n = int(dur * SR); x = sig[:n].copy(); f = int(min(fade, dur / 2) * SR); x[-f:] *= np.linspace(1, 0, f); return x
 S = {k: load(f'{SFX}/user-{k}.wav') for k in ['ting', 'whoosh', 'boom', 'pop', 'money', 'cash-register', 'wrong']}
-put(cut(S['ting'], .3, .15), 0.0, .14)                                    # ting at 0 s
-put(cut(S['pop'], .22), W('gas'), .4)                                     # the pump bounces
-put(cut(S['whoosh'], .4), W('prices') - .2, .28)                          # push to the pump
-put(cut(S['cash-register'], .5), W('prices') + .05, .32)                  # $100 bills circle
-put(cut(S['whoosh'], .4), W('if') - .05, .3)                              # fly to DC
-put(cut(S['pop'], .25), W('elsayed'), .42); put(cut(S['ting'], .35), W('elsayed') + .08, .22)   # the head badge pops
-put(cut(S['whoosh'], .7, .3), W('president'), .38)                        # the map wipes red -> blue
-put(cut(S['ting'], .35), W('today'), .32); put(cut(S['pop'], .2), W('today') + .12, .3)   # '?' + arrows
-put(cut(S['whoosh'], .45), W('meet') - .12, .32)                          # white flash -> Mike
-put(cut(S['pop'], .22), W('mike'), .3)
-for i in range(5): put(cut(S['money'], .22), W('paid') + i * .1, .2)      # bills fly into the pump
-put(cut(S['cash-register'], .5), W('four') if any(x['w'].lower()=='four' for x in WD) else W('paid') + .4, .3)
+# user 2026-11-06: fewer SFX (no pops / extra tings / money loops) - the words carry the hook
+put(cut(S['ting'], .3, .15), 0.0, .14)                                    # ting at 0 s (channel rule)
+put(cut(S['whoosh'], .7, .3), W('president'), .3)                         # the map wipes red -> blue
+put(cut(S['whoosh'], .45), W('meet') - .12, .26)                          # white flash -> Mike
+put(cut(S['cash-register'], .5), W('paid') + .05, .26)                    # bills into the pump
 out /= max(1, np.abs(out).max() / .95)
 w = wave.open(f'{RK}/mix_ep15.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((out * 32767).astype(np.int16).tobytes()); w.close()
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{RK}/mix_ep15.wav', '-af', 'loudnorm=I=-11:TP=-1', '-ar', str(SR), f'{TMP}/_m15.wav'], check=True)
