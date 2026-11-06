@@ -1027,7 +1027,7 @@ popT('$4.10',.42,RED,PRICE_P,tPaid-.05,1e9);
 // real $100 bills circling the pump on "prices" / flying from Mike into it on "paid"
 const BILLS15=[0,1,2,3,4].map(()=>{const b=MNY.note(100,{curve:.012,glow:.12});b.scale.setScalar(2.2);b.visible=false;scene.add(b);return b;});
 const ARUP=CK.icon('up',{color:'#ff2a2a',size:.55}),ARDN=CK.icon('down',{color:'#22e06a',size:.55});scene.add(ARUP);scene.add(ARDN);
-popT('?',.7,YEL,PRICE_P.clone().add(V3(0,.05,0)),tToday-.05,tMeet-.08);
+popT('?',.7,YEL,PRICE_P.clone().add(V3(0,.05,0)),tToday-.05,tMeet-.3);
 // ---------------- El-Sayed: HEAD ONLY in a map badge (live render target: blinks, moves, smiles) ----------------
 const ELS=person('elsayed',GX,SY,19.25,Math.PI);FK.rig(ELS,{iris:'#3b2618',brow:'#1e1612'});
 ELS.g.traverse(o=>{if(o.isMesh&&/short04|eyebrow/i.test(o.name+o.material.name)){o.material.roughness=.95;o.material.envMapIntensity=.12;o.material.color.setScalar(.55);o.material.needsUpdate=true;}});
@@ -1070,8 +1070,8 @@ function animate(t){sun.intensity=2.4;WF15.style.opacity=String(Math.max(0,1-Mat
   if(on){const a=t*2.2+i*Math.PI*2/5,k=Math.min(1,(t-t0)/.3);p=PP.clone().add(V3(Math.cos(a)*1.05*k,.6+i*.28+.1*Math.sin(t*3+i),Math.sin(a)*1.05*k));}
   else if(t>=tPaid+i*.1&&t<tPaid+i*.1+.62){on=true;const u=(t-tPaid-i*.1)/.6;p=MKP.clone().add(V3(.7,1.35,-.2)).lerp(PP.clone().add(V3(.35,1.25,0)),u).add(V3(0,Math.sin(u*Math.PI)*.45,0));}
   b.visible=on;if(!on)return;b.position.copy(p);b.lookAt(cam.position);b.rotateZ(.4*Math.sin(t*4+i));MNY.flutter(b,t,i);});
- const sw=Math.sin((t-tToday)*7);CK.iconAnim(ARUP,t,tToday,tMeet-.08,{pos:PP.clone().add(V3(.1,PUMPH+.55+.12*Math.max(0,sw),.72)),cam,spin:.3});
- CK.iconAnim(ARDN,t,tToday+.12,tMeet-.08,{pos:PP.clone().add(V3(.1,PUMPH+.55-.12*Math.max(0,-sw),-.72)),cam,spin:.3});
+ const sw=Math.sin((t-tToday)*7);CK.iconAnim(ARUP,t,tToday,tMeet-.3,{pos:PP.clone().add(V3(.1,PUMPH+.55+.12*Math.max(0,sw),.72)),cam,spin:.3});
+ CK.iconAnim(ARDN,t,tToday+.12,tMeet-.3,{pos:PP.clone().add(V3(.1,PUMPH+.55-.12*Math.max(0,-sw),-.72)),cam,spin:.3});
  PMIKE.visible=t>=tMike-.05&&t<tPaid-.1;if(PMIKE.visible)face2cam(PMIKE,MKP.clone().add(V3(0,2.75,0)));}
 // ---------------- camera: a different, clear angle per beat (monotone Hermite; the white flash hides the cut on "Meet") ----------------
 const gbox=(lo0,la0,lo1,la1,y0,y1)=>{const a=mxz(lo0,la0,y0),b=mxz(lo1,la1,y1);return new THREE.Box3(a.clone().min(b),a.clone().max(b));};
