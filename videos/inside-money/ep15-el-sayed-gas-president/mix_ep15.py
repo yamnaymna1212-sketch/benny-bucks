@@ -7,7 +7,7 @@ def load(p):
     w = wave.open(f'{TMP}/_l15.wav'); return np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32) / 32768
 tl = json.load(open(f'{RK}/timeline_ep15.json')); WD = tl['words']; DUR = tl['dur']
 W = lambda w, n=0: [x['s'] for x in WD if re.sub(r'[^a-z0-9]', '', x['w'].lower()) == w][n]
-VO = sys.argv[1] if len(sys.argv) > 1 else 'ep15-el-sayed-gas-president/vo_hook_temp.wav'
+VO = sys.argv[1] if len(sys.argv) > 1 else 'ep15-el-sayed-gas-president/vo.wav'
 voice = load(VO); N = int(DUR * SR); out = np.zeros(N, np.float32); out[:min(N, len(voice))] += voice[:N]
 rng = np.random.default_rng(15); b = np.cumsum(rng.standard_normal(N).astype(np.float32)); b -= np.convolve(b, np.ones(4800) / 4800, 'same'); b /= np.abs(b).max(); out += b * .05
 def put(sig, t, g):
