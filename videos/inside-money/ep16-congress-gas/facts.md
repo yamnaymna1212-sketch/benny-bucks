@@ -7,8 +7,10 @@
 | story | Federal gas tax 18.4 cents/gal; only Congress can change/pause it (2022 holiday proposal stalled) | EP15 facts.md (EIA, CBS explainer) |
 | story | 15 gal x $0.184 = $2.76 saved per fill-up; 0.184 / 4.04 = ~4.6 % of the price | math |
 | story | Crude ~50 % of a gallon, refining ~24 %, distribution ~13 %, taxes ~13 % (EIA, Aug 2026) | https://www.eia.gov/petroleum/gasdiesel/ |
-| story | Crude changes reach the pump in ~3-6 weeks | EIA (via secondary sources) - VERIFY on eia.gov before the script is final |
-| story | Hormuz carries ~20 % of world oil; 2026 shipping disruption | VERIFY on eia.gov (World Oil Transit Chokepoints) |
-| story | A gas tax pause is a law: needs the president's signature (or a veto override) | VERIFY (constitutional process; cite congress.gov) |
+| story | Hormuz: ~20 million b/d = ~20 % (one fifth) of world petroleum liquids consumption (EIA, 2024) | https://www.eia.gov/todayinenergy/detail.php?id=65504 |
+| story | A federal gas tax pause needs an act of Congress (president can't do it alone); bills S.4032 / H.R.7919 (2026); veto override = 2/3 of both chambers (US Constitution Art. I s.7) | https://www.nbcwashington.com/news/national-international/suspend-federal-gas-tax-fuel-prices-soar/4083384/ |
+| story | Federal gas tax 18.4c unchanged since 1993 | same NBC explainer |
+| story | Trump floated a federal gas tax pause (May 11, 2026) | https://www.goodmorningamerica.com/amp/news/story/trump-floating-gas-tax-holiday-amid-rising-fuel-132859509 |
+| story | +$14 per tank: (4.04 - 3.08) x 15 = $14.4 | math from AAA |
 
 Safety: no promise that gas falls; no blame wording; open ending vote UP / DOWN.

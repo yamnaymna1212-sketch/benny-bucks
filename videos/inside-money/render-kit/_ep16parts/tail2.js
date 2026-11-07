@@ -36,14 +36,10 @@ function card16(n,title,fs,draw){const P=canv15(1024,384),x=P.x;x.fillStyle='#0b
  x.save();x.translate(250,192);x.scale(.82,.82);x.translate(-256,-270);draw(x);x.restore();
  x.fillStyle='#ffc61a';x.beginPath();x.arc(74,74,46,0,Math.PI*2);x.fill();x.fillStyle='#0b1530';x.font='900 64px Mont';x.textAlign='center';x.textBaseline='middle';x.fillText(String(n),74,78);
  x.fillStyle='#fff';x.font=`900 ${fs}px Mont`;x.textAlign='left';x.textBaseline='middle';x.fillText(title,420,200);P.t.needsUpdate=true;return P.t;}
-const CARDS16=[
- card16(1,'TAX',150,x=>{x.fillStyle='#f4f4f0';x.beginPath();x.moveTo(166,110);x.lineTo(346,110);x.lineTo(346,430);for(let i=0;i<6;i++){x.lineTo(346-i*30-15,410);x.lineTo(346-(i+1)*30,430);}x.closePath();x.fill();
-  x.fillStyle='#d21e2a';x.font='900 150px Mont';x.textAlign='center';x.textBaseline='middle';x.fillText('%',256,265);}),
- card16(2,'OIL',150,x=>{x.fillStyle='#1b1b1f';x.beginPath();x.roundRect(176,110,160,300,22);x.fill();x.fillStyle='#3a3a42';[170,260,350].forEach(y=>x.fillRect(170,y,172,16));
-  x.fillStyle='#ffc61a';x.beginPath();x.moveTo(256,190);x.bezierCurveTo(300,250,300,300,256,310);x.bezierCurveTo(212,300,212,250,256,190);x.fill();}),
- card16(3,'PRESIDENT',84,x=>{x.fillStyle='#f4f4f0';x.fillRect(150,130,212,270);x.fillStyle='#9aa3b5';[180,215,250,285].forEach(y=>x.fillRect(178,y,156,12));
-  x.strokeStyle='#0b1530';x.lineWidth=7;x.beginPath();x.moveTo(180,360);x.bezierCurveTo(215,320,240,390,275,345);x.stroke();
-  x.save();x.translate(320,330);x.rotate(-.75);x.fillStyle='#d4af37';x.fillRect(-14,-120,28,150);x.fillStyle='#222';x.beginPath();x.moveTo(-14,30);x.lineTo(14,30);x.lineTo(0,62);x.fill();x.restore();})]
+// hook cards = NUMBERS ONLY (user 2026-11-07: no TAX / OIL / PRESIDENT words in the hook); card16 (icon + title) is used again in the story
+function numCard(n){const P=canv15(1024,384),x=P.x;x.fillStyle='#0b1530';x.beginPath();x.roundRect(6,6,1012,372,40);x.fill();x.strokeStyle='#fff';x.lineWidth=10;x.stroke();
+ x.fillStyle='#ffc61a';x.font='900 300px Mont';x.textAlign='center';x.textBaseline='middle';x.fillText(String(n),512,205);P.t.needsUpdate=true;return P.t;}
+const CARDS16=[1,2,3].map(numCard)
  .map((tx,i)=>{const m=add(new THREE.PlaneGeometry(2.4,.9),new THREE.MeshBasicMaterial({map:tx,transparent:true,toneMapped:false}),0,0,0,scene,false);m.renderOrder=6;m.visible=false;m.userData.t0=tThree-.04+i*.2;m.userData.p=PP.clone().add(V3(.4,3.05-i*1.05,0));return m;});
 function cards16(t){CARDS16.forEach((m,i)=>{const k=bump(t,m.userData.t0,.3);m.visible=k>.01;if(!m.visible)return;m.position.copy(m.userData.p).add(V3(0,.04*Math.sin(t*2.5+i),0));m.quaternion.copy(cam.quaternion);m.scale.setScalar(k);});}
 function animate(t){sun.intensity=2.4;updPops(t);MK.g.visible=false;MIKE.g.visible=false;TR.g.visible=false;DEBT.visible=DFR.visible=false;

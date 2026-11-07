@@ -1,7 +1,7 @@
 const W15=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9]/g,'')===w);return (k[Math.min(n,k.length-1)]||{s:0}).s;};
 const tLost=W15('lost'),tCong=W15('congress'),tSo=W15('so'),tGas=W15('gas'),tCheaper=W15('cheaper'),tThree=W15('three'),tThings=W15('things'),tDecide=W15('decide');
 const tPres=tLost+.1;   // wipe15 (EP15 code) starts on this
-const HOOK_END=tDecide+1.6;
+const HOOK_END=W15('meet');   // the story starts on 'Meet Mike'
 POPS.forEach(m=>{m.visible=false;scene.remove(m);});POPS.length=0;COIN.visible=WARN.visible=false;
 STORY10_OBJS.forEach(o=>o.visible=false);TR.g.visible=false;
 renderer.localClippingEnabled=true;

@@ -19,8 +19,16 @@ S = {k: load(f'{SFX}/user-{k}.wav') for k in ['ting', 'whoosh', 'pop', 'cash-reg
 put(cut(S['ting'], .3, .15), 0.0, .14)                 # ting at 0 s (channel rule)
 put(cut(S['whoosh'], .7, .3), W('lost') + .05, .3)     # LOST + the map wipes red -> blue
 put(cut(S['pop'], .22), W('cheaper'), .3)              # '?' + UP / DOWN
-put(cut(S['whoosh'], .45), W('three') - .12, .26)      # camera to the 3 cards
-put(cut(S['cash-register'], .5), W('so') + .05, .2)    # $4.04 floats over the pump
+put(cut(S['whoosh'], .45), W('three') - .12, .26)      # camera to the 3 numbered cards
+# ---- story (few SFX): a whoosh on every white flash + a few key cues ----
+for w, n in [('meet',0), ('thing',0), ('thing',1), ('about',6), ('thing',2), ('so',1), ('will',1)]:
+    put(cut(S['whoosh'], .45), W(w, n) - .12, .24)
+put(cut(S['cash-register'], .5), W('fourteen') + .05, .24)   # +$14 every tank
+put(cut(S['ting'], .35), W('two'), .26)                      # = $2.76
+put(cut(S['pop'], .22), W('pause'), .26)                     # the padlock opens
+put(cut(S['pop'], .22), W('vetoes'), .28)                    # VETO
+put(cut(S['ting'], .35), W('thirds'), .24)                   # 2/3
+put(cut(S['pop'], .22), W('up', 0), .3)                      # UP / DOWN signs
 out /= max(1, np.abs(out).max() / .95)
 w = wave.open(f'{RK}/mix_ep16.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((out * 32767).astype(np.int16).tobytes()); w.close()
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{RK}/mix_ep16.wav', '-af', 'loudnorm=I=-11:TP=-1', '-ar', str(SR), f'{TMP}/_m16.wav'], check=True)
