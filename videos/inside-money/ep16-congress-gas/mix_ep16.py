@@ -19,8 +19,8 @@ S = {k: load(f'{SFX}/user-{k}.wav') for k in ['ting', 'whoosh', 'pop', 'cash-reg
 put(cut(S['ting'], .3, .15), 0.0, .14)                 # ting at 0 s (channel rule)
 put(cut(S['whoosh'], .7, .3), W('lost') + .05, .3)     # LOST + the map wipes red -> blue
 put(cut(S['pop'], .22), W('cheaper'), .3)              # '?' + UP / DOWN
-put(cut(S['whoosh'], .45), W('meet') - .12, .26)       # white flash -> Mike
-put(cut(S['cash-register'], .5), W('pays') + .05, .26) # bills into the pump
+put(cut(S['whoosh'], .45), W('three') - .12, .26)      # camera to the 3 cards
+put(cut(S['cash-register'], .5), W('so') + .05, .2)    # $4.04 floats over the pump
 out /= max(1, np.abs(out).max() / .95)
 w = wave.open(f'{RK}/mix_ep16.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((out * 32767).astype(np.int16).tobytes()); w.close()
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{RK}/mix_ep16.wav', '-af', 'loudnorm=I=-11:TP=-1', '-ar', str(SR), f'{TMP}/_m16.wav'], check=True)
