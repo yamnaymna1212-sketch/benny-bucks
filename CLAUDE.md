@@ -48,3 +48,7 @@ If any item fails, rewrite before sending. Give me blunt, direct criticism of my
 # Script safety (user rule 2026-10-29, all channels, TikTok is strict on money topics)
 Never in a script or on screen: anything that encourages illegal acts, misleading info, made-up or inflated numbers, "do this / buy this" instructions, promises (gains, guarantees), insults or sensitive wording. Every number needs a source in the episode's facts.md; simplifications must not change the truth.
 Real brand names/logos on screen: allowed by the user (2026-10-29) for realism.
+
+# Financial-crime documentary channel (added 2026-11-07)
+A second project lives in `money-files-channel/`: a YouTube documentary channel about real financial cases (first case: the Bybit hack), with the host character "The Auditor".
+When the user mentions this channel, read `money-files-channel/CLAUDE.md` first; it has the full context, style, verified facts and next steps.

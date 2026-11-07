@@ -1,0 +1,8 @@
+{
+ "fps": 30,
+ "sources": {
+  "fbi": {"pub": "FBI · IC3 PSA I-022625-PSA", "date": "Feb 26, 2025", "url": "ic3.gov/PSA/2025/PSA250226"},
+  "bloomberg": {"pub": "Bloomberg", "date": "Feb 21, 2025", "url": "bloomberg.com/news/articles/2025-02-21"},
+  "techcrunch": {"pub": "TechCrunch", "date": "Feb 21, 2025", "url": "techcrunch.com/2025/02/21"}
+ }
+}

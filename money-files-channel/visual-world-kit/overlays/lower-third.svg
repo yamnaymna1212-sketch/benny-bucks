@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="150" viewBox="0 0 1200 150">
+<rect width="1200" height="150" fill="#0B0D10" fill-opacity="0.82"/>
+<rect width="8" height="150" fill="#C9A24B"/>
+<text x="40" y="52" font-family="Courier New, monospace" font-size="28" fill="#C9A24B" letter-spacing="3">DATE · 14:02 UTC</text>
+<text x="40" y="108" font-family="Georgia, serif" font-size="46" fill="#EDE6D6">Event title goes here</text></svg>

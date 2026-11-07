@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+<radialGradient id="v" cx="50%" cy="45%" r="75%"><stop offset="0%" stop-color="#14171C"/><stop offset="70%" stop-color="#0B0D10"/><stop offset="100%" stop-color="#050607"/></radialGradient>
+<filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+</defs>
+<rect width="1920" height="1080" fill="url(#v)"/>
+<rect width="1920" height="1080" filter="url(#g)" opacity="0.07"/>
+</svg>

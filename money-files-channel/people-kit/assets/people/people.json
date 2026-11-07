@@ -1,0 +1,12 @@
+{
+  "people": [
+    {
+      "name": "Example Person",
+      "aliases": ["Example"],
+      "file": null,
+      "license": "",
+      "source_url": "",
+      "attribution": ""
+    }
+  ]
+}
