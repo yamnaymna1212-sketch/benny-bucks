@@ -10,3 +10,4 @@
 - [Hook zoom + 1-word captions](inside-money-hook-zoom-captions.md) — wide context shot (place+process+money+action) -> zoom -> glowing tight zoom; 1-word captions, no prices
 - [EP13 motion + contrast rules](inside-money-ep13-motion-contrast-rules.md) — no camera shake, no haze/blur, change every ~2 s, characters react, subject centred, crisp high-contrast icons (Zack)
 - [EP12 hook/camera rules](inside-money-ep12-hook-camera-rules.md) — hook clear w/o sound, contrast figure vs background, camera never through objects, no crossed hands
+- [Few SFX](inside-money-few-sfx.md) — hooks: ~4 cues max (ting 0 s, whoosh on big changes, one cash); no pops on every beat
