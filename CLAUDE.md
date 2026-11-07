@@ -1,3 +1,10 @@
+# LATEST STATE (updated 2026-11-07) — READ FIRST, new sessions/accounts start here
+- Last finished video = Inside Money **EP4 "Why can't the government print money and make everyone rich"** (videos/inside-money/ep4-print-million/: SCRIPT.md, PLAN.md, PUBLISH.md, ep4-print-million-phone.mp4; scene render-kit/ep4.html). Done 2026-11-01: final phone render, mix, publish kit. EP4 is the TEMPLATE for the next video.
+- Order so far: EP0 bank test, EP1 where money goes, EP2 dig under NYC (gold vs water), EP3 $1M cash, EP4 print money.
+- Next Inside Money video = EP5 (not started; pick idea from PROJECT_BRIEF section 5, verify facts first, hook 5-s preview before any full render).
+- Side project started 2026-11-07: money-files-channel/ (YouTube documentary, host "The Auditor", Bybit hack). Only a 13-s Remotion scene exists; no script yet. Read money-files-channel/CLAUDE.md only if the user mentions it.
+- If the user says they made a newer video elsewhere, it is NOT in this repo: ask for its name and add it here.
+
 # ACTIVE DIRECTION (2026-10-29): "Inside Money" — 3D cutaway videos about how money/banks/finance work. START with videos/inside-money/PROJECT_BRIEF.md (section 0 = latest user rules 2026-10-31; template for every new video = render-kit/ep4.html) (new machine/phone: videos/inside-money/SETUP.md; style references: references/inside-money/).
 The Doug the Penguin rules below are LEGACY (kept for reference) unless the user asks to resume Doug.
 
