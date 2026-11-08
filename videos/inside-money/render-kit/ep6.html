@@ -3,7 +3,7 @@
 html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
 #ov{position:absolute;inset:0;z-index:3;pointer-events:none}
 .cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 64px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.75),0 0 2px #000}
-</style></head><body><canvas id="c"></canvas><div id="ov"><canvas id="split" style="position:absolute;inset:0;width:720px;height:1280px;display:none"></canvas><div class="cap" id="cap"></div></div>
+</style></head><body><canvas id="c"></canvas><div id="ov"><canvas id="split" style="position:absolute;inset:0;width:720px;height:1280px;display:none"></canvas><div class="cap" id="cap"></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 // EP6 HOOK v1 (0-5 s): gas USA vs Iran. Same pump, two stations. Left set x=0 (US, red glow $4.15), right set x=22 (Iran, green glow $0.11).
@@ -77,7 +77,7 @@ function station(X,hex,txt,flagTex,band){
  makeFlag(flagTex,X-1.45,4.5,-1.5,1.2);
  return {pr,pump:P};
 }
-const sUS=station(US,SIGN[0],'$4.15',flagT,0x1e5ab8),sIR=station(IR,SIGN[1],'$0.11',irT,0x239f40);
+const sUS=station(US,SIGN[0],'$4.02',flagT,0x1e5ab8),sIR=station(IR,SIGN[1],'$0.11',irT,0x239f40);
 // ================= CAST =================
 // Trump look (EP9/EP14, user reference 2026-11-03): navy suit, white shirt, red tie, blond hair, tan skin, blue eyes
 function remap(mt,f){if(!mt.map)return;const im=mt.map.image,c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data,Wt=c.width,Ht=c.height;
@@ -90,7 +90,7 @@ function styleTrump(o,mt){const n=o.name+mt.name;
  if(/body/i.test(n))mt.color.setRGB(1,.66,.43);
  if(/high-poly/i.test(n))remap(mt,(r,g,b)=>{const l=lum(r,g,b);return (r>g+12&&r>b+12&&l<200)?[l*.45,l*.85,Math.min(255,l*1.9+40)]:[r,g,b];});}
 const gl=new GLTFLoader(),SRC={};
-for(const n of['trump','landlord']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
+for(const n of['trump','landlord','guard','manager','printer','seller','teller']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
   if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
@@ -121,10 +121,165 @@ function driver(P,t,shock,reactT){for(const n of['upperleg01L','upperleg01R','lo
   pose(P,'head',.04,.1*Math.sin(t*2)*r,.12*r);}
  P.g.updateMatrixWorld(true);}
 function animate(t){
- driver(mike,t,1,tTr+.45);driver(guy,t,0,tEl-.1);
+ updPops(t);
+ if(t<4.86){mike.g.visible=guy.g.visible=true;OFF.g.visible=false;mike.g.position.set(US-.85,0,.55);mike.g.rotation.y=.25;guy.g.position.set(IR-.85,0,.55);guy.g.rotation.y=.25;driver(mike,t,1,tTr+.45);driver(guy,t,0,tEl-.1);}
+ else story(t);
  {const v=pop(t,tTr-.05,.3);sUS.pr.visible=v>.002;sUS.pr.scale.setScalar(Math.max(v,.002));sUS.pr.position.y=2.8+.03*Math.sin(t*3);}
  {const v=pop(t,tIran-.05,.3);sIR.pr.visible=v>.002;sIR.pr.scale.setScalar(Math.max(v,.002));sIR.pr.position.y=2.8+.03*Math.sin(t*3);}
  waveFlags(t);}
+// ================= EP6 STORY (4.86-62.92 s) =================
+// US pump (Trump points) -> blue room S1: glass gallon fills 52/22/15/12 + real props (barrel, refinery, tanker truck, coins $0.50, globe WORLD MARKET)
+// S2: 4 people get paid from one gallon -> Iran pump -> S3: GOVERNMENT pushes the price bar down + tier board ($0.11 avg, UNDER $0.20)
+// S4: toman pile = $1 -> S5: imported tanker $1.00 per gallon, then COST vs PRICE bars, STATE PAYS the gap -> S6: cars BURN MORE + truck SMUGGLED past the border
+// S7: price steps 1,500 / 3,000 / 5,000 -> 10,000 x2 SEPTEMBER -> split MARKET vs SUBSIDY -> CTA Trump to camera '?'. White flash + whoosh on every change of place.
+const CY=(a,b,h,s=32,hs=1,open=false)=>new THREE.CylinderGeometry(a,b,h,s,hs,open);
+const POPS=[];
+function popT(str,size,c,pos,t0,t1,i=1.6){const m=big(str,size,c,i);m.position.copy(pos);m.userData={t0,t1,y:pos.y};POPS.push(m);return m;}
+function updPops(t){for(const m of POPS){const u=m.userData,v=pop(t,u.t0,.3)*(1-sm(u.t1,u.t1+.2,t));m.visible=v>.002;m.scale.setScalar(Math.max(v,.002));m.position.y=u.y+.025*Math.sin(t*3+u.t0);}}
+const PS=(o,v)=>{o.visible=v>.002;o.scale.setScalar(Math.max(v,.002));};
+const win=(t,a,b)=>pop(t,a,.3)*(1-sm(b,b+.2,t));
+const RED=0xff3a2a,GRN=0x22ff6a,YEL=0xffc61a,WHT=0xffffff,ORG=0xff8a1a,BLU=0x4aa0ff;
+const S1=-40,S2=-52,S3=-64,S4=-76,S5=-88,S6=-100,S7=-112;
+// ---- blue room (Zack style): wall behind, floor, a spotlight per set ----
+{const w=add(new THREE.PlaneGeometry(110,24),new THREE.MeshStandardMaterial({color:0x1b2f72,roughness:.95,envMapIntensity:.2}),-75,10,-3.2,scene,false);
+ const f=add(new THREE.PlaneGeometry(110,40),new THREE.MeshStandardMaterial({color:0x13235a,roughness:.9,envMapIntensity:.2}),-75,.02,10,scene,false);f.rotation.x=-Math.PI/2;
+ add(B(110,.1,.08),M(0x2e4aa0,.6),-75,.08,-3.15,scene,false);
+ for(const x of [S1,S2-1.5,S2+1.5,S3,S4,S5,S5+5,S6,S6+4,S7]){const L=new THREE.SpotLight(0xfff3e2,16,16,.6,.7,1.2);L.position.set(x+.5,6,4.5);L.target.position.set(x,1.2,0);scene.add(L);scene.add(L.target);}}
+// ---- props ----
+const OILT=tex(512,256,x=>{x.fillStyle='#1d4e9c';x.fillRect(0,0,512,256);x.fillStyle='rgba(255,255,255,.08)';for(let i=0;i<512;i+=8)x.fillRect(i,0,3,256);x.fillStyle='#fff';x.font='800 120px Mont';x.textAlign='center';x.fillText('OIL',256,170);});
+function barrel(){const g=new THREE.Group(),rib=M(0x163d7a,.35,.7);add(CY(.3,.3,.9,32),[new THREE.MeshStandardMaterial({map:OILT,roughness:.4,metalness:.55}),rib,rib],0,.45,0,g);
+ for(const y of [.18,.45,.72])add(new THREE.TorusGeometry(.302,.018,8,40),rib,0,y,0,g).rotation.x=Math.PI/2;add(CY(.05,.05,.03,12),M(0xc9c9c9,.3,.8),.15,.915,0,g);return g;}
+function wheel(p,x,y,z,r=.13){const w=add(CY(r,r,.1,20),M(0x111111,.8),x,y,z,p);w.rotation.x=Math.PI/2;add(CY(r*.5,r*.5,.105,16),M(0xbfc4ca,.3,.8),x,y,z,p).rotation.x=Math.PI/2;return w;}
+function truck(col=0xd21e2a){const g=new THREE.Group();add(RB(.7,.75,.8,.05),M(col,.4,.2),1.1,.62,0,g);add(B(.04,.3,.66),M(0x1d2a3a,.1,.6),1.46,.8,0,g,false);
+ const tk=add(CY(.42,.42,1.7,32),M(0xd0d4da,.25,.85),-.25,.78,0,g);tk.rotation.z=Math.PI/2;add(B(2.3,.12,.7),M(0x333333,.6),.1,.3,0,g);
+ for(const x of [1.1,-.1,-.7])for(const z of [.36,-.36])wheel(g,x,.2,z,.2);return g;}
+function car(col){const g=new THREE.Group(),m=M(col,.3,.4);add(RB(1.1,.32,.56,.06),m,0,.3,0,g);add(RB(.6,.26,.5,.06),m,.05,.58,0,g);
+ add(B(.02,.2,.46),M(0x1d2a3a,.1,.6),-.26,.6,0,g,false);for(const [x,z] of [[.35,.28],[.35,-.28],[-.35,.28],[-.35,-.28]])wheel(g,x,.14,z);return g;}
+function refinery(){const g=new THREE.Group(),st=M(0xc9ced6,.3,.8);add(CY(.2,.2,1.6,24),st,-.25,.8,0,g);add(CY(.15,.15,1.15,24),st,.2,.58,.1,g);add(CY(.05,.05,1.9,12),M(0xd8d8d8,.4,.6),.45,.95,-.15,g);
+ for(const y of [.4,.8,1.2])add(new THREE.TorusGeometry(.205,.02,8,24),M(0x8a9098,.4,.7),-.25,y,0,g).rotation.x=Math.PI/2;
+ add(new THREE.ConeGeometry(.07,.28,12),new THREE.MeshBasicMaterial({color:new THREE.Color(3,1.5,.3),toneMapped:false}),.45,2.03,-.15,g,false);
+ add(CY(.035,.035,.45,8),st,0,1.0,.05,g).rotation.z=Math.PI/2;add(CY(.035,.035,.35,8),st,.32,.4,-.05,g).rotation.z=Math.PI/2;return g;}
+function coins(){const g=new THREE.Group(),gold=M(0xd4af37,.28,1);for(const [x,z,n] of [[0,0,9],[.36,.05,6],[-.34,.1,4],[.1,.38,3]])for(let i=0;i<n;i++)add(CY(.16,.16,.045,28),gold,x+Math.sin(i)*.008,.03+i*.05,z,g);return g;}
+const EARTH=tex(1024,512,x=>{x.fillStyle='#1e6fd9';x.fillRect(0,0,1024,512);x.fillStyle='#3fae4a';
+ for(const [cx,cy,rx,ry] of [[230,170,120,80],[290,330,60,110],[520,150,90,60],[560,300,80,120],[720,170,170,90],[850,360,60,40],[120,90,60,30],[480,60,200,30]]){x.beginPath();x.ellipse(cx,cy,rx,ry,0,0,7);x.fill();}
+ x.fillStyle='#f4f6f8';x.fillRect(0,0,1024,26);x.fillRect(0,486,1024,26);});
+function globe(){const g=new THREE.Group();const s=add(new THREE.SphereGeometry(.55,48,32),new THREE.MeshStandardMaterial({map:EARTH,roughness:.55}),0,1.25,0,g);g.userData.s=s;
+ add(CY(.05,.05,.6,12),GOLD,0,.4,0,g);add(CY(.28,.32,.1,32),GOLD,0,.06,0,g);const r=add(new THREE.TorusGeometry(.64,.018,8,64,Math.PI),GOLD,0,1.25,0,g);r.rotation.z=Math.PI/2;return g;}
+function gascan(){const g=new THREE.Group();add(RB(.5,.6,.26,.05),M(0xd21e2a,.35,.1),0,.3,0,g);add(new THREE.TorusGeometry(.12,.03,8,20,Math.PI),M(0x222222,.5),0,.62,0,g);add(CY(.035,.05,.25,12),M(0x222222,.5),.2,.68,0,g).rotation.z=-.6;return g;}
+function bar(h,c){const m=add(B(.8,1,.5),new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(.45),roughness:.4,emissive:c,emissiveIntensity:.55}),0,0,0);m.userData.h=h;return m;}
+const setBar=(m,x,h,z=0)=>{m.position.set(x,h/2+.03,z);m.scale.set(1,Math.max(h,.001),1);};
+// ---- S1: glass gallon + layers ----
+const JR=.7,JH=2.6,JZ=0;
+{const glass=new THREE.MeshPhysicalMaterial({color:0xdfefff,roughness:.05,transparent:true,opacity:.14,clearcoat:1,envMapIntensity:1.4,depthWrite:false,side:THREE.DoubleSide});
+ add(CY(JR,JR,JH,48,1,true),glass,S1,JH/2+.05,JZ,scene,false);const sh=add(new THREE.SphereGeometry(JR,48,16,0,Math.PI*2,0,Math.PI/2),glass,S1,JH+.05,JZ,scene,false);sh.scale.y=.45;
+ add(CY(.26,.26,.24,32),glass,S1,JH+.38,JZ,scene,false);add(CY(JR*1.02,JR*1.02,.06,48),M(0xdfe6ee,.3,.2),S1,.03,JZ);add(CY(.29,.29,.18,32),M(0xd21e2a,.35),S1,JH+.58,JZ);
+ const lb=tex(512,160,x=>{x.fillStyle='#fff';x.beginPath();x.roundRect(6,6,500,148,24);x.fill();x.fillStyle='#0b1530';x.font='800 84px Mont';x.textAlign='center';x.fillText('1 GALLON',256,110);});
+ add(new THREE.PlaneGeometry(.95,.3),new THREE.MeshBasicMaterial({map:lb,toneMapped:false,transparent:true}),S1,JH+.98,JZ+.1,scene,false);}
+const LAY=[[.52,0x161616,Wn('52'),WHT],[.22,0xf08a12,Wn('22'),ORG],[.15,0x2f7fe8,Wn('15'),BLU],[.12,0xffc61a,Wn('12'),YEL]];
+let ly=.07;const LAYM=LAY.map(([f,c,t0,tc],i)=>{const h=f/1.01*(JH-.12),m=add(CY(JR*.95,JR*.95,1,48),new THREE.MeshStandardMaterial({color:c,roughness:.35,emissive:c,emissiveIntensity:.15}),S1,0,JZ,scene,false);
+ m.userData={y0:ly,h,t0};const ps=[.32,.26,.21,.18][i];popT(['52%','22%','15%','12%'][i],ps,tc,V3(S1,ly+h/2-ps/2,JZ+JR+.12),t0-.02,22.9);ly+=h;return m;});
+const P_BRL=barrel(),P_REF=refinery(),P_TRK=truck(),P_COIN=coins(),P_GLB=globe();
+for(const [o,s] of [[P_BRL,1.25],[P_REF,1],[P_TRK,.62],[P_COIN,1.2],[P_GLB,1]]){const g=new THREE.Group();g.add(o);o.scale.setScalar(s);g.position.set(S1-1.6,0,.3);scene.add(g);o.userData.g=g;}
+P_TRK.rotation.y=-.5;
+popT('$0.50',.34,YEL,V3(S1-1.6,1.0,.4),Wn('$0',1)-.02,19.7);popT('WORLD MARKET',.17,YEL,V3(S1-1.6,2.2,.4),Wn('world')-.05,22.9);
+// ---- S2: four people paid from one gallon ----
+const PX=[-1.95,-.65,.65,1.95].map(v=>S2+v),PT=[Wn('oil',1),Wn('refiners'),Wn('stations'),Wn('tax')];
+const CAN=gascan();CAN.position.set(S2,.62,1.5);CAN.scale.setScalar(1.3);scene.add(CAN);add(B(.7,.6,.5),M(0xe9ecef,.5),S2,.3,1.5);
+['OIL CO.','REFINER','STATION','TAXES'].forEach((n,i)=>popT(n,.15,[WHT,ORG,BLU,YEL][i],V3(PX[i],2.12,.3),PT[i]-.05,27.8));
+const COINS=PX.map(()=>{const c=add(CY(.13,.13,.04,28),M(0xd4af37,.25,1),0,0,0);c.rotation.x=Math.PI/2;c.visible=false;return c;});
+// ---- S3: government sets the price far below the market + the tier board ----
+const BM=bar(3,RED),BI=bar(3,GRN);
+popT('GOVERNMENT',.15,WHT,V3(S3+1.6,2.12,.6),Wn('government')-.05,32.0);popT('MARKET',.18,RED,V3(S3-1.0,3.25,0),Wn('far')-.3,32.0);popT('IRAN',.18,GRN,V3(S3+.3,.75,0),Wn('below')+.1,32.0);
+const TIER=tex(768,640,x=>{x.fillStyle='#0d1424';x.beginPath();x.roundRect(8,8,752,624,36);x.fill();x.strokeStyle='#22ff6a';x.lineWidth=8;x.stroke();
+ x.textAlign='center';x.fillStyle='#fff';x.font='800 50px Mont';x.fillText('IRAN GAS PRICE',384,90);x.font='800 34px Mont';x.fillStyle='#9fb3d1';x.fillText('TOMAN PER LITER',384,140);
+ [['FIRST 60 L','1,500','#22ff6a'],['NEXT 50 L','3,000','#ffd23a'],['TOP TIER','10,000','#ff5a4a']].forEach(([a,b,c],i)=>{const y=250+i*130;x.fillStyle='rgba(255,255,255,.06)';x.fillRect(40,y-70,688,110);
+ x.textAlign='left';x.fillStyle='#fff';x.font='800 46px Mont';x.fillText(a,70,y);x.textAlign='right';x.fillStyle=c;x.font='800 62px Mont';x.fillText(b,698,y+4);});});
+const BOARD=new THREE.Group();BOARD.position.set(S3,0,0);scene.add(BOARD);add(B(.1,1.2,.1),M(0xcfcfcf,.4,.5),-.9,.6,-.1,BOARD);add(B(.1,1.2,.1),M(0xcfcfcf,.4,.5),.9,.6,-.1,BOARD);
+add(B(2.4,2.0,.08),[M(0x111111),M(0x111111),M(0x111111),M(0x111111),new THREE.MeshBasicMaterial({map:TIER,toneMapped:false}),M(0x111111)],0,2.1,0,BOARD);
+popT('$0.11',.4,GRN,V3(S3,3.35,.1),Wn('$0',2)-.02,35.9,2.2);popT('UNDER $0.20',.2,YEL,V3(S3+1.55,2.95,.3),Wn('top')-.02,35.9);
+// ---- S4: a pile of toman = one dollar ----
+const NOTE=tex(512,256,x=>{x.fillStyle='#6f8fb5';x.fillRect(0,0,512,256);x.strokeStyle='#e9eef5';x.lineWidth=14;x.strokeRect(10,10,492,236);x.fillStyle='#eef2f7';x.font='800 70px Mont';x.textAlign='center';x.fillText('100,000',256,150);x.font='800 30px Mont';x.fillText('RIAL',256,200);});
+const PILE=new THREE.InstancedMesh(new THREE.BoxGeometry(.5,.07,.25),[M(0xe9e4d6,.8),M(0xe9e4d6,.8),new THREE.MeshStandardMaterial({map:NOTE,roughness:.7}),M(0xe9e4d6,.8),new THREE.MeshStandardMaterial({map:NOTE,roughness:.7}),M(0xe9e4d6,.8)],6*34);
+{const o=new THREE.Object3D();let k=0;for(let l=0;l<34;l++)for(let i=0;i<6;i++){o.position.set(S4-1.45+(i%3)*.52+Math.sin(l*3+i)*.02,.04+l*.071,(i<3?-.14:.14));o.rotation.y=Math.sin(l*7+i)*.05;o.updateMatrix();PILE.setMatrixAt(k++,o.matrix);}}
+PILE.frustumCulled=false;PILE.castShadow=true;PILE.receiveShadow=true;scene.add(PILE);PILE.count=0;
+const DOLT=tex(512,220,x=>{x.fillStyle='#d9e6cf';x.fillRect(0,0,512,220);x.strokeStyle='#3b6b3a';x.lineWidth=12;x.strokeRect(8,8,496,204);x.fillStyle='#3b6b3a';x.font='800 120px Mont';x.textAlign='center';x.fillText('1',256,155);x.font='800 34px Mont';x.fillText('ONE DOLLAR',256,200);});
+add(B(.5,.9,.4),M(0xe9ecef,.5),S4+.45,.45,0);const BILL=add(new THREE.PlaneGeometry(.75,.32),new THREE.MeshStandardMaterial({map:DOLT,roughness:.6,side:THREE.DoubleSide}),S4+.45,1.12,.1,scene,false);BILL.rotation.x=-.25;
+popT('TOMAN',.18,WHT,V3(S4-.93,2.3,.2),Wn('currency')-.05,40.4);popT('=',.3,WHT,V3(S4-.05,1.55,.3),Wn('prices')-.05,40.4);popT('$1',.32,GRN,V3(S4+.45,1.5,.2),Wn('prices')-.05,40.4,2.2);
+// ---- S5: imported tanker ship + the state pays the gap ----
+add(new THREE.PlaneGeometry(9,6),new THREE.MeshStandardMaterial({color:0x1f5f8f,roughness:.15,metalness:.3}),S5-.6,.04,-.2,scene,false).rotation.x=-Math.PI/2;
+const SHIP=new THREE.Group();SHIP.position.set(S5-.15,.05,-.6);SHIP.scale.setScalar(.85);scene.add(SHIP);
+{const hs=new THREE.Shape([new THREE.Vector2(-1.8,-.42),new THREE.Vector2(1.25,-.42),new THREE.Vector2(1.85,0),new THREE.Vector2(1.25,.42),new THREE.Vector2(-1.8,.42)]);
+ const ex=(d,c,y)=>{const g=new THREE.ExtrudeGeometry(hs,{depth:d,bevelEnabled:false});g.rotateX(-Math.PI/2);const m=add(g,M(c,.5,.2),0,y,0,SHIP);return m;};
+ ex(.3,0xa3231f,0);ex(.35,0x1c2430,.3);add(B(3.0,.04,.72),M(0x6b7d4f,.7),-.15,.67,0,SHIP);
+ for(const x of [-.9,-.3,.3,.9]){const d=add(new THREE.SphereGeometry(.2,24,12,0,Math.PI*2,0,Math.PI/2),M(0xe8e8e8,.4,.2),x,.68,0,SHIP);d.scale.y=.6;}
+ add(B(2.8,.05,.05),M(0xd0d0d0,.4,.6),0,.8,.15,SHIP);add(RB(.5,.75,.7,.03),M(0xf2f2f2,.45),-1.45,1.05,0,SHIP);add(B(.52,.08,.72),M(0x1d2a3a,.1,.6),-1.45,1.28,0,SHIP,false);
+ add(CY(.11,.13,.35,16),M(0xd21e2a,.4),-1.6,1.55,0,SHIP);}
+popT('IMPORTED',.18,WHT,V3(S5-.15,2.75,0),Wn('importing')-.05,45.7);popT('$1.00',.38,RED,V3(S5-.15,2.15,0),Wn('$1')-.02,45.7,2.0);popT('PER GALLON',.13,WHT,V3(S5-.15,1.85,0),Wn('$1')+.05,45.7);
+const BC=bar(3,RED),BP=bar(.33,GRN),GAP=add(B(.82,1,.52),new THREE.MeshBasicMaterial({color:new THREE.Color(YEL).multiplyScalar(1.2),toneMapped:false,transparent:true,opacity:.55,depthWrite:false}),S5+5.3,1.67,0,scene,false);
+setBar(BC,S5+4.2,3);setBar(BP,S5+5.3,.33);GAP.scale.set(1,2.67,1);
+popT('$1.00',.3,RED,V3(S5+4.2,3.25,0),45.9,48.3);popT('COST',.15,WHT,V3(S5+4.2,3.7,0),45.95,48.3);popT('$0.11',.3,GRN,V3(S5+5.3,.55,.35),Wn('pennies')-.05,48.3);
+popT('STATE PAYS',.15,YEL,V3(S5+5.3,1.7,.4),Wn('difference')-.05,48.3);
+// ---- S6: cars burn more, a truck slips across the border ----
+const PUMP6=new THREE.Group();PUMP6.position.set(S6-1.7,0,0);scene.add(PUMP6);add(RB(.6,1.4,.4,.05),M(0x239f40,.35),0,.7,0,PUMP6);add(B(.5,.35,.02),new THREE.MeshBasicMaterial({map:screen('$0.11','#22ff6a'),toneMapped:false}),0,1.12,.21,PUMP6,false);
+const CARS=[0xf2f2f2,0x2b62c9,0xc9a227].map((c,i)=>{const g=car(c);g.position.set(S6-.75+i*1.3,0,.3);scene.add(g);return g;});
+popT('BURN MORE',.2,RED,V3(S6+.2,1.55,.4),Wn('burn')-.05,50.3);
+const TRK6=truck(0x5a5f66);scene.add(TRK6);
+const GATE=new THREE.Group();GATE.position.set(S6+4.6,0,-.9);scene.add(GATE);add(RB(.6,1.3,.6,.04),M(0xe8e4da,.6),.8,.65,-.4,GATE);add(B(.62,.1,.62),M(0xb33,.5),.8,1.35,-.4,GATE);
+const STR=tex(512,32,x=>{for(let i=0;i<8;i++){x.fillStyle=i%2?'#fff':'#d21e2a';x.fillRect(i*64,0,64,32);}});
+STR.rotation=Math.PI/2;STR.center.set(.5,.5);const ARM=new THREE.Group();ARM.position.set(0,.9,0);GATE.add(ARM);add(B(.08,.08,2.2),new THREE.MeshStandardMaterial({map:STR,roughness:.5}),0,0,1.1,ARM);add(B(.18,.9,.18),M(0x333333,.5),0,.45,0,GATE);
+popT('BORDER',.2,WHT,V3(S6+5.4,1.75,-1.3),48.3,52.4);popT('SMUGGLED',.24,RED,V3(S6+3.6,2.45,.2),Wn('smuggled')-.05,52.3);
+// ---- S7: price steps ----
+const STEP=[[.3,-1.2,'1,500',Wn('raising')],[.6,0,'3,000',Wn('prices',1)],[.9,1.2,'5,000',Wn('steps')]];
+STEP.forEach(([h,dx,p,t0])=>{add(B(1.1,h,1.0),M(0xe9ecef,.55),S7+dx,h/2,0);add(B(.06,1.0,.06),M(0xcfcfcf,.4,.5),S7+dx,h+.5,-.3);add(RB(1.0,.5,.08,.04),M(0x14161c,.5),S7+dx,h+1.15,-.3);});
+popT('1,500',.2,GRN,V3(S7-1.2,1.33,-.22),STEP[0][3]-.02,56.7);popT('3,000',.2,YEL,V3(S7,1.63,-.22),STEP[1][3]-.02,56.7);popT('5,000',.2,ORG,V3(S7+1.2,1.93,-.22),STEP[2][3]-.02,Wn('doubled')-.15);
+popT('10,000',.2,RED,V3(S7+1.2,1.93,-.22),Wn('doubled')-.02,56.7,2.2);popT('x2',.4,RED,V3(S7+1.2,2.55,-.1),Wn('doubled')-.02,56.7,2.2);popT('SEPTEMBER',.15,WHT,V3(S7+1.2,3.05,-.1),Wn('september')-.05,56.7);
+popT('TOMAN / LITER',.12,WHT,V3(S7,2.45,-.2),STEP[0][3]-.02,Wn('september')-.1);
+// ---- split 2 + CTA ----
+const tS2=Wn('so',3),tCTA=Wn('which');
+popT('MARKET',.34,RED,V3(US-.05,5.5,-1.3),Wn('market',2)-.05,tCTA);popT('SUBSIDY',.34,GRN,V3(IR-.05,5.5,-1.3),Wn('subsidy')-.05,tCTA);
+popT('?',.36,YEL,V3(US-1.22,1.62,1.1),tCTA+.05,63);
+// ---- cast for the story ----
+const OFF=person('guard',S3+1.6,.6,-.25),PAY=['manager','printer','seller','teller'].map((n,i)=>person(n,PX[i],.3,0));
+function act(P,t,kind,r=1){for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);relaxArms(P);
+ const br=Math.sin(t*2.1+P.ph);pose(P,'spine03',.04+.02*br,0,0);pose(P,'head',.04,.08*Math.sin(t*1.3+P.ph),0);
+ if(kind==='pointR'){pose(P,'upperarm01R',AD[0]+.3*r,0,AD[2]-1.45*r);pose(P,'lowerarm01R',0,0,-.15*r);curl(P,'R',.55*r,.3);}
+ else if(kind==='pointL'){pose(P,'upperarm01L',AD[0]+.3*r,0,-AD[2]+1.45*r);pose(P,'lowerarm01L',0,0,.15*r);curl(P,'L',.55*r,.3);}
+ else if(kind==='shock'||kind==='cheer'){pose(P,'upperarm01R',AD[0]-.1*r,0,AD[2]-1.9*r);pose(P,'lowerarm01R',0,0,-.5*r);pose(P,'upperarm01L',AD[0]-.1*r,0,-AD[2]+1.9*r);pose(P,'lowerarm01L',0,0,.5*r);curl(P,'R',.3);curl(P,'L',.3);
+  if(kind==='shock')pose(P,'head',-.12*r,.12*Math.sin(t*9)*r,0);}
+ else if(kind==='shrug'){pose(P,'upperarm01R',AD[0]+.1*r,0,AD[2]-.5*r);pose(P,'lowerarm01R',0,0,-1.0*r);pose(P,'upperarm01L',AD[0]+.1*r,0,-AD[2]+.5*r);pose(P,'lowerarm01L',0,0,1.0*r);curl(P,'R',.15);curl(P,'L',.15);pose(P,'head',.04,.1*Math.sin(t*2)*r,.1*r);}
+ P.g.updateMatrixWorld(true);}
+const place=(P,x,z,ry)=>{P.g.visible=true;P.g.position.set(x,0,z);P.g.rotation.y=ry;};
+function story(t){
+ for(const P of [mike,guy,OFF])P.g.visible=false;
+ if(t<7.38){place(mike,US-.85,.55,.25);act(mike,t,'pointL',sm(5.9,6.3,t));}
+ else if(t<22.96){place(mike,S1+1.25,1.0,-.25);if(t<19.78)act(mike,t,'pointR',sm(7.5,7.9,t));else if(t<21.2)act(mike,t,'shrug',sm(19.8,20.1,t));else act(mike,t,'pointR',sm(21.2,21.5,t));}
+ else if(t>=tS2&&t<tCTA){place(mike,US-.85,.55,.25);act(mike,t,'pointL',sm(tS2+.3,tS2+.7,t));}
+ else if(t>=tCTA){place(mike,US-.85,.8,0);act(mike,t,'shrug',sm(tCTA+.05,tCTA+.4,t));}
+ if(t>=27.82&&t<28.9){place(guy,IR-.85,.55,.25);act(guy,t,'shrug',.6);}
+ else if(t>=35.92&&t<40.5){place(guy,S4+1.4,.6,-.25);if(t<38.9)act(guy,t,'pointR',sm(37.6,37.9,t));else act(guy,t,'shrug',sm(38.9,39.2,t));}
+ else if(t>=52.34&&t<tS2){place(guy,S7+2.3,.4,-.3);if(t<56.2)act(guy,t,'pointR',sm(53.4,53.7,t));else act(guy,t,'shock',sm(56.25,56.5,t));}
+ else if(t>=tS2&&t<tCTA){place(guy,IR-.85,.55,.25);act(guy,t,'shrug',sm(59.6,59.9,t));}
+ if(t>=28.9&&t<35.92){place(OFF,S3+1.6,.6,-.25);act(OFF,t,'pointR',sm(29.2,29.5,t));}
+ else if(t>=40.5&&t<45.76){place(OFF,S5+2.0,1.0,-.3);act(OFF,t,'pointR',sm(42.8,43.1,t));}
+ else if(t>=45.76&&t<48.34){place(OFF,S5+6.5,.6,-.3);act(OFF,t,'pointR',sm(46.0,46.3,t));}
+ if(t>22.5&&t<28.2)PAY.forEach((P,i)=>{const a=PT[i]+.45;act(P,t,'cheer',Math.max(sm(a,a+.3,t),sm(26.36,26.7,t)));const c=COINS[i],k=(t-PT[i])/.45;c.visible=k>0&&k<1;
+  if(c.visible){c.position.set(S2+(PX[i]-S2)*k,1.55+Math.sin(k*Math.PI)*.9-.5*k,1.5+(.55-1.5)*k);c.rotation.z=t*12;}});
+ // S1 layers + props
+ for(const m of LAYM){const u=m.userData,h=u.h*sm(u.t0,u.t0+.6,t);m.visible=h>.002;m.scale.y=Math.max(h,.001);m.position.y=u.y0+h/2;m.material.emissiveIntensity=.15+.5*(t>19.78&&t<21.2?(.5+.5*Math.sin(t*10)):0);}
+ PS(P_BRL.userData.g,win(t,7.5,10.35));PS(P_REF.userData.g,win(t,10.5,13.35));PS(P_TRK.userData.g,win(t,13.5,16.35));PS(P_COIN.userData.g,win(t,16.6,19.7));PS(P_GLB.userData.g,win(t,21.0,23.0));P_GLB.userData.s.rotation.y=t*.8;
+ // S3 bars
+ const bs=win(t,29.3,32.0);BM.visible=BI.visible=bs>.002;setBar(BM,S3-1.0,3*bs);setBar(BI,S3+.3,(3-(3-.35)*sm(Wn('far'),Wn('far')+.5,t))*bs);
+ PS(BOARD,win(t,32.0,35.8));
+ // S4 pile grows
+ PILE.count=t<36.2?0:6*Math.round(4+24*sm(Wn('lost'),Wn('lost')+.8,t));
+ // S5 bars + gap
+ GAP.visible=t>Wn('difference')-.05;GAP.scale.y=2.67*sm(Wn('difference')-.05,Wn('difference')+.4,t);GAP.position.y=.36+GAP.scale.y/2;
+ // S6 truck + gate
+ const k6=sm(50.3,52.3,t);TRK6.visible=t>50.2;TRK6.position.set(S6+2.0+4.6*k6,0,.15);ARM.rotation.x=-1.35*sm(50.8,51.2,t);
+}
+// white flash on every change of place
+const FLASH=[7.38,22.96,27.82,28.9,35.92,40.5,45.76,48.34,52.34,tS2,tCTA];
+
 // ================= LIGHTS / CAMERA / POST =================
 const cam=new THREE.PerspectiveCamera(40,W/H,.05,300);
 scene.add(new THREE.HemisphereLight(0xfff1dc,0x4a3a2a,.55));
@@ -142,19 +297,39 @@ const SHOTS=[
  [0,tIran-.22,D([US+.9,2.1,7.6],[US+.4,2.1,6.6],[US-.2,2.2,0],[US-.2,2.2,0],50,46,.0008)],
  [tIran-.22,tIran+.08,D([US+.4,2.1,6.6],[IR-.4,2.1,6.6],[US-.2,2.2,0],[IR-.2,2.2,0],42,44,.0003)],
  [tIran+.08,tSplit,D([IR-.6,2.1,7.4],[IR-.1,2.5,5.6],[IR-.2,2.2,0],[IR,2.7,0],50,46,.0008)],
- [tSplit,99,D([IR,2.9,7.6],[IR,2.9,7.2],[IR,2.9,0],[IR,2.9,0],46,46,.0003)]];
+ [tSplit,4.86,D([IR,2.9,7.6],[IR,2.9,7.2],[IR,2.9,0],[IR,2.9,0],46,46,.0003)],
+ ...STORY_SHOTS()];
+function STORY_SHOTS(){const F=(t0,t1,a,b,la,lb)=>[t0,t1,D(a,b,la,lb,46,46,.0001)],c1=S1-.45,Z1=1.1;
+ const q=[[4.86,7.38,[US-.2,1.8,5.6],[US-.5,1.6,4.8],[US-.4,1.5,0],[US-.4,1.45,0]],
+  [7.38,10.48,[c1,1.6,9.4*Z1],[c1,1.4,8.6*Z1],[c1,1.2,0],[c1,1.1,0]],[10.48,13.48,[c1+.3,1.8,8.6*Z1],[c1-.2,1.8,8.2*Z1],[c1,1.5,0],[c1,1.5,0]],
+  [13.48,16.4,[c1-.3,2.0,8.4*Z1],[c1+.2,2.1,8.0*Z1],[c1,1.8,0],[c1,1.8,0]],[16.4,19.78,[c1+.2,2.3,8.2*Z1],[c1,2.4,7.6*Z1],[c1,2.1,0],[c1,2.3,0]],
+  [19.78,22.96,[c1,2.0,7.8*Z1],[c1-.3,1.9,9.4*Z1],[c1,1.6,0],[c1,1.6,0]],
+  [22.96,PT[0]-.05,[S2,1.6,12.8],[S2,1.5,12.0],[S2,1.2,0],[S2,1.2,0]]];
+ for(let i=0;i<4;i++)q.push([PT[i]-.05,i<3?PT[i+1]-.05:26.3,[PX[i],1.45,4.6],[PX[i]+.2,1.45,4.2],[PX[i],1.25,0],[PX[i],1.25,0]]);
+ q.push([26.3,27.82,[S2,1.7,11.2],[S2,1.6,12.6],[S2,1.2,0],[S2,1.2,0]],
+  [27.82,28.9,[IR-.4,2.1,7.2],[IR-.2,2.2,6.4],[IR-.2,2.3,0],[IR,2.4,0]],
+  [28.9,32.0,[S3+.3,1.9,10.2],[S3+.3,1.8,9.2],[S3+.3,1.6,0],[S3+.3,1.6,0]],[32.0,35.92,[S3+.3,2.2,8],[S3+.3,2.3,7.0],[S3+.3,2.1,0],[S3+.3,2.1,0]],
+  [35.92,40.5,[S4+.2,1.5,7.5],[S4+.2,1.9,8.6],[S4+.2,1.3,0],[S4+.2,1.5,0]],
+  [40.5,45.76,[S5,2.3,9.4],[S5+.5,2.0,8.4],[S5+.3,1.2,0],[S5+.3,1.2,0]],[45.76,48.34,[S5+5.2,1.9,8.4],[S5+5.2,1.9,7.8],[S5+5.2,1.6,0],[S5+5.2,1.6,0]],
+  [48.34,50.3,[S6-.4,1.5,7.4],[S6-.2,1.4,6.8],[S6-.4,.8,0],[S6-.2,.8,0]],[50.3,52.34,[S6+3.4,1.7,8.6],[S6+4.6,1.6,8.0],[S6+3.6,1.0,0],[S6+4.8,1.0,0]],
+  [52.34,55.08,[S7-.55,1.8,8.6],[S7-.05,2.0,7.6],[S7-.25,1.5,0],[S7-.25,1.7,0]],[55.08,tS2,[S7+1.4,2.2,6.6],[S7+1.6,2.3,5.6],[S7+1.6,2.1,0],[S7+1.6,2.1,0]],
+  [tS2,tCTA,[IR,2.9,7.6],[IR,2.9,7.2],[IR,2.9,0],[IR,2.9,0]],[tCTA,99,[US-.75,1.5,3.9],[US-.75,1.5,3.2],[US-.75,1.45,0],[US-.75,1.45,0]]);
+ return q.map(a=>F(...a));}
+const SPLIT2=[US,IR].map(X=>D([X-.05,2.6,14.2],[X-.05,2.6,12.8],[X-.05,2.6,0],[X-.05,2.6,0],46,46,.0002));
 const SPLIT=[US,IR].map(X=>D([X-.05,2.3,13.6],[X-.05,2.3,12.4],[X-.05,2.3,0],[X-.05,2.3,0],46,46,.0002));
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
 function camTo([p,l,f,a]){cam.position.copy(p);cam.fov=f;cam.updateProjectionMatrix();cam.lookAt(l);camP=cam.position.clone();bokeh.uniforms.focus.value=p.distanceTo(l);bokeh.uniforms.aperture.value=a;}
-function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],tSplit+1.2)-S[0])));
+function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],63)-S[0])));
  const [p,l,f,a]=S[2](k);cam.position.copy(p);cam.fov=f;cam.updateProjectionMatrix();cam.lookAt(l);camP=cam.position.clone();bokeh.uniforms.focus.value=p.distanceTo(l);bokeh.uniforms.aperture.value=a;}
 await loaded;
 const cap=document.getElementById('cap');
 const spl=document.getElementById('split'),gc=document.getElementById('c');
 window.renderAt=t=>{setCam(t);animate(t);
- if(t>=tSplit&&t<5.2){ // split screen: US top, Iran bottom, both prices at once
-  spl.width=gc.width;spl.height=gc.height;const x=spl.getContext('2d'),w=gc.width,h=gc.height,k=ez(Math.min(1,(t-tSplit)/1.2));
-  cam.aspect=.5*W/H;for(let i=0;i<2;i++){camTo(SPLIT[i](k));comp.render();x.drawImage(gc,0,0,w,h,i*w*.5,0,w*.5,h);}cam.aspect=W/H;cam.updateProjectionMatrix();
+ const sp2=t>=tS2&&t<tCTA;
+ document.getElementById('fl').style.opacity=String(Math.max(0,...FLASH.map(c=>t>=c&&t<c+.16?.6*(1-(t-c)/.16):0)));
+ if((t>=tSplit&&t<4.86)||sp2){ // split screen: US left, Iran right, both prices at once
+  spl.width=gc.width;spl.height=gc.height;const x=spl.getContext('2d'),w=gc.width,h=gc.height,k=sp2?ez(Math.min(1,(t-tS2)/(tCTA-tS2))):ez(Math.min(1,(t-tSplit)/1.2));
+  cam.aspect=.5*W/H;for(let i=0;i<2;i++){camTo((sp2?SPLIT2:SPLIT)[i](k));comp.render();x.drawImage(gc,0,0,w,h,i*w*.5,0,w*.5,h);}cam.aspect=W/H;cam.updateProjectionMatrix();
   x.fillStyle='#fff';x.fillRect(w*.5-5,0,10,h);spl.style.display='block';cap.style.top='80%';}
  else {spl.style.display='none';cap.style.top='74%';}
  let c=null;for(const x of CH)if(t>=x.s-.03)c=x;const on=c&&t<c.e+.35;cap.textContent=on?c.t:'';const wa=on?t-c.s:1;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;

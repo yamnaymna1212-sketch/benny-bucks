@@ -25,6 +25,10 @@ S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register']}
 put(S['ting'],0.0,.28)                       # ting at 0 s (channel rule)
 put(S['whoosh'],Wn('iran')-.25,.32)          # camera flies US -> Iran
 put(S['cash-register'],Wn('$0')+.03,.3)      # $0.11 key number
+# story (few SFX): whoosh on each change of place, one cash on the $1 import price, a ting on 'doubled'
+for c in [7.38,22.96,27.82,28.9,35.92,40.5,45.76,48.34,52.34,Wn('so',3),Wn('which')]:put(S['whoosh'],c-.12,.2)
+put(S['cash-register'],Wn('$1')+.03,.26)
+put(S['ting'],Wn('doubled')+.02,.26)
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep6_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep6_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep6.wav'],check=True);print('ok',DUR)
