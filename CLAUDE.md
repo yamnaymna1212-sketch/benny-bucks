@@ -7,6 +7,11 @@ Doug rules: 61–65 s, the user's ElevenLabs voice (via connector: generations_c
 Cast: only Doug (and his family) are penguins; every other role is a different snow-world animal. Currency = fish (1 fish = $10).
 Code: Remotion in `studio/` — rig `studio/src/penguin/`, episodes `studio/src/videos/doug*.tsx`, phrase timings `studio/src/data/<slug>.json`.
 
+# Approval rule + report format (user rule 2026-11-08)
+- Never post, send, spend money, or change a setting/connector/environment without the user's explicit approval.
+- End every finished task with this report (in Arabic): Done / Files / Decisions needed from you / Blockers / Next.
+- Weekly review every Sunday: see videos/inside-money/WEEKLY_REVIEW.md (reviews saved in videos/inside-money/reviews/).
+
 # TOKEN GUARD (user rule, always on)
 Before doing anything expensive, WARN the user in Arabic in 1–2 lines and offer the cheaper option, then wait for their choice:
 - Full video render / re-render (any render > 5 s) -> offer ONE still or the 5-s hook preview instead; never re-render a finished episode unless asked.
