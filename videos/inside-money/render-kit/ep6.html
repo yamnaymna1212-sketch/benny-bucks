@@ -1,0 +1,138 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3;pointer-events:none}
+.cap{position:absolute;left:60px;width:600px;top:74%;text-align:center;font:800 64px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-shadow:0 3px 8px rgba(0,0,0,.75),0 0 2px #000}
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP6 HOOK v1 (0-5 s): gas USA vs Iran. Same pump, two stations. Left set x=0 (US, red glow $4.15), right set x=22 (Iran, green glow $0.11).
+// Stills: node stills.mjs ep6.html 0.5 1.8 3.0 4.4
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
+await document.fonts.load('800 64px Mont');
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.5;scene.backgroundBlurriness=.05;
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM);
+function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),RB=(w,h,d,r=.03)=>new RoundedBoxGeometry(w,h,d,3,r),V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
+let sdd=7;const rr=()=>{sdd=(sdd*16807)%2147483647;return sdd/2147483647;};
+const GOLD=M(0xc9a54a,.25,1);
+const glowMat=(c,i=1.6)=>[new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(i*1.3),toneMapped:false}),new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(.35),roughness:.4,emissive:c,emissiveIntensity:.25})];
+function big(str,size,c,i=1.1){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:8,bevelEnabled:true,bevelThickness:size*.03,bevelSize:size*.02,bevelSegments:3});
+ g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);const m=new THREE.Mesh(g,glowMat(c,i));m.scale.setScalar(0);scene.add(m);return m;}
+const flagT=tex(1140,600,x=>{const FW=1140,FH=600;for(let i=0;i<13;i++){x.fillStyle=i%2?'#ffffff':'#b22234';x.fillRect(0,i*FH/13,FW,FH/13+1);}
+ const cw=FW*.4,chh=FH*7/13;x.fillStyle='#3c3b6e';x.fillRect(0,0,cw,chh);x.fillStyle='#fff';
+ const star=(cx,cy,r)=>{x.beginPath();for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,r2=k%2?r*.4:r;x.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);}x.closePath();x.fill();};
+ for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++)star(cw/12*(2*c+1+(r%2)),chh/10*(r+1),chh*.0616*1.6);});
+const flags=[];
+
+const irT=tex(1140,600,x=>{const FW=1140,FH=600;x.fillStyle='#239f40';x.fillRect(0,0,FW,FH/3+1);x.fillStyle='#fff';x.fillRect(0,FH/3,FW,FH/3+1);x.fillStyle='#da0000';x.fillRect(0,2*FH/3,FW,FH/3+1);
+ x.strokeStyle='#da0000';x.lineWidth=14;x.beginPath();x.arc(FW/2,FH/2,46,0,Math.PI*2);x.stroke();x.beginPath();x.moveTo(FW/2,FH/2-60);x.lineTo(FW/2,FH/2+60);x.stroke();});
+function makeFlag(tx,x,y,z,w){const h=w*10/19,g=new THREE.PlaneGeometry(w,h,40,14),o=Float32Array.from(g.attributes.position.array);
+ add(g,new THREE.MeshPhysicalMaterial({map:tx,roughness:.7,sheen:1,sheenRoughness:.5,side:THREE.DoubleSide}),x+w/2,y-h/2,z,scene,true);
+ add(new THREE.CylinderGeometry(.04,.06,y+.1,12),M(0xdedede,.3,.8),x,(y+.1)/2,z);add(new THREE.SphereGeometry(.09,16,12),GOLD,x,y+.15,z);flags.push({g,o,w});}
+function waveFlags(t){for(const f of flags){const p=f.g.attributes.position;for(let i=0;i<p.count;i++){const u=(f.o[i*3]+f.w/2)/f.w;p.setZ(i,Math.sin(u*Math.PI*2.6-t*6)*.06*f.w*u);}p.needsUpdate=true;f.g.computeVertexNormals();}}
+// ================= STATIONS =================
+const US=0,IR=22,SIGN=[0xff3a2a,0x22ff6a];
+const asph=pbr('asphalt_02',14,8,{roughness:.9}),conc=pbr('concrete_pavement',6,4,{roughness:.8}),wall=pbr('painted_plaster_wall',5,2,{roughness:.8});
+add(B(80,.1,60),asph,10,-.06,-8,scene,false);
+function screen(txt,col){return tex(256,128,x=>{x.fillStyle='#060a08';x.fillRect(0,0,256,128);x.fillStyle=col;x.font='800 22px Mont';x.textAlign='center';x.fillText('REGULAR  PER GAL',128,34);x.font='800 70px Mont';x.fillText(txt,128,104);});}
+function station(X,hex,txt,flagTex,band){
+ add(B(9,.12,7.5),conc,X,.01,-.2,scene,false);
+ // store behind
+ add(B(8.4,3.4,2.6),wall,X,1.7,-5.6);add(B(6.6,1.5,.08),M(0x9fc3d6,.1,.2,{transparent:true,opacity:.75}),X,1.5,-4.27,scene,false);add(B(8.6,.22,2.8),M(band,.5),X,3.5,-5.6);
+ // pump
+ const P=new THREE.Group();P.position.set(X,0,0);scene.add(P);
+ add(RB(.8,1.7,.5,.06),M(0xe53935,.35,.1),0,.85,0,P);add(RB(.84,.12,.54,.04),M(0x222222,.5),0,1.74,0,P);add(B(.7,.5,.02),new THREE.MeshBasicMaterial({map:screen(txt,'#'+hex.toString(16).padStart(6,'0')),toneMapped:false}),0,1.38,.27,P,false);
+ add(B(.62,.36,.02),M(0x111111,.4),0,.98,.27,P,false);add(RB(.18,.4,.12,.03),M(0x202020,.5),.5,1.1,.1,P);
+ const hose=new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V3(.42,.9,.3),V3(.62,.6,.5),V3(.4,.55,.85),V3(-.1,.95,.95)]),30,.025,8);add(hose,M(0x111111,.6),0,0,0,P,false);
+ // price sign behind the pump: dark panel + glowing 3D price (Zack glow rule)
+ add(B(.12,2.7,.12),M(0xcfcfcf,.4,.5),X-1.1,1.35,-1.4);add(B(.12,2.7,.12),M(0xcfcfcf,.4,.5),X+1.1,1.35,-1.4);add(RB(2.7,1.25,.14,.06),M(0x14161c,.5),X,3.05,-1.4);
+ const pr=big(txt,.62,hex,2.2);pr.position.set(X,2.8,-1.28);
+ // flag
+ makeFlag(flagTex,X+1.45,5.0,-1.6,1.5);
+ return {pr,pump:P};
+}
+const sUS=station(US,SIGN[0],'$4.15',flagT,0x1e5ab8),sIR=station(IR,SIGN[1],'$0.11',irT,0x239f40);
+// ================= CAST =================
+const gl=new GLTFLoader(),SRC={};
+for(const n of['mike','landlord']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
+ g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
+  if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
+  if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}}});SRC[n]=g;}
+const qx=new THREE.Quaternion(),E=new THREE.Euler();window.missingBones=[];
+function pose(P,n,x,y,z){const b=P.BN[n];if(!b){if(!window.missingBones.includes(n))window.missingBones.push(n);return;}b.quaternion.copy(P.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);}
+const AD=[0.12,0,0.72],FC=[1,0,0];
+function curl(P,side,v,thumb=v*.6){for(const [n] of Object.entries(P.BN)){const m=n.match(/^finger(\d)-(\d)(L|R)$/);if(!m||m[3]!==side)continue;
+ const k=(m[1]==='1'?thumb:v)*(m[2]==='1'?.7:1);pose(P,n,FC[0]*k,FC[1]*k,FC[2]*k*(side==='L'?-1:1));}}
+function person(name,x,z,ry){const g=skClone(SRC[name]);g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);
+ const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest,ph:rr()*6.28};}
+const relaxArms=P=>{pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01L',0,0,0);pose(P,'lowerarm01R',0,0,0);};
+const mike=person('mike',US+.15,1.15,Math.PI),guy=person('landlord',IR-.15,1.15,Math.PI);
+// ================= TIMELINE =================
+const TLN=await (await fetch('timeline_ep6.json')).json(),WD=TLN.words,CH=TLN.chunks;
+const Wn=(w,n=0)=>{const k=WD.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$]/g,'')===w);return (k[n]||k[k.length-1]||{s:0}).s;};
+const tTr=Wn('trump'),tIran=Wn('iran'),tEl=Wn('$0');
+const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
+const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
+const camP0=V3(0,0,0);let camP=V3(0,0,0);
+function driver(P,t,on,reactT){for(const n of['upperleg01L','upperleg01R','lowerleg01L','lowerleg01R'])pose(P,n,0,0,0);relaxArms(P);
+ const br=Math.sin(t*2.1+P.ph),holding=1-sm(reactT,reactT+.25,t),react=sm(reactT,reactT+.3,t);
+ pose(P,'spine03',.1+.02*br,0,0);
+ pose(P,'upperarm01R',AD[0]+1.0*holding+.9*react,0,AD[2]-.25*holding-.5*react);pose(P,'lowerarm01R',.5*holding+.3*react,0,0);curl(P,'R',.6*holding+.1);
+ pose(P,'upperarm01L',AD[0]+.25*holding+1.1*react,0,-AD[2]+.1+.55*react);pose(P,'lowerarm01L',.4*holding+.3*react,0,0);curl(P,'L',.3);
+ pose(P,'head',.05,.35*react*(on?1:0),0);P.g.updateMatrixWorld(true);}
+function animate(t){
+ const reactUS=tIran-.9,reactIR=tIran+.7;
+ driver(mike,t,true,reactUS);driver(guy,t,false,reactIR);guy.g.rotation.y=Math.PI+.25*sm(reactIR,reactIR+.4,t);mike.g.rotation.y=Math.PI-.55*sm(reactUS,reactUS+.35,t);
+ {const v=pop(t,tTr-.05,.3);sUS.pr.visible=v>.002;sUS.pr.scale.setScalar(Math.max(v,.002));sUS.pr.position.y=2.8+.03*Math.sin(t*3);}
+ {const v=pop(t,tIran-.05,.3);sIR.pr.visible=v>.002;sIR.pr.scale.setScalar(Math.max(v,.002));sIR.pr.position.y=2.8+.03*Math.sin(t*3);}
+ waveFlags(t);}
+// ================= LIGHTS / CAMERA / POST =================
+const cam=new THREE.PerspectiveCamera(40,W/H,.05,300);
+scene.add(new THREE.HemisphereLight(0xfff1dc,0x4a3a2a,.55));
+const sun=new THREE.DirectionalLight(0xffd8a8,1.9);sun.position.set(-8,12,16);sun.target.position.set(11,0,0);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-14,right:36,top:10,bottom:-10,near:1,far:60});sun.shadow.bias=-.0004;scene.add(sun);scene.add(sun.target);
+const comp=new EffectComposer(renderer);comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);if(any(isnan(c))||any(isinf(c)))c=vec4(0.,0.,0.,1.);gl_FragColor=min(c,vec4(64.));}'}));   // NaN guard
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.18,1.3));
+const bokeh=new BokehPass(scene,cam,{focus:3,aperture:.001,maxblur:.004});comp.addPass(bokeh);comp.addPass(new OutputPass());
+const L=(a,b,k)=>V3(a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k);
+const D=(p0,p1,l0,l1,f0,f1,ap=.001)=>k=>[L(p0,p1,k),L(l0,l1,k),f0+(f1-f0)*k,ap];
+const SHOTS=[
+ [0,tIran-.35,D([US+1.9,2.0,7.4],[US+1.2,1.9,6.4],[US,1.95,0],[US,1.95,0],50,46,.0008)],
+ [tIran-.35,tIran+.1,D([US+1.2,1.9,6.4],[IR-1.2,1.9,6.4],[US,1.95,0],[IR,1.95,0],42,44,.0003)],
+ [tIran+.1,99,D([IR-1.9,2.0,7.4],[IR-1.2,1.9,6.4],[IR,1.95,0],[IR,1.95,0],50,46,.0008)]];
+const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],64.2)-S[0])));
+ const [p,l,f,a]=S[2](k);cam.position.copy(p);cam.fov=f;cam.updateProjectionMatrix();cam.lookAt(l);camP=cam.position.clone();bokeh.uniforms.focus.value=p.distanceTo(l);bokeh.uniforms.aperture.value=a;}
+await loaded;
+const cap=document.getElementById('cap');
+window.renderAt=t=>{setCam(t);animate(t);
+ let c=null;for(const x of CH)if(t>=x.s-.03)c=x;const on=c&&t<c.e+.35;cap.textContent=on?c.t:'';const wa=on?t-c.s:1;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
+ comp.render();return true;};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>
