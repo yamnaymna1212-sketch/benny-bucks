@@ -79,11 +79,22 @@ function station(X,hex,txt,flagTex,band){
 }
 const sUS=station(US,SIGN[0],'$4.15',flagT,0x1e5ab8),sIR=station(IR,SIGN[1],'$0.11',irT,0x239f40);
 // ================= CAST =================
+// Trump look (EP9/EP14, user reference 2026-11-03): navy suit, white shirt, red tie, blond hair, tan skin, blue eyes
+function remap(mt,f){if(!mt.map)return;const im=mt.map.image,c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),p=d.data,Wt=c.width,Ht=c.height;
+ for(let i=0;i<p.length;i+=4){const q=i/4,u=(q%Wt)/Wt,v=Math.floor(q/Wt)/Ht;const o=f(p[i],p[i+1],p[i+2],u,v);p[i]=o[0];p[i+1]=o[1];p[i+2]=o[2];}x.putImageData(d,0,0);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.flipY=mt.map.flipY;t.wrapS=mt.map.wrapS;t.wrapT=mt.map.wrapT;t.anisotropy=8;mt.map=t;mt.needsUpdate=true;}
+const lum=(r,g,b)=>.3*r+.59*g+.11*b;
+function styleTrump(o,mt){const n=o.name+mt.name;
+ if(/suit_?3/i.test(n)){remap(mt,(r,g,b,u,v)=>{const l=lum(r,g,b);if(u>.84&&v<.27&&r>90)return [214,18,26];if(l>150)return [246,246,250];return [17,25,60];});if(mt.normalScale)mt.normalScale.set(.25,.25);mt.roughness=.72;mt.metalness=0;mt.metalnessMap=null;mt.roughnessMap=null;mt.needsUpdate=true;}
+ if(/eyebrow/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.55+.3*l;return [Math.min(255,200*k),Math.min(255,150*k),Math.min(255,70*k)];});mt.color.set(0xffffff);mt.roughness=.6;}
+ else if(/short04/i.test(n)){remap(mt,(r,g,b)=>{const l=lum(r,g,b)/255,k=.72+.45*l;return [Math.min(255,236*k),Math.min(255,182*k),Math.min(255,82*k)];});mt.color.set(0xffffff);mt.roughness=.55;}
+ if(/body/i.test(n))mt.color.setRGB(1,.66,.43);
+ if(/high-poly/i.test(n))remap(mt,(r,g,b)=>{const l=lum(r,g,b);return (r>g+12&&r>b+12&&l<200)?[l*.45,l*.85,Math.min(255,l*1.9+40)]:[r,g,b];});}
 const gl=new GLTFLoader(),SRC={};
-for(const n of['mike','landlord']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
+for(const n of['trump','landlord']){const g=(await gl.loadAsync(`dl/models/cast/${n}.glb`)).scene;
  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;const mt=o.material;
   if(mt.normalMap&&/bump/i.test(mt.normalMap.name)){mt.normalMap=null;mt.needsUpdate=true;}
-  if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}}});SRC[n]=g;}
+  if(mt.transparent||/hair|brow|lash|ponytail|bob|short|bun|messy|braid/i.test(o.name+mt.name)){mt.transparent=false;mt.alphaTest=.45;mt.depthWrite=true;mt.side=THREE.DoubleSide;}
+  if(n==='trump')styleTrump(o,mt);}});SRC[n]=g;}
 const qx=new THREE.Quaternion(),E=new THREE.Euler();window.missingBones=[];
 function pose(P,n,x,y,z){const b=P.BN[n];if(!b){if(!window.missingBones.includes(n))window.missingBones.push(n);return;}b.quaternion.copy(P.rest.get(b));qx.setFromEuler(E.set(x,y,z));b.quaternion.multiply(qx);}
 const AD=[0.12,0,0.72],FC=[1,0,0];
@@ -92,7 +103,7 @@ function curl(P,side,v,thumb=v*.6){for(const [n] of Object.entries(P.BN)){const 
 function person(name,x,z,ry){const g=skClone(SRC[name]);g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);
  const BN={};g.traverse(o=>{if(o.isBone)BN[o.name]=o;});const rest=new Map();for(const b of Object.values(BN))rest.set(b,b.quaternion.clone());return {g,BN,rest,ph:rr()*6.28};}
 const relaxArms=P=>{pose(P,'upperarm01L',AD[0],AD[1],-AD[2]);pose(P,'upperarm01R',AD[0],-AD[1],AD[2]);pose(P,'lowerarm01L',0,0,0);pose(P,'lowerarm01R',0,0,0);};
-const mike=person('mike',US-.85,.55,.25),guy=person('landlord',IR-.85,.55,.25);
+const mike=person('trump',US-.85,.55,.25),guy=person('landlord',IR-.85,.55,.25);
 // ================= TIMELINE =================
 const TLN=await (await fetch('timeline_ep6.json')).json(),WD=TLN.words,CH=TLN.chunks;
 const Wn=(w,n=0)=>{const k=WD.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$]/g,'')===w);return (k[n]||k[k.length-1]||{s:0}).s;};
@@ -132,7 +143,7 @@ const SHOTS=[
  [tIran-.22,tIran+.08,D([US+.4,2.1,6.6],[IR-.4,2.1,6.6],[US-.2,2.2,0],[IR-.2,2.2,0],42,44,.0003)],
  [tIran+.08,tSplit,D([IR-.6,2.1,7.4],[IR-.1,2.5,5.6],[IR-.2,2.2,0],[IR,2.7,0],50,46,.0008)],
  [tSplit,99,D([IR,2.9,7.6],[IR,2.9,7.2],[IR,2.9,0],[IR,2.9,0],46,46,.0003)]];
-const SPLIT=[D([US-.3,2.75,9.4],[US-.3,2.75,8.6],[US-.3,2.75,0],[US-.3,2.75,0],46,46,.0003),D([IR-.3,2.75,9.4],[IR-.3,2.75,8.6],[IR-.3,2.75,0],[IR-.3,2.75,0],46,46,.0003)];
+const SPLIT=[US,IR].map(X=>D([X-.05,2.3,13.6],[X-.05,2.3,12.4],[X-.05,2.3,0],[X-.05,2.3,0],46,46,.0002));
 const ez=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
 function camTo([p,l,f,a]){cam.position.copy(p);cam.fov=f;cam.updateProjectionMatrix();cam.lookAt(l);camP=cam.position.clone();bokeh.uniforms.focus.value=p.distanceTo(l);bokeh.uniforms.aperture.value=a;}
 function setCam(t){const S=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];const k=ez(Math.min(1,(t-S[0])/(Math.min(S[1],tSplit+1.2)-S[0])));
@@ -143,8 +154,8 @@ const spl=document.getElementById('split'),gc=document.getElementById('c');
 window.renderAt=t=>{setCam(t);animate(t);
  if(t>=tSplit&&t<5.2){ // split screen: US top, Iran bottom, both prices at once
   spl.width=gc.width;spl.height=gc.height;const x=spl.getContext('2d'),w=gc.width,h=gc.height,k=ez(Math.min(1,(t-tSplit)/1.2));
-  for(let i=0;i<2;i++){camTo(SPLIT[i](k));comp.render();x.drawImage(gc,0,h*.25,w,h*.5,0,i*h*.5,w,h*.5);}
-  x.fillStyle='#fff';x.fillRect(0,h*.5-5,w,10);spl.style.display='block';cap.style.top='46%';}
+  cam.aspect=.5*W/H;for(let i=0;i<2;i++){camTo(SPLIT[i](k));comp.render();x.drawImage(gc,0,0,w,h,i*w*.5,0,w*.5,h);}cam.aspect=W/H;cam.updateProjectionMatrix();
+  x.fillStyle='#fff';x.fillRect(w*.5-5,0,10,h);spl.style.display='block';cap.style.top='80%';}
  else {spl.style.display='none';cap.style.top='74%';}
  let c=null;for(const x of CH)if(t>=x.s-.03)c=x;const on=c&&t<c.e+.35;cap.textContent=on?c.t:'';const wa=on?t-c.s:1;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
  comp.render();return true;};
