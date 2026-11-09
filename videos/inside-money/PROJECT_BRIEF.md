@@ -64,3 +64,8 @@ EP3 "$1M in cash" v2 RENDERED: render-kit/ep3-1m-cash.mp4 (62.41 s, GPU Apple M3
 v2 = first half (4.6-33 s) rebuilt after user feedback "first half boring, same place, camera not matched to the words": now one event + one camera move per line (see PLAN.md beat table).
 Scene ep3.html (?tl=timeline_ep3_full.json), mix ep3-1m-cash/mix_ep3_full.py, render `npm run render -- ep3full`. Awaiting user review of v2. Weak spots: printer shot (gray box), plain government building, sparse Fed vault, toy-like truck, shared face model; camera may pass close to Mike's shoulder in transitions (not watched in motion).
 Pinned comment: "Would you carry $1 million in cash? Comment YES or NO".
+
+## 9. EP6 status (2026-11-08) — DONE: read ep6-gas-iran-usa/PLAN.md + PUBLISH.md
+Gas USA vs Iran, 62.9 s, branch claude/nice-mendeleev-72189d. Scene render-kit/ep6.html (hook + story), mix ep6-gas-iran-usa/mix_ep6.py, render `npm run render -- ep6`.
+New user rules from EP6: Trump = the American hero in place of Mike; price comparisons = SIDE-BY-SIDE split (left/right) inside the vertical video, never top/bottom; the first word of the hook ("Trump") louder + clearer in the mix.
+EP5 ($10M IRS) also finished 2026-11-08 (branch of worktree xenodochial-darwin-466504); TikTok phone copy made at 28 MB (two-pass 3.3 Mbps, same 720x1280) because the 40 MB file is over the 30 MB phone-send limit.
