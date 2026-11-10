@@ -21,6 +21,12 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
 
+## 0b. CHANNEL MODE CHANGE (user, 2026-11-10): "Inside Money" = ENTERTAINMENT what-ifs MIXED with finance explainers
+- Alternate: (A) finance/how-it-works episodes (as before) and (B) fun/absurd "what if" stories whose meaning is ordinary, with a real money/legal/tax lesson inside or at the end.
+- Style reference for (B): references/inside-money/examples/trench-river-living-room.mp4 (analysis in REFERENCE_ANALYSIS.md): one continuous camera, one real set, a new object/step every ~3 s, payoff shot at the end.
+- First (B) idea (user): "What if you buried $1,000,000 in a hole in your yard, lined it with steel, added a vault door + passcode to dodge tax -> IRS spots it by satellite -> planes, helicopters, tanks arrive -> arrested -> interrogated 'give us the code' -> you forgot the code." Needs: legal-safety review (no how-to for tax evasion; frame as consequences), verified facts in facts.md, and a lesson/comment question.
+- All older rules in section 0 (61-65 s, hook preview first, one-take voice, safety) still apply.
+
 ## 1. Why we changed (TikTok Studio data, last 28 days)
 - 415K views (+35%), 90% For You, 83.6% US, age 25-34 biggest; BUT net followers -424 and most penguin videos stop at 500-1,000 views.
 - Same topic (gas USA vs Iran): stick-figure/"Benny" detective script = 65K views, 27% full-watch, 29 s avg; penguin caveman "3 reasons" script = 29K, 8%. Kuwait/India penguin: 4.6K / 9.5K, 5-7% full-watch, avg 14-16 s of 65 s.

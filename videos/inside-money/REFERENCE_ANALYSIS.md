@@ -41,3 +41,17 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 - Keep: calm confident narrator tone, 2-3 word low caption, floating glowing 3D prices, shot types.
 - Beat him: **3.2-3.4 words/s, pauses <= 0.12 s inside a sentence and <= 0.2 s between sentences (max_gap 0.05)**, a visual change/cut every 2-3 s, never a static shot.
 - Never clone a real person's voice; use a Kokoro American male voice with the same calm tone.
+
+## "How A Trench In Your Living Room Becomes A River" — trench-river-living-room.mp4 (user upload 2026-11-10) — measured
+- 66.3 s, 720x1280, 30 fps, audio present. **0 scene cuts** (ffmpeg scene>0.08) = ONE continuous camera, no cuts, exactly our locked format. Sheet: analysis/trench-river-sheet.jpg.
+- Topic is NOT finance: an "absurd what-if" (dig a trench in your living room -> hose, concrete channel, pump, tank, evaporation, bridge, stones, plants, a man sits on the sofa). Pure engineering-satisfaction / ASMR-explainer format.
+- Set: ONE real room (wood floor, green sofa, rug, window with trees + sky). The room never changes; the object grows inside it. Cutaway of the floor shows soil, pipes, pump, tank under the floor.
+- Build-up structure: dig -> water -> line it with concrete -> add machinery (pump, valve, fan) -> decorate (bridge, stones, ferns) -> a person finally walks in and relaxes (payoff/reward shot at 50-66 s). Every ~3 s a NEW object/step appears (machine, hose, drawer, pump, bridge...), camera glides to it, close/medium alternating with a wide that reveals progress.
+- Props are real-looking PBR objects (excavator, hose reel, submersible pump, pipe, filter, bridge, pebbles), NOT primitives. Warm daylight, soft shadows, clear water with caustics.
+- Captions: 1 word at a time, white bold, centred ~75 % height, no cards/icons. TikTok "Follow" chip only in the last seconds.
+- Character appears only at the END (suit, flat cap, walks, sits) = reward, not a narrator.
+### Copy for Inside Money
+- NEW CHANNEL MODE "Entertainment + money": a wild what-if told as ONE build-up inside ONE real set; the escalation itself is the hook (each step more absurd), a finance/legal truth lands at the end.
+- Escalation beats every ~3 s; every beat = a new object + camera glide; keep the room constant so progress is readable.
+- Underground cutaway (soil layers, vault, pipes) fits the "$1M in a hole" idea directly.
+- Keep our fixes: faster voice (>=3.2 words/s), glow prices, real set, characters visible earlier than this reference (he only appears at 50 s).
