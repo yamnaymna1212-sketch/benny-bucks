@@ -10,13 +10,13 @@
 //   MK.brick(100,{nx:1,ny:6,nz:3}) a block of straps in ONE box (nx along x, ny layers, nz along z) - cheap for pallets / flying stacks
 //   MK.size(100,{nx,ny,nz})        -> {w,h,d} of that brick;  MK.NW / MK.NH / MK.NT = one note width / height / strap thickness
 //   MK.flutter(noteGroup,t,seed)   bends + spins a flying single bill
-// Strap colours = American Bankers Association standard: 100 x $1 = $100 red, 100 x $20 = $2,000 violet, 100 x $100 = $10,000 mustard.
+// Strap colours = American Bankers Association standard: 100 x $1 = $100 blue (fixed 2026-11-10: was red, red is not the $1 colour), 100 x $20 = $2,000 violet, 100 x $100 = $10,000 mustard.
 export async function moneyKit(THREE,{base=new URL('./money/',import.meta.url).href,scale=1.51,aniso=8}={}){
   if(scale<=1.5)throw new Error('money-kit: scale must stay > 1.5 (18 USC 504)');
   const NW=.156*scale,NH=.0663*scale,NT=.0109*scale;   // real note 156 x 66.3 mm, 100 notes = 10.9 mm
   const DEN={100:{f:'note100.jpg',band:'#b98f26',ink:'#4a3a12',txt:'$10,000',edge:[158,172,146]},
              20:{f:'note20.jpg',band:'#7d4fa6',ink:'#f3ecff',txt:'$2,000',edge:[160,174,150]},
-              1:{f:'note1.jpg',band:'#c42a3a',ink:'#fff3f3',txt:'$100',edge:[166,176,156]}};
+              1:{f:'note1.jpg',band:'#2c63c9',ink:'#f2f6ff',txt:'$100',edge:[166,176,156]}};
   const img=f=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('money-kit: missing '+base+f));i.src=base+f;});
   for(const k in DEN)DEN[k].im=await img(DEN[k].f);
   const cv=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=aniso;return t;};
