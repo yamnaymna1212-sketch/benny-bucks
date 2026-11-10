@@ -142,7 +142,7 @@ function rectTube(w,d,r,col,ei){const pts=[];const R=.35;for(const [cx,cz,a0] of
  const c=new THREE.CatmullRomCurve3(pts,true);return new THREE.Mesh(new THREE.TubeGeometry(c,160,r,8,true),new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:ei,roughness:.4}));}
 const RING=new THREE.Group();RING.position.set(P.x,.08,P.z);scene.add(RING);for(const [k,r] of[[0,.035],[.22,.025]]){const m=rectTube(P.w+.45+k,P.d+.45+k,r,0xffcc22,2.2);RING.add(m);}
 // dirt pile (grows with every bucket) + flying dirt clods
-const PILE=add(new THREE.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),pbr('dirt',1.5,1.2,0x8a6240),P.x+4.2,0,P.z-2.9);
+const PILE=add(new THREE.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),pbr('dirt',1.5,1.2,0x8a6240),P.x+3.6,0,P.z+2.7);
 const CLODS=[];{const gm=new THREE.IcosahedronGeometry(.07,0),mm=new THREE.MeshStandardMaterial({color:0x6a4a2c,roughness:1});for(let i=0;i<28;i++){const m=add(gm,mm,0,0,0);m.visible=false;CLODS.push({m,a:Math.random(),dx:(Math.random()-.5)*.5,dz:(Math.random()-.5)*.5});}}
 // ================= EXCAVATOR (yellow, tracked; boom/arm/bucket pivots) =================
 const EX=new THREE.Group();EX.position.set(P.x+4.0,0,P.z+.2);EX.rotation.y=Math.PI;scene.add(EX);   // local +x = towards the pit
@@ -159,10 +159,18 @@ const BUCK=new THREE.Group();BUCK.position.set(0,-1.55,0);ARMG.add(BUCK);add(B(.
 const BDIRT=add(new THREE.SphereGeometry(.26,14,10),pbr('dirt',.5,.5,0x8a6240),.15,0,0,BUCK,false);
 add(CY(.04,.04,1.2,8),M(0xb8bcc2,.3,.9),.55,-.05,-.25,TURN,false).rotation.z=1.0;   // hydraulic ram
 // ================= THE MONEY: $1 bills, blue ABA bands (100 x $1 = $100 a strap); 12 layers of 14 x 4 x 26 straps =================
-const MSZ=MK.size(1,{nx:14,ny:4,nz:26}),BR=[];   // 14 x 0.236 = 3.30 m, 26 x 0.100 = 2.60 m (notes drawn at 151 %)
-for(let i=0;i<12;i++){const b=MK.brick(1,{nx:14,ny:4,nz:26,glow:.001});b.position.set(P.x,-P.dep+.03+MSZ.h*(i+.5),P.z);b.userData.y=b.position.y;b.visible=false;scene.add(b);BR.push(b);}
-const MTOP=BR[0].material[2];
-const RAIN=[];for(let i=0;i<40;i++){const s=MK.strap(1);s.visible=false;scene.add(s);RAIN.push({s,x:P.x+(Math.random()-.5)*(P.w-.3),z:P.z+(Math.random()-.5)*(P.d-.3),u:Math.random(),y0:3+Math.random()*2.5,r:Math.random()*6});}
+// real cash colour: the $1 faces read green-grey, never white (sun + exposure washed them out)
+const CASHM=new Set();function cashTint(o){o.traverse(m=>{if(m.isMesh)for(const mt of[].concat(m.material))if(!CASHM.has(mt)){CASHM.add(mt);mt.color.setHex(0xaebd98);mt.roughness=.9;}});}
+const MSZ=MK.size(1,{nx:7,ny:4,nz:13}),BR=[];   // a layer = 2 x 2 bricks of 7 x 4 x 13 straps (sharper note faces than one big brick): 3.30 x 2.60 m (notes drawn at 151 %)
+for(let i=0;i<12;i++){const g=new THREE.Group();for(const [sx,sz] of[[-1,-1],[1,-1],[-1,1],[1,1]]){const b=MK.brick(1,{nx:7,ny:4,nz:13,glow:.001});b.position.set(sx*MSZ.w/2,0,sz*MSZ.d/2);b.rotation.y=((i*3+sx+sz*2)%3-1)*.004;g.add(b);}
+ cashTint(g);g.position.set(P.x,-P.dep+.03+MSZ.h*(i+.5),P.z);g.userData.y=g.position.y;g.visible=false;scene.add(g);BR.push(g);}
+const MTOP=BR[0].children[0].material[2];
+// the top is never a flat slab: loose straps piled at angles + single bills (real cash, not a texture)
+const TOPS=new THREE.Group();scene.add(TOPS);TOPS.visible=false;
+{let k=0;const rr=()=>{k++;return (Math.sin(k*12.9898)*43758.5453)%1;};const R=()=>Math.abs(rr());
+ for(let i=0;i<70;i++){const st=MK.strap(1);cashTint(st);st.position.set((R()-.5)*(P.w-.35),MK.NT*(.5+Math.floor(R()*2.2)),(R()-.5)*(P.d-.3));st.rotation.set((R()-.5)*.12,(R()-.5)*1.2,(R()-.5)*.12);TOPS.add(st);}
+ for(let i=0;i<26;i++){const n=MK.note(1,{curve:.01});cashTint(n);n.rotation.set(-Math.PI/2+(R()-.5)*.25,0,R()*6.28);n.position.set((R()-.5)*(P.w-.3),MK.NT*2.6+R()*.02,(R()-.5)*(P.d-.3));TOPS.add(n);}}
+const RAIN=[];for(let i=0;i<40;i++){const s=MK.strap(1);cashTint(s);s.visible=false;scene.add(s);RAIN.push({s,x:P.x+(Math.random()-.5)*(P.w-.3),z:P.z+(Math.random()-.5)*(P.d-.3),u:Math.random(),y0:3+Math.random()*2.5,r:Math.random()*6});}
 const MGLOW=new THREE.PointLight(0x7dff9a,0,6,1.5);MGLOW.position.set(P.x,.8,P.z);scene.add(MGLOW);
 // ================= THE ARMOR LID (steel, bolts, hazard edge, vault wheel, keypad ****) =================
 const ARM=new THREE.Group();scene.add(ARM);ARM.visible=false;const AW=P.w+.7,AD2=P.d+.7,AH=.3;
@@ -288,10 +296,10 @@ function animate(t){
  // ---- dig: depth grows bucket by bucket, the lawn disappears, dirt pile grows ----
  const dk=sm(-.2,tDigEnd,t),dep=Math.max(.02,P.dep*dk);
  PW.floor.position.y=-dep;for(const k of['n','s','w','e']){PW[k].scale.y=dep;PW[k].position.y=-dep/2;}
- GRASSCAP.visible=dk<.05;LIP.visible=dk>=.05;PILE.scale.set(1.6,.2+1.0*dk,1.25);
+ GRASSCAP.visible=dk<.05;LIP.visible=dk>=.05;PILE.scale.set(1.3,.12+.55*dk,1.1);
  // excavator cycle (fast, readable): reach into the pit -> curl -> lift -> swing to the pile -> dump -> back. After digging it backs away (clear view on the cash).
  const cy=(t*1.55)%1,dig=t<tDigEnd;const sw=dig?(cy<.45?0:cy<.6?sm(.45,.6,cy):cy<.85?1:1-sm(.85,1,cy)):0;
- TURN.rotation.y=-1.82*sw;
+ TURN.rotation.y=1.41*sw;
  const L=(a0,a1,u)=>a0+(a1-a0)*u;let bo,ar,bu;
  if(!dig){const k=sm(tDigEnd,tDigEnd+.4,t);bo=L(.2,.55,k);ar=L(.3,.15,k);bu=-.9;}
  else if(cy<.25){const u=sm(0,.25,cy);bo=L(.45,-.35,u);ar=L(.2,.6,u);bu=L(.4,.2,u);}        // reach down into the pit
@@ -305,13 +313,14 @@ function animate(t){
  const rk=pop(t,tPool,.3)*(1-sm(tFill+.3,tFill+.55,t));RING.visible=rk>.01;RING.scale.setScalar(Math.max(.01,.9+.1*rk));RING.children.forEach(m=>m.material.emissiveIntensity=2.2*(.6+.4*Math.sin(t*14)));
  // ---- the money: straps rain in, 12 layers fill the pit, green glow + the number on "million" ----
  BR.forEach((b,i)=>{const t0=tMS+(tME-tMS)*i/12,k=sm(t0,t0+.16,t);b.visible=t>=t0;b.position.y=b.userData.y+.4*(1-k);});
+ {const t0=tMS+(tME-tMS)*11/12+.08,k=sm(t0,t0+.2,t);TOPS.visible=t>=t0;TOPS.position.set(P.x,-P.dep+.03+MSZ.h*12+.35*(1-k),P.z);}
  const lvl=-P.dep+.03+MSZ.h*12*sm(tMS,tME,t);
  for(const r of RAIN){const t0=tMS-.25+r.u*(tME-tMS),f=t-t0,y=r.y0-4.9*f*f;r.s.visible=f>0&&y>lvl;if(r.s.visible){r.s.position.set(r.x,y,r.z);r.s.rotation.set(r.r+f*3,r.r*2+f*5,f*2);}}
- const gl=sm(tMil-.05,tMil+.2,t)*(1-sm(tLand-.15,tLand,t)),bl=.6+.4*Math.cos((t-tMil)*Math.PI*2);MTOP.emissiveIntensity=.001+.42*gl*bl;MGLOW.intensity=7*gl*bl;
+ const gl=sm(tMil-.05,tMil+.2,t)*(1-sm(tLand-.15,tLand,t)),bl=.6+.4*Math.cos((t-tMil)*Math.PI*2);MTOP.emissiveIntensity=0;MGLOW.intensity=2.2*gl*bl;
  {const s=pop(t,tMil-.04,.3)*(1-sm(tPut+.1,tPut+.3,t));MIL.visible=s>.01;MIL.scale.setScalar(Math.max(.001,s));MIL.position.set(P.x-.2,1.5+.04*Math.sin(t*2.4),P.z+.5);MIL.quaternion.copy(cam.quaternion);}
  // ---- the armor lid: falls, CLANG, dust, cyan glow outline, the wheel locks ----
  ARM.visible=t>tPut-.2&&t<tSw+.05;if(ARM.visible){const u=Math.min(1,Math.max(0,(t-(tPut-.2))/(tLand-(tPut-.2))));const bo=t>tLand?.05*Math.exp(-(t-tLand)*9)*Math.abs(Math.sin((t-tLand)*28)):0;ARM.position.set(P.x,.02+7*(1-u*u)+bo,P.z);WHEEL.rotation.y=-2.2*sm(tWorld,tTop+.2,t);}
- OUT.selectedObjects=(t>tLand&&t<tSw)?[ARM]:(t>tMil-.05&&t<tPut)?[BR[11]]:[];OUT.edgeStrength=6+3*Math.sin(t*12);
+ OUT.selectedObjects=(t>tLand&&t<tSw)?[ARM]:[];OUT.edgeStrength=6+3*Math.sin(t*12);
  for(const d of DUST){const f=t-tLand;d.m.visible=f>0&&f<.75;if(d.m.visible){const r=2.1+d.v*f*1.8;d.m.position.set(P.x+Math.cos(d.a)*r*1.05,.15+f*.4,P.z+Math.sin(d.a)*r*.85);d.m.scale.setScalar(1+f*3);d.m.material.opacity=.55*(1-f/.75);}}
  // ---- Mike: directs the digger -> cheers on "million" -> points up at the lid -> thumbs up/proud ----
  const M_=mike;relax(M_);idle(M_,t);M_.g.position.set(P.x-2.4,0,P.z+1.7);M_.g.rotation.y=2.2;
