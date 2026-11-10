@@ -19,7 +19,7 @@ console.log('GPU:',await p.evaluate(()=>{const g=document.createElement('canvas'
 const dur=secs||JSON.parse(fs.readFileSync(EP.tl)).dur,N=Math.round(dur*30);
 fs.rmSync('frames',{recursive:true,force:true});fs.mkdirSync('frames');const t0=Date.now();
 for(let f=0;f<N;f++){for(let a=0;;a++){try{await p.evaluate(t=>renderAt(t),f/30);break;}catch(e){if(a>=3)throw e;console.log(`frame ${f}: ${e.message.split('\n')[0]} -> reloading page`);if(p.isClosed())p=await b.newPage({viewport:{width:720,height:1280}});await load();}}
-  await p.screenshot({path:`frames/f${String(f).padStart(4,'0')}.jpg`,type:'jpeg',quality:94});
+  await p.screenshot({path:`frames/f${String(f).padStart(4,'0')}.jpg`,type:'jpeg',quality:94,timeout:300000});
   if(f%30===0)console.log(`frame ${f}/${N}  ${((Date.now()-t0)/1000).toFixed(0)}s`);}
 await b.close();srv.close();
 const out=secs?EP.out.replace('.mp4',`-preview-${secs}s.mp4`):EP.out;
