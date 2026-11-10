@@ -14,3 +14,8 @@ assets/audio/sfx/synth/
 # reference videos stay local
 references/inside-money/**/*.mp4
 references/inside-money/**/*.mov
+
+# Inside Money render-kit: generated stills / mixes / frames (EP5-6)
+videos/inside-money/render-kit/still-*.jpg
+videos/inside-money/render-kit/mix_ep*.wav
+videos/inside-money/render-kit/_sh/

@@ -11,6 +11,6 @@ Hook: "Trump pays four dollars a gallon. In Iran, the same gallon costs eleven c
 - NOT yet sourced (kept soft): "government controls the price" (supported by tier reports), currency "lost so much value" (derived from toman/$ in sources). Re-confirm exchange rate on render day.
 
 ## Re-check 2026-11-08
-- AAA national average regular: $4.0203 on 11/8/26 (yesterday $4.0371, week ago $4.1732) -> https://gasprices.aaa.com/  => voice "four dollars" still true; hook signs show $4.15 (11-03 value): change both '$4.15' strings in ep6.html to the AAA value on render day.
+- AAA national average regular: $4.0203 on 11/8/26 (yesterday $4.0371, week ago $4.1732) -> https://gasprices.aaa.com/  => voice "four dollars" still true; hook signs show $4.15 (11-03 value): change both '$4.15' strings in ep6gas.html to the AAA value on render day.
 - GlobalPetrolPrices 02-Nov-2026: Iran $0.029/L = 15,000 IRR (1,500 toman) for the first 60 L/month, then 30,000 IRR -> https://www.globalpetrolprices.com/Iran/gasoline_prices/  => ~$0.11/gal confirmed (source's own rate).
 - WARNING exchange rate: GPP's $0.029 implies ~51,700 toman/$, while the import claim ($1/gal) used ~215k toman/$ (open market). Live open-market rate NOT confirmed (bonbast loads by script; search results undated). The ratio is rate-free and safe: imports ~60,000 toman/L vs 1,500 toman/L = ~40x. If questioned, keep "eleven cents" (cited average) and treat "about a dollar" as the official's claim.

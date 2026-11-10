@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+</style></head><body><canvas id="c"></canvas>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP5 LOOK TEST: "Maple Street, USA" world (blue sky, US suburban houses, street, vehicles). node stills.mjs ep5-look.html 0 --q "cam=wide|room|porch|street"
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.backgroundBlurriness=0;scene.environmentIntensity=1.0;
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM),GL=new GLTFLoader(LM);
+function pbr(name,rx,ry,opt={}){const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshStandardMaterial(Object.assign({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1},opt));}
+const M=(c,r=.6,m=0,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o));
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),RB=(w,h,d,r=.05)=>new RoundedBoxGeometry(w,h,d,4,r),CY=(a,b,h,s=32)=>new THREE.CylinderGeometry(a,b,h,s);
+const tint=(m,c)=>{m.color.set(c);return m;};
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+// place a Poly Haven model scaled to a target height, base on y
+function model(name,x,y,z,h,ry=0,p=scene){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ GL.load(`dl/models/${name}/${name}.gltf`,o=>{const s=o.scene;const bb=new THREE.Box3().setFromObject(s);const k=h/(bb.max.y-bb.min.y);s.scale.setScalar(k);
+  const b2=new THREE.Box3().setFromObject(s);s.position.y-=b2.min.y;s.position.x-=(b2.min.x+b2.max.x)/2;s.position.z-=(b2.min.z+b2.max.z)/2;
+  s.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true;}});g.add(s);});return g;}
+// ---------- sun + ground ----------
+const sun=new THREE.DirectionalLight(0xfff1dc,3.2);sun.position.set(-18,26,16);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);
+Object.assign(sun.shadow.camera,{left:-32,right:32,top:22,bottom:-22,near:1,far:90});sun.shadow.bias=-.0004;sun.shadow.normalBias=.04;scene.add(sun);
+const G=tint(pbr('leafy_grass',160,160,{}),0x7fb24a);add(B(500,.2,500),G,0,-.1,-80,scene,false);
+add(B(500,.12,8),pbr('asphalt_02',150,2.5),0,.02,7.5,scene,false);                              // road z 3.5..11.5
+for(const z of[7.35,7.65])add(B(500,.005,.1),M(0xf2b705,.6),0,.085,z,scene,false);              // double yellow
+add(B(500,.14,3.2),pbr('concrete_pavement',150,1.2),0,.05,1.9,scene,false);                       // sidewalk z .3..3.5
+add(B(500,.18,.22),M(0xb9b6ae,.8),0,.06,3.6,scene,false);                                        // curb
+for(let x=-12;x<=12;x+=.9)add(B(.5,.006,3.2),M(0xffffff,.7),x+30,.095,7.5,scene,false);         // crosswalk stripes (x 18..42)
+// ---------- house builder: cutaway ground floor, closed upper floor, gabled shingle roof, porch, garage ----------
+function house(x,o){const g=new THREE.Group();g.position.set(x,0,-8);scene.add(g);const W=9,D=7.5,H1=2.9,H2=2.7;
+ const sid=tint(pbr(o.siding,4,2),o.sidingColor);const wall=tint(pbr('plastered_wall',3,1.2),o.inner);
+ add(B(W+.6,.5,D+.6),pbr('concrete_pavement',4,3),0,.15,0,g);                                    // foundation
+ add(B(W,.12,D),pbr('oak_wood_planks',5,4,{}),0,.46,0,g,false);                                  // living-room floor
+ add(B(W,H1,.2),wall,0,.46+H1/2,-D/2,g);add(B(.2,H1,D),wall,-W/2,.46+H1/2,0,g);add(B(.2,H1,D),wall,W/2,.46+H1/2,0,g);   // back + 2 side walls
+ add(B(W+.4,.3,D+.4),sid,0,.46+H1+.15,0,g);                                                      // floor slab
+ add(B(W,H2,D),sid,0,.46+H1+.3+H2/2,0,g);                                                        // upper floor (closed)
+ const rs=tint(pbr(o.roof,5,3),o.roofColor);const y0=.46+H1+.3+H2;for(const s of[-1,1]){const r=add(B(W+1.2,.2,4.9),rs,0,y0+1.08,s*1.85,g);r.rotation.x=s*.5;}
+ add(B(W+1.3,.2,.5),rs,0,y0+2.05,0,g);add(B(W,2.0,.2),sid,0,y0+1.0,D/2-.1,g,false);   // gable fill
+add(B(.9,3.2,.9),sid,2.6,.46+H1+.3+H2+1.6,-1.8,g);                                              // chimney
+ // upper windows (front)
+ const win=(wx,wy,ww,wh,p=g,wz=D/2+.02)=>{add(B(ww+.22,wh+.22,.08),M(0xffffff,.45),wx,wy,wz,p,false);add(B(ww,wh,.1),M(0x203a56,.1,.2,{envMapIntensity:1.6}),wx,wy,wz+.02,p,false);
+  add(B(ww,.05,.12),M(0xffffff,.4),wx,wy,wz+.04,p,false);add(B(.05,wh,.12),M(0xffffff,.4),wx,wy,wz+.04,p,false);
+  add(B(ww*.5,.07,.14),M(o.shutter,.6),wx-ww*.75,wy,wz+.04,p,false);add(B(ww*.5,.07,.14),M(o.shutter,.6),wx+ww*.75,wy,wz+.04,p,false);};
+ for(const wx of[-2.8,0,2.8])win(wx,.46+H1+.3+H2/2,1.2,1.5);
+ // porch: floor, steps, columns, roof, door on the side wall of the cutaway
+ add(B(4.4,.2,2.2),pbr('concrete_pavement',2,1),-1.4,.5,D/2+1.1,g);add(B(2,.14,.7),pbr('concrete_pavement',1,.4),-1.4,.3,D/2+2.45,g);
+ for(const cx of[-3.4,-.6])add(CY(.1,.1,3.1,20),M(0xffffff,.45),cx,2.1,D/2+1.9,g);add(B(4.6,.18,2.6),sid,-1.4,3.7,D/2+1.15,g);
+ add(B(.2,.14,.14),M(0xffffff),-1.4,3.58,D/2+2.4,g,false);
+ // garage + driveway
+ add(B(4.2,3,6),sid,W/2+2.3,1.45,.2,g);const gr=add(B(4.6,.22,6.4),rs,W/2+2.3,3.05,.2,g);gr.rotation.z=o.garageSide*.12;
+ add(B(3.1,2.3,.08),M(0xe7e3da,.5),W/2+2.3,1.6,3.23,g,false);for(let i=0;i<4;i++)add(B(3.0,.02,.1),M(0xbdb8ac,.6),W/2+2.3,.9+i*.5,3.25,g,false);
+ add(B(3.6,.05,8),pbr('grooved_concrete_driveway',2,4),W/2+2.3,.3,D/2+3.5,g,false);
+ // front walk + mailbox + lawn
+ add(B(1.3,.04,5),pbr('concrete_pavement',1,3),-1.4,.3,D/2+4.8,g,false);
+ const mb=new THREE.Group();mb.position.set(-4.5,0,D/2+5);g.add(mb);add(B(.1,1.05,.1),M(0x5a4126,.6),0,.55,0,mb);add(RB(.28,.26,.6,.1),M(0x1d4f9d,.4,.3),0,1.15,0,mb);add(B(.03,.2,.04),M(0xc0262d,.5),.16,1.28,.1,mb);
+ // US flag on the porch column
+ const ft=tex(512,270,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#fff':'#b22234';x.fillRect(0,i*270/13,512,270/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,205,145);x.fillStyle='#fff';
+  for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++){x.beginPath();x.arc(17+c*34+(r%2?17:0),14+r*15.5,3.4,0,7);x.fill();}});
+ const fg=new THREE.PlaneGeometry(1.2,.63,24,8);const pp=fg.attributes.position;for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.6)/1.2;pp.setZ(i,Math.sin(u*7)*.06*u);}fg.computeVertexNormals();
+ const fl=add(fg,new THREE.MeshStandardMaterial({map:ft,roughness:.8,side:THREE.DoubleSide}),-3.4+.1,3.1,D/2+2.0,g,true);fl.rotation.y=-.55;
+ add(CY(.015,.015,1.4,8),M(0x777777,.3,.8),-3.4,3.1,D/2+1.95,g);
+ return g;}
+const mike=house(-9,{siding:'weathered_plank_siding',sidingColor:0x9aa7b0,inner:0xcfc4ae,roof:'grey_roof_tiles',roofColor:0xb9b9b9,shutter:0x2f3f4f,garageSide:1});
+const dana=house(11,{siding:'white_planks_clean',sidingColor:0xd9cdb4,inner:0xe9e2d3,roof:'roof_07',roofColor:0xc79b84,shutter:0x2b5a41,garageSide:-1});
+// ---------- interior of Mike's living room ----------
+{const g=mike;const rug=add(B(4,.03,3),M(0x8c3a3a,.95),0,.55,.6,g,false);
+ model('Sofa_01',0,.52,-2.2,.95,0,g);model('Television_01',-3.4,.52,-3.1,.8,0,g);model('CoffeeTable_01',0,.52,.7,.45,0,g);model('hanging_picture_frame_01',2.4,2.2,-3.6,.9,0,g);model('modern_ceiling_lamp_01',0,3.0,0,.5,0,g);model('potted_plant_01',3.7,.52,-2.9,1.1,0,g);}
+for(const hx of[-9,11]){const L=new THREE.PointLight(0xfff0d8,60,14,1.6);L.position.set(hx,3.0,-7);scene.add(L);}
+// $100 bundles (green, $10,000 each) on the sofa and table
+const bill=tex(256,128,x=>{x.fillStyle='#85bb65';x.fillRect(0,0,256,128);x.strokeStyle='#4f7d3a';x.lineWidth=6;x.strokeRect(5,5,246,118);x.fillStyle='#3d6a2c';x.font='800 70px Mont,sans-serif';x.textAlign='center';x.fillText('100',128,88);});
+function bundle(x,y,z,p,ry=0){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);add(B(.16,.045,.07),[M(0x6fa24f,.7),M(0x6fa24f,.7),new THREE.MeshStandardMaterial({map:bill,roughness:.6}),new THREE.MeshStandardMaterial({map:bill,roughness:.6}),M(0xeeeedd,.8),M(0xeeeedd,.8)],0,0,0,g);add(B(.04,.047,.072),M(0xf3d58a,.7),0,0,0,g,false);return g;}
+for(let i=0;i<4;i++)bundle(-.4+i*.25,1.12,-2.1,mike,.1*i);for(let i=0;i<4;i++)bundle(-.3+i*.2,1.0,.7,mike,.2*i);
+// ---------- street furniture ----------
+for(const x of[-18,0,18,34])model('street_lamp_01',x,.1,2.7,5.2,0);
+for(const x of[-14,6,16.5])model('fire_hydrant',x,.1,3.0,.8,0);
+for(const [x,z,h] of[[-16,-3,7],[2.5,-3,8.5],[4.5,-4,7.5],[22,-5,9],[-20,-14,10],[0,-18,11],[26,-14,9.5],[-1,-14,9]])model(['island_tree_01','jacaranda_tree'][Math.abs(Math.floor(x))%2],x,0,z,h,x);
+for(const x of[-13.4,6.8,16.4])model('shrub_01',x,.3,-3.6,.9,x);
+// ---------- vehicles (procedural, US-style) ----------
+function wheel(p,x,y,z){const w=add(CY(.38,.38,.28,28),M(0x151515,.9),x,y,z,p);w.rotation.z=Math.PI/2;const r=add(CY(.22,.22,.3,24),M(0xcfd3d8,.25,1),x,y,z,p,false);r.rotation.z=Math.PI/2;}
+function pickup(x,z,color,ry){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const body=M(color,.35,.6,{clearcoat:.8});
+ add(RB(5.6,.8,2.0,.12),body,0,.85,0,g);add(RB(2.0,.85,1.85,.2),body,.8,1.65,0,g);add(RB(1.55,.55,1.88,.1),M(0x1c2a38,.05,.4),.9,1.72,0,g,false);
+ add(B(2.3,.5,1.9),M(0x222222,.8),-1.6,1.3,0,g);                                                // bed
+ for(const sx of[-1.7,1.6])for(const sz of[-.95,.95])wheel(g,sx,.4,sz);add(B(.1,.35,1.7),M(0xdddddd,.3,.9),2.85,.75,0,g,false);
+ add(B(.04,.18,.5),M(0xffffcc,.2,0,{emissive:0xffffaa,emissiveIntensity:.6}),2.82,1.05,.7,g,false);add(B(.04,.18,.5),M(0xffffcc,.2,0,{emissive:0xffffaa,emissiveIntensity:.6}),2.82,1.05,-.7,g,false);return g;}
+function suv(x,z,ry,lights){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const body=M(0x0c0d10,.25,.7,{clearcoat:1});
+ add(RB(4.9,1.0,2.0,.14),body,0,.95,0,g);add(RB(3.9,.85,1.9,.2),body,-.2,1.75,0,g);add(RB(3.6,.55,1.92,.1),M(0x1a2430,.05,.5),-.2,1.8,0,g,false);
+ for(const sx of[-1.5,1.5])for(const sz of[-.95,.95])wheel(g,sx,.4,sz);
+ const dt=tex(256,64,t=>{t.fillStyle='#fff';t.font='800 52px Mont,sans-serif';t.textAlign='center';t.fillText('IRS',128,50);});
+ for(const sz of[-1.01,1.01]){const dd=add(new THREE.PlaneGeometry(1.1,.28),new THREE.MeshBasicMaterial({map:dt,transparent:true}),.4,1.05,sz,g,false);if(sz<0)dd.rotation.y=Math.PI;}
+ if(lights){add(B(.9,.14,.3),M(0xff2a2a,.3,0,{emissive:0xff1111,emissiveIntensity:1.2}),-.6,2.33,.3,g,false);add(B(.9,.14,.3),M(0x2a4aff,.3,0,{emissive:0x1133ff,emissiveIntensity:1.2}),-.6,2.33,-.3,g,false);}return g;}
+pickup(-2.2,-1.2,0x8a1f1f,-Math.PI/2);pickup(17.8,-1.2,0xe9edf2,-Math.PI/2);suv(-0.5,5.6,Math.PI,true);
+// ---------- camera ----------
+const cams={wide:{p:[1,14,62],t:[1,3,-8],f:50},room:{p:[-8.4,1.9,-3.9],t:[-9,1.0,-10.2],f:62},porch:{p:[-6,2.2,6],t:[-9,1.6,-6],f:44},street:{p:[-16,2.2,12],t:[-9,2.4,-8],f:48},
+ aerial:{p:[22,18,32],t:[0,2,-8],f:38}};
+const cam=new THREE.PerspectiveCamera(40,W/H,.1,400);const c=cams[Q.get('cam')||'wide'];cam.position.set(...c.p);cam.lookAt(...c.t);cam.fov=c.f;cam.updateProjectionMatrix();
+await loaded;window.renderAt=()=>renderer.render(scene,cam);window.renderAt();document.title='ready';
+</script></body></html>

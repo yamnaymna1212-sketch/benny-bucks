@@ -1,11 +1,11 @@
-"""EP6 mix: voice + air bed + FEW SFX (hook: ting 0 s, one whoosh on "Iran", one cash on "$0.11") -> render-kit/mix_ep6.wav (-14 LUFS).
+"""EP6 mix: voice + air bed + FEW SFX (hook: ting 0 s, one whoosh on "Iran", one cash on "$0.11") -> render-kit/mix_ep6gas.wav (-14 LUFS).
 Usage (from videos/inside-money): ~/kokoro-tts/venv/bin/python ep6-gas-iran-usa/mix_ep6.py"""
 import json,subprocess,wave,numpy as np,tempfile
 SR=48000;RK='render-kit';SFX='/Users/User/benny-bucks/studio/public/sfx';TMP=tempfile.gettempdir()
 def load(p):
     subprocess.run(['ffmpeg','-v','error','-y','-i',p,'-ac','1','-ar',str(SR),f'{TMP}/_l6.wav'],check=True)
     w=wave.open(f'{TMP}/_l6.wav');return np.frombuffer(w.readframes(w.getnframes()),dtype=np.int16).astype(np.float32)/32768
-tl=json.load(open(f'{RK}/timeline_ep6.json'));WD=tl['words'];DUR=tl['dur']
+tl=json.load(open(f'{RK}/timeline_ep6gas.json'));WD=tl['words'];DUR=tl['dur']
 def Wn(w,n=0):
     k=[x['s'] for x in WD if x['w'].lower().strip('?.,!')==w];return k[min(n,len(k)-1)]
 voice=load('ep6-gas-iran-usa/vo.wav')
@@ -31,4 +31,4 @@ put(S['cash-register'],Wn('$1')+.03,.26)
 put(S['ting'],Wn('doubled')+.02,.26)
 out=np.clip(out,-1,1)
 with wave.open(f'{TMP}/mix_ep6_raw.wav','wb') as o:o.setnchannels(1);o.setsampwidth(2);o.setframerate(SR);o.writeframes((out*32767).astype(np.int16).tobytes())
-subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep6_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep6.wav'],check=True);print('ok',DUR)
+subprocess.run(['ffmpeg','-v','error','-y','-i',f'{TMP}/mix_ep6_raw.wav','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar','48000','-ac','2',f'{RK}/mix_ep6gas.wav'],check=True);print('ok',DUR)
