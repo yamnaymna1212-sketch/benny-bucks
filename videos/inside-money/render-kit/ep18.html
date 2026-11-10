@@ -257,9 +257,9 @@ function idle(P,t,o=0){pose(P,'spine03',.03*Math.sin(t*1.7+o),0,.025*Math.sin(t*
 const mike={g:MSRC};mike.g.position.set(PL.x-.55,PL.y,PL.z-.15);mikeH.add(mike.g);mike.BN={};mike.g.traverse(o=>{if(o.isBone)mike.BN[o.name]=o;});mike.rest=new Map();for(const b of Object.values(mike.BN))mike.rest.set(b,b.quaternion.clone());
 // ================= 3D TEXT (meaning colours: GREEN money, RED problem, WHITE neutral) =================
 const font=await new FontLoader().loadAsync('node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
-function txt3(str,size,col){const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
+function txt3(str,size,col){const ei=col===0xff1e1e?.55:1.1;const g=new TextGeometry(str,{font,size,depth:size*.22,curveSegments:10,bevelEnabled:true,bevelThickness:size*.035,bevelSize:size*.025,bevelSegments:4});
  g.computeBoundingBox();g.translate(-(g.boundingBox.max.x+g.boundingBox.min.x)/2,0,0);
- return add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:1.1,roughness:.35}),new THREE.MeshStandardMaterial({color:0x123a1e,roughness:.5})],0,0,0,scene,false);}
+ return add(g,[new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:ei,roughness:.35}),new THREE.MeshStandardMaterial({color:col===0xff1e1e?0x5a0606:0x123a1e,roughness:.5})],0,0,0,scene,false);}
 const GRN=0x22e06a,RED=0xff1e1e,WHT=0xffffff;
 const pop=(t,t0,d=.28)=>{const k=Math.min(Math.max((t-t0)/d,0),1);return k<=0?0:(1+Math.sin(k*Math.PI)*.22)*(1-Math.pow(1-k,3));};
 const sm=(a,b,t)=>{const k=Math.min(1,Math.max(0,(t-a)/(b-a)));return k*k*(3-2*k);};
@@ -281,22 +281,22 @@ const TLN=await (await fetch('timeline_ep18.json')).json(),CH=TLN.chunks;
 const Wd=(w,n=0)=>{const k=TLN.words.filter(x=>x.w.toLowerCase().replace(/[^a-z0-9$%(),']/g,'').replace(/[,.]$/,'')===w);return (k[Math.min(n,k.length-1)]||{s:0}).s;};
 const tPool=Wd('pool'),tFill=Wd('filled'),tMil=Wd('million'),tDol=Wd('dollars'),tPut=Wd('put'),tArm=Wd('armor'),tTop=Wd('top'),tWill=Wd('will'),tIRS=Wd('irs'),tFind=Wd('find'),DUR=TLN.dur;
 const tFillEnd=tDol+.3,tLand=tArm+.05,tJump=tFill-.25;
-popT('$1,000,000',.26,GRN,toW(PL.x,1.05,PL.z+.35),tMil-.05,tArm-.15);
+popT('$1,000,000',.24,GRN,toW(PL.x,.95,PL.z+.35),tMil-.05,tArm-.15);
 popT('$1 BILLS',.11,WHT,toW(PL.x,.78,PL.z+.4),tDol,tArm-.15);
-popT('IRS?',.42,RED,V3(-7.0,2.9,5.6),tIRS-.05,DUR+5);
+popT('IRS?',.7,RED,V3(-7.0,2.75,5.6),tIRS-.05,DUR+5);
 function toW(lx,ly,lz){return V3(MX+lx,ly,MZ+lz);}
 // ================= ONE CONTINUOUS CAMERA (monotone Hermite through keys, house-local; no cuts, no shake) =================
 const KEYS=[
- [0,        [2.3,1.7,15.6],[2.3,-.6,7.4],55],      // frame 1: the house on top, the pool hole cut open (soil cross-section), Mike digging in it
- [tPool+.15,[2.3,1.5,15.0],[2.3,-.6,7.5],54],      // tiles grow up the walls, coping pops
- [tFill,    [2.4,1.6,14.8],[2.4,-.5,7.6],53],      // he jumps out, the money rains in
- [tMil,     [2.4,1.2,13.9],[2.4,-.45,7.8],50],     // push in: full of glowing $1 straps + $1,000,000
- [tPut,     [2.4,1.9,14.6],[2.4,.6,7.4],53],       // tilt up: the steel lid comes down from the sky
- [tLand+.1, [2.5,1.7,14.4],[2.5,-.1,7.6],52],      // CLANG
- [tTop,     [2.7,1.5,13.9],[2.7,.1,7.8],50],       // Mike proud next to his armored pool
- [tWill-.05,[2.7,1.6,14.2],[2.7,.1,7.9],51],
- [tIRS,     [1.2,6.4,25.5],[1.8,.4,9.5],50],       // (white flash) pull back + up: the IRS SUV stops at the curb in front of the house
- [DUR+.6,   [1.0,6.6,26.4],[1.8,.4,9.5],50]];
+ [0,        [2.3,1.4,15.2],[2.3,-.4,7.6],52],      // frame 1: the house on top, the pool hole cut open (soil cross-section), Mike digging in it
+ [tPool+.15,[2.3,1.3,14.8],[2.3,-.4,7.7],52],      // tiles grow up the walls, coping pops
+ [tFill,    [2.4,1.45,14.6],[2.5,-.25,7.8],52],    // he jumps out, the money rains in
+ [tMil,     [2.6,1.5,14.6],[2.6,0,7.9],52],        // full of glowing $1 straps + $1,000,000, Mike cheering
+ [tPut,     [2.5,1.9,14.8],[2.5,.6,7.6],53],       // tilt up: the steel lid comes down from the sky
+ [tLand+.1, [2.6,1.6,14.6],[2.6,-.05,7.8],52],     // CLANG
+ [tTop,     [2.8,1.5,14.2],[2.9,.05,7.9],50],      // Mike proud next to his armored pool
+ [tWill-.05,[2.8,1.55,14.4],[2.9,.05,8.0],50],
+ [tIRS,     [1.0,8.2,26.0],[1.4,.2,9.8],48],      // (white flash) pull back + up: the IRS SUV stops at the curb in front of the house
+ [DUR+.6,   [0.9,8.4,26.8],[1.4,.2,9.8],48]];
 const herm=(t,arr)=>{let i=0;while(i<arr.length-2&&t>=arr[i+1][0])i++;const a=arr[Math.max(0,i-1)],b=arr[i],c=arr[i+1],d=arr[Math.min(arr.length-1,i+2)];
  const h=c[0]-b[0],u=Math.min(1,Math.max(0,(t-b[0])/h)),u2=u*u,u3=u2*u;return {a,b,c,d,h,h00:2*u3-3*u2+1,h10:u3-2*u2+u,h01:-2*u3+3*u2,h11:u3-u2};};
 function hv(t,sel){const {a,b,c,d,h,h00,h10,h01,h11}=herm(t,KEYS),out=[];const A=sel(a),Bv=sel(b),C=sel(c),D=sel(d);

@@ -12,7 +12,7 @@ const EPS={ep18:{page:'ep18.html',tl:'timeline_ep18.json',wav:'mix_ep18.wav',out
 const EP=EPS[args.find(a=>EPS[a])]||{page:'v2.html',tl:'timeline2.json',wav:'mix2.wav',out:'bank-v2.mp4'};
 const b=await chromium.launch({...(process.env.CLOUD?{executablePath:process.env.CHROME||'/opt/pw-browsers/chromium',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']}:{channel:'chrome',args:['--ignore-gpu-blocklist','--use-angle=metal','--enable-gpu']}),headless:!show});
 let p=await b.newPage({viewport:{width:720,height:1280}});p.on('console',m=>{if(m.type()==='error')console.log('browser:',m.text().slice(0,200));});p.on('pageerror',e=>console.log('page error:',e.message));
-const load=async()=>{await p.goto(`http://localhost:${PORT}/${EP.page}?pr=2${EP.q||''}`);await p.waitForFunction(()=>document.title==='ready',null,{timeout:600000});};
+const load=async()=>{await p.goto(`http://localhost:${PORT}/${EP.page}?pr=${process.env.PR||2}${process.env.LQ?'&lq=1':''}${EP.q||''}`);await p.waitForFunction(()=>document.title==='ready',null,{timeout:600000});};
 p.on('crash',()=>console.log('PAGE CRASHED'));p.on('framenavigated',f=>{if(f===p.mainFrame())console.log('navigated:',f.url());});
 await load();
 console.log('GPU:',await p.evaluate(()=>{const g=document.createElement('canvas').getContext('webgl2');const e=g.getExtension('WEBGL_debug_renderer_info');return e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):'unknown';}));
