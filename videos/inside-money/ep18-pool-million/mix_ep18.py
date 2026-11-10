@@ -20,17 +20,20 @@ def put(sig,t,g):
 def cut(sig,dur,fade=.12):
     n=int(dur*SR);x=sig[:n].copy();f=int(min(fade,dur/2)*SR);x[-f:]*=np.linspace(1,0,f);return x
 S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','slap','money','boom','pop','shock','wrong']}
+for k in['timer','notif','horn']:S[k]=load(f'{SFX}/user-{k}.wav')
 put(cut(S['ting'],.3,.15),0,.14)                                   # soft ting under the first word
-for k in range(3):put(cut(S['slap'],.12,.05),.12+k*.24,.09)        # shovel scrapes while he digs
-put(S['pop'],W('pool')+.05,.3)                                     # tiles + coping pop in
-put(cut(S['whoosh'],.6),W('filled')-.25,.22)                       # he jumps out
-put(cut(S['money'],1.0),W('filled')+.05,.22)                       # straps raining in
-put(cut(S['cash-register'],.8),W('million')+.02,.3)                # cash on the price
-put(cut(S['whoosh'],.7),W('put')-.2,.25)                           # the lid drops from the sky
-put(S['boom'],W('armor')+.05,.4);put(cut(S['slap'],.3),W('armor')+.05,.3)   # CLANG
-put(cut(S['ting'],.4),W('top')+.05,.18)                            # wheel locks
-put(cut(S['whoosh'],.8),W('will')-.15,.28)                         # camera pulls back to the street
-put(cut(S['shock'],.6),W('irs')+.02,.28)                           # IRS SUV
+tDig=W('filled')+.3
+k=0
+while (k+.88)/1.55<tDig:put(cut(S['slap'],.25),(k+.88)/1.55,.16);put(cut(S['boom'],.3,.15),(k+.9)/1.55,.08);k+=1   # excavator bucket dumps
+put(S['pop'],W('pool')+.02,.3)                                     # yellow ring pops on
+put(cut(S['money'],1.0),W('filled')+.25,.24)                       # straps raining in
+put(cut(S['cash-register'],.8),W('million')+.02,.3)                # cash on the number
+put(cut(S['whoosh'],.7),W('put')-.25,.25)                          # the lid drops from the sky
+put(S['boom'],W('armor')+.05,.42);put(cut(S['slap'],.3),W('armor')+.05,.32)   # CLANG
+put(cut(S['timer'],.5),W('world'),.18);put(cut(S['ting'],.4),W('top')+.1,.2)  # the vault wheel turns, locks
+put(cut(S['whoosh'],.9),W('will')-.45,.32)                         # straight up to the satellite view -> into the IRS screen
+put(cut(S['wrong'],.5),W('will')+.05,.22);put(cut(S['wrong'],.5),W('will')+.62,.18)   # alarm in the IRS room (strobes)
+put(cut(S['shock'],.6),W('irs')+.02,.26);put(cut(S['notif'],.4),W('find'),.25)        # target locked on the pool
 x=out/np.abs(out).max()*.9
 subprocess.run(['ffmpeg','-v','error','-y','-f','f32le','-ar',str(SR),'-ac','1','-i','-','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar',str(SR),f'{RK}/mix_ep18.wav'],input=x.astype(np.float32).tobytes(),check=True)
 print('mix ->',f'{RK}/mix_ep18.wav',round(DUR,2),'s')
