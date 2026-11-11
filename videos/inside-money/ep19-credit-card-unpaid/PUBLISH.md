@@ -21,7 +21,7 @@ Education only, not financial or legal advice. Numbers are typical/approximate; 
 AI-generated label: ON (synthetic voice). Characters are fictional.
 
 ## Re-check before posting (source in facts.md)
-- Late fee ~$30 (CARD Act safe harbor, $8 cap vacated 2025-04-15) — consumerfinance.gov / Federal Register
+- Late fee ~$30 first late fee (safe harbor $30/$41, some issuers $32/$43; $8 cap vacated 2025-04-15) — re-checked 2026-11-11
 - Reported after 30 days late — Experian / issuer pages
 - Penalty APR up to ~30% (29.99%) — Experian
 - Charge-off ~180 days, debt still owed, can be sold — Capital One / Chase
