@@ -1,0 +1,264 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3;pointer-events:none}
+.ttl{position:absolute;left:0;width:720px;top:4%;text-align:center;font:800 62px/1.1 Mont,sans-serif;color:#fff;letter-spacing:-.5px;-webkit-text-stroke:9px #000;paint-order:stroke fill;text-shadow:0 5px 0 #000,0 8px 14px rgba(0,0,0,.6)}.ttl .g{color:#3dff7a}
+.cap{position:absolute;left:60px;width:600px;top:66%;text-align:center;font:800 64px Mont,sans-serif;color:#fff;letter-spacing:-.5px;-webkit-text-stroke:10px #111;paint-order:stroke fill;text-shadow:0 6px 10px rgba(0,0,0,.45)}   /* Building Box style: one word, white, dark outline, mid-screen */
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP20 "What if you could ride your $1,000 inside the ATM?" stills: node stills.mjs ep20.html 0.3 1 1.6 2.2 3 4.5 5.5   render: npm run render -- ep20 5.8
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+await document.fonts.load('800 60px Mont');
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/sunset_jhbcentral_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.9;
+scene.fog=new THREE.Fog(0xc4d6ea,90,260);
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM),GL=new GLTFLoader(LM);
+const PC={};   // material cache: textures are loaded once
+function pbr(name,rx,ry,color){const key=[name,rx,ry,color].join();if(PC[key])return PC[key];
+ const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;const m=new THREE.MeshStandardMaterial({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1});if(color!==undefined)m.color.set(color);return PC[key]=m;}
+const MC={};const M=(c,r=.6,m=0,o={})=>{const k=[c,r,m,JSON.stringify(o)].join();return MC[k]||(MC[k]=new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o)));};
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),RB=(w,h,d,r=.05)=>new RoundedBoxGeometry(w,h,d,4,r),CY=(a,b,h,s=32)=>new THREE.CylinderGeometry(a,b,h,s),V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const MODELS={};
+// a box with a rectangular hole in xz (used for the pit through floor, foundation and ground); mf(w,d) -> material for a piece
+function ringBox(cx,cy,cz,W,H,D,hl,mf,p=scene,cast=false){const x0=cx-W/2,x1=cx+W/2,z0=cz-D/2,z1=cz+D/2,hx0=hl.x-hl.w/2,hx1=hl.x+hl.w/2,hz0=hl.z-hl.d/2,hz1=hl.z+hl.d/2;
+ for(const [a,b,c,d] of[[x0,hx0,z0,z1],[hx1,x1,z0,z1],[hx0,hx1,z0,hz0],[hx0,hx1,hz1,z1]]){const w=b-a,dd=d-c;if(w<=0||dd<=0)continue;add(B(w,H,dd),mf(w,dd),(a+b)/2,cy,(c+d)/2,p,cast);}}
+function model(name,x,y,z,h,ry=0,p=scene){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ const put=src=>{const s=src.clone(true);const bb=new THREE.Box3().setFromObject(s);s.scale.setScalar(h/(bb.max.y-bb.min.y));
+  const b2=new THREE.Box3().setFromObject(s);s.position.set(-(b2.min.x+b2.max.x)/2,-b2.min.y,-(b2.min.z+b2.max.z)/2);g.add(s);};
+ if(!MODELS[name])MODELS[name]=new Promise(r=>GL.load(`dl/models/${name}/${name}.gltf`,o=>{o.scene.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true;}});r(o.scene);},undefined,e=>{console.warn('missing model (run node assets5.mjs):',name);r(new THREE.Group());}));
+ MODELS[name].then(put);return g;}
+// cut=true: ground-floor front wall removed (cutaway); facing +z by default (ry=Math.PI faces -z)
+const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',rc:0xb9b9b9,sh:0x2f3f4f,inner:0xa3b39f},
+ {siding:'white_planks_clean',col:0xe2d6bd,roof:'roof_07',rc:0xc79b84,sh:0x2b5a41,inner:0xece4d4},
+ {siding:'white_planks_clean',col:0xf2f2ee,roof:'grey_roof_tiles',rc:0x8d929a,sh:0x1f2f55,inner:0xeae6dc},
+ {siding:'red_brick',col:0xc9a596,roof:'grey_roof_tiles',rc:0x7d7f86,sh:0x1c1c1c,inner:0xe6dccb},
+ {siding:'white_planks_clean',col:0xb9cbd8,roof:'roof_07',rc:0xa9a29a,sh:0xffffff,inner:0xeee6d8},
+ {siding:'white_planks_clean',col:0xe6d7a8,roof:'grey_roof_tiles',rc:0x9a8f86,sh:0x6b2b22,inner:0xefe8d8}];
+function house(x,z,ry,o,cut=false,flip=1){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const W=9,D=7.5,H1=2.9,H2=2.7,y0=.46+H1+.3+H2;
+ const sid=pbr(o.siding,o.siding==='red_brick'?3:4,2,o.col),wall=pbr('plastered_wall',3,1.2,o.inner),rs=pbr(o.roof,5,3,o.rc),trim=M(0xe9e6df,.7);
+ if(o.pit)ringBox(0,.15,0,W+.6,.5,D+.6,o.pit,(w,d)=>pbr('concrete_pavement',Math.max(1,w/2.5),Math.max(1,d/2.5)),g,true);else add(B(W+.6,.5,D+.6),pbr('concrete_pavement',4,3),0,.15,0,g);
+ if(cut){if(o.pit)ringBox(0,.46,0,W,.12,D,o.pit,(w,d)=>pbr('oak_wood_planks',Math.max(1,w/1.8),Math.max(1,d/1.8),0xc29466),g);else add(B(W,.12,D),pbr('oak_wood_planks',5,4,0xc29466),0,.46,0,g,false);
+  add(B(W,H1,.2),wall,0,.46+H1/2,-D/2,g);add(B(.2,H1,D),wall,-W/2,.46+H1/2,0,g);add(B(.2,H1,D),wall,W/2,.46+H1/2,0,g);
+  add(B(W,.12,.06),M(0xffffff,.5),0,.58,-D/2+.13,g,false);
+  for(const s of[-1,1])add(B(.3,H1,.3),sid,s*(W/2-.05),.46+H1/2,D/2-.1,g);}            // cut faces: show the wall thickness
+ else{add(B(W,H1,D),sid,0,.46+H1/2,0,g);}
+ add(B(W+.4,.3,D+.4),trim,0,.46+H1+.15,0,g);add(B(W,H2,D),sid,0,.46+H1+.3+H2/2,0,g);
+ const RA=.62,RH=(D/2+.4)*Math.tan(RA);for(const s of[-1,1]){const r=add(B(W+1.2,.2,(D/2+.4)/Math.cos(RA)+.1),rs,0,y0+RH/2+.12,s*(D/4+.2),g);r.rotation.x=s*RA;}
+ add(B(W+1.3,.22,.45),rs,0,y0+RH+.14,0,g);
+ {const sh=new THREE.Shape([new THREE.Vector2(-D/2,0),new THREE.Vector2(D/2,0),new THREE.Vector2(0,RH-.05)]);const gg=new THREE.ExtrudeGeometry(sh,{depth:.2,bevelEnabled:false});
+  for(const sx of[-1,1]){const m=add(gg,sid,sx*(W/2-.1)-.1,y0,0,g);m.rotation.y=Math.PI/2;}}
+ add(B(.9,4.0,.9),pbr('red_brick',1,2),2.6*flip,y0+2.0,-1.8,g);
+ const win=(wx,wy,ww,wh)=>{const wz=D/2+.02;add(B(ww+.22,wh+.22,.08),trim,wx,wy,wz,g,false);add(B(ww,wh,.1),M(0x22384f,.08,.3,{envMapIntensity:1.8}),wx,wy,wz+.02,g,false);
+  add(B(ww,.05,.12),trim,wx,wy,wz+.05,g,false);add(B(.05,wh,.12),trim,wx,wy,wz+.05,g,false);
+  for(const s of[-1,1])add(B(ww*.42,wh+.1,.06),M(o.sh,.6),wx+s*(ww*.5+ww*.24),wy,wz+.02,g,false);};
+ for(const wx of(o.simple?[0]:[-2.8,0,2.8]))win(wx,y0-H2/2,1.15,1.45);
+ if(!cut){if(!o.simple){win(-2.8,.46+H1/2,1.4,1.5);win(2.8,.46+H1/2,1.4,1.5);}add(B(1.1,2.1,.12),M(o.sh===0xffffff?0x7a1f1f:o.sh,.4),-.2*flip,.46+1.05,D/2+.04,g,false);}
+ // porch
+ const px=-1.4*flip;add(B(4.4,.2,2.2),pbr('concrete_pavement',2,1),px,.5,D/2+1.1,g);add(B(2,.14,.7),pbr('concrete_pavement',1,.4),px,.3,D/2+2.45,g);
+ if(!cut){for(const cx of[px-2,px+.8*flip])add(CY(.1,.1,3.1,20),trim,cx,2.1,D/2+1.9,g);add(B(4.6,.18,2.6),trim,px,3.7,D/2+1.15,g);}   // no porch roof on the cutaway: keep the room visible
+ // garage + driveway
+ const gx=flip*(W/2+2.3);
+ if(o.office){add(B(4.2,3,.2),sid,gx,1.45,-2.7,g);for(const s2 of[-1,1])add(B(.2,3,6),sid,gx+s2*2.0,1.45,.2,g);add(B(4.2,.1,6),M(0x6b6258,.8),gx,.32,.2,g,false);
+  add(B(4.0,2.9,.05),M(0xe8e2d4,.8),gx,1.5,-2.58,g,false);
+  const sg=tex(1024,200,t=>{t.fillStyle='#1f3b2c';t.fillRect(0,0,1024,200);t.fillStyle='#fff';t.font='800 92px Mont';t.textAlign='center';t.fillText('DANA DESIGN CO.',512,135);});
+  add(new THREE.PlaneGeometry(3.4,.62),new THREE.MeshStandardMaterial({map:sg,roughness:.5}),gx,3.2,3.27,g,false);
+  add(B(2.0,.06,.8),pbr('oak_wood_planks',1,.4,0xc29466),gx,1.08,-.6,g);for(const lx of[-.9,.9])add(B(.06,.72,.7),M(0x222222,.4,.6),gx+lx,.7,-.6,g);
+  add(B(.9,.55,.04),M(0x0c0c10,.2,.4),gx-.35,1.45,-.9,g);add(B(.84,.49,.02),M(0x6aa7ff,.3,0,{emissive:0x3d7be0,emissiveIntensity:.9}),gx-.35,1.45,-.875,g,false);
+  add(B(.5,.03,.32),M(0x9ea3aa,.3,.8),gx+.45,1.13,-.5,g);add(B(1.6,1.6,.4),pbr('oak_wood_planks',1,1,0xa77b52),gx+1.1,1.1,-2.3,g);
+  const ol=new THREE.PointLight(0xfff2dc,8,8,1.4);ol.position.set(gx,2.6,1.0);g.add(ol);}
+ else add(B(4.2,3,6),sid,gx,1.45,.2,g);const gr=add(B(4.6,.22,6.4),rs,gx,3.05,.2,g);gr.rotation.z=flip*.12;
+ if(!o.office){add(B(3.1,2.3,.08),M(0xebe7de,.5),gx,1.6,3.23,g,false);for(let i=0;i<4;i++)add(B(3.0,.02,.1),M(0xc4beb2,.6),gx,.9+i*.5,3.25,g,false);}
+ add(B(3.6,.05,7.6),pbr('grooved_concrete_driveway',2,4,0xc9c6c0),gx,.3,D/2+3.4,g,false);
+ add(B(1.3,.04,4.8),pbr('concrete_pavement',1,3),px,.3,D/2+4.75,g,false);
+ // white picket fence along the front lawn
+ const fx0=-W/2-.6,fx1=gx-flip*1.9;const fa=Math.min(fx0*flip,fx1*flip)*flip;
+ for(let fx=-W/2-.5;fx<W/2-.3;fx+=.32){if(Math.abs(fx-px)<.8)continue;add(B(.09,.85,.04),trim,fx*flip<0?fx:fx,.62,D/2+6.9,g,false);}
+ for(const fy of[.45,.85])add(B(W-.2,.07,.04),trim,-.3,fy,D/2+6.88,g,false);
+ // mailbox + flag
+ const mb=new THREE.Group();mb.position.set(px-1.9*flip,0,D/2+7.4);g.add(mb);add(B(.1,1.05,.1),M(0x5a4126,.6),0,.55,0,mb);add(RB(.26,.26,.56,.1),M(0x2b2b2e,.4,.4),0,1.15,0,mb);add(B(.03,.2,.04),M(0xc0262d,.5),.15,1.28,.1,mb);
+ if(o.flag!==false&&!cut){const fl=add(FG,FLAGM,px-2+.62,3.05,D/2+2.0,g,true);fl.rotation.y=-.5;add(CY(.015,.015,1.4,8),M(0x777777,.3,.8),px-2,3.1,D/2+1.95,g);}
+ // backyard wooden fence
+ if(!o.noFence)add(B(W+10,1.8,.08),pbr('wood_planks',6,1,0xb09878),0,.9,-D/2-6,g);
+ return g;}
+const FT=tex(512,270,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#fff':'#b22234';x.fillRect(0,i*270/13,512,270/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,205,145);x.fillStyle='#fff';
+ for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++){x.beginPath();x.arc(17+c*34+(r%2?17:0),14+r*15.5,3.4,0,7);x.fill();}});
+const FG=new THREE.PlaneGeometry(1.2,.63,24,8);{const pp=FG.attributes.position;for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.6)/1.2;pp.setZ(i,Math.sin(u*7)*.06*u);}FG.computeVertexNormals();}
+const FLAGM=new THREE.MeshStandardMaterial({map:FT,roughness:.8,side:THREE.DoubleSide});
+import {OutlinePass} from 'three/addons/postprocessing/OutlinePass.js';
+const {moneyKit}=await import('./money-kit.js');const MK=await moneyKit(THREE);
+const LQ=Q.get('lq')==='1';
+function street(cx,cz,len){const g=new THREE.Group();g.position.set(cx,0,cz);scene.add(g);
+ add(B(len,.12,8),pbr('asphalt_02',len/3.3,2.5),0,.02,0,g,false);for(const z of[-.15,.15])add(B(len,.005,.1),M(0xf2b705,.6),0,.085,z,g,false);
+ for(const s of[-1,1]){add(B(len,.14,3.2),pbr('concrete_pavement',len/3.3,1.2),0,.05,s*5.6,g,false);add(B(len,.18,.22),M(0xb9b6ae,.8),0,.06,s*4.0,g,false);}return g;}
+// ===================== EP20 (ATM deposit) — Maple Street + a bank with an ATM; giant ATM interior set at x=IN =====================
+const lawn=add(B(600,.2,600),pbr('leafy_grass',120,120,0x8fdc4a),0,-.1,0,scene,false);
+street(0,19,400);
+const SIMPLE=o=>Object.assign({},o,{simple:true,flag:false});
+house(-22,0,0,SIMPLE(STY[1]),false,-1);house(22,0,0,SIMPLE(STY[3]),false,1);house(-44,0,0,SIMPLE(STY[4]),false,1);house(44,0,0,SIMPLE(STY[5]),false,-1);
+for(const [x,s] of[[-22,2],[0,3],[22,1]])house(x,-34,Math.PI,SIMPLE(STY[s]),false,1);
+const TREES=['island_tree_01','jacaranda_tree','pine_tree_01'];
+for(const [x,z,h] of[[-10.5,10,6.5],[11.5,10,7],[-14,-8,9],[15,-12,8],[-30,-14,9],[31,-20,10],[-36,8,8],[36,8,9],[0,-26,9]])model(TREES[Math.round(Math.abs(x*7+z))%3],x,0,z,h,x);
+const {core}=await import('./scenekit/core.js');const K=await core(THREE,scene,{TL});
+const {sm,pop,AD}=K;
+// ---------- the bank (front faces the street, +z) ----------
+const BANK=K.group(0,0,0);
+{const st=pbr('white_sandstone_blocks_02',4,2,0xf3ece0);
+ K.add(K.B(14,6.4,10),st,0,3.2,3,BANK);K.add(K.B(14.6,.6,10.6),K.M(0xe8e1d4,.6),0,6.6,3,BANK);          // body + cornice
+ K.add(K.B(16,.12,6),pbr('concrete_pavement',8,3,0xdedede),0,.06,11,BANK,false);                         // sidewalk
+ for(const x of[-5.2,-1.8])K.add(K.CY(.32,.36,5.6,24),K.M(0xf4efe6,.55),x,2.8,8.45,BANK);                // columns
+ const gl=new THREE.MeshPhysicalMaterial({color:0x1d2a36,roughness:.08,metalness:.4,clearcoat:1,envMapIntensity:1.2});
+ K.add(K.B(2.6,2.6,.08),gl,-3.5,1.6,8.06,BANK);K.add(K.B(2.8,2.8,.06),K.M(0xb8a888,.4,.6),-3.5,1.6,8.02,BANK);  // glass door
+ for(const x of[-5.6,5.6])K.add(K.B(1.6,1.8,.08),gl,x,4.5,8.03,BANK);
+ const sign=K.txt3('BANK',.72,0xd9a62a,{ei:.25,p:BANK});sign.position.set(0,5.45,8.12);}
+// ---------- the ATM (built into the facade) ----------
+const AX=3.2,AZ=8.0;   // ATM centre on the wall
+const ATM=K.group(AX,0,AZ,BANK);
+const SCRT=K.tex(512,400,()=>{});let scrMode=-1;
+function screenDraw(mode){if(mode===scrMode)return;scrMode=mode;K.redraw(SCRT,(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0f3d73');g.addColorStop(1,'#0a2448');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.textAlign='center';x.fillStyle='#fff';x.font='800 40px Mont';x.fillText(mode?'DEPOSITING...':'INSERT CASH',w/2,70);
+ x.fillStyle=mode?'#2fe06a':'#21b357';x.beginPath();x.roundRect(86,130,340,120,22);x.fill();x.fillStyle='#fff';x.font='800 64px Mont';x.fillText('DEPOSIT',w/2,214);
+ x.fillStyle='#9fc2ea';x.font='800 34px Mont';x.fillText('WITHDRAW',w/2,320);});}
+screenDraw(0);
+{const steel=K.M(0x5c636b,.35,.85),dk=K.M(0x16191c,.4,.6);
+ K.add(K.RB(1.25,2.3,.5,.06),K.M(0x1d4f8f,.4,.3),0,1.25,.05,ATM);                 // blue surround (front z=.30)
+ K.add(K.RB(1.0,1.95,.42,.04),steel,0,1.12,.14,ATM);                               // steel body (front z=.35)
+ K.add(new THREE.PlaneGeometry(.62,.48),new THREE.MeshBasicMaterial({map:SCRT,toneMapped:false}),0,1.62,.362,ATM,false);
+ K.add(K.B(.7,.56,.02),dk,0,1.62,.35,ATM);
+ const kp=K.tex(256,200,(x,w,h)=>{x.fillStyle='#2a2e33';x.fillRect(0,0,w,h);x.font='800 30px Mont';x.textAlign='center';for(let r=0;r<4;r++)for(let c=0;c<3;c++){x.fillStyle='#d9dde2';x.beginPath();x.roundRect(20+c*60,12+r*46,48,38,6);x.fill();x.fillStyle='#222';x.fillText('123456789*0#'[r*3+c],44+c*60,42+r*46);}
+  ['#d42a2a','#e8c32a','#2fae4a'].forEach((col,i)=>{x.fillStyle=col;x.beginPath();x.roundRect(200,14+i*62,44,50,6);x.fill();});});
+ K.add(K.B(.4,.31,.02),K.M(0x2a2e33,.6),0,1.17,.355,ATM);K.add(new THREE.PlaneGeometry(.34,.27),new THREE.MeshStandardMaterial({map:kp,roughness:.8}),0,1.17,.368,ATM,false);
+ K.add(K.B(.46,.12,.06),K.M(0x0b0b0b,.5),0,.9,.37,ATM);                           // cash slot frame
+ K.add(new THREE.PlaneGeometry(.36,.035),new THREE.MeshBasicMaterial({color:0x000000}),0,.9,.402,ATM,false);
+ const sign=K.tex(256,96,(x,w,h)=>{x.fillStyle='#1d4f8f';x.fillRect(0,0,w,h);x.fillStyle='#fff';x.font='800 70px Mont';x.textAlign='center';x.fillText('ATM',w/2,74);});
+ K.add(new THREE.PlaneGeometry(.7,.26),new THREE.MeshBasicMaterial({map:sign,toneMapped:false}),0,2.22,.31,ATM,false);}
+const SLOTLED=K.add(K.B(.42,.015,.02),new THREE.MeshStandardMaterial({color:0x2fe06a,emissive:0x2fe06a,emissiveIntensity:1.6}),0,.97,.4,ATM,false);
+const SLOT=V3(AX,.9,AZ+.36);   // world point of the cash slot
+// ---------- giant ATM interior (Mike is the size of a finger in here) ----------
+const IN=300,IG=K.group(IN,0,0);
+const PCB=K.tex(1024,512,(x,w,h)=>{x.fillStyle='#0f4a2c';x.fillRect(0,0,w,h);x.strokeStyle='#d8b04a';x.lineWidth=5;
+ for(let i=0;i<46;i++){let px=(i*97)%w,py=(i*53)%h;x.beginPath();x.moveTo(px,py);for(let k=0;k<4;k++){if(k%2)px+=((i*31+k*17)%160)-60;else py+=((i*23+k*29)%140)-50;x.lineTo(px,py);}x.stroke();x.fillStyle='#e8c35a';x.beginPath();x.arc(px,py,8,0,7);x.fill();}
+ for(let i=0;i<12;i++){x.fillStyle='#16181b';const cx=(i*211)%(w-150)+20,cy=(i*137)%(h-110)+20;x.fillRect(cx,cy,130,80);x.fillStyle='#8b9096';for(let k=0;k<8;k++){x.fillRect(cx+6+k*15,cy-10,7,10);x.fillRect(cx+6+k*15,cy+80,7,10);}}});
+PCB.wrapS=THREE.RepeatWrapping;PCB.repeat.set(4,1);
+const STRIPE=K.tex(256,32,(x,w,h)=>{for(let i=0;i<12;i++){x.fillStyle=i%2?'#151515':'#f2c21a';x.beginPath();x.moveTo(i*24,0);x.lineTo(i*24+24,0);x.lineTo(i*24+8,h);x.lineTo(i*24-16,h);x.fill();}});
+STRIPE.wrapS=THREE.RepeatWrapping;STRIPE.repeat.set(14,1);
+{const steel=K.M(0x7d858e,.35,.85),rub=K.M(0x1b1c1e,.85);
+ K.add(K.B(60,.2,14),pbr('granite_tile',12,3,0x9aa1a8),0,-.1,0,IG,false);                                   // floor plate
+ K.add(new THREE.PlaneGeometry(60,8),new THREE.MeshStandardMaterial({map:PCB,roughness:.55,metalness:.2}),0,4,4.2,IG,false).rotation.y=Math.PI;   // circuit-board back wall
+ for(const y of[.5,7.4])K.add(K.B(60,.08,.08),new THREE.MeshStandardMaterial({color:0x3aa0ff,emissive:0x3aa0ff,emissiveIntensity:2.2}),0,y,4.1,IG,false);   // blue LED strips
+ for(let i=0;i<9;i++)K.add(new THREE.SphereGeometry(.07,12,8),new THREE.MeshStandardMaterial({color:0x2fe06a,emissive:0x2fe06a,emissiveIntensity:2}),-24+i*6,6.2,4.05,IG,false);
+ K.add(K.B(30,.3,2.4),rub,-3,.85,0,IG);                                                                     // conveyor belt (top y=1.0)
+ for(let i=0;i<26;i++){const r=K.add(K.CY(.16,.16,2.7,18),steel,-17.5+i*1.15,.62,0,IG);r.rotation.x=Math.PI/2;}
+ for(const z of[-1.35,1.35])K.add(K.B(30,.28,.12),new THREE.MeshStandardMaterial({map:STRIPE,roughness:.6}),-3,1.14,z,IG);   // yellow/black rails
+ K.add(K.B(30,.9,.25),steel,-3,.45,-1.5,IG);K.add(K.B(30,.9,.25),steel,-3,.45,1.5,IG);}
+const ROLL=[];for(const y of[1.75,3.05]){const r=K.add(K.CY(.62,.62,2.9,40),K.M(0x9aa2ab,.25,.9),-10.5,y,0,IG);r.rotation.x=Math.PI/2;ROLL.push(r);}
+{const fr=K.M(0x2b2f35,.4,.7);for(const z of[-1.6,1.6])K.add(K.B(1.8,4.4,.2),fr,-10.5,2.2,z,IG);K.add(K.B(1.8,.3,3.4),fr,-10.5,4.35,0,IG);}
+for(const [c,x,y,z,i] of[[0xffffff,-2,6,-3,22],[0x9fd0ff,6,5,-3,16],[0xfff1d6,-9,5,-2,16]]){const l=new THREE.PointLight(c,i,24,1.2);l.position.set(x,y,z);IG.add(l);}
+// the giant $1,000 stack Mike rides (bills at finger scale = a raft)
+const GS=14,RAFT=K.group(0,0,0,IG);for(let i=0;i<10;i++){const n=MK.note(100,{curve:0});n.scale.setScalar(GS);n.rotation.set(-Math.PI/2,0,Math.PI+.05*Math.sin(i*2.7));n.position.set(.05*Math.sin(i*1.9),.012+i*.016,.04*Math.cos(i*1.3));RAFT.add(n);}   // ten $100 bills = $1,000 (no strap band)
+const RH=.17;
+const LOOSE=[];for(let i=0;i<6;i++){const n=MK.note(100,{curve:.01});n.scale.setScalar(7);IG.add(n);LOOSE.push(n);}
+// ---------- outside props: Mike's $1,000 (ten $100 bills) ----------
+const NOTES=[];for(let i=0;i<10;i++){const n=MK.note(100,{curve:.004});scene.add(n);NOTES.push(n);}
+const BIG=K.txt3('$1,000',.34,0x2fe06a,{ei:1.0});
+// ================= TIMELINE =================
+const TLN=await (await fetch(Q.get('tl')||'timeline_ep20full.json')).json(),CH=TLN.chunks,WS=TLN.words,DUR=TLN.dur;
+const nw=x=>x.toLowerCase().replace(/[^a-z0-9]/g,'');
+function FIND(ph,occ=0){const p=ph.split(/\s+/).map(nw);let c=0;for(let i=0;i+p.length<=WS.length;i++){if(p.every((w,j)=>nw(WS[i+j].w)===w)){if(c++===occ)return [i,i+p.length-1];}}console.error('phrase not found',ph);return [0,0];}
+const T=(ph,o=0)=>WS[FIND(ph,o)[0]].s,TE=(ph,o=0)=>WS[FIND(ph,o)[1]].e;
+const tThou=T('thousand dollars'),tInside=T('inside the'),tAtm=T('atm',0),tSucks=T('sucks him'),tFirst=T('first stop');
+{const [a,b]=FIND('thousand dollars');for(let i=a;i<=b;i++)CH[i].t='';}   // the amount floats in 3D
+// ================= CAST =================
+const mike=await K.person('mike',null,AX-.25,0,AZ+.9,2.6,0x2f6fd6);
+const mikeI=await K.person('mike',null,IN,0,0,Math.PI,0x2f6fd6);
+const _v=V3();const wristW=(P_,sd='R')=>{const b=P_.BN['wrist'+sd];return b?b.getWorldPosition(_v).clone():P_.g.position.clone();};
+// ================= LIGHT / POST (bright daylight, crisp, no haze) =================
+const hdrD=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdrD.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdrD;scene.environment=hdrD;scene.environmentIntensity=.8;scene.fog=new THREE.Fog(0xcfe0f0,90,260);
+const sun=new THREE.DirectionalLight(0xfff2de,3.4);sun.castShadow=true;sun.shadow.mapSize.set(LQ?2048:4096,LQ?2048:4096);Object.assign(sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:120});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;
+sun.position.set(-20,26,30);sun.target.position.set(0,0,8);scene.add(sun);scene.add(sun.target);
+const HEMI=new THREE.HemisphereLight(0xeaf3ff,0x6a6458,1.4);scene.add(HEMI);renderer.toneMappingExposure=1.25;
+const cam=new THREE.PerspectiveCamera(45,W/H,.02,600);
+const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:LQ?0:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+const OUT=new OutlinePass(new THREE.Vector2(W,H),scene,cam);Object.assign(OUT,{edgeStrength:6,edgeGlow:.6,edgeThickness:2.2,pulsePeriod:0});OUT.visibleEdgeColor.set(0x38e8ff);OUT.hiddenEdgeColor.set(0x38e8ff);comp.addPass(OUT);
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.18,1.3));comp.addPass(new OutputPass());
+const GRADE=new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.12},sat:{value:1.12},vig:{value:.18}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'});comp.addPass(GRADE);
+// ================= CAMERA =================
+// outside: side view (Mike + ATM + $1,000) -> slow push -> dive into the cash slot -> white flash -> inside: track the raft along the belt
+const tFeed=tThou-.05,tPull=tInside,tGone=tAtm+.15,tDive=tGone,tIn=tAtm+.3;
+const sx=t=>{const a=sm(tIn,tSucks,t),b=sm(tSucks,tFirst+.4,t);return 7.5-4.0*a-6.5*b;};   // raft x on the belt (slow ride, then whoosh after "sucks")
+const SH=[{t0:0,set:'out',keys:[
+ [0,[5.9,2.2,12.9],[3.1,1.6,8.4],44],
+ [tFeed,[5.4,2.0,12.1],[3.15,1.45,8.4],42],
+ [tPull+.2,[4.9,1.6,11.0],[3.2,1.15,8.4],38],
+ [tDive-.05,[3.6,1.05,9.4],[3.2,.92,8.3],32],
+ [tIn,[3.22,.92,8.6],[3.2,.9,8.2],30]]},
+ {t0:tIn,set:'in',o:[IN,0,0],keys:[[tIn,[3.2,3.6,-2.6],[0,2.0,0],56],[tIn+.7,[.8,3.3,-4.6],[0,1.9,0],46],[tSucks,[-1.2,3.1,-4.6],[0,1.9,0],44],[tSucks+.6,[-2.2,2.9,-4.2],[.3,1.9,0],46],[tFirst+.4,[-2.6,3.2,-5.0],[-.6,1.9,0],48]]}];
+const RIDE=SH[1].keys;
+const LOOK=V3();const FL=document.getElementById('fl');
+// ================= ANIMATION =================
+function animate(t){
+ const inside=t>=tIn;
+ FL.style.opacity=String(Math.max(0,1-Math.abs(t-tIn)/.14)*.95);   // white flash between outside and inside
+ screenDraw(t>tFeed?1:0);SLOTLED.material.emissiveIntensity=t>tFeed&&t<tGone?(Math.sin(t*30)>0?2.4:.4):1.2;
+ // ---- outside: Mike at the ATM, then pulled into the slot (shrinking) ----
+ const M_=mike;K.relax(M_);K.idle(M_,t);
+ const pull=sm(tPull,tGone,t);M_.g.visible=!inside&&pull<.995;
+ if(M_.g.visible){const p0=V3(AX-.25,0,AZ+.9),p1=SLOT.clone().add(V3(0,-.02,0));
+  M_.g.position.copy(p0).lerp(p1,Math.pow(pull,.7));M_.g.scale.setScalar(Math.max(.02,1-Math.pow(pull,.45)*.98));
+  M_.g.rotation.set(-1.2*pull,2.6-.5*sm(tFeed,tPull,t)+3*pull,0);
+  if(t<tFeed){K.arm(M_,'R',AD[0]+1.05,AD[2]-.25,.55);K.face(M_,{smile:.8});}
+  else if(t<tPull){K.arm(M_,'R',AD[0]+1.2,AD[2]-.2,.3);K.face(M_,{jaw:.25,smile:.3});K.pose(M_,'head',.1,0,0);}
+  else{K.armsUp(M_,1);K.face(M_,{jaw:.6});K.pose(M_,'head',-.2,0,0);}
+  M_.g.updateMatrixWorld(true);}
+ // the ten bills: fanned in his hand, then shot into the slot one by one
+ const wr=M_.g.visible?wristW(M_,'R'):SLOT.clone();
+ NOTES.forEach((n,i)=>{const ti=tFeed+i*.045,u=sm(ti,ti+.22,t);n.visible=!inside&&u<.98;if(!n.visible)return;
+  const hand=wr.clone().add(V3(.03,.06+i*.004,.06));n.position.copy(hand).lerp(SLOT.clone().add(V3(0,0,-.1)),u);
+  n.quaternion.copy(cam.quaternion);n.rotateZ(.25*(i/9-.5)*(1-u)+1.57*u);MK.flutter(n,t,i);});
+ // $1,000 floats above (outside: over the ATM, inside: over Mike)
+ {const a=pop(t,0,.25);BIG.visible=true;BIG.scale.setScalar(Math.max(.001,a)*(1+.05*Math.sin(t*5)));
+  if(!inside)BIG.position.set(AX+.05,2.55-.38*sm(0,tFeed+.3,t),AZ+.6);else BIG.position.set(IN+sx(t),1.06+RH+2.0,0);BIG.quaternion.copy(cam.quaternion);}
+ // ---- inside: Mike rides the raft along the belt ----
+ const MI=mikeI;MI.g.visible=inside;RAFT.visible=inside;
+ const x=sx(t),fast=sm(tSucks,tSucks+.3,t);
+ RAFT.position.set(x,1.06,0);RAFT.rotation.z=.04*Math.sin(t*9)*(.4+fast);
+ ROLL.forEach((r,i)=>{r.rotation.y=t*(i?-6:6);});
+ if(inside){K.relax(MI);MI.g.position.set(IN+x,1.06+RH,.05);MI.g.rotation.y=Math.PI+.25*Math.sin(t*2.2);
+  K.armsUp(MI,.85+.15*Math.sin(t*12));K.face(MI,{jaw:.55+.2*fast,smile:.7});K.pose(MI,'spine03',-.08-.1*fast,0,.06*Math.sin(t*7));K.pose(MI,'head',-.15,.15*Math.sin(t*3),0);
+  MI.g.position.y+=.06*Math.abs(Math.sin(t*9));MI.g.updateMatrixWorld(true);}
+ LOOSE.forEach((n,i)=>{n.visible=inside;if(!inside)return;const f=t-tIn+i*.35;n.position.set(x+4.5-((f*2.2)%9),2.0+1.8*Math.sin(f*1.7+i),1.1+1.3*Math.abs(Math.sin(i*2.3)));n.rotation.set(.5*Math.sin(f*1.3+i),Math.PI+.5*Math.sin(f*.9+i),f*.7+i);MK.flutter(n,t,i);});
+ if(inside){const tt=Math.min(Math.max(t,RIDE[0][0]),RIDE[RIDE.length-1][0]),p=K.hv(tt,RIDE,k=>k[1]),l=K.hv(tt,RIDE,k=>k[2]),X=IN+sx(t);cam.position.set(X+p[0],p[1],p[2]);cam.lookAt(X+l[0],l[1],l[2]);cam.getWorldDirection(LOOK);}
+ OUT.selectedObjects=[];story(t);
+}
+function story(t){
+ // ---- light: the sun follows the camera (shadows stay sharp in every place) ----
+ const gx=cam.position.x+LOOK.x*8,gz=cam.position.z+LOOK.z*8;sun.target.position.set(gx,0,gz);sun.position.set(gx-20,26,gz+22);sun.target.updateMatrixWorld();
+}
+await loaded;await Promise.all(Object.values(MODELS));
+const cap=document.getElementById('cap');
+window.renderAt=t=>{try{K.shotCam(cam,t,SH);cam.getWorldDirection(LOOK);animate(t);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}
+ let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
+ comp.render();return true;};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>

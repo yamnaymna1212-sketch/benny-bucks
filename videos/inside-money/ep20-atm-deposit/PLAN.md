@@ -7,3 +7,8 @@
   - Banks send excess cash to the Federal Reserve; the Fed destroys unfit notes (federalreserve.gov currency processing).
   - ATM miscount -> receipt + report quickly (Reg E error resolution).
 - Then: voice (Kokoro am_liam, one take) -> timeline -> copy render-kit/ep4.html style / ep19.html helpers -> 5-s hook preview -> wait for approval -> full render.
+- DONE 2026-11-11 (Mac): facts.md verified (Reg CC 229.10/229.12/229.19, Fed shredding, ATM validators). Voice full.tts.txt (242 words) -> Kokoro am_liam 0.95 max_gap .08 ONE take -> vo_full.wav 64.2 s (no pause >= .12 s). Timeline make_timeline_full.py -> render-kit/timeline_ep20full.json (dur 64.42).
+- Page: render-kit/ep20.html = ep19.html lines 1-112 (renderer + Maple Street helpers) + _ep20parts/hook.part.js + ep19 renderAt tail (rebuild with the cat command in the hook part header if you edit the part; or edit ep20.html directly once the story starts).
+- HOOK (0-5.8 s): bank with an ATM on Maple Street, daylight; Mike feeds ten $100 bills ("$1,000" green 3D above), gets pulled into the slot shrinking (legs last) -> camera dives into the slot -> white flash -> giant ATM interior (circuit-board wall, conveyor belt, yellow/black rails, counter rollers ahead); Mike rides a raft of ten giant $100 bills (no strap band: it is $1,000, not $10,000), arms up screaming; loose bills fly behind him. Mix mix_ep20.py: ting 0, cash on "thousand", whoosh on "inside", whoosh on the flash, whoosh on "sucks".
+- Preview: npm run render -- ep20 5.8 -> render-kit/ep20-atm-deposit-preview-5.8s.mp4. WAIT for approval, then build the story (SCRIPT.md beats from "First stop").
+- Worktree note: render-kit node_modules / dl / frames are symlinks to ~/benny-bucks/videos/inside-money/render-kit (untracked).
