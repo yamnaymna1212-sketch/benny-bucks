@@ -1,0 +1,409 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3;pointer-events:none}
+.ttl{position:absolute;left:0;width:720px;top:4%;text-align:center;font:800 62px/1.1 Mont,sans-serif;color:#fff;letter-spacing:-.5px;-webkit-text-stroke:9px #000;paint-order:stroke fill;text-shadow:0 5px 0 #000,0 8px 14px rgba(0,0,0,.6)}.ttl .g{color:#3dff7a}
+.cap{position:absolute;left:60px;width:600px;top:47%;text-align:center;font:800 64px Mont,sans-serif;color:#fff;letter-spacing:-.5px;-webkit-text-stroke:10px #111;paint-order:stroke fill;text-shadow:0 6px 10px rgba(0,0,0,.45)}   /* Building Box style: one word, white, dark outline, mid-screen */
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div><div id="fl" style="position:absolute;inset:0;background:#fff;opacity:0"></div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP18 FULL (61-65 s) "$1,000,000 in a pool" - hook v2 + story, built on scenekit/ (reusable modules).
+// EP18 HOOK v2 "$1,000,000 in a pool" (user 2026-11-10, refs = The Building Box screenshots): bright aerial backyard, an excavator digs, the cash goes in, a steel lid, then the IRS watches it all from a surveillance room.
+// (built from ep5.html) - Maple Street, USA (a whole suburban neighbourhood, cutaway houses).
+// stills: node stills.mjs ep18full.html 1.5 8 12 18 21 28 35 41 47 51 57 62      render (from render-kit): npm run render -- ep18full
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+await document.fonts.load('800 60px Mont');
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
+const scene=new THREE.Scene();
+const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.9;
+scene.fog=new THREE.Fog(0xc4d6ea,90,260);
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM),GL=new GLTFLoader(LM);
+const PC={};   // material cache: textures are loaded once
+function pbr(name,rx,ry,color){const key=[name,rx,ry,color].join();if(PC[key])return PC[key];
+ const ld=s=>{const t=TL.load(`dl/tex/${name}_${s}.jpg`);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=8;return t};
+ const d=ld('diff');d.colorSpace=THREE.SRGBColorSpace;const m=new THREE.MeshStandardMaterial({map:d,normalMap:ld('nor'),roughnessMap:ld('rough'),roughness:1});if(color!==undefined)m.color.set(color);return PC[key]=m;}
+const MC={};const M=(c,r=.6,m=0,o={})=>{const k=[c,r,m,JSON.stringify(o)].join();return MC[k]||(MC[k]=new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:r,metalness:m},o)));};
+const add=(geo,mat,x,y,z,p=scene,cast=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;p.add(m);return m};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),RB=(w,h,d,r=.05)=>new RoundedBoxGeometry(w,h,d,4,r),CY=(a,b,h,s=32)=>new THREE.CylinderGeometry(a,b,h,s),V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+function tex(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const MODELS={};
+// a box with a rectangular hole in xz (used for the pit through floor, foundation and ground); mf(w,d) -> material for a piece
+function ringBox(cx,cy,cz,W,H,D,hl,mf,p=scene,cast=false){const x0=cx-W/2,x1=cx+W/2,z0=cz-D/2,z1=cz+D/2,hx0=hl.x-hl.w/2,hx1=hl.x+hl.w/2,hz0=hl.z-hl.d/2,hz1=hl.z+hl.d/2;
+ for(const [a,b,c,d] of[[x0,hx0,z0,z1],[hx1,x1,z0,z1],[hx0,hx1,z0,hz0],[hx0,hx1,hz1,z1]]){const w=b-a,dd=d-c;if(w<=0||dd<=0)continue;add(B(w,H,dd),mf(w,dd),(a+b)/2,cy,(c+d)/2,p,cast);}}
+function model(name,x,y,z,h,ry=0,p=scene){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ const put=src=>{const s=src.clone(true);const bb=new THREE.Box3().setFromObject(s);s.scale.setScalar(h/(bb.max.y-bb.min.y));
+  const b2=new THREE.Box3().setFromObject(s);s.position.set(-(b2.min.x+b2.max.x)/2,-b2.min.y,-(b2.min.z+b2.max.z)/2);g.add(s);};
+ if(!MODELS[name])MODELS[name]=new Promise(r=>GL.load(`dl/models/${name}/${name}.gltf`,o=>{o.scene.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true;}});r(o.scene);},undefined,e=>{console.warn('missing model (run node assets5.mjs):',name);r(new THREE.Group());}));
+ MODELS[name].then(put);return g;}
+// cut=true: ground-floor front wall removed (cutaway); facing +z by default (ry=Math.PI faces -z)
+const STY=[{siding:'weathered_plank_siding',col:0x9aa7b0,roof:'grey_roof_tiles',rc:0xb9b9b9,sh:0x2f3f4f,inner:0xa3b39f},
+ {siding:'white_planks_clean',col:0xe2d6bd,roof:'roof_07',rc:0xc79b84,sh:0x2b5a41,inner:0xece4d4},
+ {siding:'white_planks_clean',col:0xf2f2ee,roof:'grey_roof_tiles',rc:0x8d929a,sh:0x1f2f55,inner:0xeae6dc},
+ {siding:'red_brick',col:0xc9a596,roof:'grey_roof_tiles',rc:0x7d7f86,sh:0x1c1c1c,inner:0xe6dccb},
+ {siding:'white_planks_clean',col:0xb9cbd8,roof:'roof_07',rc:0xa9a29a,sh:0xffffff,inner:0xeee6d8},
+ {siding:'white_planks_clean',col:0xe6d7a8,roof:'grey_roof_tiles',rc:0x9a8f86,sh:0x6b2b22,inner:0xefe8d8}];
+function house(x,z,ry,o,cut=false,flip=1){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);const W=9,D=7.5,H1=2.9,H2=2.7,y0=.46+H1+.3+H2;
+ const sid=pbr(o.siding,o.siding==='red_brick'?3:4,2,o.col),wall=pbr('plastered_wall',3,1.2,o.inner),rs=pbr(o.roof,5,3,o.rc),trim=M(0xe9e6df,.7);
+ if(o.pit)ringBox(0,.15,0,W+.6,.5,D+.6,o.pit,(w,d)=>pbr('concrete_pavement',Math.max(1,w/2.5),Math.max(1,d/2.5)),g,true);else add(B(W+.6,.5,D+.6),pbr('concrete_pavement',4,3),0,.15,0,g);
+ if(cut){if(o.pit)ringBox(0,.46,0,W,.12,D,o.pit,(w,d)=>pbr('oak_wood_planks',Math.max(1,w/1.8),Math.max(1,d/1.8),0xc29466),g);else add(B(W,.12,D),pbr('oak_wood_planks',5,4,0xc29466),0,.46,0,g,false);
+  add(B(W,H1,.2),wall,0,.46+H1/2,-D/2,g);add(B(.2,H1,D),wall,-W/2,.46+H1/2,0,g);add(B(.2,H1,D),wall,W/2,.46+H1/2,0,g);
+  add(B(W,.12,.06),M(0xffffff,.5),0,.58,-D/2+.13,g,false);
+  for(const s of[-1,1])add(B(.3,H1,.3),sid,s*(W/2-.05),.46+H1/2,D/2-.1,g);}            // cut faces: show the wall thickness
+ else{add(B(W,H1,D),sid,0,.46+H1/2,0,g);}
+ add(B(W+.4,.3,D+.4),trim,0,.46+H1+.15,0,g);add(B(W,H2,D),sid,0,.46+H1+.3+H2/2,0,g);
+ const RA=.62,RH=(D/2+.4)*Math.tan(RA);for(const s of[-1,1]){const r=add(B(W+1.2,.2,(D/2+.4)/Math.cos(RA)+.1),rs,0,y0+RH/2+.12,s*(D/4+.2),g);r.rotation.x=s*RA;}
+ add(B(W+1.3,.22,.45),rs,0,y0+RH+.14,0,g);
+ {const sh=new THREE.Shape([new THREE.Vector2(-D/2,0),new THREE.Vector2(D/2,0),new THREE.Vector2(0,RH-.05)]);const gg=new THREE.ExtrudeGeometry(sh,{depth:.2,bevelEnabled:false});
+  for(const sx of[-1,1]){const m=add(gg,sid,sx*(W/2-.1)-.1,y0,0,g);m.rotation.y=Math.PI/2;}}
+ add(B(.9,4.0,.9),pbr('red_brick',1,2),2.6*flip,y0+2.0,-1.8,g);
+ const win=(wx,wy,ww,wh)=>{const wz=D/2+.02;add(B(ww+.22,wh+.22,.08),trim,wx,wy,wz,g,false);add(B(ww,wh,.1),M(0x22384f,.08,.3,{envMapIntensity:1.8}),wx,wy,wz+.02,g,false);
+  add(B(ww,.05,.12),trim,wx,wy,wz+.05,g,false);add(B(.05,wh,.12),trim,wx,wy,wz+.05,g,false);
+  for(const s of[-1,1])add(B(ww*.42,wh+.1,.06),M(o.sh,.6),wx+s*(ww*.5+ww*.24),wy,wz+.02,g,false);};
+ for(const wx of[-2.8,0,2.8])win(wx,y0-H2/2,1.15,1.45);
+ if(!cut){win(-2.8,.46+H1/2,1.4,1.5);win(2.8,.46+H1/2,1.4,1.5);add(B(1.1,2.1,.12),M(o.sh===0xffffff?0x7a1f1f:o.sh,.4),-.2*flip,.46+1.05,D/2+.04,g,false);}
+ // porch
+ const px=-1.4*flip;add(B(4.4,.2,2.2),pbr('concrete_pavement',2,1),px,.5,D/2+1.1,g);add(B(2,.14,.7),pbr('concrete_pavement',1,.4),px,.3,D/2+2.45,g);
+ if(!cut){for(const cx of[px-2,px+.8*flip])add(CY(.1,.1,3.1,20),trim,cx,2.1,D/2+1.9,g);add(B(4.6,.18,2.6),trim,px,3.7,D/2+1.15,g);}   // no porch roof on the cutaway: keep the room visible
+ // garage + driveway
+ const gx=flip*(W/2+2.3);
+ if(o.office){add(B(4.2,3,.2),sid,gx,1.45,-2.7,g);for(const s2 of[-1,1])add(B(.2,3,6),sid,gx+s2*2.0,1.45,.2,g);add(B(4.2,.1,6),M(0x6b6258,.8),gx,.32,.2,g,false);
+  add(B(4.0,2.9,.05),M(0xe8e2d4,.8),gx,1.5,-2.58,g,false);
+  const sg=tex(1024,200,t=>{t.fillStyle='#1f3b2c';t.fillRect(0,0,1024,200);t.fillStyle='#fff';t.font='800 92px Mont';t.textAlign='center';t.fillText('DANA DESIGN CO.',512,135);});
+  add(new THREE.PlaneGeometry(3.4,.62),new THREE.MeshStandardMaterial({map:sg,roughness:.5}),gx,3.2,3.27,g,false);
+  add(B(2.0,.06,.8),pbr('oak_wood_planks',1,.4,0xc29466),gx,1.08,-.6,g);for(const lx of[-.9,.9])add(B(.06,.72,.7),M(0x222222,.4,.6),gx+lx,.7,-.6,g);
+  add(B(.9,.55,.04),M(0x0c0c10,.2,.4),gx-.35,1.45,-.9,g);add(B(.84,.49,.02),M(0x6aa7ff,.3,0,{emissive:0x3d7be0,emissiveIntensity:.9}),gx-.35,1.45,-.875,g,false);
+  add(B(.5,.03,.32),M(0x9ea3aa,.3,.8),gx+.45,1.13,-.5,g);add(B(1.6,1.6,.4),pbr('oak_wood_planks',1,1,0xa77b52),gx+1.1,1.1,-2.3,g);
+  const ol=new THREE.PointLight(0xfff2dc,8,8,1.4);ol.position.set(gx,2.6,1.0);g.add(ol);}
+ else add(B(4.2,3,6),sid,gx,1.45,.2,g);const gr=add(B(4.6,.22,6.4),rs,gx,3.05,.2,g);gr.rotation.z=flip*.12;
+ if(!o.office){add(B(3.1,2.3,.08),M(0xebe7de,.5),gx,1.6,3.23,g,false);for(let i=0;i<4;i++)add(B(3.0,.02,.1),M(0xc4beb2,.6),gx,.9+i*.5,3.25,g,false);}
+ add(B(3.6,.05,7.6),pbr('grooved_concrete_driveway',2,4,0xc9c6c0),gx,.3,D/2+3.4,g,false);
+ add(B(1.3,.04,4.8),pbr('concrete_pavement',1,3),px,.3,D/2+4.75,g,false);
+ // white picket fence along the front lawn
+ const fx0=-W/2-.6,fx1=gx-flip*1.9;const fa=Math.min(fx0*flip,fx1*flip)*flip;
+ for(let fx=-W/2-.5;fx<W/2-.3;fx+=.32){if(Math.abs(fx-px)<.8)continue;add(B(.09,.85,.04),trim,fx*flip<0?fx:fx,.62,D/2+6.9,g,false);}
+ for(const fy of[.45,.85])add(B(W-.2,.07,.04),trim,-.3,fy,D/2+6.88,g,false);
+ // mailbox + flag
+ const mb=new THREE.Group();mb.position.set(px-1.9*flip,0,D/2+7.4);g.add(mb);add(B(.1,1.05,.1),M(0x5a4126,.6),0,.55,0,mb);add(RB(.26,.26,.56,.1),M(0x2b2b2e,.4,.4),0,1.15,0,mb);add(B(.03,.2,.04),M(0xc0262d,.5),.15,1.28,.1,mb);
+ if(o.flag!==false&&!cut){const fl=add(FG,FLAGM,px-2+.62,3.05,D/2+2.0,g,true);fl.rotation.y=-.5;add(CY(.015,.015,1.4,8),M(0x777777,.3,.8),px-2,3.1,D/2+1.95,g);}
+ // backyard wooden fence
+ if(!o.noFence)add(B(W+10,1.8,.08),pbr('wood_planks',6,1,0xb09878),0,.9,-D/2-6,g);
+ return g;}
+const FT=tex(512,270,x=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#fff':'#b22234';x.fillRect(0,i*270/13,512,270/13+1);}x.fillStyle='#3c3b6e';x.fillRect(0,0,205,145);x.fillStyle='#fff';
+ for(let r=0;r<9;r++)for(let c=0;c<(r%2?5:6);c++){x.beginPath();x.arc(17+c*34+(r%2?17:0),14+r*15.5,3.4,0,7);x.fill();}});
+const FG=new THREE.PlaneGeometry(1.2,.63,24,8);{const pp=FG.attributes.position;for(let i=0;i<pp.count;i++){const u=(pp.getX(i)+.6)/1.2;pp.setZ(i,Math.sin(u*7)*.06*u);}FG.computeVertexNormals();}
+const FLAGM=new THREE.MeshStandardMaterial({map:FT,roughness:.8,side:THREE.DoubleSide});
+import {OutlinePass} from 'three/addons/postprocessing/OutlinePass.js';
+const {moneyKit}=await import('./money-kit.js');const MK=await moneyKit(THREE);
+const LQ=Q.get('lq')==='1';
+// ================= WORLD: a bright green suburban lot (Building Box look: saturated grass, clean houses, trees, one street) =================
+function street(cx,cz,len){const g=new THREE.Group();g.position.set(cx,0,cz);scene.add(g);
+ add(B(len,.12,8),pbr('asphalt_02',len/3.3,2.5),0,.02,0,g,false);for(const z of[-.15,.15])add(B(len,.005,.1),M(0xf2b705,.6),0,.085,z,g,false);
+ for(const s of[-1,1]){add(B(len,.14,3.2),pbr('concrete_pavement',len/3.3,1.2),0,.05,s*5.6,g,false);add(B(len,.18,.22),M(0xb9b6ae,.8),0,.06,s*4.0,g,false);}return g;}
+street(0,13.5,400);
+const mikeH=house(0,0,0,Object.assign({},STY[2],{noFence:true}),false,1);        // Mike's house (faces the street, +z); the backyard is behind it (-z)
+house(-22,0,0,STY[1],false,-1);house(22,0,0,STY[2],false,1);house(-44,0,0,STY[3],false,1);house(44,0,0,STY[1],false,-1);
+for(const [x,s] of[[-22,2],[0,3],[22,1]])house(x,-34,Math.PI,STY[s],false,1);      // houses behind (their backyards meet ours)
+// Mike's backyard: wooden fence (x -10..10, z -3.75..-19), a patio + table, trees
+const FW=pbr('wood_planks',6,1,0xb08a62);
+for(const [w,x,z,ry] of[[20,0,-19,0],[15.25,-10,-11.4,Math.PI/2],[15.25,10,-11.4,Math.PI/2]]){const f=add(B(w,1.7,.08),FW,x,.85,z);f.rotation.y=ry;}
+add(B(4.2,.06,2.6),pbr('concrete_pavement',2,1.2),-5.6,.03,-5.6,scene,false);
+{const wd=pbr('oak_wood_planks',1,.5,0x8a5a3a);add(CY(.55,.55,.05,28),wd,-5.6,.75,-5.6);add(CY(.05,.05,.72,10),M(0x333333,.4,.6),-5.6,.38,-5.6);for(const s of[-1,1]){add(B(.5,.06,.5),wd,-5.6+s*.95,.45,-5.6);add(B(.5,.5,.06),wd,-5.6+s*.95,.7,-5.6-.25);}}
+const TREES=['island_tree_01','jacaranda_tree','pine_tree_01'];
+for(const [x,z,h] of[[-8,-17,7],[-14,-8,9],[15,-12,8],[-30,-14,9],[31,-20,10],[-18,-25,8],[17,-27,9],[-36,8,8],[36,8,9],[-12,8,7],[12,8,6.5],[0,-26,9]])model(TREES[Math.round(Math.abs(x*7+z))%3],x,0,z,h,x);
+for(const [x,z] of[[-9,-4.6],[9,-4.6],[-4,-18.3],])model('shrub_01',x,0,z,.9,x);
+// ================= THE PIT -> "pool" (house-local = world, Mike's house at the origin) =================
+const P={x:.4,z:-11.0,w:3.3,d:2.6,dep:1.25};   // a big hole: the money pit (11 x 4 x 26... straps: see the money block)
+{const hole=new THREE.Shape([[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>new THREE.Vector2(a*P.w/2,b*P.d/2)));}
+// grass ring around the hole (the big ground slab already covers it: cut a hole by drawing the pit walls ABOVE it and a "grass lid" that shrinks)
+ringBox(0,-.1,0,600,.2,600,{x:P.x,z:P.z,w:P.w,d:P.d},(w,d)=>pbr('leafy_grass',Math.max(.6,w/5),Math.max(.6,d/5),0x8fdc4a));   // the lawn with the pit hole
+const PIT=new THREE.Group();PIT.position.set(P.x,0,P.z);scene.add(PIT);
+const SOIL=(w,h)=>pbr('excavated_soil_wall',Math.max(.5,w/1.4),Math.max(.5,h/1.4),0xb07a52);
+const PW={};   // pit walls/floor scale with the digging depth
+PW.floor=add(B(P.w,.06,P.d),pbr('dirt',1.6,1.3,0x8a6240),0,0,0,PIT,false);
+for(const [k,w,d,x,z] of[['n',P.w,.06,0,-P.d/2],['s',P.w,.06,0,P.d/2],['w',.06,P.d,-P.w/2,0],['e',.06,P.d,P.w/2,0]])PW[k]=add(B(w,1,d),SOIL(Math.max(w,d),1),x,0,z,PIT,false);
+const LIP=new THREE.Group();PIT.add(LIP);for(const [w,d,x,z] of[[P.w+.3,.15,0,-P.d/2-.075],[P.w+.3,.15,0,P.d/2+.075],[.15,P.d,-P.w/2-.075,0],[.15,P.d,P.w/2+.075,0]])add(B(w,.03,d),M(0x6b4a2e,.95),x,.005,z,LIP,false);   // churned soil rim
+const GRASSCAP=add(B(P.w+.02,.03,P.d+.02),pbr('leafy_grass',1.2,1,0x8fdc4a),0,.02,0,PIT,false);   // the lawn before digging (removed bite by bite)
+// glowing yellow double outline around the hole (Building Box highlight) on "pool"
+function rectTube(w,d,r,col,ei){const pts=[];const R=.35;for(const [cx,cz,a0] of[[w/2-R,d/2-R,0],[-w/2+R,d/2-R,Math.PI/2],[-w/2+R,-d/2+R,Math.PI],[w/2-R,-d/2+R,1.5*Math.PI]])for(let i=0;i<=8;i++){const a=a0+i/8*Math.PI/2;pts.push(V3(cx+Math.cos(a)*R,0,cz+Math.sin(a)*R));}
+ const c=new THREE.CatmullRomCurve3(pts,true);return new THREE.Mesh(new THREE.TubeGeometry(c,160,r,8,true),new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:ei,roughness:.4}));}
+const RING=new THREE.Group();RING.position.set(P.x,.08,P.z);scene.add(RING);for(const [k,r] of[[0,.035],[.22,.025]]){const m=rectTube(P.w+.45+k,P.d+.45+k,r,0xffcc22,2.2);RING.add(m);}
+// dirt pile (grows with every bucket) + flying dirt clods
+const PILE=add(new THREE.SphereGeometry(1,32,16,0,Math.PI*2,0,Math.PI/2),pbr('dirt',1.5,1.2,0x8a6240),P.x+3.6,0,P.z+2.7);
+const CLODS=[];{const gm=new THREE.IcosahedronGeometry(.07,0),mm=new THREE.MeshStandardMaterial({color:0x6a4a2c,roughness:1});for(let i=0;i<28;i++){const m=add(gm,mm,0,0,0);m.visible=false;CLODS.push({m,a:Math.random(),dx:(Math.random()-.5)*.5,dz:(Math.random()-.5)*.5});}}
+// ================= SCENE KIT (reusable modules, see scenekit/README.md) =================
+const {core}=await import('./scenekit/core.js');const K=await core(THREE,scene,{TL});
+const {excavator}=await import('./scenekit/excavator.js');const {vaultLid}=await import('./scenekit/vault-lid.js');const {moneyPit}=await import('./scenekit/money-pit.js');
+const {irsRoom}=await import('./scenekit/irs-room.js');const {interrogation}=await import('./scenekit/interrogation.js');const {vehicle}=await import('./scenekit/vehicles.js');
+const {form1040,redFlag,check3D,x3D,evidenceBag}=await import('./scenekit/props.js');
+const {sm,pop,AD}=K;
+// ================= TIMELINE (one continuous voice take) =================
+const TLN=await (await fetch(Q.get('tl')||'timeline_ep18full.json')).json(),CH=TLN.chunks,WS=TLN.words,DUR=TLN.dur;
+const nw=x=>x.toLowerCase().replace(/[^a-z0-9]/g,'');
+// T('give us the code') = start of the first word of that phrase (occ = which occurrence); TE = end of its last word
+function FIND(ph,occ=0){const p=ph.split(/\s+/).map(nw);let c=0;for(let i=0;i+p.length<=WS.length;i++){if(p.every((w,j)=>nw(WS[i+j].w)===w)){if(c++===occ)return [i,i+p.length-1];}}console.error('phrase not found',ph);return [0,0];}
+const T=(ph,o=0)=>WS[FIND(ph,o)[0]].s,TE=(ph,o=0)=>WS[FIND(ph,o)[1]].e;
+const tPool=T('pool'),tFill=T('filled'),tMil=T('million'),tDol=T('dollars'),tPut=T('put'),tArm=T('armor'),tWorld=T('world'),tTop=T('top'),tWill=T('will'),tIRS=T('irs'),tFind=T('find');
+const tDigEnd=tFill+.3,tMS=tFill+.25,tME=tDol+.35,tLand=tArm+.05,tSw=tWill-.02;
+const tReal=T('in real life'),tSat=T('satellite'),tDay1=T('day one'),tDay2=T('day two'),tTruck=T('truck'),tNeigh=T('but your neighbor'),tExc=T('excavator'),tCash=T('cash'),tLid1=T('steel lid'),
+ tPays=T('and the irs pays'),tTips=T('tips'),tOpen=T('so they open'),tReturn=T('tax return'),tNothing=T('nothing'),tPoolFull=T('a pool full'),tNoInc=T('no income'),tFlag=T('red flag'),
+ tBecause=T('because'),tHide=T('hide money'),tCares=T('it cares'),tFrom=T('came from'),tTwo=T('two weeks'),tSUV=T('suvs'),tPolice=T('police cars'),tAgents=T('agents at'),tDoor=T('door'),tStreet=T('the whole street'),
+ tWalk=T('they walk'),tBack=T('backyard'),tOneAg=T('one agent'),tPoints=T('points'),tOpenIt=T('open it'),tType=T('you type'),tWrong1=T('wrong'),tAgain=T('try again'),tWrong2=T('wrong',1),tBuilt=T('you built'),tForgot=T('forgot'),
+ tNow=T('now youre'),tGray=T('gray room'),tGive=T('give us'),tSwear=T('you swear'),tAsk=T('they ask'),tAgain2=T('and again'),tNobody=T('nobody'),tLesson=T('heres the real'),tKeep=T('keeping cash'),tLegal=T('legal'),
+ tHiding=T('hiding the income'),tEvasion=T('tax evasion'),tFive=T('five years'),tPrison=T('prison'),tFraud=T('fraud penalty'),tSeventy=T('seventyfive'),tLidQ=T('and the lid'),tBigger=T('bigger excavator'),
+ tYourMil=T('your million',1),tStrap=T('one strap'),tBags=T('evidence bags'),tSo=T('so pay'),tPayTax=T('the tax and sleep'),tKeepPool=T('keep the pool'),tPray=T('pray'),tComment=T('comment'),tTAX=T('tax or pool'),tPOOLw=T('pool',3);
+// whip transitions (camera tilts up to the sky/ceiling, the set changes there, then it tilts down): no hard cut ever on screen
+const W1=tReal+1.55,W2=tOpen-.05,W3=tTwo-.04,W4=tNow-.03,W5=tLidQ-.06;
+// ================= YARD: excavator, money, lid (scenekit) =================
+const EXv=excavator(K,{x:P.x+4.0,z:P.z+.2,ry:Math.PI});const EX=EXv.root;
+const PITM=moneyPit(K,MK,{x:P.x,z:P.z,w:P.w,d:P.d,dep:P.dep,denom:1});
+const LID=vaultLid(K,{w:P.w+.7,d:P.d+.7,h:.3,kpx:.75,kpz:(P.d+.7)/2-.42});const ARM=LID.root;ARM.visible=false;const AH=LID.h;
+const DUST=[];{const gm=new THREE.SphereGeometry(.07,10,8),mm=new THREE.MeshBasicMaterial({color:0xd9cbb4,transparent:true,opacity:.6,depthWrite:false});for(let i=0;i<30;i++){const m=add(gm,mm,0,0,0);m.visible=false;DUST.push({m,a:i/30*Math.PI*2,v:.9+Math.random()*.8});}}
+// loose cash Mike shows off on the lid ("the cash" beat) + his fan of bills
+const SHOW=K.group(P.x-1.1,AH,P.z-.2);SHOW.visible=false;{let k=0;const R=()=>{k++;const v=Math.sin(k*91.7)*4375.85;return v-Math.floor(v);};for(let i=0;i<14;i++){const s=MK.strap(1);s.position.set((R()-.5)*.6,MK.NT*(.5+Math.floor(i/5)),(R()-.5)*.4);s.rotation.y=(R()-.5)*.8;SHOW.add(s);}}
+const FAN=MK.fan(1,5,{spread:.7});scene.add(FAN);FAN.visible=false;
+// the second, BIGGER excavator (end): orange, 1.6x
+const BIGv=excavator(K,{x:P.x+15,z:P.z+.1,ry:Math.PI,scale:1.6,color:0xff7a1a});const BIG=BIGv.root;BIG.visible=false;
+// the new truck (Day two)
+const TRUCK=vehicle(K,'pickup',{x:-5.6,z:-13.6,ry:0});TRUCK.root.visible=false;
+// neighbour's stool behind the back fence
+add(B(.5,.42,.4),pbr('wood_planks',1,.5,0x9a7a56),-2.2,.21,-19.55);
+// evidence table + bags (end)
+const ETAB=K.group(P.x-3.4,0,P.z+2.3);add(B(1.8,.05,.7),M(0xd9d9d9,.5,.3),0,.74,0,ETAB);for(const lx of[-.8,.8])add(B(.04,.72,.6),M(0x777777,.4,.7),lx,.37,0,ETAB);
+const BAGS=[-.55,0,.55].map(bx=>{const b=evidenceBag(K);ETAB.add(b);b.position.set(bx,.77,0);return b;});ETAB.visible=false;
+const CARRY=MK.strap(1);scene.add(CARRY);CARRY.visible=false;
+// ================= FRONT STREET: SUVs + police cars =================
+const SUV=[vehicle(K,'suv',{x:40,z:11.6,ry:Math.PI}),vehicle(K,'suv',{x:46,z:11.6,ry:Math.PI})];
+const COP=[vehicle(K,'police',{x:-40,z:15.4,ry:0}),vehicle(K,'police',{x:-47,z:15.4,ry:0})];
+// ================= IRS ROOM (x 300) with the live "satellite" feed =================
+const RX=300,RT=new THREE.WebGLRenderTarget(1280,720,{samples:LQ?0:4});RT.texture.colorSpace=THREE.SRGBColorSpace;
+const SAT=new THREE.PerspectiveCamera(34,16/9,.5,400);SAT.up.set(0,0,1);
+const IRS=irsRoom(K,{x:RX,z:0,feed:RT.texture});
+const F1040=form1040(K);IRS.root.add(F1040);F1040.position.set(.55,.815,-.62);F1040.rotation.set(-Math.PI/2,0,.08);F1040.scale.setScalar(.75);
+{const big=form1040(K);IRS.right.material.map=big.children[0].material.map;IRS.right.material.opacity=1;IRS.right.material.needsUpdate=true;scene.remove(big);}
+const FLAG=redFlag(K);IRS.root.add(FLAG);FLAG.position.set(1.45,.81,-.35);FLAG.scale.setScalar(.6);
+const DIM=add(new THREE.PlaneGeometry(2.25,2.53),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0,depthWrite:false}),-1.125,2.0,-2.97,IRS.root,false);
+const QM=K.txt3('?',.95,0xffd21a,{ei:1.1,p:IRS.root});QM.position.set(1.15,2.05,-2.55);
+// ================= INTERROGATION ROOM (x -300) =================
+const IX=-300,IR=interrogation(K,{x:IX,z:0});
+const CASHT=K.group(-.45,.785,.05,IR.root);for(let j=0;j<3;j++)for(let i=0;i<2;i++){const s=MK.strap(1);s.position.set(i*.25-.12,MK.NT*(j+.5),0);s.rotation.y=Math.PI/2+(j%2)*.05;CASHT.add(s);}
+const F2=form1040(K);IR.root.add(F2);F2.position.set(.42,.79,.08);F2.rotation.set(-Math.PI/2+.25,0,-.06);F2.scale.setScalar(.6);
+const CHK=check3D(K);IR.root.add(CHK);const XX=x3D(K);IR.root.add(XX);
+const Y5=K.txt3('5 YEARS',.19,0xff2a2a,{ei:1.0,p:IR.root}),P75=K.txt3('+75%',.3,0xff2a2a,{ei:1.0,p:IR.root});
+// ================= CAST (every character different) =================
+const P_=K.person;
+const mike=await P_('mike',null,P.x-2.4,0,P.z+1.7,.9,0x2f6fd6);
+const agA=await P_('manager',null,RX-1.55,0,-1.9,.5,0x1b1f27);            // IRS room: senior agent at the screen
+const agB=await P_('teller',null,RX+.6,0,-.05,Math.PI,0x2a2f3a);         // IRS room: analyst at the desk
+const fa1=await P_('guard',{polo:0x15171b,cargo:0x1d2026},0,0,0,0,0x15171b);   // field agent (black)
+const fa2=await P_('manager',null,0,0,0,0,0x1b1f27);                    // the senior agent comes along
+const cop=await P_('guard',{polo:0x1f3a6e,cargo:0x1a2233},0,0,0,0,0x1f3a6e);   // police officer (navy)
+const nb=await P_('seller',null,-2.2,.42,-19.55,Math.PI,0x7a3a5a);           // the neighbour (behind the back fence)
+const wt=[await P_('landlord',null,-17.5,0,8.2,.9,0x333333),await P_('printer',null,16.5,0,7.6,-1.0,0x555555),await P_('teller',{'suit|blouse':0x8a2b3b},20.5,0,9.6,-1.2,0x8a2b3b)];
+const MIL=K.txt3('$1,000,000',.55,0x22e06a,{ei:1.1});MIL.visible=false;
+const TAXS=K.txt3('TAX',.24,0x2fe06a,{ei:1.0}),POOLS=K.txt3('POOL',.22,0x38c8ff,{ei:1.0});TAXS.visible=POOLS.visible=false;
+const KEYL=new THREE.PointLight(0xff2020,0,3,1.5);scene.add(KEYL);
+// ================= LIGHT / POST (bright, saturated, crisp; no haze) =================
+scene.environmentIntensity=.9;scene.fog=new THREE.Fog(0xc4d6ea,120,320);
+const sun=new THREE.DirectionalLight(0xfff1dc,3.2);sun.castShadow=true;sun.shadow.mapSize.set(LQ?2048:4096,LQ?2048:4096);Object.assign(sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:120});sun.shadow.bias=-.0004;sun.shadow.normalBias=.05;
+sun.position.set(-18,40,10);sun.target.position.set(0,0,-10);scene.add(sun);scene.add(sun.target);
+const HEMI=new THREE.HemisphereLight(0xf2f7ff,0x7a9a50,1.1);scene.add(HEMI);renderer.toneMappingExposure=1.15;
+const cam=new THREE.PerspectiveCamera(45,W/H,.05,600);
+const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:LQ?0:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+const OUT=new OutlinePass(new THREE.Vector2(W,H),scene,cam);Object.assign(OUT,{edgeStrength:6,edgeGlow:.6,edgeThickness:2.2,pulsePeriod:0});OUT.visibleEdgeColor.set(0x38e8ff);OUT.hiddenEdgeColor.set(0x38e8ff);comp.addPass(OUT);
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.32,.18,1.5));comp.addPass(new OutputPass());
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.1},sat:{value:1.3},vig:{value:.14}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat,vig;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;float d=distance(vUv,vec2(.5));v*=1.-vig*smoothstep(.35,.85,d);gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
+// ================= ONE CAMERA, 8 shots (whips hide every change of place) =================
+const px=P.x,pz=P.z;
+const SH=[
+ {t0:0,set:'yard',keys:[
+  [0,[8.5,12.5,-24],[0.8,0,-10.5],46],[tPool+.1,[7.5,11,-22.5],[0.6,-.2,-10.8],46],[tFill,[6,10,-21],[.5,-.3,-11],45],
+  [tMil,[3.6,7.4,-17.8],[.4,-.5,-11],42],          // closer on the real cash + $1,000,000
+  [tPut,[4,9,-19],[.4,.8,-11],46],[tLand+.1,[3.8,8,-18.6],[.4,0,-11],45],[tTop,[2.2,8.4,-18.8],[0,0,-10.8],45],
+  [tSw-.35,[.5,16,-11.6],[px,0,pz-.05],38],[tSw,[px,30,pz-.02],[px,0,pz],34]]},
+ {t0:tSw,set:'irs',o:[RX,0,0],keys:[
+  [tSw,[0,2.0,-1.3],[0,2.0,-3.0],50],[tSw+.6,[.3,1.85,3.4],[0,1.85,-2.6],56],[tFind,[.4,1.8,3.7],[-.1,1.75,-2.6],56],
+  [tSat,[.2,1.75,3.2],[-.4,1.6,-2.6],50],[W1-.32,[.15,1.75,3.0],[-.4,1.6,-2.6],48],[W1,[.15,1.9,2.9],[0,7.5,-1.0],58]]},
+ {t0:W1,set:'yard',keys:[
+  [W1,[px-1.4,3.0,pz+4.4],[px-.6,9,pz+1],58],[W1+.4,[px-1.3,2.4,pz+3.8],[px+.2,.55,pz+.1],46],[tDay2,[px+.6,2.2,pz+3.5],[px+.1,.55,pz],44],
+  [tTruck-.1,[px-2.4,2.6,pz+5.4],[-4.6,1.0,-13.2],48],[tNeigh+.2,[-1.2,3.2,-6.0],[-4.4,1.0,-13.4],48],[tNeigh+.75,[-1.6,4.6,-15.6],[-2.2,1.6,-19.4],50],
+  [tExc-.05,[-2.9,2.55,-21.7],[0.9,.4,-11.2],46],[tLid1+.4,[-2.6,2.45,-21.2],[0.6,.35,-11],42],
+  [tPays+.5,[-1.2,1.95,-21.3],[-2.15,1.85,-19.6],38],[W2-.3,[-1.6,1.92,-20.85],[-2.2,1.85,-19.6],34],[W2,[-1.6,2.0,-20.85],[-2.0,7.5,-17.5],52]]},
+ {t0:W2,set:'irs',o:[RX,0,0],keys:[
+  [W2,[.55,2.4,.9],[.5,7,-1.5],52],[W2+.4,[.55,2.2,.2],[.55,.8,-.62],44],[tNothing+.2,[.56,1.95,0],[.55,.8,-.64],38],
+  [tPoolFull+.1,[.4,1.9,1.6],[.2,1.6,-2],48],[tFlag,[.1,1.95,3.4],[0,1.75,-2.6],54],[tHide,[-.3,1.9,3.0],[-.4,1.85,-2.7],50],
+  [tFrom+.2,[.7,1.95,1.6],[.95,2.0,-2.9],46],[W3-.3,[.8,1.95,1.3],[1.05,2.0,-2.9],44],[W3,[.8,2.1,1.2],[1.0,7.5,-1.0],52]]},
+ {t0:W3,set:'street',keys:[
+  [W3,[5,11,25],[1,19,10],56],[W3+.45,[5,10,25],[0,1.0,9],50],[tPolice+.3,[3,8,22],[-1,.9,9],48],[tAgents+.2,[1.5,4.6,15.5],[-1,1.4,6.0],44],
+  [tDoor+.2,[-3.4,3.1,11.2],[-.7,1.5,5.0],40],[tStreet+.35,[2.5,5,16],[-6,1.4,8.5],50],
+  [tWalk+.3,[0,11,6],[-1,.5,-6],52],[tBack+.6,[2.0,6.8,-3.0],[-.5,.6,-9.5],48],[tPoints+.2,[2.9,4.2,-4.6],[px,.5,pz+1],44],
+  [tOpenIt+.25,[2.4,2.4,pz+4.4],[1.15,.5,pz+1.3],42],[tType+.4,[1.95,1.45,pz+2.45],[1.15,.44,pz+1.15],40],[tWrong2+.3,[1.9,1.38,pz+2.35],[1.15,.44,pz+1.15],38],
+  [tBuilt+.9,[3.0,3.1,pz+5.6],[px+.4,1.0,pz+1.6],46],[W4-.3,[2.7,2.9,pz+5.2],[px+.4,1.1,pz+1.8],42],[W4,[2.7,3.0,pz+5.2],[px,8.5,pz+1],54]]},
+ {t0:W4,set:'room',o:[IX,0,0],keys:[
+  [W4,[0,2.4,3.3],[0,7.5,0],56],[W4+.45,[0,2.1,3.2],[0,1.1,0],50],[tGive-.1,[2.4,1.75,2.2],[-.1,1.15,0],46],[tGive+.35,[1.6,1.55,1.2],[0,1.3,-.5],42],
+  [tSwear+.3,[-1.1,1.45,-.75],[0,1.15,.75],40],[tAsk+.5,[-1.5,1.55,-.95],[.1,1.2,.35],42],[tNobody+.3,[2.4,2.2,2.9],[0,1.1,0],50],
+  [tKeep+.1,[0,2.4,2.0],[0,.85,0],46],[tLegal+.1,[-.45,1.75,1.45],[-.45,1.05,0],40],[tHiding+.4,[.1,1.9,1.7],[.1,.95,0],42],[tEvasion+.1,[.45,1.75,1.45],[.42,1.05,.05],40],
+  [tFive,[0,1.85,3.6],[0,1.45,0],46],[tFraud+.3,[0,1.8,3.4],[0,1.6,0],44],[W5-.3,[0,1.75,3.2],[0,1.6,0],42],[W5,[0,1.9,3.2],[0,7.5,0],54]]},
+ {t0:W5,set:'yard',keys:[
+  [W5,[px+6,6,pz+9],[px+1,15,pz+2],56],[W5+.45,[px+6.5,6.2,pz+9.5],[px+1.5,1.4,pz],48],[tYourMil+.1,[px+1.5,5.2,pz+6.5],[px,.2,pz],46],
+  [tBags,[px-3.8,3.0,pz+6.2],[px-3.2,.9,pz+2.3],44],[tSo+.5,[px-1.3,1.8,pz+9.0],[px-1.3,1.55,pz+3.0],42],[DUR,[px-1.3,1.75,pz+8.6],[px-1.3,1.55,pz+3.0],41]]}];
+const LOOK=V3();
+function setCam(t){const s=K.shotCam(cam,t,SH);
+ if(s===SH[0]&&t>tSw-.36){cam.up.set(0,1,0).lerp(V3(0,0,1),sm(tSw-.36,tSw-.05,t)).normalize();const l=K.hv(Math.min(t,tSw),s.keys,k=>k[2]);cam.lookAt(l[0],l[1],l[2]);}
+ cam.getWorldDirection(LOOK);return s;}
+// ================= ANIMATION =================
+const _v=V3(),_q=new THREE.Quaternion();
+const at=(P_,x,y,z,ry)=>{P_.g.position.set(x,y,z);if(ry!==undefined)P_.g.rotation.y=ry;};
+const walkTo=(P_,t,t0,t1,a,b,amp=.45)=>{const u=sm(t0,t1,t);P_.g.position.set(a[0]+(b[0]-a[0])*u,0,a[1]+(b[1]-a[1])*u);if(u>0&&u<1){P_.g.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);K.walk(P_,t*1.2,amp);}return u;};
+const wristW=(P_,sd='R')=>{const b=P_.BN['wrist'+sd];return b?b.getWorldPosition(_v):P_.g.position;};
+function animate(t,shot){const set=shot.set;
+ // ---------- YARD: dig, ring, money, lid ----------
+ const dk=sm(-.2,tDigEnd,t),dep=Math.max(.02,P.dep*dk);
+ PW.floor.position.y=-dep;for(const k of['n','s','w','e']){PW[k].scale.y=dep;PW[k].position.y=-dep/2;}
+ GRASSCAP.visible=dk<.05;LIP.visible=dk>=.05;PILE.scale.set(1.3,.12+.55*dk,1.1);
+ const dig=t<tDigEnd;let cy=0;
+ if(dig)cy=EXv.dig(t);else{const k=sm(tDigEnd,tDigEnd+.4,t);EXv.pose(.2+.35*k,.3-.15*k,-.9,0);EXv.bucketDirt.visible=false;}
+ EX.position.x=P.x+4.0+2.2*sm(tDigEnd,tDigEnd+.7,t)+.02*Math.sin(t*40)*(dig?1:0);EX.visible=t<W5;
+ for(const c of CLODS){const ph=((cy-.88+1)%1)/.25;const vis=dig&&ph>=0&&ph<1;c.m.visible=vis&&t>.1;if(vis){EXv.BUCK.getWorldPosition(_v);c.m.position.set(_v.x+c.dx*ph,_v.y-2.5*ph*ph,_v.z+c.dz*ph);}}
+ const rk=pop(t,tPool,.3)*(1-sm(tFill+.3,tFill+.55,t));RING.visible=rk>.01;RING.scale.setScalar(Math.max(.01,.9+.1*rk));RING.children.forEach(m=>m.material.emissiveIntensity=2.2*(.6+.4*Math.sin(t*14)));
+ PITM.update(t,{t0:tMS,t1:tME});
+ const gl=Math.max(sm(tMil-.05,tMil+.2,t)*(1-sm(tLand-.15,tLand,t)),K.win(t,tYourMil,tStrap+.4,.2));PITM.glow(gl,t-tMil);
+ {const s=pop(t,tMil-.04,.3)*(1-sm(tPut+.1,tPut+.3,t));MIL.visible=s>.01;MIL.scale.setScalar(Math.max(.001,s));MIL.position.set(P.x-.2,1.75+.04*Math.sin(t*2.4),P.z+.5);MIL.quaternion.copy(cam.quaternion);}
+ // lid: falls (hook), stays, is lifted by the bigger excavator (end)
+ ARM.visible=t>tPut-.2;
+ {const u=Math.min(1,Math.max(0,(t-(tPut-.2))/(tLand-(tPut-.2))));const bo=t>tLand?.05*Math.exp(-(t-tLand)*9)*Math.abs(Math.sin((t-tLand)*28)):0;
+  const lift=sm(tBigger+.15,tYourMil+.2,t);ARM.position.set(P.x+2.0*lift,.02+7*(1-u*u)+bo+3.0*lift,P.z);ARM.rotation.z=.45*lift;LID.wheel.rotation.y=-2.2*sm(tWorld,tTop+.2,t);}
+ for(const d of DUST){const f=t-tLand;d.m.visible=f>0&&f<.75;if(d.m.visible){const r=2.1+d.v*f*1.8;d.m.position.set(P.x+Math.cos(d.a)*r*1.05,.15+f*.4,P.z+Math.sin(d.a)*r*.85);d.m.scale.setScalar(1+f*3);d.m.material.opacity=.55*(1-f/.75);}}
+ // keypad: typing, WRONG (red), typing again, WRONG
+ {const ty=(a,b,code)=>code.slice(0,Math.max(1,Math.ceil(code.length*sm(a,b,t))));let kp='****',kc='#39ff6a',red=0;
+  if(t>=tType&&t<tWrong1)kp=ty(tType,tWrong1-.05,'4071');else if(t>=tWrong1&&t<tAgain){kp='WRONG';kc='#ff3030';red=1;}
+  else if(t>=tAgain&&t<tWrong2)kp=ty(tAgain,tWrong2-.05,'7140');else if(t>=tWrong2&&t<W5){kp='WRONG';kc='#ff3030';red=1;}
+  LID.screen(kp,kc);ARM.updateMatrixWorld();KEYL.position.copy(LID.keypadPos).add(V3(0,.3,0)).applyMatrix4(ARM.matrixWorld);KEYL.intensity=red?(Math.sin(t*22)>0?5:1.5):0;}
+ // big excavator (end)
+ BIG.visible=t>=W5;if(BIG.visible){BIG.position.x=P.x+15-8.6*sm(W5,tBigger+.1,t);const L=sm(tBigger+.15,tYourMil+.2,t);BIGv.pose(-.25+.8*L,.5-.3*L,-.6*L,0);}
+ TRUCK.root.visible=t>=tDay2-.05&&t<W3;if(TRUCK.root.visible){const u=sm(tDay2-.05,tDay2+.35,t);TRUCK.root.position.y=4*(1-u)*(1-u)+.12*Math.abs(Math.sin((t-tDay2-.35)*16))*Math.exp(-Math.max(0,t-tDay2-.35)*7)*(u>=1?1:0);}
+ // ---------- STREET: SUVs + police ----------
+ const S0=sm(tSUV-1.0,tSUV+.2,t),S1=sm(tSUV-.8,tSUV+.45,t),C0=sm(tPolice-1.0,tPolice+.2,t),C1=sm(tPolice-.8,tPolice+.45,t);
+ SUV[0].root.position.x=40-42.5*S0;SUV[1].root.position.x=46-42*S1;COP[0].root.position.x=-40+31*C0;COP[1].root.position.x=-47+31.5*C1;
+ for(const v of[...SUV,...COP])v.update(t,true);
+ // ---------- IRS ROOM ----------
+ const feedOn=(t>=tSw-.4&&t<W1)||(t>=W2&&t<W3);
+ if(feedOn){const z=sm(tSw,tSat,t);SAT.position.set(P.x,30-6*z,P.z-.02);SAT.lookAt(P.x,0,P.z);SAT.updateMatrixWorld();renderer.setRenderTarget(RT);renderer.render(scene,SAT);renderer.setRenderTarget(null);}
+ IRS.mode(t<W2?(t>tSat+.35?'off':'feed'):(t>=tPoolFull?'split':'feed'));
+ IRS.reticle(t>tIRS&&t<tSat+.35?(.6+.4*(Math.sin(t*16)>0?1:0))*sm(tIRS,tIRS+.15,t):0);
+ IRS.beacons(t,(t>tSw&&t<W1)||(t>tFlag&&t<W3));
+ F1040.circle(sm(tNothing-.1,tNothing+.25,t));
+ {const s=pop(t,tFlag,.3);FLAG.visible=s>.01&&t<W3;FLAG.scale.setScalar(.6*Math.max(.01,s));FLAG.wave(t);}
+ DIM.material.opacity=.6*sm(tHide,tHide+.3,t);
+ {const s=pop(t,tFrom,.3);QM.visible=s>.01&&t<W3;QM.scale.setScalar(Math.max(.01,s)*(1+.05*Math.sin(t*8)));QM.rotation.y=.25*Math.sin(t*2);}
+ K.relax(agA);K.idle(agA,t,1);at(agA,RX-1.55,0,-1.9);
+ {const ap=sm(tFind-.25,tFind+.05,t)*(1-sm(tSat,tSat+.2,t));agA.g.rotation.y=.5-.9*ap;if(ap>0)K.point(agA,'R',ap);else K.arm(agA,'R',AD[0]+.9,AD[2]-.35,1.6);
+  const sh=K.win(t,tSat+.25,W1,.15);if(sh>0)K.shrug(agA,sh);
+  if(t>=W2){agA.g.rotation.y=.5+.4*sm(tHide-.2,tHide,t);const w=K.win(t,tHide,tCares,.15);if(w>0){K.point(agA,'L',w);K.pose(agA,'lowerarm01L',.4*w+.3*Math.sin(t*9)*w,0,0);}
+   const p2=K.win(t,tFrom-.1,W3,.15);if(p2>0){K.point(agA,'R',p2);agA.g.rotation.y=.5-.5*p2;}}
+  K.face(agA,{jaw:.15*ap});}
+ K.relax(agB);K.idle(agB,t,2);at(agB,RX+1.5,0,-1.35);
+ {const toScr=t<W2?sm(tIRS-.1,tIRS+.25,t):sm(tPoolFull-.1,tPoolFull+.3,t);agB.g.rotation.y=-.64+(Math.PI+.64-Math.PI*2)*toScr;K.pose(agB,'head',.25*(1-toScr),0,0);
+  if(toScr<.5){K.arm(agB,'R',AD[0]+.9,AD[2]-.2,1.2);K.arm(agB,'L',AD[0]+.9,AD[2]-.2,1.2);}K.face(agB,{jaw:.2*K.win(t,tFlag,tFlag+.8)});}
+ // ---------- INTERROGATION ----------
+ IR.lampSwing(t);IR.bars(t<tPrison?0:Math.min(1,(t-tPrison)/.22)*(1-.05*Math.exp(-(t-tPrison-.22)*10)*Math.abs(Math.sin((t-tPrison)*30))));
+ {const c=pop(t,tLegal,.3);CHK.visible=c>.01;CHK.scale.setScalar(Math.max(.01,c)*.55);CHK.position.set(-.45,1.45,.05);CHK.rotation.y=.2*Math.sin(t*2);
+  const x=pop(t,tEvasion,.3);XX.visible=x>.01;XX.scale.setScalar(Math.max(.01,x)*.5);XX.position.set(.42,1.45,.12);
+  F2.cover(sm(tHiding,tHiding+.4,t));
+  const y5=pop(t,tFive,.3)*(1-sm(tFraud-.15,tFraud,t));Y5.visible=y5>.01;Y5.scale.setScalar(Math.max(.01,y5));Y5.position.set(0,2.2,.6);
+  const p7=pop(t,tSeventy,.3);P75.visible=p7>.01;P75.scale.setScalar(Math.max(.01,p7));P75.position.set(0,2.2,.6);}
+ // ---------- CAST per place ----------
+ const M_=mike;K.relax(M_);K.idle(M_,t);M_.g.rotation.order='YXZ';M_.g.rotation.x=0;
+ FAN.visible=false;SHOW.visible=t>=tNeigh-.3&&t<W2;CARRY.visible=false;
+ if(t<tSw+.1){ // hook: directs the digger -> cheers on "million" -> points up at the lid -> proud
+  at(M_,P.x-2.4,0,P.z+1.7,2.2);
+  if(t<tFill){K.arm(M_,'R',AD[0]+1.3,AD[2]-.25+.25*Math.sin(t*9),.25);K.pose(M_,'head',.1,-.2,0);K.face(M_,{smile:.6,jaw:.05});}
+  const cel=sm(tMil-.1,tMil+.1,t)*(1-sm(tPut-.1,tPut+.1,t));if(cel>0){K.armsUp(M_,cel);M_.g.position.y=Math.abs(Math.sin((t-tMil)*7))*.14*cel;K.face(M_,{smile:1.3,jaw:.2});}
+  const pu=sm(tPut-.05,tPut+.12,t)*(1-sm(tLand-.08,tLand+.05,t));if(pu>0){K.arm(M_,'R',AD[0]+.35,AD[2]-2.3*pu,.1);K.pose(M_,'head',-.5*pu,0,0);K.face(M_,{jaw:.25});}
+  const fl=Math.exp(-Math.pow((t-tLand-.05)*7,2));if(fl>.03){K.pose(M_,'spine03',-.15*fl,0,0);for(const sd of['L','R'])K.arm(M_,sd,AD[0]+.9*fl,AD[2]-.6*fl,1.6*fl);}
+  const pr=sm(tWorld-.1,tWorld+.15,t);if(pr>0&&fl<.3){K.arm(M_,'L',AD[0]+.95*pr,AD[2]-.85*pr,1.95*pr);K.arm(M_,'R',AD[0]+1.2*pr,AD[2]-.6*pr,1.2*pr);K.face(M_,{smile:1.2});K.pose(M_,'head',-.1*pr,.2*pr,0);}
+ }else if(t<tDay2-.05){ // Day one: sleeps like a king on the lid
+  at(M_,P.x+1.05,AH+.14,P.z-.95,Math.PI/2);M_.g.rotation.x=-Math.PI/2;K.lieArms(M_,1);K.face(M_,{smile:.9});K.pose(M_,'spine03',.02*Math.sin(t*2.2),0,0);
+ }else if(t<tNeigh-.3){ // Day two: cheers next to his brand new truck
+  at(M_,-3.0,0,-12.1,-.5);const c=sm(tDay2+.25,tDay2+.45,t);K.armsUp(M_,c);M_.g.position.y=Math.abs(Math.sin((t-tDay2)*7))*.12*c;K.face(M_,{smile:1.3,jaw:.2});
+ }else if(t<W2){ // shows off: stands on the lid fanning cash
+  at(M_,P.x-.5,AH+.02,P.z-.1,-.4);K.arm(M_,'R',AD[0]+1.1,AD[2]-.9+.25*Math.sin(t*7),1.0);K.face(M_,{smile:1.1,jaw:.1});
+  FAN.visible=true;FAN.position.copy(wristW(M_,'R'));FAN.quaternion.copy(cam.quaternion);
+ }else if(t<tWalk){ // front door: opens, then shocked
+  at(M_,-.25,.6,4.2,0);const sh=sm(tDoor-.2,tDoor+.1,t);if(sh>0){K.headHold(M_,sh*.6);K.face(M_,{jaw:.35*sh});}
+ }else if(t<W4){ // walked to the lid, kneels, types, fails, forgets
+  const u=walkTo(M_,t,tWalk-.2,tPoints,[-3.6,-6.6],[1.15,P.z+2.3]);
+  if(u>=1){M_.g.rotation.y=Math.PI;const kn=sm(tOpenIt,tType-.05,t)*(1-sm(tBuilt,tBuilt+.35,t));
+   M_.g.position.y=-.47*kn;for(const sd of['L','R']){K.pose(M_,'upperleg01'+sd,-.25*kn,0,0);K.pose(M_,'lowerleg01'+sd,1.65*kn,0,0);}
+   if(kn>.05){K.pose(M_,'spine03',.35*kn,0,0);K.arm(M_,'R',AD[0]+.95*kn,AD[2]-.25*kn,.35*kn+.12*Math.sin(t*26)*K.win(t,tType,tWrong2));K.pose(M_,'head',.35*kn,0,0);}
+   const w=Math.max(K.win(t,tWrong1,tWrong1+.35,.08),K.win(t,tWrong2,tWrong2+.35,.08));if(w>0){K.pose(M_,'head',-.2*w,0,0);K.face(M_,{jaw:.4*w});}
+   const hh=K.win(t,tBuilt+.2,tForgot,.2);if(hh>0)K.headHold(M_,hh);const sr=sm(tForgot,tForgot+.2,t);if(sr>0){K.shrug(M_,sr);K.face(M_,{jaw:.2*sr});}}
+ }else if(t<W5){ // interrogation: seated, swears, shrugs, head down
+  at(M_,IX,-.46,.8,Math.PI);K.sit(M_,1);K.handsFront(M_,.85);
+  const sw=K.win(t,tSwear,tAsk-.05,.15);if(sw>0){K.arm(M_,'R',AD[0]+.35,AD[2]-1.95*sw,1.5*sw);K.face(M_,{jaw:.25*sw});}
+  const sr=K.win(t,tAsk+.2,tNobody,.2);if(sr>0)K.shrug(M_,sr);if(t>tNobody)K.pose(M_,'head',.35*sm(tNobody,tNobody+.3,t),0,0);
+ }else{ // end: hands cuffed in front, watches the money go, then faces the viewer for the question
+  const turn=sm(tSo-.4,tSo+.1,t);at(M_,P.x-1.3,0,P.z+3.0,Math.PI*(1-turn));K.handsFront(M_,1);K.pose(M_,'head',.25*(1-turn),0,0);K.face(M_,{jaw:.1});
+  const a1=K.win(t,tPayTax,tKeepPool-.1,.15),a2=K.win(t,tKeepPool,tComment,.15);if(a1>0)K.arm(M_,'R',AD[0]+.9*a1,AD[2]-1.0*a1,.4*a1);if(a2>0)K.arm(M_,'L',AD[0]+.9*a2,AD[2]-1.0*a2,.4*a2);
+  if(t>tComment){K.arm(M_,'R',AD[0]+.7,AD[2]-.5,1.3);K.arm(M_,'L',AD[0]+.7,AD[2]-.5,1.3);K.face(M_,{smile:.6});}}
+ // field agents + police officer
+ for(const a of[fa1,fa2,cop]){K.relax(a);K.idle(a,t,a===fa1?4:a===fa2?5:6);}
+ if(t<W3){at(fa1,0,-50,0);at(fa2,0,-50,0);at(cop,0,-50,0);}
+ else if(t<tWalk){walkTo(fa1,t,tAgents-.7,tDoor,[-1.75,10.9],[-1.9,6.7]);walkTo(fa2,t,tAgents-.5,tDoor+.1,[-1.05,11.2],[-.8,6.9]);if(t<tSUV+.25){at(fa1,0,-50,0);at(fa2,0,-50,0);}
+  if(t>=tDoor){fa1.g.rotation.y=fa2.g.rotation.y=Math.PI;K.point(fa1,'R',sm(tDoor,tDoor+.2,t));}
+  at(cop,-8.2,0,13.4,Math.PI-.3);K.crossArms(cop,1);}
+ else if(t<W4){walkTo(fa1,t,tWalk-.2,tPoints-.1,[-4.6,-6.0],[P.x-1.1,P.z+2.75]);walkTo(fa2,t,tWalk,tPoints+.1,[-2.4,-6.4],[P.x+2.7,P.z+2.6]);
+  if(t>tPoints-.1){fa1.g.rotation.y=Math.PI-.5;K.point(fa1,'R',sm(tPoints-.1,tPoints+.15,t)*(1-sm(tOpenIt+.4,tOpenIt+.6,t)));fa2.g.rotation.y=Math.PI+.6;K.crossArms(fa2,1);}
+  if(t>tBuilt){K.crossArms(fa1,1);K.pose(fa1,'head',0,.25*Math.sin(t*6)*K.win(t,tForgot,W4),0);}
+  at(cop,0,-50,0);}
+ else if(t<W5){at(fa1,IX,0,-1.15,0);at(fa2,IX+1.35,0,-.25,-.95);
+  const sl=K.win(t,tGive-.15,tGive+.45,.12);K.pose(fa1,'spine03',.42*sl,0,0);if(sl>0){K.arm(fa1,'R',AD[0]+1.1*sl,AD[2]-.25*sl,.2*sl);K.arm(fa1,'L',AD[0]+1.1*sl,AD[2]-.25*sl,.2*sl);K.face(fa1,{jaw:.35*sl});}
+  else K.crossArms(fa1,1);
+  const lk=K.win(t,tAsk,tNobody,.15);if(lk>0){K.pose(fa2,'spine03',.3*lk,0,0);K.point(fa2,'R',lk);K.face(fa2,{jaw:.25*lk});}else if(t>tNobody)K.crossArms(fa2,1);
+  if(t>tNobody)for(const a of[fa1,fa2])K.pose(a,'head',0,.3*Math.sin(t*7)*K.win(t,tNobody,tLesson),0);
+  at(cop,0,-50,0);}
+ else{ // end: fa1 carries straps to the evidence bags, fa2 watches, the officer holds Mike
+  const tr=1.3,c0=tStrap-.9,k=Math.max(0,(t-c0)/tr),trip=Math.floor(k),ph=k-trip,from=[P.x-1.0,P.z+1.95],to=[P.x-3.1,P.z+1.75];
+  if(t<c0){at(fa1,from[0],0,from[1],Math.PI);}
+  else{const go=ph<.5,u=sm(0,1,go?ph*2:(ph-.5)*2),a=go?from:to,b=go?to:from;fa1.g.position.set(a[0]+(b[0]-a[0])*u,0,a[1]+(b[1]-a[1])*u);fa1.g.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);K.walk(fa1,t*1.2,.4);
+   if(go){K.handsFront(fa1,1);CARRY.visible=true;fa1.g.updateMatrixWorld(true);CARRY.position.copy(wristW(fa1,'R')).add(V3(Math.sin(fa1.g.rotation.y)*.12,.05,Math.cos(fa1.g.rotation.y)*.12));CARRY.rotation.set(0,fa1.g.rotation.y+Math.PI/2,0);}}
+  BAGS.forEach((b,i)=>b.fill(Math.min(1,Math.max(0,(k-.5-i*.9)/.9))*(t>c0?1:0)));PITM.take(PITM.total-Math.floor(Math.max(0,k)*4));
+  at(fa2,P.x+1.9,0,P.z+1.9,Math.PI+.4);K.crossArms(fa2,1);at(cop,P.x-2.75,0,P.z+2.6,Math.PI*(1-sm(tSo-.4,tSo+.1,t))+.3);K.arm(cop,'L',AD[0]+.6,AD[2]-.3,.9);}
+ ETAB.visible=t>=W5;
+ // neighbour: watches over the fence, then calls the tip line
+ K.relax(nb);K.idle(nb,t,7);{const call=sm(tPays-.1,tPays+.35,t);nb.g.rotation.y=Math.PI*call;if(call>0){K.phone(nb,call);K.face(nb,{jaw:.18*Math.abs(Math.sin(t*9))*call,smile:.4*call});}
+  else{const pk=K.win(t,tExc,tLid1+.4,.15);K.point(nb,'R',pk*.8);K.face(nb,{jaw:.3*K.win(t,tCash,tCash+.4)});}}
+ // street watchers: turn and stare on "the whole street is watching"
+ wt.forEach((w,i)=>{K.relax(w);K.idle(w,t,8+i);const k=sm(tStreet-.1,tStreet+.3,t);w.g.rotation.y=[.0,0,0][i]+[1.75,-1.73,-1.79][i]*k;if(i===0)K.point(w,'R',k);if(i===1)K.headHold(w,k*.5);if(i===2)K.crossArms(w,k);K.face(w,{jaw:.25*k});});
+ // ---------- glow outlines (Building Box): lid in the hook, then excavator / cash / lid when the neighbour "saw everything" ----------
+ OUT.selectedObjects=(t>tLand&&t<tSw)?[ARM]:(t>=tExc&&t<tCash)?[EX]:(t>=tCash&&t<tLid1)?[SHOW,FAN]:(t>=tLid1&&t<tPays)?[ARM]:(t>=tType&&t<tBuilt)?[ARM]:[];OUT.edgeStrength=6+3*Math.sin(t*12);
+ // ---------- CTA signs ----------
+ {const a=pop(t,tPayTax+.1,.3),b=pop(t,tKeepPool+.15,.3);const pul=(t0)=>1+.18*Math.exp(-Math.pow((t-t0-.08)*6,2));
+  TAXS.visible=a>.01;POOLS.visible=b>.01;TAXS.scale.setScalar(Math.max(.01,a)*pul(tTAX));POOLS.scale.setScalar(Math.max(.01,b)*pul(tPOOLw));
+  TAXS.position.set(P.x-1.3-.6,2.25,P.z+3.1);POOLS.position.set(P.x-1.3+.62,2.25,P.z+3.1);TAXS.quaternion.copy(cam.quaternion);POOLS.quaternion.copy(cam.quaternion);}
+ // ---------- light per place (sun follows the camera; rooms are lit by their own lights) ----------
+ const inRoom=set==='irs'||set==='room';sun.intensity=inRoom?(set==='room'?.25:.7):3.2;HEMI.intensity=inRoom?(set==='room'?.45:.8):1.1;scene.environmentIntensity=inRoom?(set==='room'?.35:.6):.9;
+ if(!inRoom){const gx=cam.position.x+LOOK.x*12,gz=cam.position.z+LOOK.z*12;sun.target.position.set(gx,0,gz);sun.position.set(gx-18,40,gz+20);sun.target.updateMatrixWorld();}
+}
+await loaded;await Promise.all(Object.values(MODELS));
+const cap=document.getElementById('cap');
+window.renderAt=t=>{let s;try{s=setCam(t);animate(t,s);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}
+ let c=CH[0];for(const x of CH)if(t>=x.s-.03)c=x;cap.textContent=c.t;const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;
+ comp.render();return true;};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>
