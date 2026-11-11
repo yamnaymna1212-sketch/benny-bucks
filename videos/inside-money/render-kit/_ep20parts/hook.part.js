@@ -56,7 +56,7 @@ const ROLL=[];{const fr=K.M(0x2b2f35,.4,.7);for(const y of[YA+2.35,YA+3.0]){cons
  K.add(K.B(.7,3.3,.12),fr,-1.3,YA+1.65,1.0,IG);}
 // 2 SCAN: an arch with a soft green scan light over track B
 const SCAN=K.group(0,YB,0,IG);{const fr=K.M(0x2b2f35,.4,.7);for(const x of[-1.05,1.05])K.add(K.B(.22,2.6,.3),fr,x,1.3,-.2,SCAN);K.add(K.B(2.32,.26,.3),fr,0,2.6,-.2,SCAN);}
-const BEAM=K.add(new THREE.PlaneGeometry(1.9,2.4),new THREE.MeshBasicMaterial({color:0x2fe06a,transparent:true,opacity:.14,depthWrite:false,side:THREE.DoubleSide}),0,1.25,0,SCAN,false);BEAM.position.z=-.2;
+const BEAM=K.add(new THREE.PlaneGeometry(1.9,2.4),new THREE.MeshBasicMaterial({color:0x2fe06a,transparent:true,opacity:.08,depthWrite:false,side:THREE.DoubleSide}),0,1.25,0,SCAN,false);BEAM.position.z=-.2;
 // 3 LOCKED BOX: steel box on track C (opening faces the incoming raft)
 const BOX=K.group(-1.6,YC,0,IG);{const st=K.M(0x6f767e,.35,.85);K.add(K.B(1.9,1.9,.1),st,0,.95,-.85,BOX);K.add(K.B(1.9,1.9,.1),st,0,.95,.85,BOX);K.add(K.B(.1,1.9,1.8),st,-.95,.95,0,BOX);K.add(K.B(1.9,.1,1.8),st,0,1.9,0,BOX);}
 const LABS=[['1  COUNT',YA],['2  SCAN',YB],['3  LOCKED BOX',YC]].map(([s_,y])=>{const m=K.txt3(s_,.42,0xffffff,{ei:.05,p:IG});m.position.set(.9,y+2.0,-1.3);m.visible=false;return m;});
@@ -73,7 +73,8 @@ const nw=x=>x.toLowerCase().replace(/[^a-z0-9]/g,'');
 function FIND(ph,occ=0){const p=ph.split(/\s+/).map(nw);let c=0;for(let i=0;i+p.length<=WS.length;i++){if(p.every((w,j)=>nw(WS[i+j].w)===w)){if(c++===occ)return [i,i+p.length-1];}}console.error('phrase not found',ph);return [0,0];}
 const T=(ph,o=0)=>WS[FIND(ph,o)[0]].s,TE=(ph,o=0)=>WS[FIND(ph,o)[1]].e;
 const tThou=T('thousand dollars'),tInside=T('inside the'),tAtm=T('atm',0),tSucks=T('sucks him'),tFirst=T('first stop');
-{const [a,b]=FIND('thousand dollars');for(let i=a;i<=b;i++)CH[i].t='';}   // the amount floats in 3D
+{const [a,b]=FIND('thousand dollars');for(let i=a;i<=b;i++)CH[i].t='';}
+{const [a,b]=FIND('one thousand dollars');for(let i=a;i<=b;i++)CH[i].t='';}   // the amount floats in 3D
 // ================= CAST =================
 const mike=await K.person('mike',null,AX-.25,0,AZ+.9,2.6,0x2f6fd6);
 const mikeI=await K.person('mike',null,IN,0,0,Math.PI,0x2f6fd6);
@@ -136,7 +137,7 @@ function animate(t){
  const MI=mikeI;MI.g.visible=inside;RAFT.visible=inside;
  const x=sx(t),fast=sm(tSucks,tSucks+.3,t);
  RAFT.position.set(x,YA+.02,0);RAFT.rotation.z=.03*Math.sin(t*8)*(.3+fast);
- ROLL.forEach((r,i)=>{r.rotation.y=t*(i?-5:5);});BEAM.material.opacity=.1+.06*Math.sin(t*6);
+ ROLL.forEach((r,i)=>{r.rotation.y=t*(i?-5:5);});BEAM.material.opacity=.07+.03*Math.sin(t*6);
  LABS.forEach((m,i)=>{const a=pop(t,tLab+i*.2,.25)*(1-sm(tSucks+.2,tSucks+.5,t));m.visible=a>.01;m.scale.setScalar(Math.max(.001,a));m.quaternion.copy(cam.quaternion);});
  if(inside){K.relax(MI);K.idle(MI,t);MI.g.position.set(IN+x,YA+.02+RH,.05);
   if(t<tWide-.2){MI.g.rotation.y=Math.PI+.3;K.arm(MI,'L',AD[0]+.2,AD[2]-1.3,.2);K.arm(MI,'R',AD[0]+.2,AD[2]-1.3,.2);K.pose(MI,'spine03',.15,0,.08*Math.sin(t*6));K.face(MI,{jaw:.45,smile:.6});}
@@ -144,8 +145,4 @@ function animate(t){
   else{MI.g.rotation.y=Math.PI;K.armsUp(MI,.9+.1*Math.sin(t*12));K.pose(MI,'spine03',-.18*fast,0,0);K.face(MI,{jaw:.65});}
   MI.g.updateMatrixWorld(true);}
  OUT.selectedObjects=[];story(t);
-}
-function story(t){
- // ---- light: the sun follows the camera (shadows stay sharp in every place) ----
- const gx=cam.position.x+LOOK.x*8,gz=cam.position.z+LOOK.z*8;sun.target.position.set(gx,0,gz);sun.position.set(gx-20,26,gz+22);sun.target.updateMatrixWorld();
 }

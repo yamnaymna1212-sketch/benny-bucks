@@ -33,6 +33,37 @@ put(cut(S['cash-register'],.8),T('thousand dollars')+.05,.26)
 put(cut(S['whoosh'],.7),T('inside the'),.24)
 put(cut(S['whoosh'],.6),T('atm')+.18,.2)
 put(cut(S['whoosh'],.6),T('sucks him')-.05,.2)
+# ---- story cues (on the words): whoosh on every place change, one hit per beat ----
+W=lambda ph,o=0:T(ph,o)
+put(cut(S['cash-register'],.6),W('about a second')+.1,.22)                                   # count done
+put(cut(S['whoosh'],.5),W('then scanners')+.1,.18)                                           # drop to track 2
+for ph in['ink','size','hidden marks']:put(cut(S['pop'],.3),W(ph)+.25,.16)                  # checks turn green
+put(cut(S['wrong'],.45),W('no fakes'),.2)
+put(cut(S['ting'],.35),W('clean'),.2)
+put(cut(S['wrong'],.45),W('rejected'),.22)
+put(cut(S['whoosh'],.5),W('the rest')+.3,.18)
+put(cut(S['slap'],.3),W('locked steel')+.38,.3);put(cut(S['boom'],.4,.2),W('locked steel')+.38,.14)   # shutter slams
+put(cut(S['boom'],.4,.2),W('bad news'),.16)
+put(cut(S['timer'],.5),W('after the')+.3,.14)
+for k in range(3):put(cut(S['pop'],.25),W('so the bank')+.3+.35*k,.12)                       # calendar flips
+put(cut(S['slap'],.25),W('his rent')+.3,.24)
+put(cut(S['whoosh'],.5),W('heres the twist')-.15,.16)
+put(cut(S['notif'],.5),W('his app'),.2)
+put(cut(S['slap'],.3),W('locked',1),.3)
+put(cut(S['whoosh'],.6),W('your own')-.05,.2)
+put(cut(S['ting'],.35),W('two business'),.16);put(cut(S['ting'],.35),W('five'),.16)
+put(cut(S['whoosh'],.6),W('armored truck')-.1,.18)
+for k in range(3):put(cut(S['pop'],.2),W('armored truck')+.6+.4*k,.08)                     # camera flashes
+put(cut(S['whoosh'],.6),W('a vault')-.05,.2)
+put(cut(S['money'],.6),W('federal reserve'),.16)
+put(cut(S['wow'],.6),W('confetti'),.18)
+put(cut(S['yeah'],.6),W('mike throws'),.2)
+put(cut(S['whoosh'],.6),W('wednesday')-.12,.2)
+put(cut(S['ting'],.4),W('hold lifts')+.1,.22);put(cut(S['cash-register'],.6),W('ready to spend'),.2)
+put(cut(S['pop'],.35),W('mike pops'),.24)
+put(cut(S['ting'],.3),W('before the cutoff')+.5,.16);put(cut(S['ting'],.3),W('and use your')+.6,.16)
+put(cut(S['notif2'],.4),W('keep the receipt'),.16);put(cut(S['ting'],.3),W('your proof'),.18)
+put(cut(S['pop'],.35),W('deposit cash'),.2);put(cut(S['pop'],.35),W('your phone'),.2)
 x=out/np.abs(out).max()*.9
 subprocess.run(['ffmpeg','-v','error','-y','-f','f32le','-ar',str(SR),'-ac','1','-i','-','-af','loudnorm=I=-11.5:TP=-1.0:LRA=9,volume=2.2dB,alimiter=limit=0.89:level=false','-ar',str(SR),f'{RK}/mix_ep20.wav'],input=x.astype(np.float32).tobytes(),check=True)
 print('mix ->',f'{RK}/mix_ep20.wav',round(DUR,2),'s')
