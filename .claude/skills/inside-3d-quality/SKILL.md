@@ -14,6 +14,17 @@ Template: `videos/inside-money/render-kit/ep4.html` (+ `ep4-print-million/PLAN.m
 - Camera = `SHOTS` table `[t0,t1, pos0,look0,fov0, pos1,look1,fov1, aperture]` (hard cut between rows, eased move inside). DoF focus = distance to look point.
 - Timeline: `timeline_ep4.json` (words + 2-3 word chunks), `Wd(word)` / `Wn(word,n)` to sync events to spoken words.
 
+## Faces (stage 1, 2026-11-04): `render-kit/face-kit.js` for every character
+- `FK.rig(P,{iris,brow})` + `FK.update(P,t,{expr,clip,look})` after the body pose: blink, saccades, look-at, presets shock/joy/sad/angry/doubt/smirk, MediaPipe stock-clip curves (`face_capture.py`, sources in `render-kit/faces/SOURCES.md`). Notes + rig facts: `NEXT_LEVEL_PLAN.md` stage 1.
+- A face close-up (fov 27-30 at ~0.7 m, `FK.closeUp(P)` gives the numbers) on every key emotional beat; wide shots hide faces.
+- Check faces with `facelab.mjs` contact sheets (one load, many variants) before stills/renders.
+
+## Real money (stage 2, 2026-11-04): `render-kit/money-kit.js` for every note/strap/pallet
+- `const MNY=await moneyKit(THREE)`: real uscurrency.gov fronts ($100/$20/$1), blank backs (one-sided), 151 % size (never smaller), ABA strap colours. `brick/strap/note/fan/flutter`; details in `NEXT_LEVEL_PLAN.md` stage 2. Do not use the old canvas `NOTE`/`billT` fakes in new episodes.
+
+## Camera (stage 3, 2026-11-04): `render-kit/camera-kit.js` for every shot
+- `const CK=cameraKit(THREE,{FK})`; shots via `CK.track` (fit / closeUp / overShoulder / macro / orbit, whip in, boom, speed ramp, glowing 3D icons). New framing every 1.5-2 s, key text auto-fitted above the 74 % caption line. One macro on the real money per episode. Details: `NEXT_LEVEL_PLAN.md` stage 3.
+
 ## Checklist before any render
 1. Hook first frame readable with no sound; main character visible; titles centred and uncropped.
 2. Every line has a new shot/angle/action; nothing static for > 3 s.

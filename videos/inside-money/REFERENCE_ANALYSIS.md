@@ -41,3 +41,28 @@ speed = mean px/frame-step at 180x320 (avg 2.04, max 11.9); zoom>0 = dolly-in, <
 - Keep: calm confident narrator tone, 2-3 word low caption, floating glowing 3D prices, shot types.
 - Beat him: **3.2-3.4 words/s, pauses <= 0.12 s inside a sentence and <= 0.2 s between sentences (max_gap 0.05)**, a visual change/cut every 2-3 s, never a static shot.
 - Never clone a real person's voice; use a Kokoro American male voice with the same calm tone.
+
+## "How A Trench In Your Living Room Becomes A River" — trench-river-living-room.mp4 (user upload 2026-11-10) — measured
+- 66.3 s, 720x1280, 30 fps, audio present. **0 scene cuts** (ffmpeg scene>0.08) = ONE continuous camera, no cuts, exactly our locked format. Sheet: analysis/trench-river-sheet.jpg.
+- Topic is NOT finance: an "absurd what-if" (dig a trench in your living room -> hose, concrete channel, pump, tank, evaporation, bridge, stones, plants, a man sits on the sofa). Pure engineering-satisfaction / ASMR-explainer format.
+- Set: ONE real room (wood floor, green sofa, rug, window with trees + sky). The room never changes; the object grows inside it. Cutaway of the floor shows soil, pipes, pump, tank under the floor.
+- Build-up structure: dig -> water -> line it with concrete -> add machinery (pump, valve, fan) -> decorate (bridge, stones, ferns) -> a person finally walks in and relaxes (payoff/reward shot at 50-66 s). Every ~3 s a NEW object/step appears (machine, hose, drawer, pump, bridge...), camera glides to it, close/medium alternating with a wide that reveals progress.
+- Props are real-looking PBR objects (excavator, hose reel, submersible pump, pipe, filter, bridge, pebbles), NOT primitives. Warm daylight, soft shadows, clear water with caustics.
+- Captions: 1 word at a time, white bold, centred ~75 % height, no cards/icons. TikTok "Follow" chip only in the last seconds.
+- Character appears only at the END (suit, flat cap, walks, sits) = reward, not a narrator.
+### Copy for Inside Money
+- NEW CHANNEL MODE "Entertainment + money": a wild what-if told as ONE build-up inside ONE real set; the escalation itself is the hook (each step more absurd), a finance/legal truth lands at the end.
+- Escalation beats every ~3 s; every beat = a new object + camera glide; keep the room constant so progress is readable.
+- Underground cutaway (soil layers, vault, pipes) fits the "$1M in a hole" idea directly.
+- Keep our fixes: faster voice (>=3.2 words/s), glow prices, real set, characters visible earlier than this reference (he only appears at 50 s).
+## Zack D. Films #3: references/inside-money/zack/zack-03.mp4 ("She shot at the president", marine hero story) — measured 2026-11-03
+Sheets: references/inside-money/analysis/zack-03-sheet.jpg (1 fps) and zack-03-hook-sheet.jpg (first 5 s, 3 fps). 33.2 s, 720x1280, 29.97 fps, -8.1 LUFS (loud, LRA 1.8), NO silence > 0.25 s at -35 dB.
+- **Hook (0-5 s)**: first-person BULLET POV: gun in foreground, bullet flies through frame, president's face reacts (open-mouth shock), camera follows the bullet past his head (macro on hair), whip-pan with motion blur into the shooter. The caption starts at 0 s. The story is understood with no sound.
+- **Camera**: handheld-feel, ALWAYS moving (optical-flow speed 2.2-6.0 px/step in every 3-s window, peaks 10-15 at whips). Mostly push-ins (zoom +5..+12) with 2 pull-outs at 21-27 s. Cuts disguised as whip pans / object wipes (bullet, hand, paper); only ~3 hard cuts, ~20+ shots in 33 s = a new shot every ~1.5 s. Macro inserts: bullet, shoe, thank-you letter signature, newspaper, whisky bottle, framed letter.
+- **Characters**: offline-rendered (Unreal/Blender class) realistic humans, skin subsurface, individual hair strands, wet eyes, clear emotion close-ups (shock, shame, grief); crowd of background extras with phones/hands on mouth reacting; role by costume (suits+sunglasses guards, white shirt marine, military caps).
+- **Light**: golden-hour / blue-hour colour split (orange practicals vs blue fill), shallow DoF, film grade, strong contrast between day street and dark interior.
+- **Caption**: 2-3 words, white bold, centred ~y 70-74 %, thin shadow, synced to each phrase. ~2.3 words/s, no pauses.
+- **Story**: hook event -> twist -> consequence -> sad payoff shown with objects (framed letter on wall). Every phrase = a new image.
+- **Sound** (cannot separate from file alone): constant bed + hits on impact; loudness -8 LUFS means a mastered mix, louder than ours.
+### Gaps vs our Three.js (EP9)
+Faces/eyes/hair strands (biggest), skin shading, extras reacting, DoF + motion blur on whips, handheld camera energy, macro inserts every 1.5 s, object-wipe transitions, grade. Three.js can improve: whip-pan blur transitions, macro inserts, DoF (BokehPass), extras with reaction poses, grade, louder master. Cannot reach: face realism -> needs Blender/Unreal MetaHuman.

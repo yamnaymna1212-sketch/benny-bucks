@@ -1,0 +1,14 @@
+- [Min 60 s videos](inside-money-min-60s.md) — videos under 60 s are rejected; aim 61-65 s
+- [Glow highlight style](inside-money-glow-highlight-style.md) — glow colour on key things, floating 3D prices, every character different
+- [Latest Inside Money rules](inside-money-latest-rules.md) — read PROJECT_BRIEF section 0 first; copy render-kit/ep4.html for every new video
+- [Publish kit rule](inside-money-publish-kit-rule.md) — every episode ships PUBLISH.md: caption, 3 alt titles, hashtags, poll, pinned comment
+- [EP5/EP6 feedback rules](inside-money-ep5-ep6-feedback-rules.md) — one-take voice, no cuts, living characters, US neighbourhood, one-sentence hook
+- [Token saving, no quality loss](token-saving-without-quality-loss.md) — cut useless actions/big reads, never lower video quality, warn on token-burning errors
+- [Exaggerated hooks](inside-money-exaggerated-hooks.md) — first word "Trump", absurd exaggeration, approximate numbers OK
+- [Pacing + CTA rules](inside-money-pacing-cta-rules.md) — short CTA facing the viewer, camera move/icon every 1-2 s, no idle character
+- [Single delivery file](inside-money-single-delivery-file.md) — one best-quality mp4 per episode (phone+desktop+TikTok), no low-quality phone copy
+- [Hook zoom + 1-word captions](inside-money-hook-zoom-captions.md) — wide context shot (place+process+money+action) -> zoom -> glowing tight zoom; 1-word captions, no prices
+- [EP13 motion + contrast rules](inside-money-ep13-motion-contrast-rules.md) — no camera shake, no haze/blur, change every ~2 s, characters react, subject centred, crisp high-contrast icons (Zack)
+- [EP12 hook/camera rules](inside-money-ep12-hook-camera-rules.md) — hook clear w/o sound, contrast figure vs background, camera never through objects, no crossed hands
+- [Few SFX](inside-money-few-sfx.md) — hooks: ~4 cues max (ting 0 s, whoosh on big changes, one cash); no pops on every beat
+- [EP17 hero/checks/icons](inside-money-ep17-character-checks-icons.md) — hero faces camera + acts every beat; green check per finished reason; real icons only when needed

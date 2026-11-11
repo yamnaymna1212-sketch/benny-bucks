@@ -188,5 +188,119 @@
       "fedora01",
       "shoes03"
     ]
+  },
+  "trump": {
+    "role": "Trump (caricature, user ref images 2026-11-03): navy suit, white shirt, long RED tie, blond swept hair (recoloured in three.js), tan skin, big heavy build, US flag pin added in three.js",
+    "body": {
+      "gender": 1.0,
+      "age": 0.9,
+      "muscle": 0.3,
+      "weight": 1.0,
+      "height": 0.72,
+      "race": {
+        "caucasian": 1.0,
+        "african": 0.0,
+        "asian": 0.0
+      }
+    },
+    "skin": "toigo_light_skin_male_bronze",
+    "hair": "short04",
+    "eyebrows": "eyebrow001",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_male_suit_3",
+      "shoes03"
+    ],
+    "targets": [
+      {
+        "target": "stomach-pregnant-incr",
+        "value": 0.6
+      },
+      {
+        "target": "head-fat-incr",
+        "value": 0.8
+      },
+      {
+        "target": "head-round",
+        "value": 0.5
+      },
+      {
+        "target": "chin-width-incr",
+        "value": 0.4
+      }
+    ]
+  },
+  "masked": {
+    "role": "masked criminal (EP12): black knit balaclava (built in make_cast.py, knit look in three.js), black sweater + cargo pants + boots, tall and broad, never shows his face",
+    "body": {
+      "gender": 1.0,
+      "age": 0.5,
+      "muscle": 0.8,
+      "weight": 0.62,
+      "height": 0.6,
+      "race": {
+        "caucasian": 0.5,
+        "african": 0.25,
+        "asian": 0.25
+      }
+    },
+    "skin": "middleage_caucasian_male",
+    "eyebrows": "eyebrow007",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_fisherman_sweater",
+      "cortu_cargo_pants",
+      "toigo_ankle_boots_male"
+    ],
+    "balaclava": {
+      "rgb": [
+        0.035,
+        0.035,
+        0.04
+      ],
+      "eye_r": 0.021,
+      "mouth_r": 0.024,
+      "offset": 0.008,
+      "smooth": 8,
+      "neck_drop": 0.07
+    }
+  },
+  "elsayed": {
+    "role": "Abdul El-Sayed (hypothetical president, EP13, user ref image 2026-11-05): navy suit, white shirt, blue tie, dark swept-back hair, short salt-and-pepper beard (painted in skin), US flag pin added in three.js, slim, early 40s",
+    "body": {
+      "gender": 1.0,
+      "age": 0.55,
+      "muscle": 0.5,
+      "weight": 0.5,
+      "height": 0.6,
+      "race": {
+        "caucasian": 0.85,
+        "african": 0.05,
+        "asian": 0.1
+      }
+    },
+    "skin": "jartur69_middleage_slavic_male_with_genitals_and_beard",
+    "hair": "short04",
+    "eyebrows": "eyebrow001",
+    "eyelashes": "eyelashes01",
+    "eyes": "high-poly",
+    "teeth": "teeth_base",
+    "tongue": "tongue01",
+    "clothes": [
+      "toigo_male_suit_3",
+      "shoes03"
+    ],
+    "targets": [
+      {
+        "target": "chin-width-incr",
+        "value": 0.2
+      }
+    ]
   }
 }
