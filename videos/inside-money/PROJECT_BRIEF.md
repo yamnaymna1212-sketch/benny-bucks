@@ -57,6 +57,8 @@ Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start 
 - Check stills (node stills.mjs ep4.html t1 t2 ...) for every beat BEFORE a render; 5-s hook preview first; full render only after the hook is approved (~2 min on M3); send a phone copy (crf 26).
 - The user gives blunt feedback in batches; fix ALL points of a batch, then render once.
 
+## EP19 status (2026-11-11): credit card unpaid, FULL v1 rendered — read ep19-credit-card-unpaid/PLAN.md (hook rules from the user: mute-clear, card right behind the hero, $0 number, calm colours, sunset light, police raid = his fear that poofs).
+
 ## 0b. CHANNEL MODE CHANGE (user, 2026-11-10): "Inside Money" = ENTERTAINMENT what-ifs MIXED with finance explainers
 - Alternate: (A) finance/how-it-works episodes (as before) and (B) fun/absurd "what if" stories whose meaning is ordinary, with a real money/legal/tax lesson inside or at the end.
 - Style reference for (B): references/inside-money/examples/trench-river-living-room.mp4 (analysis in REFERENCE_ANALYSIS.md): one continuous camera, one real set, a new object/step every ~3 s, payoff shot at the end.
