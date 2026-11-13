@@ -1,0 +1,177 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Mont;src:url(./node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2) format('woff2');font-weight:800}
+html,body{margin:0;background:#000;overflow:hidden}#c{display:block}
+#ov{position:absolute;inset:0;z-index:3;pointer-events:none}
+.cap{position:absolute;left:30px;width:660px;top:47%;text-align:center;font:800 62px Mont,sans-serif;color:#fff;letter-spacing:-.5px;text-transform:uppercase;-webkit-text-stroke:11px #000;paint-order:stroke fill;text-shadow:0 6px 10px rgba(0,0,0,.45)}
+</style></head><body><canvas id="c"></canvas><div id="ov"><div class="cap" id="cap"></div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// EP21 "SWAT hidey hole" (tunnel-base reference style: side-on earth cross-section under a US pine forest).
+// stills: node stills.mjs ep21.html 0.3 1.5 2.5 3.4 4.6 5.8     preview: npm run render -- ep21 6
+import * as THREE from 'three';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+await document.fonts.load('800 60px Mont');
+const Q=new URLSearchParams(location.search),W=720,H=1280,PR=Number(Q.get('pr')||1.5),LQ=Q.get('lq')==='1';
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(PR);renderer.setSize(W,H);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
+const scene=new THREE.Scene();
+const LM=new THREE.LoadingManager();const loaded=new Promise(r=>{LM.onLoad=r;});const TL=new THREE.TextureLoader(LM),GL=new GLTFLoader(LM);
+const hdr=await new RGBELoader().loadAsync('dl/kloofendal_clear_4k.hdr');hdr.mapping=THREE.EquirectangularReflectionMapping;
+scene.background=hdr;scene.environment=hdr;scene.environmentIntensity=.6;scene.backgroundIntensity=1.1;
+scene.fog=new THREE.Fog(0xb9d3e6,45,140);
+const {core}=await import('./scenekit/core.js');const K=await core(THREE,scene,{TL});
+const {add,B,CY,M,sm,pop,win,AD,V3}=K;
+const MODELS={};
+function model(name,x,y,z,h,ry=0,p=scene){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+ const put=src=>{const s=src.clone(true);const bb=new THREE.Box3().setFromObject(s);s.scale.setScalar(h/(bb.max.y-bb.min.y));
+  const b2=new THREE.Box3().setFromObject(s);s.position.set(-(b2.min.x+b2.max.x)/2,-b2.min.y,-(b2.min.z+b2.max.z)/2);g.add(s);};
+ if(!MODELS[name])MODELS[name]=new Promise(r=>GL.load(`dl/models/${name}/${name}.gltf`,o=>{o.scene.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true;}});r(o.scene);},undefined,()=>{console.warn('missing model',name);r(new THREE.Group());}));
+ MODELS[name].then(put);return g;}
+// ================= TIMELINE =================
+const TLN=await (await fetch(Q.get('tl')||'timeline_ep21.json')).json(),CH=TLN.chunks,WS=TLN.words,DUR=TLN.dur;
+const nw=x=>x.toLowerCase().replace(/[^a-z0-9]/g,'');
+function FIND(ph,occ=0){const p=ph.split(/\s+/).map(nw);let c=0;for(let i=0;i+p.length<=WS.length;i++){if(p.every((w,j)=>nw(WS[i+j].w)===w)){if(c++===occ)return [i,i+p.length-1];}}console.error('phrase not found',ph);return [0,0];}
+const T=(ph,o=0)=>WS[FIND(ph,o)[0]].s;
+const tSwat=T('swat team'),tHave=T('you have'),tHidey=T('hidey'),tBut=T('but the first'),tRain=T('rainstorm'),tFills=T('fills it'),tSide=T('so you dig sideways');
+// ================= WORLD: earth cross-section (front face at z=0) + forest floor on top =================
+// soil = one strong readable orange-red with dark speckles (reference look); topsoil band dark brown
+const soilTex=(rx,ry)=>{const t=K.tex(256,256,(x,w,h)=>{x.fillStyle='#c4562d';x.fillRect(0,0,w,h);for(let i=0;i<260;i++){x.fillStyle=`rgba(${90+Math.random()*40|0},${30+Math.random()*20|0},15,${.25+Math.random()*.35})`;x.beginPath();x.arc(Math.random()*w,Math.random()*h,.8+Math.random()*1.8,0,7);x.fill();}
+ for(let i=0;i<40;i++){x.fillStyle='rgba(255,170,120,.18)';x.beginPath();x.arc(Math.random()*w,Math.random()*h,1+Math.random()*2,0,7);x.fill();}});t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);return t;};
+const SOIL=(w,h)=>new THREE.MeshStandardMaterial({map:soilTex(Math.max(1,w/2.2),Math.max(1,h/2.2)),roughness:.95});
+const HOLE={x:0,w:1.5,d:1.5,dep:2.15};      // hidey hole: open to the front (cutaway), x centred, z from -d to 0
+const hx0=HOLE.x-HOLE.w/2,hx1=HOLE.x+HOLE.w/2,DEEP=14,BACK=90;
+add(B(hx0+70,DEEP,BACK),SOIL(hx0+70,DEEP),(hx0-70)/2,-DEEP/2,-BACK/2,scene,false);
+add(B(70-hx1,DEEP,BACK),SOIL(70-hx1,DEEP),(hx1+70)/2,-DEEP/2,-BACK/2,scene,false);
+add(B(HOLE.w,DEEP-HOLE.dep,BACK),SOIL(HOLE.w,DEEP-HOLE.dep),HOLE.x,-HOLE.dep-(DEEP-HOLE.dep)/2,-BACK/2,scene,false);
+add(B(HOLE.w,HOLE.dep,BACK-HOLE.d),SOIL(HOLE.w,HOLE.dep),HOLE.x,-HOLE.dep/2,-HOLE.d-(BACK-HOLE.d)/2,scene,false);
+// hole interior: darker red walls (reads as "inside")
+{const IN=M(0x7e2c17,.95);add(new THREE.PlaneGeometry(HOLE.w,HOLE.dep),IN,HOLE.x,-HOLE.dep/2,-HOLE.d+.005,scene,false);
+ for(const s of[-1,1]){const p=add(new THREE.PlaneGeometry(HOLE.d,HOLE.dep),IN,HOLE.x+s*(HOLE.w/2-.005),-HOLE.dep/2,-HOLE.d/2,scene,false);p.rotation.y=-s*Math.PI/2;}
+ const f=add(new THREE.PlaneGeometry(HOLE.w,HOLE.d),M(0x6a2512,.95),HOLE.x,-HOLE.dep+.005,-HOLE.d/2,scene,false);f.rotation.x=-Math.PI/2;}
+// topsoil band on the front face + dark rim
+{const TS=new THREE.MeshStandardMaterial({map:K.tex(256,64,(x,w,h)=>{x.fillStyle='#4a2a17';x.fillRect(0,0,w,h);for(let i=0;i<300;i++){x.fillStyle=`rgba(20,10,5,${Math.random()*.5})`;x.fillRect(Math.random()*w,Math.random()*h,2,2);}}),roughness:1});
+ TS.map.wrapS=THREE.RepeatWrapping;TS.map.repeat.set(20,1);
+ add(new THREE.PlaneGeometry(70+hx0,.42),TS,(hx0-70)/2,-.21,.004,scene,false);add(new THREE.PlaneGeometry(70-hx1,.42),TS,(hx1+70)/2,-.21,.004,scene,false);
+ const g1=add(B(.06,.42,.06),M(0x2c1a0e,1),hx0,-.21,0,scene,false),g2=add(B(.06,.42,.06),M(0x2c1a0e,1),hx1,-.21,0,scene,false);}
+// forest floor (grass + leaf litter) on top, with the hole opening cut out
+{const GR=(w,d)=>K.pbr('leafy_grass',Math.max(1,w/3),Math.max(1,d/3),0x7fb24a);
+ add(B(hx0+70,.06,BACK),GR(hx0+70,BACK),(hx0-70)/2,.03,-BACK/2,scene,false);add(B(70-hx1,.06,BACK),GR(70-hx1,BACK),(hx1+70)/2,.03,-BACK/2,scene,false);
+ add(B(HOLE.w,.06,BACK-HOLE.d),GR(HOLE.w,BACK-HOLE.d),HOLE.x,.03,-HOLE.d-(BACK-HOLE.d)/2,scene,false);}
+// fresh dirt pile next to the hole + shovel marks
+const PILE=add(new THREE.SphereGeometry(.5,20,12,0,Math.PI*2,0,Math.PI/2),M(0x4a2a17,1),1.4,.03,-.95,scene,true);PILE.scale.set(1,.45,.8);
+// pine forest (real pine model), ferns/shrubs, rocks; kept away from the hole and the SWAT running lane
+const RNG=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(21);
+// stylised pines (reference look: chunky readable shapes); pine_tree_01.gltf has no .bin (949 MB) so it is not used
+const PTR=M(0x6b4a2e,.9),PN=[M(0x2f6b3a,.85),M(0x3a7d43,.85),M(0x285c34,.85)];
+const CONE=[0,1,2,3].map(k=>new THREE.ConeGeometry(1,1.6,9,1));const TRK=CY(.12,.2,1,8);
+function pine(x,z,h){const g=K.group(x,0,z);const tk=add(TRK,PTR,0,h*.2,0,g);tk.scale.y=h*.4;const c=PN[Math.floor(RNG()*3)];
+ for(let k=0;k<4;k++){const r=h*(.3-.06*k),m=add(CONE[k],c,0,h*(.3+.17*k),0,g);m.scale.set(r,h*.17,r);m.rotation.y=RNG()*3;}return g;}
+for(let i=0;i<90;i++){const z=-2.6-RNG()*50,x=(RNG()-.5)*(16+(-z)*1.3);if(Math.abs(x)<3.4&&z>-6.5)continue;pine(x,z,5+RNG()*6);}
+for(const [x,z,h] of[[-3.2,-7,8],[3.4,-7.5,9],[-1.2,-9.5,10],[1.6,-10.5,8.5],[-4.8,-3.2,7],[5,-3.5,7.5]])pine(x,z,h);
+for(let i=0;i<34;i++){const z=-.6-RNG()*14,x=(RNG()-.5)*20;if(Math.abs(x-HOLE.x)<1.4&&z>-2.6)continue;if(z>-1.2&&Math.abs(x)<5)continue;model(RNG()<.5?'shrub_01':'shrub_02',x,0,z,.5+RNG()*.6,RNG()*6);}
+for(let i=0;i<12;i++){const r=add(new THREE.DodecahedronGeometry(.25+RNG()*.3,0),M(0x8a8780,.9),(RNG()-.5)*16,.05,-1.5-RNG()*10);r.scale.y=.6;r.rotation.set(RNG(),RNG(),RNG());}
+// ================= CAST =================
+const mike=await K.person('mike',null,-.1,0,-.75,0,0x2f6fd6);
+const SW=[];const SWATT=K.tex(256,96,(x,w,h)=>{x.fillStyle='#14161a';x.fillRect(0,0,w,h);x.fillStyle='#fff';x.font='800 70px Mont';x.textAlign='center';x.fillText('SWAT',w/2,74);});
+const SWM=new THREE.MeshStandardMaterial({map:SWATT,roughness:.7});const BLK=M(0x15171b,.6),HELM=M(0x1b1e22,.35,.2),VIS=M(0x0c0d10,.15,.4);
+const BEAM=new THREE.MeshBasicMaterial({color:0xfff2b0,transparent:true,opacity:.13,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false});
+{const rec={'polo|cargo|suit|sportsuit|jacket|shirt|pants|trouser|jeans|tshirt|shoe|boot':0x17191d};const who=['guard','printer','seller','manager'];
+ for(let i=0;i<4;i++){const P=await K.person(who[i],rec,-12,0,-4,Math.PI/2,0x17191d);P.g.traverse(o=>{if(o.isMesh&&!/body|high-poly|eye|teeth|tongue|brow|lash|hair|short0|bob|ponytail|skin/i.test(o.name+o.material.name)){o.material.map=null;o.material.color.set(0x17191d);o.material.roughness=.7;o.material.needsUpdate=true;}});
+  const G={helm:new THREE.Group(),vest:new THREE.Group(),lamp:new THREE.Group()};for(const g of Object.values(G))scene.add(g);
+  add(new THREE.SphereGeometry(.135,20,12,0,Math.PI*2,0,Math.PI*.55),HELM,0,0,0,G.helm);add(B(.2,.05,.02),VIS,0,-.03,.12,G.helm,false);
+  add(K.RB(.4,.46,.3,.05),BLK,0,0,0,G.vest);for(const s of[-1,1]){const pl=add(new THREE.PlaneGeometry(.3,.11),SWM,0,.06,s*.152,G.vest,false);if(s<0)pl.rotation.y=Math.PI;}
+  add(CY(.025,.03,.18,12),M(0x222222,.4,.5),0,0,0,G.lamp).rotation.x=Math.PI/2;
+  const cone=add(new THREE.ConeGeometry(.55,4,24,1,true),BEAM,0,0,2.1,G.lamp,false);cone.rotation.x=-Math.PI/2;
+  const sl=new THREE.SpotLight(0xfff2c8,LQ?0:14,9,.35,.6,1.2);sl.position.set(0,0,0);G.lamp.add(sl);sl.target.position.set(0,0,3);G.lamp.add(sl.target);
+  SW.push({P,G,i,lane:[-3.2,-4.4,-3.7,-5.0][i],x0:-6.2-i*1.1,x1:[-1.9,-.5,1.0,2.3][i],dl:i*.14});}}
+const _v=V3(),_q=new THREE.Quaternion();
+const boneW=(P,n)=>{const b=P.BN[n];return b?b.getWorldPosition(V3()):P.g.position.clone();};
+// shovel in Mike's right hand
+const SHOV=new THREE.Group();scene.add(SHOV);add(CY(.02,.02,1.0,10),M(0x8a5a2b,.7),0,.5,0,SHOV);add(K.RB(.22,.28,.03,.02),M(0x8d939a,.35,.8),0,-.08,0,SHOV);
+// dirt clods thrown out of the hole
+const CLODS=[...Array(26)].map((_,k)=>{const m=add(new THREE.DodecahedronGeometry(.05+.03*((k*7)%3),0),M(0x6b3a1f,1),0,-9,0,scene,false);return {m,k};});
+// rain (tunnel reference: thin white streaks) + rising water in the hole
+const RAIN=new THREE.InstancedMesh(new THREE.BoxGeometry(.012,.5,.012),new THREE.MeshBasicMaterial({color:0xdde8f5,transparent:true,opacity:.55,toneMapped:false}),420);RAIN.frustumCulled=false;scene.add(RAIN);
+const RP=[...Array(420)].map(()=>[(RNG()-.5)*9,RNG()*7,-.3-RNG()*8,RNG()]);const _m=new THREE.Matrix4();
+const WATER=add(B(HOLE.w-.02,1,HOLE.d-.02),new THREE.MeshStandardMaterial({color:0x5f8f7f,roughness:.1,metalness:.05,transparent:true,opacity:.82}),HOLE.x,-HOLE.dep,-HOLE.d/2+.005,scene,false);WATER.visible=false;
+const DROPS=[...Array(30)].map(()=>{const r=add(new THREE.TorusGeometry(.06,.006,6,16),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.6}),0,0,0,scene,false);r.rotation.x=-Math.PI/2;return r;});
+// ================= LIGHT / POST (bright daylight, crisp) =================
+const sun=new THREE.DirectionalLight(0xfff1dc,3.2);sun.castShadow=true;sun.shadow.mapSize.set(LQ?2048:4096,LQ?2048:4096);Object.assign(sun.shadow.camera,{left:-14,right:14,top:14,bottom:-14,near:1,far:90});sun.shadow.bias=-.0004;sun.shadow.normalBias=.04;
+sun.position.set(-12,22,16);sun.target.position.set(0,0,-4);scene.add(sun,sun.target);
+const HEMI=new THREE.HemisphereLight(0xdbe9ff,0x8a4a2a,1.5);scene.add(HEMI);
+const FILL=new THREE.DirectionalLight(0xffe2cc,1.1);FILL.position.set(2,-1,10);scene.add(FILL);   // lights the cross-section face
+const cam=new THREE.PerspectiveCamera(42,W/H,.05,400);
+const comp=new EffectComposer(renderer,new THREE.WebGLRenderTarget(W*PR,H*PR,{samples:LQ?0:4,type:THREE.HalfFloatType}));comp.setPixelRatio(PR);comp.setSize(W,H);comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.25,.15,1.6));comp.addPass(new OutputPass());
+comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null},con:{value:1.1},sat:{value:1.22}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+ fragmentShader:'uniform sampler2D tDiffuse;uniform float con,sat;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 v=c.rgb;float l=dot(v,vec3(.2126,.7152,.0722));v=mix(vec3(l),v,sat);v=(v-.5)*con+.5;gl_FragColor=vec4(clamp(v,0.,1.),c.a);}'}));
+// ================= CAMERA: side-on cross-section, slow continuous push (no cuts, no shake) =================
+const SH=[{t0:0,keys:[
+ [0,[.2,1.0,7.6],[.1,.15,-1.6],44],
+ [tSwat,[-.6,.9,7.2],[-.5,.3,-2.4],44],
+ [tHidey,[.1,.4,5.9],[.05,-.3,-1.2],42],
+ [tRain,[.1,.45,5.7],[.05,-.35,-1.2],42],
+ [tSide+.3,[.6,-.1,5.0],[.5,-1.1,-.9],42]]}];
+// ================= ANIMATION =================
+// hole depth grows while Mike digs (0 -> tSwat); Mike sinks with the floor
+const DIG1=tSwat-.05;
+function animate(t){
+ const dg=sm(0,DIG1,t),dep=.9+(HOLE.dep-.9)*dg;FLOORFILL.scale.y=Math.max(.001,HOLE.dep-dep);FLOORFILL.position.y=-HOLE.dep+(HOLE.dep-dep)/2;
+ // ---- Mike: digs (shovel scoops, dirt flies) -> hears SWAT, looks up -> ducks down (crouch) -> rain: stands, water to the knees, shrugs
+ const M_=mike;K.relax(M_);K.idle(M_,t);const floorY=-dep+.005;
+ const digging=t<DIG1+.15,ph=t*5.2,sc=Math.sin(ph);
+ if(digging){M_.g.position.set(HOLE.x-.1,floorY,-.78);M_.g.rotation.y=.35;
+  K.pose(M_,'spine03',.35+.18*sc,0,0);K.pose(M_,'spine02',.15+.1*sc,0,0);K.arm(M_,'R',AD[0]+.9+.5*sc,AD[2]-.4,.5-.3*sc);K.arm(M_,'L',AD[0]+1.1+.45*sc,AD[2]-.25,.9-.3*sc);
+  for(const sd of['L','R']){K.pose(M_,'upperleg01'+sd,-.35,0,0);K.pose(M_,'lowerleg01'+sd,.55,0,0);}M_.g.position.y=floorY-.1;K.face(M_,{jaw:.15});}
+ const look=win(t,tSwat-.1,tHidey-.15,.15);   // hears them: head up, jaw drops
+ const duck=sm(tHidey-.2,tHidey+.25,t)*(1-sm(tFills-.1,tFills+.35,t));
+ const stand=sm(tFills-.1,tFills+.35,t);
+ if(!digging){M_.g.position.set(HOLE.x-.05,floorY,-.75);M_.g.rotation.y=.12*(1-duck);
+  if(look>0){K.pose(M_,'head',-.45*look,.25*Math.sin(t*4)*look,0);K.face(M_,{jaw:.5*look});K.pose(M_,'spine03',-.08*look,0,0);}
+  if(duck>0){K.sit(M_,.75*duck);M_.g.position.y=floorY-.62*duck;K.pose(M_,'spine03',.35*duck,0,0);K.headHold(M_,duck*.9);K.pose(M_,'head',.2*duck,.12*Math.sin(t*6)*duck,0);K.face(M_,{jaw:.25*duck});}
+  if(stand>0){const sh=win(t,tFills+.3,tSide-.1,.15);K.shrug(M_,sh*(.85+.15*Math.sin(t*5)));K.pose(M_,'head',-.25*stand,.25*Math.sin(t*2.4)*stand,.12*sh);K.face(M_,{jaw:.4*sh});
+   const dg2=sm(tSide-.05,tSide+.3,t);if(dg2>0){K.relax(M_);K.idle(M_,t);M_.g.rotation.y=Math.PI*.42*dg2;K.pose(M_,'spine03',.3+.15*Math.sin(t*5.2),0,0);K.arm(M_,'R',AD[0]+1.0+.4*Math.sin(t*5.2),AD[2]-.4,.6);K.arm(M_,'L',AD[0]+1.1+.4*Math.sin(t*5.2),AD[2]-.25,.9);}}}
+ M_.g.updateMatrixWorld(true);
+ // shovel follows the right wrist, blade down into the soil
+ {const wr=boneW(M_,'wristR'),wl=boneW(M_,'wristL');const hold=digging||t>tSide-.05;SHOV.visible=hold;if(hold){SHOV.position.copy(wr);const dir=V3().subVectors(wl,wr);dir.y-=.9;dir.normalize();_q.setFromUnitVectors(V3(0,-1,0),dir);SHOV.quaternion.copy(_q);SHOV.translateY(-.15);}}
+ // dirt clods: thrown up and to the right on each scoop, land on the pile
+ CLODS.forEach(c=>{const per=1.2,tk=((t*5.2/(Math.PI*2))+c.k/26)%1,on=t<DIG1+.1||(t>tSide&&t<tSide+3);c.m.visible=on&&tk<.7;if(!c.m.visible)return;const u=tk/.7;
+  c.m.position.set(HOLE.x+.2+u*1.3+(c.k%5)*.05,-dep*.5*(1-u)+2.2*u*(1-u)*1.6+.05,-.9+(c.k%3)*.15);c.m.rotation.set(u*6,u*4,0);});
+ PILE.scale.set(1+.25*dg,.45+.25*dg,.8+.15*dg);
+ // ---- SWAT team runs through the forest behind the hole (flashlights sweeping), from left to right
+ // they run in from the left (on "SWAT"), stop around the hole area and SEARCH: flashlights sweep, heads turn, one points
+ for(const s of SW){const P=s.P,t0=1.35+s.dl,u=sm(t0,t0+1.5,t),run=u>0&&u<1?Math.min(1,u*5,(1-u)*5):0;K.relax(P);P.g.visible=t>t0-.05;
+  P.g.position.set(s.x0+(s.x1-s.x0)*(1-Math.pow(1-u,1.6)),0,s.lane);
+  const face=u<.92?Math.PI/2:Math.PI/2+(Math.PI*.5+.6*Math.sin(t*.8+s.i*2))*sm(.92,1,u)*(s.i%2?-1:1)*.6;P.g.rotation.y=face;
+  if(run>0){K.walk(P,t*1.5+s.i,.75*run);K.pose(P,'spine03',.25*run,0,0);P.g.position.y=.05*Math.abs(Math.sin((t*1.5+s.i)*7))*run;}else{K.idle(P,t,s.i*1.7);K.pose(P,'spine03',.12,0,0);}
+  K.arm(P,'R',AD[0]+1.2,AD[2]-.25,.35);K.pose(P,'head',0,.45*Math.sin(t*1.9+s.i*1.3)*(1-run),0);
+  if(s.i===1&&u>=1){const pk=win(t,tHave,tBut,.2);K.point(P,'L',pk);}
+  P.g.updateMatrixWorld(true);
+  const hd=boneW(P,'head'),sp=boneW(P,'spine01'),wr=boneW(P,'wristR');P.g.getWorldQuaternion(_q);
+  s.G.helm.position.copy(hd).add(V3(0,.09,0));s.G.helm.quaternion.copy(_q);s.G.vest.position.copy(sp).add(V3(0,-.12,0));s.G.vest.quaternion.copy(_q);
+  s.G.lamp.position.copy(wr);s.G.lamp.quaternion.copy(_q);s.G.lamp.rotateY(.35*Math.sin(t*2.6+s.i*1.7));s.G.lamp.rotateX(.25+.1*Math.sin(t*3+s.i));
+  for(const g of Object.values(s.G))g.visible=P.g.visible;}
+ // ---- rain + water rising in the hole
+ const rk=sm(tRain-.15,tRain+.25,t);RAIN.visible=rk>0;if(rk>0){for(let i=0;i<RP.length;i++){const p=RP[i],y=((p[1]-t*9+p[3]*7)%7+7)%7-1.2;_m.makeTranslation(p[0],y,p[2]);RAIN.setMatrixAt(i,_m);}RAIN.instanceMatrix.needsUpdate=true;RAIN.material.opacity=.55*rk;}
+ const wl=sm(tRain,tSide+.2,t)*1.05;WATER.visible=wl>.01;WATER.scale.y=Math.max(.001,wl);WATER.position.y=-HOLE.dep+wl/2;
+ DROPS.forEach((d,i)=>{const ph=(t*1.8+i*.137)%1;d.visible=wl>.01;d.position.set(HOLE.x-.6+((i*37)%100)/100*1.2,-HOLE.dep+wl+.01,-.1-((i*53)%100)/100*1.3);d.scale.setScalar(.3+ph*2.2);d.material.opacity=.6*(1-ph);});
+}
+// floor fill: soil that is still undug (shrinks while Mike digs)
+const FLOORFILL=add(B(HOLE.w-.01,1,HOLE.d-.01),SOIL(HOLE.w,1),HOLE.x,0,-HOLE.d/2,scene,false);
+// ================= CAPTIONS: 2 words, word 2 coloured (new colour each phrase) =================
+const CAPC=['#ff4fd8','#3de8ff','#ffe03d','#5dff6a','#ff4a4a'];
+await loaded;await Promise.all(Object.values(MODELS));
+const cap=document.getElementById('cap');
+window.renderAt=t=>{try{K.shotCam(cam,t,SH);animate(t);}catch(e){console.error('RENDER ERR',t,e.message,e.stack.split('\n')[1]);}
+ let ci=0;for(let i=0;i<CH.length;i++)if(t>=CH[i].s-.03)ci=i;const c=CH[ci],p=c.t.split(' ');
+ cap.innerHTML=p.length>1?`${p[0]} <span style="color:${CAPC[ci%5]}">${p.slice(1).join(' ')}</span>`:`<span style="color:${CAPC[ci%5]}">${p[0]}</span>`;
+ const wa=t-c.s;cap.style.transform=`scale(${wa<.08?.86+wa/.08*.14:1})`;comp.render();return true;};
+window.renderAt(Number(Q.get('t')||0));document.title='ready';
+</script></body></html>
