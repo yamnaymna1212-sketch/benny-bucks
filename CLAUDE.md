@@ -1,4 +1,4 @@
-# LATEST (2026-11-11): EP18 "$1M in a pool" (Building Box style) -> read videos/inside-money/ep18-pool-million/HANDOFF.md first.
+# LATEST (2026-11-13): EP21 "SWAT hidey hole" (copy of tunnel-base ref) -> read videos/inside-money/ep21-swat-hidey-hole/PLAN.md + SCRIPT.md first.
 # ACTIVE DIRECTION (2026-10-29): "Inside Money" — 3D cutaway videos about how money/banks/finance work. START with videos/inside-money/PROJECT_BRIEF.md (section 0 = latest user rules 2026-10-31; template for every new video = render-kit/ep4.html) (new machine/phone: videos/inside-money/SETUP.md; style references: references/inside-money/).
 The Doug the Penguin rules below are LEGACY (kept for reference) unless the user asks to resume Doug.
 
