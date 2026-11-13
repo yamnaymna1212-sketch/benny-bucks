@@ -1,0 +1,12 @@
+# EP20 facts (checked 2026-11-13)
+- Tax evasion 26 USC 7201: felony, up to 5 years prison + fine up to $250,000 (individual). https://www.irs.gov/irm/part9/irm_09-001-003
+- Civil fraud penalty 26 USC 6663: 75% of the underpayment due to fraud. https://www.law.cornell.edu/uscode/text/26/6663
+- Businesses (car dealers included) receiving > $10,000 cash file Form 8300 with IRS/FinCEN within 15 days. https://www.irs.gov/instructions/i8300
+- Banks file a Currency Transaction Report for cash > $10,000 per business day (31 CFR 1010.311). https://bsaaml.ffiec.gov/manual/AssessingComplianceWithBSARegulatoryRequirements/05
+- Anyone can report suspected tax fraud to the IRS anonymously (Form 3949-A, online at IRS.gov). https://www.irs.gov/help/report-fraud/report-tax-fraud-a-scam-or-law-violation
+- 2026 401(k) employee deferral limit $24,500 (IRS Notice 2025-67). https://www.psca.org/news/psca-news/2025/11/irs-announces-2026-401k-contribution-limits/
+- HSA: deductible/pre-tax in, tax-free growth, tax-free for qualified medical expenses; 2026 limits $4,400 / $8,750 (needs an HSA-eligible health plan).
+- Roth IRA: qualified withdrawals (incl. growth) tax free; 2026 limit $7,500; income limits apply.
+- Home rented < 15 days a year: rental income not reported (IRS Topic 415). https://www.irs.gov/taxtopics/tc415
+- 2026 annual gift exclusion $19,000 per recipient. https://workplace.schwab.com/story/tax-brackets-and-contribution-limits
+- Home sale exclusion: up to $250,000 gain ($500,000 joint) if owned + lived in 2 of last 5 years (IRS Topic 701). https://www.irs.gov/taxtopics/tc701
