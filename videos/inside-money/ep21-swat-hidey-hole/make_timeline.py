@@ -30,6 +30,13 @@ ch=[{'t':re.sub(r'[.,?!:]','',w['w']),'s':w['s'],'e':w['e']} for w in W]
 dur=round(W[-1]['e']+.4,2)
 json.dump({'dur':dur,'words':W,'chunks':ch},open('render-kit/timeline_ep21.json','w'),indent=0)
 print(dur);print(' '.join(f"{w['w']}@{w['s']}" for w in W))
+# whisper collapsed "a circle ... heads." onto one time: spread those words by length between 'in' and 'This'
+C=json.load(open('render-kit/timeline_ep21.json'));W=C['words']
+i0=next(i for i in range(len(W)-1) if W[i]['w']=='in' and W[i+1]['w']=='a' and W[i+2]['w'].startswith('circle'))+1
+i1=next(i for i in range(i0,len(W)) if W[i]['w'].startswith('heads'))
+t0=W[i0-1]['e'] if W[i0-1]['e']-W[i0-1]['s']<.5 else W[i0-1]['s']+.25;t1=W[i1+1]['s']-.05;L=[len(W[i]['w'])+2 for i in range(i0,i1+1)];acc=t0
+for k,i in enumerate(range(i0,i1+1)):d=(t1-t0)*L[k]/sum(L);W[i]['s']=round(acc,3);W[i]['e']=round(acc+d,3);acc+=d
+W[i1+1]['s']=max(W[i1+1]['s'],round(t1+.05,3));json.dump(C,open('render-kit/timeline_ep21.json','w'),indent=0)
 # 2-word captions (reference style): pair words, never across a sentence end
 C=json.load(open('render-kit/timeline_ep21.json'));W=C['words'];o=[];i=0
 while i<len(W):
