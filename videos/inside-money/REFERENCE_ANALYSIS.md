@@ -66,3 +66,23 @@ Sheets: references/inside-money/analysis/zack-03-sheet.jpg (1 fps) and zack-03-h
 - **Sound** (cannot separate from file alone): constant bed + hits on impact; loudness -8 LUFS means a mastered mix, louder than ours.
 ### Gaps vs our Three.js (EP9)
 Faces/eyes/hair strands (biggest), skin shading, extras reacting, DoF + motion blur on whips, handheld camera energy, macro inserts every 1.5 s, object-wipe transitions, grade. Three.js can improve: whip-pan blur transitions, macro inserts, DoF (BokehPass), extras with reaction poses, grade, louder master. Cannot reach: face realism -> needs Blender/Unreal MetaHuman.
+
+## ref-1794601379597 "You built a tunnel base" (TikTok, added 2026-11-13)
+File: references/inside-money/examples/ref-1794601379597.mp4 (local). Sheets: analysis/ref1794-sheet.jpg (every 2 s), ref1794-hook-sheet.jpg (0-5 s @2 fps).
+### Measured
+- 60.1 s, 720x1280, 30 fps. Only ~6 real cuts (0.1, 4.1, 7.4, 12.1, 16.9, 36.2 s); everything else = ONE continuous camera that slides/pushes along a cutaway of earth.
+- Voice: 249 words / 60 s = 4.1 words/s, no pauses, one take.
+- Captions: 2 words, bold, centred mid-screen (~50 %), word 1 white + word 2 a bright colour that changes every phrase (pink/cyan/yellow/green/red), black outline.
+- Look: stylised low-poly jungle on top, flat orange-red soil cross-section below (one big readable colour), cutaway rooms dark red. Bright daylight.
+### Script formula (the reason it holds attention)
+Second person "you" = viewer is the builder. Loop repeated 5x: **THREAT ("But then they...") -> FIX ("so you...") -> RESULT shown -> NAME IT ("This is your water trap.")**. Each loop adds one visible part to the same base, so the viewer watches it grow. Twist at 48 s ("that entrance is not underwater by mistake"), comic payoff (monkey steals banana), ending "Congratulations! You have built a ___".
+Hook = "If you [do simple thing] to [goal], you have a [basic version]." -> understood in 1 s; frame 1 already moving (hero running, enemies behind him).
+### Camera + characters
+- Camera: side-on cross-section, slow truck left/right following the hero along the tunnel, push-in on each new trap, pull-out to reveal the whole base at the end. Never static.
+- Hero always doing something: running, digging, sitting scared, crawling, standing in water, lying in hammock. Enemies always moving too (run, crawl, fall into spikes, dogs sniffing). The threat and the fix are in the SAME frame.
+- Each threat has a visual event: rain lines, grenade blast flash, yellow gas cloud, flashlight beams, spikes, dogs.
+### Copy for Inside Money
+- Use the THREAT -> FIX -> "This is your ___" loop for a money topic where the viewer builds a protected thing step by step (e.g. protect your cash: mattress -> thief -> bank -> bank fails -> FDIC $250k -> split banks...). Every fix must be a real, verified rule (facts.md).
+- One continuous cutaway set (a house/bank cross-section) that GROWS a new room/part per loop; camera trucks along it; final pull-out shows the whole "money fortress".
+- Captions: 2 words, centre, second word coloured (new colour each phrase).
+- Pace 3.5-4 words/s is OK here because each sentence is simple; keep our "slower voice" rule by cutting words, not speeding up.
