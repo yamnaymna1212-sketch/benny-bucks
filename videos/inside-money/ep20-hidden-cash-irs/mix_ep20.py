@@ -22,7 +22,7 @@ def put(sig,t,g):
     if i<N:out[i:j]+=sig[:j-i]*g
 def cut(sig,dur,fade=.12):
     k=int(dur*SR);x=sig[:k].copy();f=int(min(fade,dur/2)*SR);x[-f:]*=np.linspace(1,0,f);return x
-S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','boom','money','slap']}
+S={k:load(f'{SFX}/user-{k}.wav') for k in['ting','whoosh','cash-register','boom','money','slap','notif','wrong','pop','yeah','money-transfer']}
 # --- realistic US siren (none in the user library): electronic 'wail' (square wave, low-passed) 650->1450 Hz, then fast 'yelp' when they stop;
 #     two cars detuned, volume grows as they approach (doppler-ish pitch drop on arrival), ducked under the voice
 def lp(x,fc):
@@ -53,5 +53,23 @@ for k in range(2):put(screech(),tArr+k*.1,.13)
 put(cut(S['whoosh'],.7),T('sees')-.15,.22)
 put(cut(S['slap'],.2),tArr+.35,.14)                               # car doors
 put(cut(S['boom'],.6,.2),T('tax evasion'),.34)
+
+# ---- story cues (few, on the words): whoosh on every place change, one hit per beat ----
+for ph in['buy a car','deposit it','even your neighbor','get caught']:put(cut(S['whoosh'],.6),T(ph)-.2,.2)
+put(cut(S['money'],.6),T('ten thousand'),.22);put(cut(S['slap'],.2),T('the dealer')+.1,.16);put(cut(S['whoosh'],.5),T('report it'),.14)
+put(cut(S['slap'],.2),T('the bank')+.05,.14);put(cut(S['whoosh'],.5),T('report it too'),.14)
+put(cut(S['notif'],.5),T('without giving')+.6,.2)
+put(cut(S['cash-register'],.6),T('all back'),.18);put(cut(S['wrong'],.5),T('seventy five'),.2);put(cut(S['boom'],.6,.2),T('prison'),.3)
+w=cut(S['whoosh'],.9)[::-1].copy();put(np.interp(np.arange(0,len(w),1.6),np.arange(len(w)),w).astype(np.float32),T('rewind')-.25,.26)   # tape rewind
+put(cut(S['money-transfer'],.6),T('twenty four thousand'),.2)
+for ph in['going in','while it grows','medical bills']:put(cut(S['ting'],.25,.1),T(ph)+.05,.06)
+put(cut(S['pop'],.3),T('in a roth')+.3,.14);put(cut(S['ting'],.25,.1),T('never taxed'),.07)
+put(cut(S['pop'],.3),T('fourteen days'),.14);put(cut(S['money'],.5),T('that rent'),.18)
+put(cut(S['yeah'],.6),T('nineteen thousand')+.4,.16)
+put(cut(S['whoosh'],.5),T('and watch')-.1,.16);put(cut(S['pop'],.3),T('twist'),.16)
+put(cut(S['money-transfer'],.6),T('two hundred fifty'),.2)
+put(cut(S['boom'],.6,.2),T('five years',2),.3);put(cut(S['ting'],.3,.1),T('prison sentence'),.08)
+put(cut(S['wrong'],.5),T('one is a crime')+.1,.18);put(cut(S['ting'],.3,.1),T('reading the rules'),.08)
+for ph,o in[('under the floor',0),('four oh one k',1),('a roth',1),('an hsa',1)]:put(cut(S['pop'],.25),T(ph,o),.12)
 out/=max(1,np.abs(out).max()/.97)
 w=wave.open(f'{RK}/mix_ep20.wav','wb');w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes((out*32767).astype(np.int16).tobytes());w.close();print('mix ok',DUR)
