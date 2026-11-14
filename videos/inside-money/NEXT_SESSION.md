@@ -1,4 +1,5 @@
 # NEXT SESSION (written 2026-11-14)
+**DEFAULT FORMAT FROM NOW ON = FORMULA_EP20.md** (user: EP20 works on TikTok). Build new videos with the same 8 blocks + GTA-6 cinematic hook; copy render-kit/ep20.html, _ep20parts/, ep20-hidden-cash-irs/mix_ep20.py.
 ## State
 - EP20 "Hide $100,000 under your floor" (US version of a UK budget video): FULL v1 done, 61.4 s, phone copy ep20-hidden-cash-irs/ep20-hidden-cash-irs-phone.mp4 (27.9 MB), publish kit ep20-hidden-cash-irs/PUBLISH.md. Waiting for the user's notes (one batch -> fix -> re-render once). Details: ep20-hidden-cash-irs/PLAN.md.
 - EP21 "SWAT hidey hole": FULL v1 done in another session (ep21-swat-hidey-hole/PLAN.md).
@@ -12,6 +13,6 @@
 - MUST verify every number on IRS.gov first (final regs, occupation list, phase-out, payroll tax) -> facts.md before the script.
 
 ## First message for the new session (copy-paste)
-Use the inside-money-episode skill. Read videos/inside-money/NEXT_SESSION.md and PROJECT_BRIEF.md section 0. Make EP22 "You made $25,000 in tips this year. How much tax do you pay?": verify the facts on IRS.gov, write the script (61-65 s, one-take voice), then a 5-s hook preview in the EP20 GTA-cinematic style before any full render.
+Use the inside-money-episode skill. Read videos/inside-money/NEXT_SESSION.md, FORMULA_EP20.md (the style + 8-block structure the user wants, copy render-kit/ep20.html) and PROJECT_BRIEF.md section 0. Make EP22 "You made $25,000 in tips this year. How much tax do you pay?": verify the facts on IRS.gov, write the script (61-65 s, one-take voice), then a 5-s hook preview in the EP20 GTA-cinematic style before any full render.
 
 ## Formula to copy for new videos: FORMULA_EP20.md (crime vs legal, GTA hook, 8 blocks)
