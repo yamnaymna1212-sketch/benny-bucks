@@ -13,3 +13,5 @@
 
 ## First message for the new session (copy-paste)
 Use the inside-money-episode skill. Read videos/inside-money/NEXT_SESSION.md and PROJECT_BRIEF.md section 0. Make EP22 "You made $25,000 in tips this year. How much tax do you pay?": verify the facts on IRS.gov, write the script (61-65 s, one-take voice), then a 5-s hook preview in the EP20 GTA-cinematic style before any full render.
+
+## Formula to copy for new videos: FORMULA_EP20.md (crime vs legal, GTA hook, 8 blocks)
