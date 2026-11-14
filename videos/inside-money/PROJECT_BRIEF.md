@@ -1,4 +1,5 @@
 # INSIDE MONEY — master brief (everything decided so far, 2026-10-29). Read this first in any new session.
+## READ FIRST (2026-11-14): NEXT_SESSION.md (EP20 + EP21 done, EP22 idea + first message)
 
 ## 0. LATEST USER RULES (2026-10-31, from EP4 feedback) — these OVERRIDE older lines below (sections 2-3)
 Template episode = EP4 (ep4-print-million/PLAN.md + render-kit/ep4.html). Start every new video from it.
